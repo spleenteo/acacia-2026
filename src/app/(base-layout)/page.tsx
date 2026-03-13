@@ -1,25 +1,47 @@
-import Link from 'next/link';
+import { executeQuery } from '@/lib/datocms/executeQuery';
+import { graphql } from '@/lib/datocms/graphql';
+import ResponsiveImage, {
+  ResponsiveImageFragment,
+} from '@/components/ResponsiveImage';
+
+const query = graphql(
+  `
+    query HomeQuery {
+      allApartments(first: 100) {
+        id
+        name
+        slug
+        featuredImage {
+          responsiveImage(imgixParams: { w: 600, h: 400, fit: crop }) {
+            ...ResponsiveImageFragment
+          }
+        }
+      }
+    }
+  `,
+  [ResponsiveImageFragment],
+);
 
 export const metadata = {
-  title: 'Home | Tech Starter Kit',
+  title: 'Apartments | Acacia',
 };
 
-export default function Page() {
+export default async function Page() {
+  const { allApartments } = await executeQuery(query);
+
   return (
     <>
-      <h3>Choose your preferred template:</h3>
-
-      <ul>
-        <li>
-          <Link href="/basic">Basic:</Link> <span>Simpler code, great to start exploring</span>
-        </li>
-        <li>
-          <Link href="/real-time-updates">Real-time Updates:</Link>{' '}
-          <span>
-            Slightly more complex code, but content updates in real-time when Draft Mode is on
-          </span>
-        </li>
-      </ul>
+      <h1>Apartments</h1>
+      <div className="apartments-grid">
+        {allApartments.map((apartment) => (
+          <div key={apartment.id} className="apartment-card">
+            {apartment.featuredImage.responsiveImage && (
+              <ResponsiveImage data={apartment.featuredImage.responsiveImage} />
+            )}
+            <h2>{apartment.name}</h2>
+          </div>
+        ))}
+      </div>
     </>
   );
 }

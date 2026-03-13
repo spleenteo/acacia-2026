@@ -26,9 +26,9 @@ export async function recordToWebsiteRoute(
   _locale: string,
 ): Promise<string | null> {
   switch (item.__itemTypeId) {
-    // Page model
-    case 'JdG722SGTSG_jEB1Jx-0XA': {
-      return `/real-time-updates/${item.attributes.slug}`;
+    // Apartment model
+    case '2726': {
+      return `/`;
     }
     default:
       return null;
@@ -39,16 +39,8 @@ export async function recordToSlug(
   item: RawApiTypes.Item<AnyModel>,
   _locale: string,
 ): Promise<string | null> {
-  switch (item.__itemTypeId) {
-    // Page model
-    case 'JdG722SGTSG_jEB1Jx-0XA': {
-      /*
-       * Using generated types, TypeScript knows exactly which fields exist.
-       * `item.attributes.slug` is fully typed - no casts needed!
-       */
-      return item.attributes.slug;
-    }
-    default:
-      return null;
+  if ('slug' in item.attributes) {
+    return item.attributes.slug as string;
   }
+  return null;
 }

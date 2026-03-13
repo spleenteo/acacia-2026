@@ -322,6 +322,21 @@ main {
     }
   }
 
+  .apartments-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+  }
+
+  .apartment-card {
+    h2 {
+      font-size: 1.2rem;
+      border-bottom: 0;
+      padding-top: 0.5rem;
+    }
+  }
+
   .pill {
     background: var(--bg-accent);
     color: var(--text-accent);
