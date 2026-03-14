@@ -6,7 +6,8 @@ import ApartmentCard, { ApartmentCardFragment } from '@/components/ApartmentCard
 import MoodCard, { MoodCardFragment } from '@/components/MoodCard';
 import BeddyBar from '@/components/BeddyBar';
 import HtmlContent from '@/components/HtmlContent';
-import ResponsiveImage, { ResponsiveImageFragment } from '@/components/ResponsiveImage';
+import Hero from '@/components/Hero';
+import { ResponsiveImageFragment } from '@/components/ResponsiveImage';
 import { TagFragment } from '@/lib/datocms/commonFragments';
 import { toNextMetadata } from 'react-datocms';
 import type { Metadata } from 'next';
@@ -89,35 +90,16 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
 
   return (
     <>
-      {/* Hero Section */}
-      <section className="relative min-h-[90vh] flex items-end bg-dark">
-        {homePage?.ctaImage?.responsiveImage && (
-          <div className="absolute inset-0">
-            <ResponsiveImage
-              data={homePage.ctaImage.responsiveImage}
-              className="w-full h-full object-cover opacity-45"
-              priority
-            />
-          </div>
+      <Hero
+        title={homePage?.title ?? ''}
+        subtitle={homePage?.claim}
+        image={homePage?.ctaImage?.responsiveImage}
+        priority
+      >
+        {homePage?.beddyId && (
+          <BeddyBar locale={locale as Locale} widgetCode={homePage.beddyId} />
         )}
-        {/* gradient overlay for legibility */}
-        <div className="absolute inset-0 bg-gradient-to-t from-dark/80 via-dark/20 to-transparent" />
-        <div className="relative z-10 w-full px-8 pb-20 pt-40">
-          <div className="max-w-6xl mx-auto">
-            <h1 className="font-heading font-normal text-hero text-white leading-[1.05] mb-6 max-w-3xl">
-              {homePage?.title}
-            </h1>
-            {homePage?.claim && (
-              <p className="font-body text-body-lg text-white/70 max-w-xl mb-10">
-                {homePage.claim}
-              </p>
-            )}
-            {homePage?.beddyId && (
-              <BeddyBar locale={locale as Locale} widgetCode={homePage.beddyId} />
-            )}
-          </div>
-        </div>
-      </section>
+      </Hero>
 
       {/* Stay Section */}
       {homePage?.stayText && (

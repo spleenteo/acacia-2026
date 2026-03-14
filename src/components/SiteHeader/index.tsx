@@ -37,14 +37,13 @@ export default function SiteHeader({ locale, isDraftModeEnabled }: Props) {
     >
       <div className="mx-auto max-w-6xl flex items-center justify-between px-8 py-5">
         <Link href={`/${locale}`} className="block">
-          <span
-            className={[
-              'font-heading italic font-normal text-h4 tracking-tight transition-colors duration-300',
-              scrolled ? 'text-dark' : 'text-white',
-            ].join(' ')}
-          >
-            Acacia Firenze
-          </span>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/logo--main.svg"
+            alt="Acacia Firenze"
+            className="h-[22px] md:h-[26px] transition-[filter] duration-300"
+            style={{ filter: scrolled ? 'none' : 'brightness(0) invert(1)' }}
+          />
         </Link>
         <nav className="flex items-center gap-8">
           {nav.map((item) => (

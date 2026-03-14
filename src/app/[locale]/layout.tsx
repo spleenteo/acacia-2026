@@ -57,7 +57,7 @@ export default async function LocaleLayout({
       />
       {isDraftModeEnabled && <ContentLink />}
       <SiteHeader locale={locale} isDraftModeEnabled={isDraftModeEnabled} />
-      <main>{children}</main>
+      <main style={{ paddingTop: 'var(--header-height)' }}>{children}</main>
       <SiteFooter locale={locale} />
     </>
   );

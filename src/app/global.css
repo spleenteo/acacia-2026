@@ -108,6 +108,10 @@
   --breakpoint-xl: 1500px;
 }
 
+:root {
+  --header-height: 68px;
+}
+
 @layer base {
   html {
     font-family: var(--font-body);
