@@ -100,11 +100,25 @@ Required in `.env.local` (see `.env.local.example`):
 Each page exports `generateMetadata()` using `_seoMetaTags` from DatoCMS + `toNextMetadata` from `react-datocms`. Pattern:
 
 ```ts
-const metaQuery = graphql(`query { record { _seoMetaTags(locale: $locale) { ...TagFragment } } }`, [TagFragment]);
+const metaQuery = graphql(
+  `
+    query {
+      record {
+        _seoMetaTags(locale: $locale) {
+          ...TagFragment
+        }
+      }
+    }
+  `,
+  [TagFragment],
+);
 
 export async function generateMetadata({ params }): Promise<Metadata> {
   const data = await executeQuery(metaQuery, { variables: { locale }, includeDrafts });
-  return { ...toNextMetadata(data.record?._seoMetaTags ?? []), alternates: { canonical, languages } };
+  return {
+    ...toNextMetadata(data.record?._seoMetaTags ?? []),
+    alternates: { canonical, languages },
+  };
 }
 ```
 
