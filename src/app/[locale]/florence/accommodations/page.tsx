@@ -126,7 +126,7 @@ export default async function AccommodationsPage({
         <div className="absolute inset-0 bg-gradient-to-t from-dark/80 via-dark/20 to-transparent" />
         <div className="relative z-10 w-full px-8 pb-14 pt-32">
           <div className="max-w-6xl mx-auto">
-            <h1 className="font-heading font-bold text-hero text-white leading-[1.05] mb-3">
+            <h1 className="font-heading font-normal text-hero text-white leading-[1.05] mb-3">
               {pageApartments?.title}
             </h1>
             {pageApartments?.subtitle && (

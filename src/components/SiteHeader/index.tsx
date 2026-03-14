@@ -1,3 +1,6 @@
+'use client';
+
+import { useState, useEffect } from 'react';
 import DraftModeToggler from '@/components/DraftModeToggler';
 import type { Locale } from '@/i18n/config';
 import Link from 'next/link';
@@ -14,13 +17,32 @@ const nav = [
 ];
 
 export default function SiteHeader({ locale, isDraftModeEnabled }: Props) {
+  const [scrolled, setScrolled] = useState(false);
   const otherLocale = locale === 'en' ? 'it' : 'en';
 
+  useEffect(() => {
+    const handleScroll = () => setScrolled(window.scrollY > 50);
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   return (
-    <header className="absolute top-0 left-0 right-0 z-50">
-      <div className="mx-auto max-w-6xl flex items-center justify-between px-8 py-6">
+    <header
+      className={[
+        'fixed top-0 left-0 right-0 z-50 transition-all duration-300',
+        scrolled
+          ? 'bg-surface/95 backdrop-blur-xl border-b border-border'
+          : 'bg-transparent border-b border-transparent',
+      ].join(' ')}
+    >
+      <div className="mx-auto max-w-6xl flex items-center justify-between px-8 py-5">
         <Link href={`/${locale}`} className="block">
-          <span className="font-heading italic font-semibold text-h4 text-white tracking-tight">
+          <span
+            className={[
+              'font-heading italic font-normal text-h4 tracking-tight transition-colors duration-300',
+              scrolled ? 'text-dark' : 'text-white',
+            ].join(' ')}
+          >
             Acacia Firenze
           </span>
         </Link>
@@ -29,16 +51,27 @@ export default function SiteHeader({ locale, isDraftModeEnabled }: Props) {
             <Link
               key={item.href}
               href={`/${locale}${item.href}`}
-              className="font-body text-body-sm font-normal text-white/80 hover:text-white transition-colors duration-300 tracking-wide"
+              className={[
+                'font-body text-body-sm font-normal transition-colors duration-300 tracking-wide',
+                scrolled ? 'text-muted hover:text-rust' : 'text-white/80 hover:text-white',
+              ].join(' ')}
             >
               {item.label[locale]}
             </Link>
           ))}
-          <span className="font-body text-caption font-normal text-white/50">
+          <span
+            className={[
+              'font-body text-caption font-normal transition-colors duration-300',
+              scrolled ? 'text-light' : 'text-white/50',
+            ].join(' ')}
+          >
             {locale.toUpperCase()} /{' '}
             <Link
               href={`/${otherLocale}`}
-              className="text-white/50 hover:text-white transition-colors duration-300"
+              className={[
+                'transition-colors duration-300',
+                scrolled ? 'hover:text-dark' : 'hover:text-white',
+              ].join(' ')}
             >
               {otherLocale.toUpperCase()}
             </Link>

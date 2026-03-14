@@ -104,7 +104,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
         <div className="absolute inset-0 bg-gradient-to-t from-dark/80 via-dark/20 to-transparent" />
         <div className="relative z-10 w-full px-8 pb-20 pt-40">
           <div className="max-w-6xl mx-auto">
-            <h1 className="font-heading font-bold text-hero text-white leading-[1.05] mb-6 max-w-3xl">
+            <h1 className="font-heading font-normal text-hero text-white leading-[1.05] mb-6 max-w-3xl">
               {homePage?.title}
             </h1>
             {homePage?.claim && (
@@ -137,7 +137,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
               <p className="font-body text-label uppercase tracking-[0.22em] text-rust font-medium text-center mb-3">
                 {locale === 'en' ? 'Our spaces' : 'I nostri spazi'}
               </p>
-              <h2 className="font-heading font-bold text-h1 text-dark text-center tracking-[-0.02em] mb-12">
+              <h2 className="font-heading font-normal text-h1 text-dark text-center tracking-[-0.02em] mb-12">
                 {homePage.promoTitle}
               </h2>
             </>
@@ -159,7 +159,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
                 <p className="font-body text-label uppercase tracking-[0.22em] text-rust font-medium text-center mb-3">
                   {locale === 'en' ? 'Travel inspirations' : 'Ispirazioni di viaggio'}
                 </p>
-                <h2 className="font-heading font-bold text-h1 text-dark text-center tracking-[-0.02em] mb-12">
+                <h2 className="font-heading font-normal text-h1 text-dark text-center tracking-[-0.02em] mb-12">
                   {homePage.moodsTitle}
                 </h2>
               </>

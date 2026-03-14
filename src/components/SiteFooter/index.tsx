@@ -17,7 +17,7 @@ export default function SiteFooter({ locale }: Props) {
       <div className="bg-dark py-16">
         <div className="mx-auto max-w-6xl px-8 grid grid-cols-1 md:grid-cols-3 gap-10">
           <div>
-            <span className="font-heading italic font-semibold text-h4 text-white tracking-tight block mb-5">
+            <span className="font-heading italic font-normal text-h4 text-white tracking-tight block mb-5">
               Acacia Firenze
             </span>
             <p className="font-body text-body-sm text-white/50 leading-relaxed">

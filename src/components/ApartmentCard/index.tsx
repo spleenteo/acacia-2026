@@ -65,7 +65,7 @@ export default function ApartmentCard({ data, locale }: Props) {
               {apartment.category.name}
             </p>
           )}
-          <h3 className="font-heading text-h3 font-semibold text-dark leading-snug mb-2">
+          <h3 className="font-heading text-h3 font-normal text-dark leading-snug mb-2">
             {apartment.name}
           </h3>
           {apartment.claim && (

@@ -18,7 +18,7 @@ All design tokens are defined in CSS using `@theme`. This block lives in the mai
 ```css
 @import 'tailwindcss';
 
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,500;1,600;1,700&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300;1,9..40,400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400;1,500&family=Lato:ital,wght@0,300;0,400;0,700;1,300;1,400&display=swap');
 
 @theme {
   /* ── COLORS ── */
@@ -48,7 +48,7 @@ All design tokens are defined in CSS using `@theme`. This block lives in the mai
   /* ── FONTS ── */
 
   --font-heading: 'Playfair Display', 'Georgia', serif;
-  --font-body: 'DM Sans', 'Helvetica Neue', sans-serif;
+  --font-body: 'Lato', 'Helvetica Neue', sans-serif;
 
   /* ── FONT SIZES ── */
 
@@ -110,7 +110,6 @@ All design tokens are defined in CSS using `@theme`. This block lives in the mai
   h2 em,
   h3 em {
     font-style: italic;
-    font-weight: 500;
   }
 }
 ```
@@ -119,14 +118,16 @@ All design tokens are defined in CSS using `@theme`. This block lives in the mai
 
 ## Typography — CRITICAL RULES
 
-### Headlines: Bold Serif + Italic Emphasis
+### Headlines: Regular Serif + Italic Emphasis
 
-Every section title MUST use Playfair Display (`font-heading`) with **one keyword in `<em>` italic**. This is the signature editorial pattern. Never skip it.
+Every section title MUST use Playfair Display (`font-heading`) at **regular weight (400)** with **one keyword in `<em>` italic**. This is the signature editorial pattern. Never skip it.
+
+Playfair Display is ALWAYS `font-normal` — never bold, never semibold. The elegance comes from the regular-weight serif with italic contrast, not from weight.
 
 ```html
-<!-- ✅ CORRECT — one italic emphasis word -->
-<h2 class="font-heading text-h1 font-bold text-dark tracking-tight">
-  Non ci accontentiamo del <em class="font-medium">quasi perfetto.</em>
+<!-- ✅ CORRECT — regular weight, one italic emphasis word -->
+<h2 class="font-heading text-h1 font-normal text-dark tracking-tight">
+  Non ci accontentiamo del <em>quasi perfetto.</em>
 </h2>
 
 <!-- ✅ MORE EXAMPLES -->
@@ -136,13 +137,16 @@ Every section title MUST use Playfair Display (`font-heading`) with **one keywor
 <!-- "The most <em>authentic</em> way to stay in Florence." -->
 
 <!-- ❌ WRONG — no italic emphasis, feels flat -->
-<h2 class="font-heading text-h1 font-bold text-dark">I nostri appartamenti</h2>
+<h2 class="font-heading text-h1 font-normal text-dark">I nostri appartamenti</h2>
+
+<!-- ❌ WRONG — bold weight on Playfair Display -->
+<h2 class="font-heading text-h1 font-bold text-dark">...</h2>
 
 <!-- ❌ WRONG — too many italics -->
 <h2>"<em>Ogni</em> <em>casa</em> una <em>storia</em>"</h2>
 ```
 
-The `<em>` drops to `font-medium` (500) while surrounding text is `font-bold` (700), creating visual contrast.
+The `<em>` is italic at the same weight (400), creating contrast purely through letterform — no weight change needed.
 
 ### Section Labels
 
@@ -162,11 +166,11 @@ Always use `font-light` (300) for body paragraphs. Reserve `font-normal` (400) f
 
 | Role            | Classes                                                                  |
 | --------------- | ------------------------------------------------------------------------ |
-| Hero title      | `font-heading text-hero font-bold text-dark tracking-tight`              |
-| Section title   | `font-heading text-h1 font-bold text-dark tracking-tight` + `<em>`       |
-| Subsection      | `font-heading text-h2 font-bold text-dark`                               |
-| Card title      | `font-heading text-h3 font-semibold text-dark`                           |
-| Grid card title | `font-heading text-h4 font-semibold text-dark`                           |
+| Hero title      | `font-heading text-hero font-normal text-dark tracking-tight`            |
+| Section title   | `font-heading text-h1 font-normal text-dark tracking-tight` + `<em>`    |
+| Subsection      | `font-heading text-h2 font-normal text-dark`                             |
+| Card title      | `font-heading text-h3 font-normal text-dark`                             |
+| Grid card title | `font-heading text-h4 font-normal text-dark`                             |
 | Label           | `font-body text-label font-medium uppercase text-rust tracking-[0.22em]` |
 | Body            | `font-body text-body font-light text-muted`                              |
 | Hero subtitle   | `font-body text-body-lg font-light text-white/75`                        |

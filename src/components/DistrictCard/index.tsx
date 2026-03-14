@@ -56,7 +56,7 @@ export default function DistrictCard({ data, locale }: Props) {
 
         {/* Content */}
         <div className="p-6">
-          <h3 className="font-heading text-h3 font-semibold text-dark leading-snug mb-4">
+          <h3 className="font-heading text-h3 font-normal text-dark leading-snug mb-4">
             {district.name}
           </h3>
           <p className="font-body text-caption text-muted group-hover:text-rust transition-colors duration-300 font-medium">

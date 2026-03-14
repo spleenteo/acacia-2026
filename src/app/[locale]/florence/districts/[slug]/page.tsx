@@ -140,7 +140,7 @@ export default async function DistrictDetailPage({
             <p className="font-body font-medium text-label text-white/50 uppercase tracking-[0.15em] mb-3">
               {locale === 'en' ? 'Florence' : 'Firenze'}
             </p>
-            <h1 className="font-heading font-bold text-hero leading-tight text-white">
+            <h1 className="font-heading font-normal text-hero leading-tight text-white">
               {district.name}
             </h1>
           </div>
@@ -185,7 +185,7 @@ export default async function DistrictDetailPage({
             <p className="font-body text-label uppercase tracking-[0.22em] text-rust font-medium text-center mb-3">
               {locale === 'en' ? 'Where to stay' : 'Dove alloggiare'}
             </p>
-            <h2 className="font-heading font-bold text-h1 text-dark text-center tracking-[-0.02em] mb-12">
+            <h2 className="font-heading font-normal text-h1 text-dark text-center tracking-[-0.02em] mb-12">
               {l.apartments} {district.name}
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-6">

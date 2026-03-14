@@ -54,7 +54,7 @@ export default function MoodCard({ data, locale }: Props) {
 
         {/* Content */}
         <div className="p-6">
-          <h3 className="font-heading text-h3 font-semibold text-dark leading-snug mb-2">
+          <h3 className="font-heading text-h3 font-normal text-dark leading-snug mb-2">
             {mood.name}
           </h3>
           {mood.claim && (

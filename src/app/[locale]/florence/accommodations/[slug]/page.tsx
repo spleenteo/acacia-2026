@@ -186,7 +186,7 @@ export default async function ApartmentDetailPage({
                 {apartment.category.name}
               </p>
             )}
-            <h1 className="font-heading font-bold text-hero leading-tight text-white mb-3">
+            <h1 className="font-heading font-normal text-hero leading-tight text-white mb-3">
               {apartment.name}
             </h1>
             {apartment.claim && (
@@ -207,7 +207,7 @@ export default async function ApartmentDetailPage({
           <div className="mx-auto max-w-6xl px-8 py-8 flex flex-wrap justify-center gap-10 sm:gap-20">
             {apartment.bedrooms && (
               <div className="text-center">
-                <p className="font-heading font-bold text-h1 text-rust leading-none">
+                <p className="font-heading font-normal text-h1 text-rust leading-none">
                   {apartment.bedrooms}
                 </p>
                 <p className="font-body text-label uppercase tracking-[0.12em] text-muted mt-1">
@@ -217,7 +217,7 @@ export default async function ApartmentDetailPage({
             )}
             {apartment.bathrooms && (
               <div className="text-center">
-                <p className="font-heading font-bold text-h1 text-rust leading-none">
+                <p className="font-heading font-normal text-h1 text-rust leading-none">
                   {apartment.bathrooms}
                 </p>
                 <p className="font-body text-label uppercase tracking-[0.12em] text-muted mt-1">
@@ -227,7 +227,7 @@ export default async function ApartmentDetailPage({
             )}
             {apartment.sleeps && (
               <div className="text-center">
-                <p className="font-heading font-bold text-h1 text-rust leading-none">
+                <p className="font-heading font-normal text-h1 text-rust leading-none">
                   {apartment.sleeps}
                 </p>
                 <p className="font-body text-label uppercase tracking-[0.12em] text-muted mt-1">

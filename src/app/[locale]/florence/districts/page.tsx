@@ -76,7 +76,7 @@ export default async function DistrictsPage({ params }: { params: Promise<{ loca
         <div className="absolute inset-0 bg-gradient-to-t from-dark/90 via-dark/40 to-dark/60" />
         <div className="relative z-10 w-full px-8 pb-14 pt-32">
           <div className="max-w-6xl mx-auto">
-            <h1 className="font-heading font-bold text-hero text-white leading-[1.05] mb-3">
+            <h1 className="font-heading font-normal text-hero text-white leading-[1.05] mb-3">
               {pageDistricts?.title}
             </h1>
             {pageDistricts?.subtitle && (
@@ -105,7 +105,7 @@ export default async function DistrictsPage({ params }: { params: Promise<{ loca
           <p className="font-body text-label uppercase tracking-[0.22em] text-rust font-medium text-center mb-3">
             {locale === 'en' ? 'Florence neighborhoods' : 'Quartieri di Firenze'}
           </p>
-          <h2 className="font-heading font-bold text-h1 text-dark text-center tracking-[-0.02em] mb-12">
+          <h2 className="font-heading font-normal text-h1 text-dark text-center tracking-[-0.02em] mb-12">
             {locale === 'en' ? 'Explore the city' : 'Esplora la città'}
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-6">

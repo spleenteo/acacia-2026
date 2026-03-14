@@ -20,7 +20,7 @@ export default function DistrictLink({ name, slug, locale }: Props) {
       </p>
       <Link
         href={`/${locale}/florence/districts/${slug}`}
-        className="font-heading text-h2 font-bold text-dark hover:text-rust transition-colors duration-300"
+        className="font-heading text-h2 font-normal text-dark hover:text-rust transition-colors duration-300"
       >
         {name}
       </Link>
