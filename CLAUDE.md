@@ -55,17 +55,17 @@ Tailwind CSS v4 with `@theme inline` design tokens in `src/app/global.css`. Bran
 
 ### Components
 
-| Component | Path | Purpose |
-|-----------|------|---------|
-| `SiteHeader` | `src/components/SiteHeader/` | Navigation with locale switcher, primary bg |
-| `SiteFooter` | `src/components/SiteFooter/` | Two-band footer (cream + dark) |
-| `BeddyBar` | `src/components/BeddyBar/` | Wrapper for `<beddy-bar>` web component (booking widget) |
-| `HtmlContent` | `src/components/HtmlContent/` | Renders legacy HTML from DatoCMS text fields |
-| `ApartmentCard` | `src/components/ApartmentCard/` | Apartment card with colocated GraphQL fragment |
-| `MoodCard` | `src/components/MoodCard/` | Mood card with colocated GraphQL fragment |
-| `ResponsiveImage` | `src/components/ResponsiveImage/` | DatoCMS responsive image with fragment |
-| `ContentLink` | `src/components/ContentLink/` | Click-to-edit overlays (draft mode) |
-| `DraftModeToggler` | `src/components/DraftModeToggler/` | Draft mode toggle button |
+| Component          | Path                               | Purpose                                                  |
+| ------------------ | ---------------------------------- | -------------------------------------------------------- |
+| `SiteHeader`       | `src/components/SiteHeader/`       | Navigation with locale switcher, primary bg              |
+| `SiteFooter`       | `src/components/SiteFooter/`       | Two-band footer (cream + dark)                           |
+| `BeddyBar`         | `src/components/BeddyBar/`         | Wrapper for `<beddy-bar>` web component (booking widget) |
+| `HtmlContent`      | `src/components/HtmlContent/`      | Renders legacy HTML from DatoCMS text fields             |
+| `ApartmentCard`    | `src/components/ApartmentCard/`    | Apartment card with colocated GraphQL fragment           |
+| `MoodCard`         | `src/components/MoodCard/`         | Mood card with colocated GraphQL fragment                |
+| `ResponsiveImage`  | `src/components/ResponsiveImage/`  | DatoCMS responsive image with fragment                   |
+| `ContentLink`      | `src/components/ContentLink/`      | Click-to-edit overlays (draft mode)                      |
+| `DraftModeToggler` | `src/components/DraftModeToggler/` | Draft mode toggle button                                 |
 
 ### Path Alias
 

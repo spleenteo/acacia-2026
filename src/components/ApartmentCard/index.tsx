@@ -34,10 +34,7 @@ export default function ApartmentCard({ data, locale }: Props) {
   const apartment = readFragment(ApartmentCardFragment, data);
 
   return (
-    <Link
-      href={`/${locale}/florence/accommodations/${apartment.slug}`}
-      className="group block"
-    >
+    <Link href={`/${locale}/florence/accommodations/${apartment.slug}`} className="group block">
       <div className="border-b border-dotted border-heading mb-8 transition-colors duration-500 hover:bg-cream">
         <div className="overflow-hidden">
           {apartment.boxImage?.responsiveImage && (

@@ -46,33 +46,40 @@ The site is **bilingual: English (default) and Italian**. The architecture must 
 ### Pages in scope for this cycle
 
 **Home Page**
+
 - Hero section with Beddy search widget (JS embed for general availability search — redirects users to Beddy's external booking domain)
 - Featured apartments selection
 - Moods overview section (links to mood pages)
 - Footer with contacts, social links, legal info
 
 **Apartments — listing page** (`/en/florence/accommodations`)
+
 - Grid/list of all ~40 apartments
 - Client-side filtering by typology (Studio, 1BR, 2BR, 3BR, 4BR, Villa) — no server-side filtering needed, the full dataset is small enough to load at once
 - Each apartment card shows: cover image (via DatoCMS image service with responsive sizes), name, short description, typology, district, and badges/labels (e.g., "Special Winter Offer", "Home Office", "Lift")
 
 **Apartment — detail page** (`/en/florence/accommodations/[slug]`)
+
 - Full apartment presentation with image gallery, description, amenities, location on district, and all "cuddle" dictionary items (points of strength, amenities, features — these come from linked DatoCMS dictionary models)
 - Beddy widget embed for single-apartment booking search
 - Related apartments or "same district" suggestions
 
 **Districts — listing page** (`/en/florence/districts`)
+
 - Grid of all districts with cover image and name
 
 **District — detail page** (`/en/florence/districts/[slug]`)
+
 - District description and imagery
 - List of apartments in this district
 
 **Moods — listing page** (`/en/moods`)
+
 - Grid of all moods (Foodie, Family, Business, Slow Tourism, etc.)
 - Each mood card shows name, short description, cover image
 
 **Mood — detail page** (`/en/moods/[slug]`)
+
 - Mood description
 - Filtered list of apartments matching this mood
 - Related services/experiences (displayed as links or cards, but the Experiences section itself is out of scope)

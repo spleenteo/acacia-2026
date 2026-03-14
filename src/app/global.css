@@ -3,14 +3,14 @@
 
 @theme inline {
   /* Colors — Brand Acacia */
-  --color-primary: #C58049;
+  --color-primary: #c58049;
   --color-secondary: #48a3c7;
-  --color-body: #6D6E77;
+  --color-body: #6d6e77;
   --color-body-light: #66656b;
   --color-heading: #393948;
   --color-cream: #f1efec;
   --color-beige: #cdc0b0;
-  --color-gold: #E8A10A;
+  --color-gold: #e8a10a;
   --color-salvia: #7e836c;
   --color-purple: #7d3c4f;
   --color-alert: #b62c3b;
@@ -65,18 +65,34 @@ a {
   text-decoration: none;
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   font-family: var(--font-heading);
   font-weight: 200;
   margin: 0;
 }
 
-ul, ol, dd, p, figure, pre, table,
-fieldset, hr, form, blockquote {
+ul,
+ol,
+dd,
+p,
+figure,
+pre,
+table,
+fieldset,
+hr,
+form,
+blockquote {
   margin: 0;
 }
 
-ul, ol, blockquote {
+ul,
+ol,
+blockquote {
   padding-left: 0;
 }
 

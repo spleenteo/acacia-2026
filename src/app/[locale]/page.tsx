@@ -38,11 +38,7 @@ const query = graphql(
   [ResponsiveImageFragment, ApartmentCardFragment, MoodCardFragment],
 );
 
-export default async function HomePage({
-  params,
-}: {
-  params: Promise<{ locale: string }>;
-}) {
+export default async function HomePage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   const { isEnabled: isDraftModeEnabled } = await draftMode();
 
@@ -68,9 +64,7 @@ export default async function HomePage({
         )}
         <div className="relative z-10 text-center text-white px-5 py-20 max-w-3xl mx-auto">
           <h1 className="font-heading font-extralight text-huge mb-6">{homePage?.title}</h1>
-          {homePage?.claim && (
-            <p className="font-serif italic text-beta mb-8">{homePage.claim}</p>
-          )}
+          {homePage?.claim && <p className="font-serif italic text-beta mb-8">{homePage.claim}</p>}
           {homePage?.beddyId && (
             <div className="mt-8">
               <BeddyBar locale={locale as Locale} widgetCode={homePage.beddyId} />
@@ -83,10 +77,7 @@ export default async function HomePage({
       {homePage?.stayText && (
         <section className="py-16 bg-cream">
           <div className="mx-auto max-w-4xl px-5 text-center">
-            <HtmlContent
-              html={homePage.stayText}
-              className="font-serif text-delta text-heading"
-            />
+            <HtmlContent html={homePage.stayText} className="font-serif text-delta text-heading" />
           </div>
         </section>
       )}
@@ -129,10 +120,7 @@ export default async function HomePage({
       {homePage?.doText && (
         <section className="py-16">
           <div className="mx-auto max-w-4xl px-5 text-center">
-            <HtmlContent
-              html={homePage.doText}
-              className="font-serif text-delta text-heading"
-            />
+            <HtmlContent html={homePage.doText} className="font-serif text-delta text-heading" />
           </div>
         </section>
       )}

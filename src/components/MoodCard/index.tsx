@@ -30,10 +30,7 @@ export default function MoodCard({ data, locale }: Props) {
   const mood = readFragment(MoodCardFragment, data);
 
   return (
-    <Link
-      href={`/${locale}/moods/${mood.slug}`}
-      className="group block"
-    >
+    <Link href={`/${locale}/moods/${mood.slug}`} className="group block">
       <div className="border-b border-dotted border-heading mb-8 transition-colors duration-500 hover:bg-cream">
         <div className="overflow-hidden">
           {mood.image?.responsiveImage && (
