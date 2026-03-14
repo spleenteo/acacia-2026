@@ -5,7 +5,7 @@ description: "Apply the Acacia Firenze visual design system to any frontend comp
 
 # Acacia Firenze — Design System (Tailwind CSS v4)
 
-You are working on the Acacia Firenze website. The aesthetic direction is **"Rinascimento Moderno"** — editorial, fashion-forward, inspired by Plum Guide's confident luxury, adapted with Florentine warmth and a family-run hospitality soul.
+You are working on the Acacia Firenze website. The aesthetic direction is **"Rinascimento Moderno"** — editorial, fashion-forward, confident luxury adapted with Florentine warmth and a family-run hospitality soul.
 
 Always follow these rules when writing any UI code for this project.
 

@@ -36,6 +36,7 @@ acacia-next/
 │   ├── components/
 │   │   ├── ApartmentCard/index.tsx
 │   │   ├── BeddyBar/index.tsx
+│   │   ├── Hero/index.tsx                      # Full-viewport hero (portrait img, double gradient)
 │   │   ├── CategoryFilter/index.tsx
 │   │   ├── ContentLink/index.tsx
 │   │   ├── CuddlesList/index.tsx
@@ -68,6 +69,7 @@ acacia-next/
 │   ├── pitches/
 │   │   └── init.md                            # Original project pitch
 │   └── shaping/
+│       ├── frontend-restyle.md                # Active shaping: Hero, Nav, Cards, Sections
 │       └── completed/
 │           ├── init-shaping.md                # Shape A: full rebuild
 │           └── init-slices.md                 # V1–V5 slice breakdown
@@ -77,7 +79,10 @@ acacia-next/
 ├── postcss.config.mjs                         # PostCSS with Tailwind
 ├── next.config.ts                             # Next.js config
 ├── .nvmrc                                     # Node 22
-└── package.json                               # v0.2.0
+├── public/
+│   ├── logo--main.svg                         # Full wordmark SVG (ratio ~3.6:1)
+│   └── acacia-isologo.svg                     # Isologo (copyright: not for standalone use)
+└── package.json                               # v0.3.0
 ```
 
 ## Tech Stack

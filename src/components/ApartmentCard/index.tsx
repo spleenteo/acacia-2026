@@ -10,13 +10,12 @@ export const ApartmentCardFragment = graphql(
       id
       name
       slug
-      claim(locale: $locale)
       highlight(locale: $locale)
       category {
         name(locale: $locale)
       }
       boxImage {
-        responsiveImage(imgixParams: { w: 700, h: 520, fit: crop }) {
+        responsiveImage(imgixParams: { w: 600, h: 800, fit: crop }) {
           ...ResponsiveImageFragment
         }
       }
@@ -30,52 +29,42 @@ type Props = {
   locale: Locale;
 };
 
-const discoverLabel = { en: 'Discover →', it: 'Scopri →' } as const;
-
 export default function ApartmentCard({ data, locale }: Props) {
   const apartment = readFragment(ApartmentCardFragment, data);
 
   return (
     <Link href={`/${locale}/florence/accommodations/${apartment.slug}`} className="group block">
-      <article
-        className="bg-white rounded-card shadow-card hover:shadow-card-hover transition-all duration-500 hover:-translate-y-1 overflow-hidden"
-        style={{ transitionTimingFunction: 'cubic-bezier(0.19,1,0.22,1)' }}
-      >
-        {/* Image */}
-        <div className="relative overflow-hidden">
+      <article>
+        {/* Image — portrait 3:4, overflow-hidden scoped here only */}
+        <div
+          className="overflow-hidden rounded-sm transition-shadow duration-500 group-hover:shadow-card-hover"
+          style={{ transitionTimingFunction: 'cubic-bezier(0.19,1,0.22,1)' }}
+        >
           {apartment.boxImage?.responsiveImage && (
             <div
-              className="transition-transform duration-700 group-hover:scale-[1.04]"
+              className="transition-transform duration-700 group-hover:scale-[1.03]"
               style={{ transitionTimingFunction: 'cubic-bezier(0.19,1,0.22,1)' }}
             >
               <ResponsiveImage data={apartment.boxImage.responsiveImage} />
             </div>
           )}
-          {apartment.highlight && (
-            <span className="absolute bottom-4 left-4 bg-rust text-white text-tag uppercase tracking-[0.14em] font-semibold px-3 py-1 rounded-pill">
-              {apartment.highlight}
-            </span>
-          )}
         </div>
 
-        {/* Content */}
-        <div className="p-6">
+        {/* Content — no background, blends with page */}
+        <div className="pt-4">
           {apartment.category && (
-            <p className="font-body text-label uppercase tracking-[0.18em] text-rust font-medium mb-2">
+            <p className="font-body text-caption text-muted font-normal mb-1.5">
               {apartment.category.name}
             </p>
           )}
-          <h3 className="font-heading text-h3 font-normal text-dark leading-snug mb-2">
+          <h3 className="font-heading text-h3 font-normal text-dark leading-snug">
             {apartment.name}
           </h3>
-          {apartment.claim && (
-            <p className="font-body text-body-sm text-muted leading-relaxed mb-4">
-              {apartment.claim}
+          {apartment.highlight && (
+            <p className="font-body text-caption text-rust font-normal mt-2">
+              {apartment.highlight}
             </p>
           )}
-          <p className="font-body text-caption text-muted group-hover:text-rust transition-colors duration-300 font-medium">
-            {discoverLabel[locale]}
-          </p>
         </div>
       </article>
     </Link>

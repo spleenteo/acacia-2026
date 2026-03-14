@@ -9,7 +9,7 @@ AI-optimized compact reference for Acacia Firenze project behavior and patterns.
 | Token          | Value            | Use                     |
 | -------------- | ---------------- | ----------------------- |
 | `font-heading` | Playfair Display | All headings, hero text |
-| `font-body`    | DM Sans          | Body text, UI elements  |
+| `font-body`    | Lato             | Body text, UI elements  |
 | `text-hero`    | 56px / 1.06      | Hero sections           |
 | `text-h1`      | 42px / 1.12      | Page titles             |
 | `text-h2`      | 36px / 1.15      | Section titles          |
@@ -34,13 +34,17 @@ AI-optimized compact reference for Acacia Firenze project behavior and patterns.
 
 ### Patterns
 
-| Pattern            | Implementation                                                                    |
-| ------------------ | --------------------------------------------------------------------------------- |
-| Section label      | `text-label uppercase tracking-[0.22em] text-rust font-medium`                    |
-| Editorial emphasis | `<em>` in headings → italic weight 500                                            |
-| Card hover         | `shadow-card hover:shadow-card-hover hover:-translate-y-1` + image `scale-[1.04]` |
-| Tag pill           | `rounded-pill bg-rust text-white text-tag uppercase tracking-wider`               |
-| Card radius        | `rounded-card` (1rem)                                                             |
+| Pattern            | Implementation                                                                                              |
+| ------------------ | ----------------------------------------------------------------------------------------------------------- |
+| Section label      | `text-label uppercase tracking-[0.22em] text-rust font-medium` — sections only, NOT card metadata          |
+| Editorial emphasis | `<em>` in headings → italic (font-normal, no weight change)                                                 |
+| Heading weight     | Playfair Display always `font-normal` — never `font-bold` or `font-semibold`                                |
+| Card image hover   | `overflow-hidden rounded-sm` on image wrapper + `group-hover:shadow-card-hover` + image `scale-[1.03]`     |
+| Card container     | No background, no default shadow, no `overflow-hidden` on article — text fuses with page background        |
+| Card radius        | `rounded-sm` (2px) on image wrapper only                                                                    |
+| Hero layout        | `min-h-[88svh]` + `marginTop: calc(var(--header-height) * -1)` — slides under fixed nav                    |
+| Nav scroll-aware   | Transparent + `bg-dark/20 backdrop-blur-sm` at top → `bg-surface/95 backdrop-blur-xl` on scroll >50px      |
+| Prose HTML content | `.prose-acacia` class in `global.css` — use on `HtmlContent` wrapper for reliable CMS content styling      |
 
 ---
 
@@ -83,7 +87,8 @@ Web component `<beddy-bar>` loaded via CDN script in layout.
 
 | Component      | Client? | Fragment? | Notes                              |
 | -------------- | ------- | --------- | ---------------------------------- |
-| SiteHeader     | No      | No        | Nav + locale switcher              |
+| Hero           | No      | No        | Full-viewport hero, double gradient, children slot |
+| SiteHeader     | Yes     | No        | Scroll-aware nav, mobile overlay, SVG logo         |
 | SiteFooter     | No      | No        | Two-band (cream + dark)            |
 | ApartmentCard  | No      | Yes       | Colocated fragment                 |
 | MoodCard       | No      | Yes       | Colocated fragment                 |

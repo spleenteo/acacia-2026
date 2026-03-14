@@ -113,7 +113,10 @@ export default async function AccommodationsPage({
   return (
     <>
       {/* Hero Section */}
-      <section className="relative min-h-[55vh] flex items-end bg-dark" style={{ marginTop: 'calc(var(--header-height) * -1)' }}>
+      <section
+        className="relative min-h-[55vh] flex items-end bg-dark"
+        style={{ marginTop: 'calc(var(--header-height) * -1)' }}
+      >
         {pageApartments?.featuredImage?.responsiveImage && (
           <div className="absolute inset-0">
             <ResponsiveImage
@@ -130,7 +133,9 @@ export default async function AccommodationsPage({
               {pageApartments?.title}
             </h1>
             {pageApartments?.subtitle && (
-              <p className="font-body font-normal text-[1.125rem] md:text-[1.375rem] text-white/90 leading-relaxed">{pageApartments.subtitle}</p>
+              <p className="font-body font-normal text-[1.125rem] md:text-[1.375rem] text-white/90 leading-relaxed">
+                {pageApartments.subtitle}
+              </p>
             )}
           </div>
         </div>

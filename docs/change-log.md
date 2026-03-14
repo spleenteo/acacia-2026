@@ -1,5 +1,21 @@
 # Changelog
 
+## v0.3.0 — 2026-03-14 — Frontend restyle phase 1: Hero, Navigation, Cards
+
+First implementation sprint of the frontend restyle shaping doc — Hero component, scroll-aware navigation with mobile overlay, and editorial card redesign across all three card types.
+
+- **Hero component**: New `src/components/Hero/index.tsx` — full-viewport (`88svh`), double gradient overlay (top protects nav, bottom protects title), Playfair title with `<em>` support via `dangerouslySetInnerHTML`, CTA slots, children slot for BeddyBar, safe-area bottom padding.
+- **Layout offset system**: `--header-height: 68px` CSS custom property in `:root`; locale layout applies `pt-[var(--header-height)]` to `<main>`; Hero and all inline page heroes apply `marginTop: calc(var(--header-height) * -1)` to slide under the fixed nav.
+- **SiteHeader redesign**: Converted to client component with scroll-aware state — transparent with frosted-glass dark effect (`bg-dark/20 backdrop-blur-sm`) at top, cream `bg-surface/95` on scroll. SVG logo (`/logo--main.svg`) switches filter on scroll. Mobile full-screen dark overlay with Playfair mega links, stagger animation, and body scroll lock.
+- **Font update**: Body font changed from DM Sans to Lato (300/400/700 weights). Playfair Display reduced to 400/500 weights only — always `font-normal` everywhere, never bold or semibold.
+- **Card redesign**: All three cards (ApartmentCard, MoodCard, DistrictCard) redesigned to portrait 3:4 (`w:600 h:800` imgix crop). Removed card background (text fuses with page), shadow only on hover, border-radius reduced to `rounded-sm`. Removed hardcoded pill tags, "Scopri →" links, and claim from ApartmentCard. MoodCard claim hidden on desktop, revealed on hover (`md:opacity-0 → md:group-hover:opacity-100`), always visible on mobile.
+- **Prose styles**: Added `.prose-acacia` component in `global.css` — guarantees readable text for DatoCMS HTML content regardless of Tailwind class scanning. Sets explicit color/weight on `p`, `strong`, `a`, `ul/li`, headings.
+- **Section headers**: Removed uppercase from card metadata (category label). Uppercase retained only for section eyebrow labels (`.text-label` pattern).
+
+Design decision: `overflow-hidden` scoped to the image wrapper only (not the `article`) — required for the MoodCard claim hover `translate-y` reveal to work without being clipped.
+
+---
+
 ## v0.2.0 — 2026-03-14 — Rinascimento Moderno design system
 
 Applied the "Rinascimento Moderno" design system across the entire frontend, replacing the original Acacia brand tokens with a refined editorial aesthetic.

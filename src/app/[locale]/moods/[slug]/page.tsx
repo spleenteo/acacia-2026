@@ -119,7 +119,10 @@ export default async function MoodDetailPage({
   return (
     <>
       {/* Hero */}
-      <section className="relative min-h-[55vh] flex items-end bg-dark overflow-hidden" style={{ marginTop: 'calc(var(--header-height) * -1)' }}>
+      <section
+        className="relative min-h-[55vh] flex items-end bg-dark overflow-hidden"
+        style={{ marginTop: 'calc(var(--header-height) * -1)' }}
+      >
         {mood.image?.responsiveImage && (
           <div className="absolute inset-0">
             <ResponsiveImage

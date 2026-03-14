@@ -8,17 +8,17 @@ shaping: true
 
 ### Source
 
-> "Mi piace molto il mood e altri aspetti del sito plumguide.com — seguendo quelle tracce, e mantenendo il colore principale di acacia (rusty) e la font sans serif scelta, voglio valutare un completo restyle dell'esistente."
+> "Mi piace molto il mood e altri aspetti di alcuni siti editoriali di lusso — seguendo quelle tracce, e mantenendo il colore principale di acacia (rusty) e la font sans serif scelta, voglio valutare un completo restyle dell'esistente."
 >
 > "Voglio assolutamente lasciare Playfair per tutti i grandi messaggi di header e sections."
 >
 > "Sullo scope direi B perché al momento la struttura è fatta totalmente a caso. Va rifatto header, menu, hero, card, sezioni di highlight, tutto."
 >
-> "C'è un aspetto molto umano nella gestione di Acacia, è una piccola azienda che coccola i clienti e che offre un servizio attento, belle case. Per questo — anche se Plum Guide è sicuramente più grande e di livello superiore — però in piccolo Acacia ci si avvicina."
+> "C'è un aspetto molto umano nella gestione di Acacia, è una piccola azienda che coccola i clienti e che offre un servizio attento, belle case. Per questo — anche se certi siti di riferimento sono sicuramente più grandi e di livello superiore — però in piccolo Acacia ci si avvicina."
 >
 > "Lavoro da giorni ma se necessario più tempo. Voglio strutturare uno shaping completo che tu possa seguire nel tempo. Molti componenti ancora non ci sono."
 >
-> "Lato CMS è possibile far arrivare elementi `<em>` in mezzo a stringhe di testo, quindi quel tipo di effetto sui titoli è possibile. Non necessariamente uguale a Plum, potrebbe essere però una vivacizzazione simile."
+> "Lato CMS è possibile far arrivare elementi `<em>` in mezzo a stringhe di testo, quindi quel tipo di effetto sui titoli è possibile. Potrebbe essere una vivacizzazione editoriale simile."
 >
 > "Partirei sicuramente da hero, per poi passare al menu. La parte responsive in generale è fondamentale, perché la maggior parte delle visite arrivano da mobile."
 
@@ -28,7 +28,7 @@ Il frontend attuale è privo di struttura sistematica: layout improvvisati, gera
 
 ### Outcome
 
-Un sistema visivo coerente e un set di componenti che comunichino **"lusso curato con calore umano"** — la fiducia editoriale di Plum Guide alla scala e con la personalità di Acacia Firenze. Il risultato deve essere implementabile in modo incrementale, componente per componente, mantenendo il sito funzionante durante la transizione.
+Un sistema visivo coerente e un set di componenti che comunichino **"lusso curato con calore umano"** — fiducia editoriale alla scala e con la personalità di Acacia Firenze. Il risultato deve essere implementabile in modo incrementale, componente per componente, mantenendo il sito funzionante durante la transizione.
 
 ---
 
@@ -93,9 +93,9 @@ Tre direzioni stilistiche da valutare. Non sono mutualmente esclusive sul colore
 
 ---
 
-### A: Plum Guide Close — "Fotografia sovrana"
+### A: Editoriale Freddo — "Fotografia sovrana"
 
-Segue Plum Guide molto da vicino. La fotografia occupa il 70%+ dello spazio visivo. La tipografia è enorme e coraggiosa. Il bianco è dominante. Il rust appare solo in 2-3 momenti strategici per pagina.
+La fotografia occupa il 70%+ dello spazio visivo. La tipografia è enorme e coraggiosa. Il bianco è dominante. Il rust appare solo in 2-3 momenti strategici per pagina.
 
 | Part | Mechanism                                                                                                                                    |
 | ---- | -------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -110,7 +110,7 @@ Segue Plum Guide molto da vicino. La fotografia occupa il 70%+ dello spazio visi
 
 ### B: Warm Editorial — "Plum con cuore fiorentino"
 
-Adotta la struttura editoriale di Plum Guide ma mantiene la palette calda di Acacia più presente. La cream e le superfici warm restano in gioco. Il rust appare più spesso ma sempre con controllo.
+Adotta una struttura editoriale di alto livello ma mantiene la palette calda di Acacia più presente. La cream e le superfici warm restano in gioco. Il rust appare più spesso ma sempre con controllo.
 
 | Part | Mechanism                                                                                        |
 | ---- | ------------------------------------------------------------------------------------------------ |
@@ -212,7 +212,7 @@ Il problema: foto hero con zone chiare in cima → testo nav bianco illeggibile.
 - `gradient-top`: `rgba(20,15,10,0.35) 0% → transparent 22%` — solo per proteggere area nav (~72px)
 
 Il nav non cambia — resta trasparente al top, cream su scroll. La protezione è nell'immagine stessa.
-Questo è il pattern usato da Netflix, Airbnb, Plum Guide: il componente foto si "auto-protegge".
+Questo è il pattern usato dai principali siti editoriali e di hospitality: il componente foto si "auto-protegge".
 
 ---
 
@@ -275,5 +275,174 @@ Il nav è `fixed top-0`, il `<main>` deve partire da `top: 0` per permettere l'o
 3. ✅ Hero implementato (`src/components/Hero/index.tsx`) — commit f632749
 4. ✅ Layout fix (`--header-height`, `pt-[var(--header-height)]` su main)
 5. ✅ Logo SVG reale in SiteHeader
-6. 🟡 Shapare Navigation (mobile first)
-7. Proseguire con Card e Section patterns
+6. ✅ Navigation shapata (N1–N10) e implementata — commit f4fbbbc
+7. ✅ Fix leggibilità: nav frosted glass, hero subtitle, prose-acacia — commit ad2cb3b
+8. ✅ Shapare e implementare Cards (ApartmentCard, MoodCard, DistrictCard) — D1 portrait 3:4
+9. Shapare Section patterns (Feature, Breaker, Reviews, Stats)
+10. Shapare SiteFooter
+
+---
+
+## Detail B — Cards
+
+### CURRENT: Inventario card esistenti
+
+Tutte e tre le card condividono **la stessa struttura**:
+
+| Elemento       | ApartmentCard              | MoodCard                | DistrictCard              |
+| -------------- | -------------------------- | ----------------------- | ------------------------- |
+| Immagine       | 700×520 (4:3), crop center | 700×520 (4:3)           | 700×520 (4:3) dal gallery |
+| Tag pill       | `highlight` (se presente)  | "Mood" hardcoded        | "Firenze" hardcoded       |
+| Label sopra h3 | `category.name` in rust    | —                       | —                         |
+| Titolo         | `name` in Playfair h3      | `name` in Playfair h3   | `name` in Playfair h3     |
+| Sottotitolo    | `claim` body-sm muted      | `claim` body-sm muted   | —                         |
+| Footer         | "Discover →" rust on hover | "Explore →" rust hover  | "Explore →" rust hover    |
+| Interazione    | Lift + ombra + zoom img    | Stesso                  | Stesso                    |
+
+**Problemi CURRENT**:
+- Tutte identiche — nessuna identità visiva per tipo di contenuto
+- 4:3 landscape è basso e compresso — la foto non respira
+- Tag pill sempre visibile anche senza contenuto significativo ("Mood", "Firenze" fissi)
+- Nessun dato funzionale per ApartmentCard (posti letto, bagni — info chiave per chi prenota)
+- Il footer "Scopri →" ridondante rispetto al link dell'intera card
+
+---
+
+### Requisiti Cards (R-C)
+
+| ID   | Requirement                                                                                          | Status    |
+| ---- | ---------------------------------------------------------------------------------------------------- | --------- |
+| RC0  | La foto deve dominare — almeno 60-65% dell'altezza totale della card                                 | Must-have |
+| RC1  | ApartmentCard deve mostrare info funzionali: capienza (sleeps) o n. camere                          | Must-have |
+| RC2  | Le tre card condividono la struttura base ma ApartmentCard è distinta nelle info                     | Must-have |
+| RC3  | Funziona con titoli corti (3 parole) e lunghi (6-7 parole) senza layout break                       | Must-have |
+| RC4  | Mobile: 1 colonna, card leggibile a 375px di larghezza                                               | Must-have |
+| RC5  | Hover elegante — non eccessivo, coerente con tono editoriale                                         | Must-have |
+| RC6  | Il tag/pill deve essere significativo — niente label fisse che non aggiungono valore                 | Nice-to-have |
+
+---
+
+### Opzioni Card Format
+
+#### D1 — Portrait + Text Below (Editoriale caldo)
+
+Immagine ritagliata in formato verticale (3:4 o 5:7). Testo sotto l'immagine, stile attuale ma con più respiro. Approccio conservativo e robusto.
+
+| Part | Mechanism |
+|------|-----------|
+| D1.1 | Immagine 600×800 (3:4) — portrait, foto protagonista |
+| D1.2 | Testo sotto: category label → h3 Playfair → claim body-sm → link freccia |
+| D1.3 | Pill tag solo se `highlight` ha contenuto (per ApartmentCard) |
+| D1.4 | ApartmentCard: riga con ícone 🛏 N camere o 👤 N persone |
+
+#### D2 — Overlay Text (Plum-like)
+
+Foto occupa tutta la card (aspect ratio 5:6 o square). Titolo e label in overlay scuro sul fondo dell'immagine. Stile più drammatico.
+
+| Part | Mechanism |
+|------|-----------|
+| D2.1 | Card senza padding text — foto full-bleed con `rounded-card` e `overflow-hidden` |
+| D2.2 | Gradient overlay sul fondo: `rgba(20,10,5,0.7) 0% → transparent 50%` |
+| D2.3 | Titolo in Playfair white sul fondo dell'immagine |
+| D2.4 | Label piccola rust-soft sopra al titolo (category o tipo) |
+| D2.5 | Al hover: gradient più scuro + zoom immagine |
+
+#### D3 — Ibrido (D1 base, D2 per featured)
+
+La griglia usa D1 (text below) per la maggior parte delle card. Una card "featured" per sezione usa D2 (overlay) a tutta larghezza o in formato 2 colonne.
+
+---
+
+### Fit Check Cards
+
+| Req | Requirement                                           | Status       | D1  | D2  | D3  |
+| --- | ----------------------------------------------------- | ------------ | --- | --- | --- |
+| RC0 | Foto domina (60-65%+ altezza card)                    | Must-have    | ✅  | ✅  | ✅  |
+| RC1 | Info funzionali ApartmentCard (sleeps/camere)         | Must-have    | ✅  | ❌  | ✅  |
+| RC2 | Struttura base condivisa, ApartmentCard distinta      | Must-have    | ✅  | ✅  | ✅  |
+| RC3 | Titoli corti e lunghi senza break                     | Must-have    | ✅  | ❌  | ✅  |
+| RC4 | Mobile 375px leggibile                                | Must-have    | ✅  | ✅  | ✅  |
+| RC5 | Hover elegante                                        | Must-have    | ✅  | ✅  | ✅  |
+| RC6 | Pill tag significativo                                | Nice-to-have | ✅  | ✅  | ✅  |
+
+**Note:**
+- D2 fallisce RC1: con overlay text non c'è spazio per info funzionali (sleeps, camere)
+- D2 fallisce RC3: titoli lunghi in overlay su immagine non garantiscono leggibilità — dipende troppo dal contenuto dell'immagine
+- D3 aggiunge complessità senza risolvere i problemi di D2 per le card in griglia
+
+**→ D1 è l'unica che passa tutti i must-have.**
+
+---
+
+### Detail D1 — Anatomia finale Cards
+
+Foto portrait → spazio generoso → titolo serifa → info minimali. **Niente uppercase nelle card** — si usa solo per le section label nei titoli di sezione, non per metadati di card.
+
+#### ApartmentCard
+
+```
+┌─────────────────────────────────┐
+│                                 │
+│         FOTO 3:4                │  ← w:600 h:800 imgix crop
+│         (occupa ~65% card)      │
+│                                 │
+├─ p-5 ───────────────────────────┤
+│  Monolocale                     │  ← category.name, text-caption, text-muted, font-normal
+│  Nome dell'appartamento         │  ← Playfair text-h3 font-normal text-dark
+│                                 │
+│  Vista sul Duomo                │  ← highlight (se presente), text-caption text-rust, fondo card
+└─────────────────────────────────┘
+```
+
+**Decisioni confermate:**
+- Sleeps/camere: solo in pagina dettaglio, non nella card
+- "Scopri →": rimosso — tutta la card è cliccabile
+- Highlight come elemento bottom opzionale: se presente, è il gancio editoriale ("Vista sul Duomo", "Con terrazza")
+- Claim: rimosso dalla card — troppo testo per uno spazio small, appartiene alla pagina dettaglio
+
+#### MoodCard
+
+```
+FOTO 3:4 → p-5 → Nome mood (Playfair h3) → claim (hidden, appare in hover)
+```
+
+Il titolo grande dà già l'informazione principale. Il claim è uno strato editoriale di profondità:
+- **Desktop**: `opacity-0 translate-y-1 → opacity-100 translate-y-0` on `group-hover`, duration 300ms
+- **Mobile** (no hover): claim sempre visibile — non c'è interazione hover, non si può nascondere
+
+#### DistrictCard
+
+```
+FOTO 3:4 → p-5 → Nome quartiere (Playfair h3)
+```
+
+La massima semplicità — il quartiere si vende con la foto e il nome.
+
+---
+
+### Parts D1 (implementazione)
+
+| Part  | Mechanism                                                                                                                                 |
+| ----- | ----------------------------------------------------------------------------------------------------------------------------------------- |
+| D1.1  | **Immagine portrait**: `imgixParams: { w: 600, h: 800, fit: crop }` su tutti e tre i fragment — crop center                              |
+| D1.2  | **Card container**: `bg-card rounded-card overflow-hidden` — senza shadow a riposo, `hover:shadow-card-hover hover:-translate-y-0.5` leggero |
+| D1.3  | **Zoom immagine on hover**: `group-hover:scale-[1.03]` duration-600 — più sottile dell'attuale 1.04                                       |
+| D1.4  | **Categoria** (ApartmentCard only): `font-body text-caption text-muted font-normal mb-1.5` — sentence case, NO uppercase                 |
+| D1.5  | **Titolo**: `font-heading text-h3 font-normal text-dark leading-snug` — Playfair regular, invariato come peso                            |
+| D1.6  | **Highlight** (ApartmentCard, opzionale): `font-body text-caption text-rust font-normal mt-auto pt-3` — solo se il campo ha contenuto   |
+| D1.7  | **Padding content**: `p-5` (20px) — leggermente più stretto dell'attuale `p-6` per bilanciare l'immagine più alta                        |
+| D1.8  | **Pill tags**: rimossi da tutte e tre le card — niente "Mood" hardcoded, niente "Firenze" hardcoded                                       |
+| D1.9  | **Nessun footer link**: niente "Scopri →" / "Esplora →" — la card intera è il link                                                       |
+| D1.10 | **MoodCard claim reveal**: `opacity-0 translate-y-1 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300` — su mobile sempre visibile (`md:opacity-0 md:translate-y-1`) |
+
+---
+
+### Una domanda rimasta aperta: shadow / no shadow
+
+Nei siti editoriali di riferimento le card si fondono con lo sfondo cream della pagina, e il confine visivo è dato solo dall'angolo arrotondato e dall'immagine.
+
+Acacia ha `shadow-card` (2px 12px rgba leggera). Opzioni:
+- **Senza shadow**: più Plum-like, card si fondono con `bg-surface`, elegante
+- **Con shadow leggera**: mantiene la sensazione di "carta fisica", più familiare
+
+Per ora manteniamo shadow leggera (invariato) — può essere rimossa in seguito senza impatti di struttura.
