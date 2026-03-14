@@ -24,6 +24,7 @@ const query = graphql(
         }
         moodsTitle(locale: $locale)
         moods {
+          id
           ...MoodCardFragment
         }
         promoTitle(locale: $locale)
@@ -31,6 +32,7 @@ const query = graphql(
         doText(locale: $locale, markdown: true)
       }
       allApartments(locale: $locale, first: 100, filter: { published: { eq: true } }) {
+        id
         ...ApartmentCardFragment
       }
     }
@@ -91,8 +93,8 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
             </h2>
           )}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {allApartments.map((apartment, index) => (
-              <ApartmentCard key={index} data={apartment} locale={locale as Locale} />
+            {allApartments.map((apartment) => (
+              <ApartmentCard key={apartment.id} data={apartment} locale={locale as Locale} />
             ))}
           </div>
         </div>
@@ -108,8 +110,8 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
               </h2>
             )}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {homePage.moods.map((mood, index) => (
-                <MoodCard key={index} data={mood} locale={locale as Locale} />
+              {homePage.moods.map((mood) => (
+                <MoodCard key={mood.id} data={mood} locale={locale as Locale} />
               ))}
             </div>
           </div>

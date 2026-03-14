@@ -22,20 +22,21 @@ Fonte: [pitches/init.md](init.md)
 | R1.3   | Dettaglio appartamento: galleria, descrizione, amenities/cuddles, Beddy widget per prenotazione singola                                    | Must-have |
 | R1.4   | Listing e dettaglio quartieri (con appartamenti del quartiere)                                                                             | Must-have |
 | R1.5   | Listing e dettaglio mood (con appartamenti filtrati per mood)                                                                              | Must-have |
-| **R2** | Sito bilingue EN/IT con URL locale-prefixed (`/en/...`, `/it/...`)                                                                         | Must-have |
+| **R2** | Sito bilingue EN/IT: URL locale-prefixed (`/en/...`, `/it/...`), redirect root (`/`) alla locale di default, `<html lang>` corretto         | Must-have |
 | **R3** | Widget Beddy funzionanti: search generico (home/listing) + prenotazione singola (dettaglio)                                                | Must-have |
-| **R4** | Content editor possono vedere bozze prima di pubblicare (Draft Mode + Visual Editing)                                                      | Must-have |
+| **R4** | Content editor possono vedere bozze prima di pubblicare (Draft Mode + Visual Editing con `recordInfo.ts` completo per tutti i modelli)      | Must-have |
 | **R5** | Aggiornamenti contenuto riflessi sul sito senza rebuild (ISR + cache tags)                                                                 | Must-have |
-| **R6** | SEO: hreflang, canonical URLs, meta tags da DatoCMS, sitemap                                                                               | Must-have |
+| **R6** | SEO: hreflang, canonical URLs, meta tags da DatoCMS, sitemap, `<html lang>` per accessibilità                                              | Must-have |
 | **R7** | Immagini responsive con lazy loading e blur-up via DatoCMS image service                                                                   | Must-have |
 | **R8** | I campi testo legacy (markdown/WYSIWYG) devono renderizzarsi correttamente, con approccio sostituibile quando si migrerà a Structured Text | Must-have |
+| **R9** | Pagine errore e stati di caricamento: 404 branded, error boundaries localizzati, loading states                                            | Must-have |
 
 ---
 
 ## Decisioni prese
 
 - **Styling**: Tailwind CSS (non CSS puro)
-- **Routing locale**: segmento `[locale]` dinamico (no middleware, no edge functions)
+- **Routing locale**: segmento `[locale]` dinamico. Middleware minimo solo per redirect `/` → `/en` (nessuna content negotiation, nessuna edge function complessa)
 - **Moods → Appartamenti**: usare MoodItems.object con adapter isolato (`src/lib/datocms/adapters/moodApartments.ts`). L'adapter estrae solo gli `ApartmentRecord` dalla union, i componenti a valle ricevono `Apartment[]` e non conoscono MoodItems. Quando DatoCMS cambia struttura, si tocca solo l'adapter. Struttura MoodItems da ripensare in ciclo futuro.
 
 ---
@@ -72,9 +73,9 @@ Il widget Beddy è un **web component** standard (`<beddy-bar>`), non script inj
 
 Setup Tailwind con design tokens per brand Acacia. Il CSS puro del template viene rimosso.
 
-### Q2: Routing `[locale]` — confermato
+### Q2: Routing `[locale]` — confermato (aggiornato)
 
-Segmento dinamico `[locale]` nel path. Nessun middleware. `generateStaticParams` per `['en', 'it']`.
+Segmento dinamico `[locale]` nel path. `generateStaticParams` per `['en', 'it']`. Middleware minimo aggiunto per redirect `/` → `/en` — la decisione originale "nessun middleware" era troppo restrittiva: senza redirect, `/` restituisce 404.
 
 ---
 
@@ -93,6 +94,9 @@ Segmento dinamico `[locale]` nel path. Nessun middleware. `generateStaticParams`
 | **A9**  | **Tailwind setup** — Installazione Tailwind CSS, design tokens (colori brand, tipografia, spaziatura), rimozione CSS puro del template                                                                   |      |
 | **A10** | **Beddy widget** — `next/script` per CDN script, componente `<BeddyBar>` che wrappa il web component `<beddy-bar>` con props lang/widgetcode                                                             |      |
 | **A11** | **HtmlContent component** — Wrapper per `dangerouslySetInnerHTML`, usato per tutti i campi testo legacy. Sostituibile con Structured Text renderer in futuro                                             |      |
+| **A12** | **Locale redirect** — `middleware.ts` minimo: redirect `/` → `/en`, 404 per path senza locale valido. Nessuna content negotiation (no Accept-Language)                                                   |      |
+| **A13** | **`<html lang>` dinamico** — Root layout riceve locale da params e setta `<html lang={locale}>`. Fallback a `en` per route senza locale (API, etc.)                                                      |      |
+| **A14** | **Pagine errore e loading** — `not-found.tsx` branded (root + locale), `error.tsx` nel segment `[locale]` con layout preservato, `loading.tsx` nel segment `[locale]`                                    |      |
 
 ---
 
@@ -110,13 +114,15 @@ Segmento dinamico `[locale]` nel path. Nessun middleware. `generateStaticParams`
 | R3   | Widget Beddy funzionanti                                   | Must-have | ✅  |
 | R4   | Draft Mode + Visual Editing                                | Must-have | ✅  |
 | R5   | ISR + cache tags                                           | Must-have | ✅  |
-| R6   | SEO completo                                               | Must-have | ✅  |
+| R6   | SEO completo + `<html lang>`                               | Must-have | ✅  |
 | R7   | Immagini responsive                                        | Must-have | ✅  |
 | R8   | Campi testo legacy renderizzati con approccio sostituibile | Must-have | ✅  |
+| R9   | Pagine errore e loading states                             | Must-have | ✅  |
 
 **Notes:**
 
 - Tutti i requisiti soddisfatti. Shape A non ha flag ⚠️ aperti.
+- R9 coperto da A14.
 
 ---
 

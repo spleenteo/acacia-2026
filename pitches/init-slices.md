@@ -12,10 +12,10 @@ Fonte: [init-shaping.md](init-shaping.md)
 
 ```
 V1 (Foundation + Design System + Home)
- ├── V2 (Apartments) ── dipende da V1 per ApartmentCard, BeddyBar, HtmlContent, design system
+ ├── V2 (Apartments + Routing Hardening) ── dipende da V1 per ApartmentCard, BeddyBar, HtmlContent, design system
  │    ├── V3 (Districts) ── dipende da V2 per apartment detail links
  │    └── V4 (Moods) ── dipende da V2 per ApartmentCard
- └── V5 (SEO + Draft Mode) ── dipende da tutte le pagine esistenti
+ └── V5 (SEO + Draft Mode + Error Pages) ── dipende da tutte le pagine esistenti
 ```
 
 V3 e V4 sono indipendenti tra loro e possono essere sviluppati in parallelo dopo V2.
@@ -116,27 +116,29 @@ A1 (routing), A2 (home), A9 (tailwind), A10 (beddy), A11 (htmlcontent)
 
 ---
 
-## V2: Apartments (Listing + Detail)
+## V2: Apartments (Listing + Detail) + Routing Hardening
 
-**Demo:** Navigazione completa degli appartamenti: listing con filtro tipologia → detail con galleria, amenities, Beddy.
+**Demo:** Navigazione completa degli appartamenti: listing con filtro tipologia → detail con galleria, amenities, Beddy. Redirect `/` → `/en` funzionante, `<html lang>` corretto.
 
 ### Cosa si costruisce
 
-| Affordance              | Tipo | Dettaglio                                                                                                                                                                                                         |
-| ----------------------- | ---- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Apartments listing page | UI   | Route `/[locale]/florence/accommodations`. Server component: query `allApartments` + `allApartmentCategories` + `pageApartments` (titolo/sottotitolo). Grid di `<ApartmentCard>`. BeddyBar con `HomePage.beddyId` |
-| `<CategoryFilter>`      | UI   | Client component: bottoni per tipologia (Studio, 1BR–4BR, Villa, All). Stile: pill/bottoni con bordo, attivo con sfondo primary. Filtra la lista client-side                                                      |
-| Apartment detail page   | UI   | Route `/[locale]/florence/accommodations/[slug]`. Query con relazioni: district, category, gallery, cuddles, ups, infoDetail                                                                                      |
-| `<ImageGallery>`        | UI   | Galleria: featured image cliccabile → slideshow con swiper/carousel. Lazy loading. Immagini responsive via DatoCMS                                                                                                |
-| `<CuddlesList>`         | UI   | Lista amenities/cuddles con nome. Font serif per titolo sezione                                                                                                                                                   |
-| `<UpsList>`             | UI   | Lista lifestyle features (highlights). Font serif per titolo sezione                                                                                                                                              |
-| `<InfoDetail>`          | UI   | Rendering blocks `InfoText` (label + testo) e `InfoAddress` (label + indirizzo/mappa). Dati da `Apartment.infoDetail`                                                                                             |
-| `<DistrictLink>`        | UI   | Sezione "Get lost in [District]" con link alla pagina quartiere. Font heading, stile editoriale                                                                                                                   |
-| BeddyBar (apartment)    | UI   | `<BeddyBar>` con `Apartment.beddyId`, mostrato solo se presente                                                                                                                                                   |
+| Affordance              | Tipo   | Dettaglio                                                                                                                                                                                                         |
+| ----------------------- | ------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Locale redirect         | Non-UI | `middleware.ts` minimo: redirect `/` → `/en`, 404 per path senza locale valido. Nessuna content negotiation                                                                                                       |
+| `<html lang>` dinamico  | Non-UI | Root layout riceve locale da params e setta `<html lang={locale}>`. Fallback a `en` per route senza locale (API, etc.)                                                                                            |
+| Apartments listing page | UI     | Route `/[locale]/florence/accommodations`. Server component: query `allApartments` + `allApartmentCategories` + `pageApartments` (titolo/sottotitolo). Grid di `<ApartmentCard>`. BeddyBar con `HomePage.beddyId` |
+| `<CategoryFilter>`      | UI     | Client component: bottoni per tipologia (Studio, 1BR–4BR, Villa, All). Stile: pill/bottoni con bordo, attivo con sfondo primary. Filtra la lista client-side                                                      |
+| Apartment detail page   | UI     | Route `/[locale]/florence/accommodations/[slug]`. Query con relazioni: district, category, gallery, cuddles, ups, infoDetail                                                                                      |
+| `<ImageGallery>`        | UI     | Galleria: featured image cliccabile → slideshow con swiper/carousel. Lazy loading. Immagini responsive via DatoCMS                                                                                                |
+| `<CuddlesList>`         | UI     | Lista amenities/cuddles con nome. Font serif per titolo sezione                                                                                                                                                   |
+| `<UpsList>`             | UI     | Lista lifestyle features (highlights). Font serif per titolo sezione                                                                                                                                              |
+| `<InfoDetail>`          | UI     | Rendering blocks `InfoText` (label + testo) e `InfoAddress` (label + indirizzo/mappa). Dati da `Apartment.infoDetail`                                                                                             |
+| `<DistrictLink>`        | UI     | Sezione "Get lost in [District]" con link alla pagina quartiere. Font heading, stile editoriale                                                                                                                   |
+| BeddyBar (apartment)    | UI     | `<BeddyBar>` con `Apartment.beddyId`, mostrato solo se presente                                                                                                                                                   |
 
 ### Parts di Shape A coperte
 
-A3 (listing), A4 (detail)
+A3 (listing), A4 (detail), A12 (locale redirect), A13 (html lang)
 
 ### Requisiti soddisfatti dopo V2
 
@@ -194,9 +196,9 @@ A6 (moods)
 
 ---
 
-## V5: SEO + Draft Mode + Polish
+## V5: SEO + Draft Mode + Error Pages + Polish
 
-**Demo:** Sito production-ready: meta tags su tutte le pagine, preview funzionante da DatoCMS, sitemap.
+**Demo:** Sito production-ready: meta tags su tutte le pagine, preview funzionante da DatoCMS, sitemap, pagine errore branded.
 
 ### Cosa si costruisce
 
@@ -208,11 +210,14 @@ A6 (moods)
 | Sitemap                  | Non-UI | `sitemap.xml` generato da Next.js con tutte le pagine in entrambe le lingue                             |
 | `recordInfo.ts` completo | Non-UI | Mapping URL per tutti i modelli: Apartment, District, Mood. Usato da Web Previews e SEO Analysis plugin |
 | Content-link overlays    | UI     | Estensione degli overlay click-to-edit a tutti i componenti (draft mode)                                |
+| `not-found.tsx`          | UI     | Pagina 404 branded (root + locale) con navigazione e stile coerente col sito                            |
+| `error.tsx`              | UI     | Error boundary nel segment `[locale]` con layout preservato (header/footer visibili)                    |
+| `loading.tsx`            | UI     | Loading state nel segment `[locale]` per Suspense boundaries automatiche                                |
 | Olark widget             | UI     | Script embed nel layout, equivalente all'attuale                                                        |
 
 ### Parts di Shape A coperte
 
-A7 (draft mode), A8 (cache), parte di A1 (SEO routing)
+A7 (draft mode), A8 (cache), A14 (pagine errore e loading), parte di A1 (SEO routing)
 
 ### Requisiti soddisfatti dopo V5
 
@@ -221,6 +226,7 @@ A7 (draft mode), A8 (cache), parte di A1 (SEO routing)
 - R4 (draft mode + visual editing) — completo
 - R5 (ISR + cache) — verificato end-to-end
 - R6 (SEO) — completo
+- R9 (pagine errore e loading) — completo
 
 ---
 
@@ -229,9 +235,9 @@ A7 (draft mode), A8 (cache), parte di A1 (SEO routing)
 | Slice  | Demo                                        | Parts                | Effort stimato |
 | ------ | ------------------------------------------- | -------------------- | -------------- |
 | **V1** | Home page bilingue con design system Acacia | A1, A2, A9, A10, A11 | ~4 giorni      |
-| **V2** | Apartments listing + detail                 | A3, A4               | ~3 giorni      |
+| **V2** | Apartments listing + detail + routing fix   | A3, A4, A12, A13     | ~3 giorni      |
 | **V3** | Districts listing + detail                  | A5                   | ~1 giorno      |
 | **V4** | Moods listing + detail + adapter            | A6                   | ~1 giorno      |
-| **V5** | SEO, Draft Mode, polish                     | A7, A8               | ~1 giorno      |
+| **V5** | SEO, Draft Mode, error pages, polish        | A7, A8, A14          | ~1 giorno      |
 
 **Totale: ~10 giorni lavorativi = 2 settimane**

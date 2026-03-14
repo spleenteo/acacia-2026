@@ -43,9 +43,9 @@ Two type generation systems work together:
 
 **Draft mode**: Next.js Draft Mode is toggled via `/api/draft-mode/enable` and `/api/draft-mode/disable`. When active, pages use the draft CDA token and enable content-link click-to-edit overlays.
 
-**Record routing**: `src/lib/datocms/recordInfo.ts` maps DatoCMS item types to frontend URLs. Used by Web Previews and SEO Analysis plugins. Currently maps Apartment model (ID `2726`) to `/`.
+**Record routing**: `src/lib/datocms/recordInfo.ts` maps DatoCMS item types to frontend URLs. Used by Web Previews and SEO Analysis plugins. Currently maps Apartment model (ID `2726`) to `/` (placeholder — full mapping for all models planned in V5 slice).
 
-**Locale routing**: App Router uses a `[locale]` dynamic segment (`src/app/[locale]/`). Supported locales are `en` and `it`, configured in `src/i18n/config.ts`. The root layout (`src/app/layout.tsx`) provides `<html>` and `<body>` tags; the locale layout adds header, footer, Beddy script, and draft mode controls.
+**Locale routing**: App Router uses a `[locale]` dynamic segment (`src/app/[locale]/`). Supported locales are `en` and `it`, configured in `src/i18n/config.ts`. The root layout (`src/app/layout.tsx`) provides `<html>` and `<body>` tags; the locale layout adds header, footer, Beddy script, and draft mode controls. A minimal `middleware.ts` for redirecting `/` → `/en` is planned (V2 slice).
 
 **HTML content from DatoCMS**: Legacy text fields (description, abstract, claim) are queried with `markdown: true` and rendered via the `<HtmlContent>` component (`dangerouslySetInnerHTML`). This will be replaced with a Structured Text renderer when DatoCMS schema migrates.
 
@@ -85,3 +85,5 @@ Required in `.env.local` (see `.env.local.example`):
 
 - Prettier: single quotes, trailing commas, 100 char print width
 - Generated files to never edit: `schema.graphql`, `src/lib/datocms/graphql-env.d.ts`, `src/lib/datocms/cma-types.ts`
+- Route handlers use `.ts` extension (not `.tsx`) since they contain no JSX
+- Always use the `/frontend-design` skill when evaluating or implementing UI changes
