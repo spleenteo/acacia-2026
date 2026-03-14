@@ -96,9 +96,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
         image={homePage?.ctaImage?.responsiveImage}
         priority
       >
-        {homePage?.beddyId && (
-          <BeddyBar locale={locale as Locale} widgetCode={homePage.beddyId} />
-        )}
+        {homePage?.beddyId && <BeddyBar locale={locale as Locale} widgetCode={homePage.beddyId} />}
       </Hero>
 
       {/* Stay Section */}
