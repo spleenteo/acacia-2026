@@ -22,9 +22,9 @@ Fonte: [pitches/init.md](init.md)
 | R1.3   | Dettaglio appartamento: galleria, descrizione, amenities/cuddles, Beddy widget per prenotazione singola                                    | Must-have |
 | R1.4   | Listing e dettaglio quartieri (con appartamenti del quartiere)                                                                             | Must-have |
 | R1.5   | Listing e dettaglio mood (con appartamenti filtrati per mood)                                                                              | Must-have |
-| **R2** | Sito bilingue EN/IT: URL locale-prefixed (`/en/...`, `/it/...`), redirect root (`/`) alla locale di default, `<html lang>` corretto         | Must-have |
+| **R2** | Sito bilingue EN/IT: URL locale-prefixed (`/en/...`, `/it/...`), redirect root (`/`) alla locale di default, `<html lang>` corretto        | Must-have |
 | **R3** | Widget Beddy funzionanti: search generico (home/listing) + prenotazione singola (dettaglio)                                                | Must-have |
-| **R4** | Content editor possono vedere bozze prima di pubblicare (Draft Mode + Visual Editing con `recordInfo.ts` completo per tutti i modelli)      | Must-have |
+| **R4** | Content editor possono vedere bozze prima di pubblicare (Draft Mode + Visual Editing con `recordInfo.ts` completo per tutti i modelli)     | Must-have |
 | **R5** | Aggiornamenti contenuto riflessi sul sito senza rebuild (ISR + cache tags)                                                                 | Must-have |
 | **R6** | SEO: hreflang, canonical URLs, meta tags da DatoCMS, sitemap, `<html lang>` per accessibilità                                              | Must-have |
 | **R7** | Immagini responsive con lazy loading e blur-up via DatoCMS image service                                                                   | Must-have |

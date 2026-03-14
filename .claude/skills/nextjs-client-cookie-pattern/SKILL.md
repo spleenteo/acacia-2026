@@ -11,6 +11,7 @@ allowed-tools: Read, Write, Edit, Glob, Grep, Bash
 This pattern handles a common Next.js requirement: **client-side interaction (button click) that needs to set server-side cookies**.
 
 **Why Two Files?**
+
 - Client components (`'use client'`) can have onClick handlers
 - Only server code can set cookies (security requirement)
 - Solution: Client component calls a server action that sets cookies
@@ -20,11 +21,13 @@ This pattern handles a common Next.js requirement: **client-side interaction (bu
 **Scenario:** A button that sets a cookie when clicked
 
 **File 1: Client Component** (`app/CookieButton.tsx`)
+
 - Has `'use client'` directive
 - Has onClick handler
 - Imports and calls server action
 
 **File 2: Server Action** (`app/actions.ts`)
+
 - Has `'use server'` directive
 - Uses `cookies()` from `next/headers`
 - Sets the cookie
@@ -216,11 +219,11 @@ export async function setLanguage(lang: string) {
 
 ```typescript
 cookieStore.set('name', 'value', {
-  httpOnly: true,    // Prevents JavaScript access (security)
-  secure: true,      // Only send over HTTPS
-  sameSite: 'lax',   // CSRF protection
-  maxAge: 3600,      // Expires in 1 hour (seconds)
-  path: '/',         // Available on all routes
+  httpOnly: true, // Prevents JavaScript access (security)
+  secure: true, // Only send over HTTPS
+  sameSite: 'lax', // CSRF protection
+  maxAge: 3600, // Expires in 1 hour (seconds)
+  path: '/', // Available on all routes
 });
 ```
 
@@ -321,6 +324,7 @@ async function setCookie() {
 ```
 
 Server actions are preferred because they're:
+
 - More type-safe
 - Less boilerplate
 - Better integrated with forms
@@ -329,6 +333,7 @@ Server actions are preferred because they're:
 ## Reading Cookies
 
 **In Server Components:**
+
 ```typescript
 // app/page.tsx
 import { cookies } from 'next/headers';
@@ -342,6 +347,7 @@ export default async function Page() {
 ```
 
 **In Client Components:**
+
 ```typescript
 // Can't use next/headers in client components!
 // Use document.cookie or a state management library
@@ -383,6 +389,7 @@ When you need to set cookies from a button click:
 ## Summary
 
 **Client-Server Cookie Pattern:**
+
 - ✅ Client component handles user interaction
 - ✅ Server action sets the cookie
 - ✅ Two files: component + actions
