@@ -13,11 +13,7 @@ const query = graphql(
         subtitle(locale: $locale)
         description(locale: $locale, markdown: true)
       }
-      allMoods(
-        locale: $locale
-        filter: { published: { eq: true } }
-        orderBy: [position_ASC]
-      ) {
+      allMoods(locale: $locale, filter: { published: { eq: true } }, orderBy: [position_ASC]) {
         id
         ...MoodCardFragment
       }

@@ -61,24 +61,24 @@ Tailwind CSS v4 with `@theme inline` design tokens in `src/app/global.css`. Bran
 
 ### Components
 
-| Component          | Path                               | Purpose                                                  |
-| ------------------ | ---------------------------------- | -------------------------------------------------------- |
-| `SiteHeader`       | `src/components/SiteHeader/`       | Navigation with locale switcher, primary bg              |
-| `SiteFooter`       | `src/components/SiteFooter/`       | Two-band footer (cream + dark)                           |
-| `BeddyBar`         | `src/components/BeddyBar/`         | Wrapper for `<beddy-bar>` web component (booking widget) |
-| `HtmlContent`      | `src/components/HtmlContent/`      | Renders legacy HTML from DatoCMS text fields             |
-| `ApartmentCard`    | `src/components/ApartmentCard/`    | Apartment card with colocated GraphQL fragment           |
-| `MoodCard`         | `src/components/MoodCard/`         | Mood card with colocated GraphQL fragment                |
-| `DistrictCard`     | `src/components/DistrictCard/`     | District card with colocated GraphQL fragment             |
+| Component          | Path                               | Purpose                                                       |
+| ------------------ | ---------------------------------- | ------------------------------------------------------------- |
+| `SiteHeader`       | `src/components/SiteHeader/`       | Navigation with locale switcher, primary bg                   |
+| `SiteFooter`       | `src/components/SiteFooter/`       | Two-band footer (cream + dark)                                |
+| `BeddyBar`         | `src/components/BeddyBar/`         | Wrapper for `<beddy-bar>` web component (booking widget)      |
+| `HtmlContent`      | `src/components/HtmlContent/`      | Renders legacy HTML from DatoCMS text fields                  |
+| `ApartmentCard`    | `src/components/ApartmentCard/`    | Apartment card with colocated GraphQL fragment                |
+| `MoodCard`         | `src/components/MoodCard/`         | Mood card with colocated GraphQL fragment                     |
+| `DistrictCard`     | `src/components/DistrictCard/`     | District card with colocated GraphQL fragment                 |
 | `ImageGallery`     | `src/components/ImageGallery/`     | Client component lightbox gallery (fragment in `fragment.ts`) |
-| `CategoryFilter`   | `src/components/CategoryFilter/`   | Client component for apartment category filtering        |
-| `CuddlesList`      | `src/components/CuddlesList/`      | Amenities list with colocated fragment                   |
-| `UpsList`          | `src/components/UpsList/`          | Lifestyle features pill list with colocated fragment     |
-| `InfoDetail`       | `src/components/InfoDetail/`       | Info blocks (text + address) with union type handling    |
-| `DistrictLink`     | `src/components/DistrictLink/`     | Editorial link to district detail page                   |
-| `ResponsiveImage`  | `src/components/ResponsiveImage/`  | DatoCMS responsive image with fragment                   |
+| `CategoryFilter`   | `src/components/CategoryFilter/`   | Client component for apartment category filtering             |
+| `CuddlesList`      | `src/components/CuddlesList/`      | Amenities list with colocated fragment                        |
+| `UpsList`          | `src/components/UpsList/`          | Lifestyle features pill list with colocated fragment          |
+| `InfoDetail`       | `src/components/InfoDetail/`       | Info blocks (text + address) with union type handling         |
+| `DistrictLink`     | `src/components/DistrictLink/`     | Editorial link to district detail page                        |
+| `ResponsiveImage`  | `src/components/ResponsiveImage/`  | DatoCMS responsive image with fragment                        |
 | `ContentLink`      | `src/components/ContentLink/`      | Click-to-edit overlays (draft mode, no next/navigation hooks) |
-| `DraftModeToggler` | `src/components/DraftModeToggler/` | Draft mode toggle button                                 |
+| `DraftModeToggler` | `src/components/DraftModeToggler/` | Draft mode toggle button                                      |
 
 ### Path Alias
 
