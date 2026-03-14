@@ -243,28 +243,28 @@ Il nav è `fixed top-0`, il `<main>` deve partire da `top: 0` per permettere l'o
 
 ### Navigation — Parts
 
-| Part | Mechanism |
-|------|-----------|
-| N1 | **Hamburger trigger**: visibile solo su mobile (`md:hidden`). Icona 3 linee → X animata. Posizionato in alto a destra nel SiteHeader |
-| N2 | **Overlay full-screen**: `fixed inset-0 z-[100] bg-dark` — sopra tutto, incluso il nav. Fade in/out `opacity 0→1` 300ms |
-| N3 | **Mega links**: Playfair regular 48px mobile / 64px tablet. `text-white` → `text-rust` su hover. Left-aligned, `gap-y-6` tra le voci |
-| N4 | **Logo nell'overlay**: `logo--main.svg` in alto a sinistra filtro white — continuità visiva con l'header |
-| N5 | **Chiudi (X)**: in alto a destra, sostituisce visivamente l'hamburger. `text-white` |
-| N6 | **Stagger animation**: voci entrano con `translateY(20px)→0` + `opacity 0→1`, delay incrementale 50ms per voce |
-| N7 | **Footer overlay**: separato in basso — switcher lingua EN/IT in Lato small + CTA "Prenota" rust pill |
-| N8 | **Lock body scroll**: `overflow:hidden` su `body` quando overlay aperto |
-| N9 | **Close on navigate**: overlay si chiude automaticamente al click su qualsiasi link |
-| N10 | **Desktop**: hamburger nascosto (`hidden md:flex`). Aggiungere CTA "Prenota" rust pill inline (mancante nell'implementazione attuale) |
+| Part | Mechanism                                                                                                                             |
+| ---- | ------------------------------------------------------------------------------------------------------------------------------------- |
+| N1   | **Hamburger trigger**: visibile solo su mobile (`md:hidden`). Icona 3 linee → X animata. Posizionato in alto a destra nel SiteHeader  |
+| N2   | **Overlay full-screen**: `fixed inset-0 z-[100] bg-dark` — sopra tutto, incluso il nav. Fade in/out `opacity 0→1` 300ms               |
+| N3   | **Mega links**: Playfair regular 48px mobile / 64px tablet. `text-white` → `text-rust` su hover. Left-aligned, `gap-y-6` tra le voci  |
+| N4   | **Logo nell'overlay**: `logo--main.svg` in alto a sinistra filtro white — continuità visiva con l'header                              |
+| N5   | **Chiudi (X)**: in alto a destra, sostituisce visivamente l'hamburger. `text-white`                                                   |
+| N6   | **Stagger animation**: voci entrano con `translateY(20px)→0` + `opacity 0→1`, delay incrementale 50ms per voce                        |
+| N7   | **Footer overlay**: separato in basso — switcher lingua EN/IT in Lato small + CTA "Prenota" rust pill                                 |
+| N8   | **Lock body scroll**: `overflow:hidden` su `body` quando overlay aperto                                                               |
+| N9   | **Close on navigate**: overlay si chiude automaticamente al click su qualsiasi link                                                   |
+| N10  | **Desktop**: hamburger nascosto (`hidden md:flex`). Aggiungere CTA "Prenota" rust pill inline (mancante nell'implementazione attuale) |
 
 ### Decisioni di design
 
-| Aspetto | Scelta |
-|---------|--------|
-| Background overlay | `bg-dark` (#2E2822) — drammatico, editoriale |
-| Allineamento link | Left-aligned — coerente con hero bottom-left |
-| Dimensione link | Playfair regular 48px mobile, 64px su schermi larghi |
-| Lingua | Bottom overlay, piccola — non tra i mega link |
-| CTA Prenota | Bottom overlay + desktop nav inline |
+| Aspetto            | Scelta                                               |
+| ------------------ | ---------------------------------------------------- |
+| Background overlay | `bg-dark` (#2E2822) — drammatico, editoriale         |
+| Allineamento link  | Left-aligned — coerente con hero bottom-left         |
+| Dimensione link    | Playfair regular 48px mobile, 64px su schermi larghi |
+| Lingua             | Bottom overlay, piccola — non tra i mega link        |
+| CTA Prenota        | Bottom overlay + desktop nav inline                  |
 
 ---
 

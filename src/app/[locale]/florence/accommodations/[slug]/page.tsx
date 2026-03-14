@@ -169,7 +169,7 @@ export default async function ApartmentDetailPage({
   return (
     <>
       {/* Hero */}
-      <section className="relative min-h-[70vh] flex items-end bg-dark">
+      <section className="relative min-h-[70vh] flex items-end bg-dark" style={{ marginTop: 'calc(var(--header-height) * -1)' }}>
         {apartment.featuredImage?.responsiveImage && (
           <div className="absolute inset-0">
             <ResponsiveImage
@@ -190,7 +190,7 @@ export default async function ApartmentDetailPage({
               {apartment.name}
             </h1>
             {apartment.claim && (
-              <p className="font-body text-body-lg text-white/70 max-w-2xl">{apartment.claim}</p>
+              <p className="font-body text-[1.125rem] md:text-[1.25rem] text-white/80 max-w-2xl leading-relaxed">{apartment.claim}</p>
             )}
             {apartment.highlight && (
               <span className="inline-block bg-rust/80 text-white text-tag uppercase font-medium tracking-wider px-3 py-1 mt-4 rounded-pill">

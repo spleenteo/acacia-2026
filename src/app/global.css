@@ -182,3 +182,58 @@
     display: block;
   }
 }
+
+@layer components {
+  /* ── PROSE ACACIA ──────────────────────────────────────────────
+     Styles for HTML content from DatoCMS (markdown: true fields).
+     Ensures readable text regardless of Tailwind class scanning.
+  ──────────────────────────────────────────────────────────────── */
+  .prose-acacia {
+    color: var(--color-dark);
+  }
+  .prose-acacia p {
+    color: var(--color-muted);
+    font-weight: 400;
+    line-height: 1.75;
+    margin-bottom: 1em;
+  }
+  .prose-acacia p:last-child {
+    margin-bottom: 0;
+  }
+  .prose-acacia strong,
+  .prose-acacia b {
+    font-weight: 700;
+    color: var(--color-dark);
+  }
+  .prose-acacia em {
+    font-style: italic;
+  }
+  .prose-acacia a {
+    color: var(--color-rust);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+  .prose-acacia a:hover {
+    color: var(--color-rust-hover);
+  }
+  .prose-acacia ul,
+  .prose-acacia ol {
+    padding-left: 1.5em;
+    color: var(--color-muted);
+    font-weight: 400;
+  }
+  .prose-acacia li {
+    list-style-type: disc;
+    margin-bottom: 0.5em;
+    line-height: 1.7;
+  }
+  .prose-acacia h2,
+  .prose-acacia h3,
+  .prose-acacia h4 {
+    color: var(--color-dark);
+    font-family: var(--font-heading);
+    font-weight: 400;
+    margin-top: 1.5em;
+    margin-bottom: 0.5em;
+  }
+}

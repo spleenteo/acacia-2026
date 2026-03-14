@@ -72,7 +72,7 @@ export default async function MoodsPage({ params }: { params: Promise<{ locale: 
   return (
     <>
       {/* Hero */}
-      <section className="relative min-h-[55vh] flex items-end bg-dark">
+      <section className="relative min-h-[55vh] flex items-end bg-dark" style={{ marginTop: 'calc(var(--header-height) * -1)' }}>
         <div className="absolute inset-0 bg-gradient-to-t from-dark/90 via-dark/40 to-dark/60" />
         <div className="relative z-10 w-full px-8 pb-14 pt-32">
           <div className="max-w-6xl mx-auto">
@@ -80,7 +80,7 @@ export default async function MoodsPage({ params }: { params: Promise<{ locale: 
               {pageMoods?.title}
             </h1>
             {pageMoods?.subtitle && (
-              <p className="font-body text-body-lg text-white/70">{pageMoods.subtitle}</p>
+              <p className="font-body font-normal text-[1.125rem] md:text-[1.375rem] text-white/90 leading-relaxed">{pageMoods.subtitle}</p>
             )}
           </div>
         </div>

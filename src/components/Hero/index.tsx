@@ -77,7 +77,7 @@ export default function Hero({
           />
 
           {subtitle && (
-            <p className="font-body font-light text-white/75 text-body-lg max-w-xl mb-8 leading-relaxed">
+            <p className="font-body font-normal text-white/90 text-[1.125rem] md:text-[1.375rem] max-w-xl mb-8 leading-relaxed">
               {subtitle}
             </p>
           )}

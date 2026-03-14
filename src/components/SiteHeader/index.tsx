@@ -46,7 +46,7 @@ export default function SiteHeader({ locale, isDraftModeEnabled }: Props) {
           'fixed top-0 left-0 right-0 z-50 transition-all duration-300',
           scrolled && !menuOpen
             ? 'bg-surface/95 backdrop-blur-xl border-b border-border'
-            : 'bg-transparent border-b border-transparent',
+            : 'bg-dark/20 backdrop-blur-sm border-b border-white/10',
         ].join(' ')}
       >
         <div className="mx-auto max-w-6xl flex items-center justify-between px-6 md:px-8 py-5">
