@@ -3,6 +3,47 @@ import { graphql } from '@/lib/datocms/graphql';
 import { type Locale, locales } from '@/i18n/config';
 import { draftMode } from 'next/headers';
 import { notFound } from 'next/navigation';
+import { TagFragment } from '@/lib/datocms/commonFragments';
+import { toNextMetadata } from 'react-datocms';
+import type { Metadata } from 'next';
+
+const metaQuery = graphql(
+  `
+    query ApartmentMetaQuery($locale: SiteLocale!, $slug: String!) {
+      apartment(locale: $locale, filter: { slug: { eq: $slug } }) {
+        _seoMetaTags(locale: $locale) {
+          ...TagFragment
+        }
+        slug
+      }
+    }
+  `,
+  [TagFragment],
+);
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string; slug: string }>;
+}): Promise<Metadata> {
+  const { locale, slug } = await params;
+  const { isEnabled } = await draftMode();
+  const data = await executeQuery(metaQuery, {
+    variables: { locale: locale as Locale, slug },
+    includeDrafts: isEnabled,
+  });
+  const path = `/${locale}/florence/accommodations/${slug}`;
+  return {
+    ...toNextMetadata(data.apartment?._seoMetaTags ?? []),
+    alternates: {
+      canonical: path,
+      languages: {
+        en: `/en/florence/accommodations/${slug}`,
+        it: `/it/florence/accommodations/${slug}`,
+      },
+    },
+  };
+}
 import ResponsiveImage, { ResponsiveImageFragment } from '@/components/ResponsiveImage';
 import HtmlContent from '@/components/HtmlContent';
 import BeddyBar from '@/components/BeddyBar';

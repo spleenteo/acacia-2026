@@ -21,15 +21,34 @@ import type { AnyModel } from './cma-types';
  * - src/app/api/preview-links/route.tsx
  */
 
+function getSlug(item: RawApiTypes.Item<AnyModel>, locale: string): string | null {
+  if (!('slug' in item.attributes)) return null;
+  const slug = item.attributes.slug;
+  if (!slug) return null;
+  if (typeof slug === 'string') return slug;
+  // Localized slug fields are objects keyed by locale
+  if (typeof slug === 'object') {
+    const map = slug as Record<string, string>;
+    return map[locale] ?? map['en'] ?? null;
+  }
+  return null;
+}
+
 export async function recordToWebsiteRoute(
   item: RawApiTypes.Item<AnyModel>,
-  _locale: string,
+  locale: string,
 ): Promise<string | null> {
+  const slug = getSlug(item, locale);
   switch (item.__itemTypeId) {
-    // Apartment model
-    case '2726': {
-      return `/`;
-    }
+    // Apartment model (ID 2726) — non-localized slug
+    case '2726':
+      return slug ? `/${locale}/florence/accommodations/${slug}` : null;
+    // Districts model (ID 2735) — localized slug
+    case '2735':
+      return slug ? `/${locale}/florence/districts/${slug}` : null;
+    // Mood model (ID 2738) — localized slug
+    case '2738':
+      return slug ? `/${locale}/moods/${slug}` : null;
     default:
       return null;
   }
@@ -37,10 +56,7 @@ export async function recordToWebsiteRoute(
 
 export async function recordToSlug(
   item: RawApiTypes.Item<AnyModel>,
-  _locale: string,
+  locale: string,
 ): Promise<string | null> {
-  if ('slug' in item.attributes) {
-    return item.attributes.slug as string;
-  }
-  return null;
+  return getSlug(item, locale);
 }

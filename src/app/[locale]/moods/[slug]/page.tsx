@@ -6,6 +6,43 @@ import { notFound } from 'next/navigation';
 import HtmlContent from '@/components/HtmlContent';
 import ResponsiveImage, { ResponsiveImageFragment } from '@/components/ResponsiveImage';
 import ApartmentCard, { ApartmentCardFragment } from '@/components/ApartmentCard';
+import { TagFragment } from '@/lib/datocms/commonFragments';
+import { toNextMetadata } from 'react-datocms';
+import type { Metadata } from 'next';
+
+const metaQuery = graphql(
+  `
+    query MoodMetaQuery($locale: SiteLocale!, $slug: String!) {
+      mood(locale: $locale, filter: { slug: { eq: $slug }, published: { eq: true } }) {
+        _seoMetaTags(locale: $locale) {
+          ...TagFragment
+        }
+        slug(locale: $locale)
+      }
+    }
+  `,
+  [TagFragment],
+);
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string; slug: string }>;
+}): Promise<Metadata> {
+  const { locale, slug } = await params;
+  const { isEnabled } = await draftMode();
+  const data = await executeQuery(metaQuery, {
+    variables: { locale: locale as Locale, slug },
+    includeDrafts: isEnabled,
+  });
+  return {
+    ...toNextMetadata(data.mood?._seoMetaTags ?? []),
+    alternates: {
+      canonical: `/${locale}/moods/${slug}`,
+      languages: { en: `/en/moods/${slug}`, it: `/it/moods/${slug}` },
+    },
+  };
+}
 
 const query = graphql(
   `

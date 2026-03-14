@@ -181,10 +181,9 @@ A5 (districts)
 
 | Affordance               | Tipo   | Dettaglio                                                                                                                                     |
 | ------------------------ | ------ | --------------------------------------------------------------------------------------------------------------------------------------------- |
-| Moods listing page       | UI     | Route `/[locale]/moods`. Query `allMoods` + `pageMoods`. Grid di `<MoodCard>` (già creata in V1)                                              |
-| Mood detail page         | UI     | Route `/[locale]/moods/[slug]`. Query mood con `boxes.object`                                                                                 |
-| `moodApartments` adapter | Non-UI | `src/lib/datocms/adapters/moodApartments.ts` — estrae `ApartmentRecord` da `MoodItems.object[]`, unico punto di contatto con struttura legacy |
-| Appartamenti del mood    | UI     | Griglia di `<ApartmentCard>` filtrati dall'adapter                                                                                            |
+| Moods listing page    | UI     | Route `/[locale]/moods`. Query `allMoods` + `pageMoods`. Grid di `<MoodCard>` (già creata in V1)                                                                        |
+| Mood detail page      | UI     | Route `/[locale]/moods/[slug]`. Query mood con `boxes.object` (union `ApartmentRecord \| PostRecord \| ServiceRecord \| TipRecord`)                                      |
+| Appartamenti del mood | UI     | Griglia di `<ApartmentCard>`. Estrazione inline nella pagina: `boxes.flatMap(box => box.object.filter(item => item.__typename === 'ApartmentRecord'))`. No file separato. |
 
 ### Parts di Shape A coperte
 

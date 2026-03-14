@@ -4,6 +4,42 @@ import { type Locale } from '@/i18n/config';
 import { draftMode } from 'next/headers';
 import MoodCard, { MoodCardFragment } from '@/components/MoodCard';
 import HtmlContent from '@/components/HtmlContent';
+import { TagFragment } from '@/lib/datocms/commonFragments';
+import { toNextMetadata } from 'react-datocms';
+import type { Metadata } from 'next';
+
+const metaQuery = graphql(
+  `
+    query MoodsMetaQuery($locale: SiteLocale!) {
+      pageMoods(locale: $locale) {
+        _seoMetaTags(locale: $locale) {
+          ...TagFragment
+        }
+      }
+    }
+  `,
+  [TagFragment],
+);
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const { isEnabled } = await draftMode();
+  const data = await executeQuery(metaQuery, {
+    variables: { locale: locale as Locale },
+    includeDrafts: isEnabled,
+  });
+  return {
+    ...toNextMetadata(data.pageMoods?._seoMetaTags ?? []),
+    alternates: {
+      canonical: `/${locale}/moods`,
+      languages: { en: '/en/moods', it: '/it/moods' },
+    },
+  };
+}
 
 const query = graphql(
   `

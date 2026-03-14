@@ -8,6 +8,42 @@ import ResponsiveImage from '@/components/ResponsiveImage';
 import BeddyBar from '@/components/BeddyBar';
 import HtmlContent from '@/components/HtmlContent';
 import CategoryFilter from '@/components/CategoryFilter';
+import { TagFragment } from '@/lib/datocms/commonFragments';
+import { toNextMetadata } from 'react-datocms';
+import type { Metadata } from 'next';
+
+const metaQuery = graphql(
+  `
+    query AccommodationsMetaQuery($locale: SiteLocale!) {
+      pageApartments(locale: $locale) {
+        _seoMetaTags(locale: $locale) {
+          ...TagFragment
+        }
+      }
+    }
+  `,
+  [TagFragment],
+);
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const { isEnabled } = await draftMode();
+  const data = await executeQuery(metaQuery, {
+    variables: { locale: locale as Locale },
+    includeDrafts: isEnabled,
+  });
+  return {
+    ...toNextMetadata(data.pageApartments?._seoMetaTags ?? []),
+    alternates: {
+      canonical: `/${locale}/florence/accommodations`,
+      languages: { en: '/en/florence/accommodations', it: '/it/florence/accommodations' },
+    },
+  };
+}
 
 const query = graphql(
   `

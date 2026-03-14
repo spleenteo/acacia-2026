@@ -43,7 +43,7 @@ Two type generation systems work together:
 
 **Draft mode**: Next.js Draft Mode is toggled via `/api/draft-mode/enable` and `/api/draft-mode/disable`. When active, pages use the draft CDA token and enable content-link click-to-edit overlays.
 
-**Record routing**: `src/lib/datocms/recordInfo.ts` maps DatoCMS item types to frontend URLs. Used by Web Previews and SEO Analysis plugins. Currently maps Apartment model (ID `2726`) to `/` (placeholder — full mapping for all models planned in V5 slice).
+**Record routing**: `src/lib/datocms/recordInfo.ts` maps DatoCMS item types to frontend URLs. Used by Web Previews and SEO Analysis plugins. Maps Apartment (ID `2726`) → `/[locale]/florence/accommodations/[slug]`, Districts (ID `2735`) → `/[locale]/florence/districts/[slug]`, Mood (ID `2738`) → `/[locale]/moods/[slug]`. Handles both plain and localized slug fields.
 
 **Locale routing**: App Router uses a `[locale]` dynamic segment (`src/app/[locale]/`). Supported locales are `en` and `it`, configured in `src/i18n/config.ts`. The root layout (`src/app/layout.tsx`) provides `<html lang>` dynamically from params; the locale layout adds header, footer, Beddy script, and draft mode controls. `middleware.ts` redirects paths without locale prefix to `/en`.
 
@@ -93,6 +93,29 @@ Required in `.env.local` (see `.env.local.example`):
 - `DATOCMS_CMA_TOKEN` — Content Management API token (read-only, for schema generation)
 - `DATOCMS_BASE_EDITING_URL` — DatoCMS project URL for content link overlays
 - `SECRET_API_TOKEN` — Shared secret for webhook authentication
+- `NEXT_PUBLIC_SITE_URL` — Production URL (e.g. `https://acacia-firenze.com`), used as `metadataBase` for SEO and sitemap generation
+
+## SEO
+
+Each page exports `generateMetadata()` using `_seoMetaTags` from DatoCMS + `toNextMetadata` from `react-datocms`. Pattern:
+
+```ts
+const metaQuery = graphql(`query { record { _seoMetaTags(locale: $locale) { ...TagFragment } } }`, [TagFragment]);
+
+export async function generateMetadata({ params }): Promise<Metadata> {
+  const data = await executeQuery(metaQuery, { variables: { locale }, includeDrafts });
+  return { ...toNextMetadata(data.record?._seoMetaTags ?? []), alternates: { canonical, languages } };
+}
+```
+
+`metadataBase` is set in `src/app/layout.tsx`. `src/app/sitemap.ts` generates `/sitemap.xml` for all static and dynamic routes in both locales.
+
+## Error Pages
+
+- `src/app/[locale]/not-found.tsx` — 404 page (server component, no locale access, bilingual)
+- `src/app/[locale]/error.tsx` — error boundary (`'use client'`, required by Next.js)
+- `src/app/[locale]/loading.tsx` — loading skeleton for Suspense boundaries
+- These render WITHOUT SiteHeader/SiteFooter (outside locale layout)
 
 ## Formatting
 

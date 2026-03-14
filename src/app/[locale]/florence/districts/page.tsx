@@ -4,6 +4,42 @@ import { type Locale } from '@/i18n/config';
 import { draftMode } from 'next/headers';
 import DistrictCard, { DistrictCardFragment } from '@/components/DistrictCard';
 import HtmlContent from '@/components/HtmlContent';
+import { TagFragment } from '@/lib/datocms/commonFragments';
+import { toNextMetadata } from 'react-datocms';
+import type { Metadata } from 'next';
+
+const metaQuery = graphql(
+  `
+    query DistrictsMetaQuery($locale: SiteLocale!) {
+      pageDistricts(locale: $locale) {
+        _seoMetaTags(locale: $locale) {
+          ...TagFragment
+        }
+      }
+    }
+  `,
+  [TagFragment],
+);
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const { isEnabled } = await draftMode();
+  const data = await executeQuery(metaQuery, {
+    variables: { locale: locale as Locale },
+    includeDrafts: isEnabled,
+  });
+  return {
+    ...toNextMetadata(data.pageDistricts?._seoMetaTags ?? []),
+    alternates: {
+      canonical: `/${locale}/florence/districts`,
+      languages: { en: '/en/florence/districts', it: '/it/florence/districts' },
+    },
+  };
+}
 
 const query = graphql(
   `

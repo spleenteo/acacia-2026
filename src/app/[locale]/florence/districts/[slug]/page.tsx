@@ -3,6 +3,46 @@ import { graphql } from '@/lib/datocms/graphql';
 import { type Locale, locales } from '@/i18n/config';
 import { draftMode } from 'next/headers';
 import { notFound } from 'next/navigation';
+import { TagFragment } from '@/lib/datocms/commonFragments';
+import { toNextMetadata } from 'react-datocms';
+import type { Metadata } from 'next';
+
+const metaQuery = graphql(
+  `
+    query DistrictMetaQuery($locale: SiteLocale!, $slug: String!) {
+      districts(locale: $locale, filter: { slug: { eq: $slug } }) {
+        _seoMetaTags(locale: $locale) {
+          ...TagFragment
+        }
+        slug
+      }
+    }
+  `,
+  [TagFragment],
+);
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string; slug: string }>;
+}): Promise<Metadata> {
+  const { locale, slug } = await params;
+  const { isEnabled } = await draftMode();
+  const data = await executeQuery(metaQuery, {
+    variables: { locale: locale as Locale, slug },
+    includeDrafts: isEnabled,
+  });
+  return {
+    ...toNextMetadata(data.districts?._seoMetaTags ?? []),
+    alternates: {
+      canonical: `/${locale}/florence/districts/${slug}`,
+      languages: {
+        en: `/en/florence/districts/${slug}`,
+        it: `/it/florence/districts/${slug}`,
+      },
+    },
+  };
+}
 import HtmlContent from '@/components/HtmlContent';
 import { GalleryImageFragment } from '@/components/ImageGallery/fragment';
 import ImageGallery from '@/components/ImageGallery';
