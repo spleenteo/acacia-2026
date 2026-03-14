@@ -53,10 +53,10 @@ function CategoryFilterInner({ categories, apartments, locale, allLabel }: Props
         <button
           type="button"
           onClick={() => setCategory(null)}
-          className={`px-4 py-2 text-small font-bold uppercase tracking-wider border transition-colors duration-300 cursor-pointer ${
+          className={`px-4 py-2 text-body-sm font-bold uppercase tracking-wider border transition-colors duration-300 cursor-pointer ${
             !activeCategory
-              ? 'bg-primary text-white border-primary'
-              : 'border-heading/20 text-heading hover:border-primary hover:text-primary'
+              ? 'bg-rust text-white border-rust'
+              : 'border-dark/20 text-dark hover:border-rust hover:text-rust'
           }`}
         >
           {allLabel}
@@ -66,10 +66,10 @@ function CategoryFilterInner({ categories, apartments, locale, allLabel }: Props
             key={cat.id}
             type="button"
             onClick={() => setCategory(cat.slug)}
-            className={`px-4 py-2 text-small font-bold uppercase tracking-wider border transition-colors duration-300 cursor-pointer ${
+            className={`px-4 py-2 text-body-sm font-bold uppercase tracking-wider border transition-colors duration-300 cursor-pointer ${
               activeCategory === cat.slug
-                ? 'bg-primary text-white border-primary'
-                : 'border-heading/20 text-heading hover:border-primary hover:text-primary'
+                ? 'bg-rust text-white border-rust'
+                : 'border-dark/20 text-dark hover:border-rust hover:text-rust'
             }`}
           >
             {cat.name}
@@ -84,7 +84,7 @@ function CategoryFilterInner({ categories, apartments, locale, allLabel }: Props
       </div>
 
       {filteredApartments.length === 0 && (
-        <p className="text-center text-body-light font-serif italic text-delta py-12">
+        <p className="text-center text-light font-heading italic text-body-lg py-12">
           {locale === 'en'
             ? 'No apartments in this category'
             : 'Nessun alloggio in questa categoria'}

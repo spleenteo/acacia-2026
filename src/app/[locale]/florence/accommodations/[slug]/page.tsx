@@ -44,6 +44,7 @@ export async function generateMetadata({
     },
   };
 }
+
 import ResponsiveImage, { ResponsiveImageFragment } from '@/components/ResponsiveImage';
 import HtmlContent from '@/components/HtmlContent';
 import BeddyBar from '@/components/BeddyBar';
@@ -168,33 +169,31 @@ export default async function ApartmentDetailPage({
   return (
     <>
       {/* Hero */}
-      <section className="relative min-h-[60vh] flex items-end bg-heading">
+      <section className="relative min-h-[70vh] flex items-end bg-dark">
         {apartment.featuredImage?.responsiveImage && (
           <div className="absolute inset-0">
             <ResponsiveImage
               data={apartment.featuredImage.responsiveImage}
-              className="w-full h-full object-cover opacity-60"
+              className="w-full h-full object-cover opacity-55"
               priority
             />
           </div>
         )}
-        <div className="relative z-10 w-full px-5 pb-12 pt-32">
-          <div className="mx-auto max-w-7xl">
+        <div className="relative z-10 w-full px-8 pb-14 pt-32">
+          <div className="mx-auto max-w-6xl">
             {apartment.category && (
-              <p className="font-bold text-small text-white/70 uppercase tracking-wider mb-2">
+              <p className="font-body font-medium text-label text-white/60 uppercase tracking-[0.15em] mb-3">
                 {apartment.category.name}
               </p>
             )}
-            <h1 className="font-heading font-extralight text-huge text-white mb-3">
+            <h1 className="font-heading font-bold text-hero leading-tight text-white mb-3">
               {apartment.name}
             </h1>
             {apartment.claim && (
-              <p className="font-serif italic text-beta text-white/80 max-w-2xl">
-                {apartment.claim}
-              </p>
+              <p className="font-body text-body-lg text-white/70 max-w-2xl">{apartment.claim}</p>
             )}
             {apartment.highlight && (
-              <span className="inline-block bg-secondary text-white text-[10px] uppercase font-bold px-2 py-0.5 rounded shadow-sm mt-4">
+              <span className="inline-block bg-rust/80 text-white text-tag uppercase font-medium tracking-wider px-3 py-1 mt-4 rounded-pill">
                 {apartment.highlight}
               </span>
             )}
@@ -204,34 +203,34 @@ export default async function ApartmentDetailPage({
 
       {/* Quick Facts */}
       {(apartment.bedrooms || apartment.bathrooms || apartment.sleeps) && (
-        <section className="bg-cream border-b border-beige">
-          <div className="mx-auto max-w-7xl px-5 py-6 flex flex-wrap justify-center gap-8 sm:gap-16">
+        <section className="bg-surface-alt border-b border-border">
+          <div className="mx-auto max-w-6xl px-8 py-8 flex flex-wrap justify-center gap-10 sm:gap-20">
             {apartment.bedrooms && (
               <div className="text-center">
-                <p className="font-heading font-extralight text-alpha text-heading">
+                <p className="font-heading font-bold text-h1 text-rust leading-none">
                   {apartment.bedrooms}
                 </p>
-                <p className="text-milli uppercase tracking-wider font-bold text-body-light">
+                <p className="font-body text-label uppercase tracking-[0.12em] text-muted mt-1">
                   {l.bedrooms}
                 </p>
               </div>
             )}
             {apartment.bathrooms && (
               <div className="text-center">
-                <p className="font-heading font-extralight text-alpha text-heading">
+                <p className="font-heading font-bold text-h1 text-rust leading-none">
                   {apartment.bathrooms}
                 </p>
-                <p className="text-milli uppercase tracking-wider font-bold text-body-light">
+                <p className="font-body text-label uppercase tracking-[0.12em] text-muted mt-1">
                   {l.bathrooms}
                 </p>
               </div>
             )}
             {apartment.sleeps && (
               <div className="text-center">
-                <p className="font-heading font-extralight text-alpha text-heading">
+                <p className="font-heading font-bold text-h1 text-rust leading-none">
                   {apartment.sleeps}
                 </p>
-                <p className="text-milli uppercase tracking-wider font-bold text-body-light">
+                <p className="font-body text-label uppercase tracking-[0.12em] text-muted mt-1">
                   {l.sleeps}
                 </p>
               </div>
@@ -242,11 +241,11 @@ export default async function ApartmentDetailPage({
 
       {/* Description */}
       {apartment.description && (
-        <section className="py-16">
-          <div className="mx-auto max-w-3xl px-5">
+        <section className="py-20 lg:py-28 bg-surface">
+          <div className="mx-auto max-w-3xl px-8">
             <HtmlContent
               html={apartment.description}
-              className="font-serif text-delta text-heading leading-relaxed"
+              className="font-body text-body-lg text-dark leading-relaxed"
             />
           </div>
         </section>
@@ -254,8 +253,8 @@ export default async function ApartmentDetailPage({
 
       {/* Gallery */}
       {apartment.gallery.length > 0 && (
-        <section className="py-12 bg-cream">
-          <div className="mx-auto max-w-7xl px-5">
+        <section className="py-16 bg-surface-alt">
+          <div className="mx-auto max-w-6xl px-8">
             <ImageGallery data={apartment.gallery} />
           </div>
         </section>
@@ -263,8 +262,8 @@ export default async function ApartmentDetailPage({
 
       {/* Cuddles & Ups */}
       {(apartment.cuddles.length > 0 || apartment.ups.length > 0) && (
-        <section className="py-16">
-          <div className="mx-auto max-w-5xl px-5 grid grid-cols-1 md:grid-cols-2 gap-12">
+        <section className="py-20 lg:py-28 bg-surface">
+          <div className="mx-auto max-w-5xl px-8 grid grid-cols-1 md:grid-cols-2 gap-14">
             <CuddlesList data={apartment.cuddles} title={l.cuddles} />
             <UpsList data={apartment.ups} title={l.ups} />
           </div>
@@ -273,8 +272,8 @@ export default async function ApartmentDetailPage({
 
       {/* Info Detail */}
       {apartment.infoDetail.length > 0 && (
-        <section className="py-16 bg-cream">
-          <div className="mx-auto max-w-3xl px-5">
+        <section className="py-20 lg:py-28 bg-surface-alt">
+          <div className="mx-auto max-w-3xl px-8">
             <InfoDetail
               data={apartment.infoDetail.map((item) => ({
                 __typename: item.__typename as 'InfoTextRecord' | 'InfoAddressRecord',
@@ -288,7 +287,7 @@ export default async function ApartmentDetailPage({
 
       {/* District Link */}
       {apartment.district && (
-        <section className="py-8">
+        <section>
           <DistrictLink
             name={apartment.district.name}
             slug={apartment.district.slug}
@@ -299,9 +298,9 @@ export default async function ApartmentDetailPage({
 
       {/* Beddy Booking */}
       {apartment.beddyId && (
-        <section className="py-12 bg-heading">
-          <div className="mx-auto max-w-3xl px-5 text-center">
-            <p className="font-serif italic text-delta text-white/80 mb-6">{l.book}</p>
+        <section className="py-16 bg-dark">
+          <div className="mx-auto max-w-3xl px-8 text-center">
+            <p className="font-body text-body-lg text-white/70 mb-8">{l.book}</p>
             <BeddyBar locale={locale as Locale} widgetCode={apartment.beddyId} />
           </div>
         </section>

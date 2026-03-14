@@ -16,7 +16,7 @@ export const ApartmentCardFragment = graphql(
         name(locale: $locale)
       }
       boxImage {
-        responsiveImage(imgixParams: { w: 400, h: 300, fit: crop }) {
+        responsiveImage(imgixParams: { w: 700, h: 520, fit: crop }) {
           ...ResponsiveImageFragment
         }
       }
@@ -30,36 +30,54 @@ type Props = {
   locale: Locale;
 };
 
+const discoverLabel = { en: 'Discover →', it: 'Scopri →' } as const;
+
 export default function ApartmentCard({ data, locale }: Props) {
   const apartment = readFragment(ApartmentCardFragment, data);
 
   return (
     <Link href={`/${locale}/florence/accommodations/${apartment.slug}`} className="group block">
-      <div className="border-b border-dotted border-heading mb-8 transition-colors duration-500 hover:bg-cream">
-        <div className="overflow-hidden">
+      <article
+        className="bg-white rounded-card shadow-card hover:shadow-card-hover transition-all duration-500 hover:-translate-y-1 overflow-hidden"
+        style={{ transitionTimingFunction: 'cubic-bezier(0.19,1,0.22,1)' }}
+      >
+        {/* Image */}
+        <div className="relative overflow-hidden">
           {apartment.boxImage?.responsiveImage && (
-            <div className="transition-transform duration-500 group-hover:scale-[1.3]">
+            <div
+              className="transition-transform duration-700 group-hover:scale-[1.04]"
+              style={{ transitionTimingFunction: 'cubic-bezier(0.19,1,0.22,1)' }}
+            >
               <ResponsiveImage data={apartment.boxImage.responsiveImage} />
             </div>
           )}
-        </div>
-        <div className="px-4 pb-4">
-          {apartment.category && (
-            <p className="font-bold text-small my-3 capitalize">{apartment.category.name}</p>
-          )}
-          <h2 className="font-heading font-extralight text-gamma leading-tight mb-3">
-            {apartment.name}
-          </h2>
-          {apartment.claim && (
-            <p className="font-serif italic text-small text-body-light">{apartment.claim}</p>
-          )}
           {apartment.highlight && (
-            <span className="inline-block bg-secondary text-white text-[10px] uppercase font-bold px-2 py-0.5 rounded shadow-sm mt-2">
+            <span className="absolute bottom-4 left-4 bg-rust text-white text-tag uppercase tracking-[0.14em] font-semibold px-3 py-1 rounded-pill">
               {apartment.highlight}
             </span>
           )}
         </div>
-      </div>
+
+        {/* Content */}
+        <div className="p-6">
+          {apartment.category && (
+            <p className="font-body text-label uppercase tracking-[0.18em] text-rust font-medium mb-2">
+              {apartment.category.name}
+            </p>
+          )}
+          <h3 className="font-heading text-h3 font-semibold text-dark leading-snug mb-2">
+            {apartment.name}
+          </h3>
+          {apartment.claim && (
+            <p className="font-body text-body-sm text-muted leading-relaxed mb-4">
+              {apartment.claim}
+            </p>
+          )}
+          <p className="font-body text-caption text-muted group-hover:text-rust transition-colors duration-300 font-medium">
+            {discoverLabel[locale]}
+          </p>
+        </div>
+      </article>
     </Link>
   );
 }

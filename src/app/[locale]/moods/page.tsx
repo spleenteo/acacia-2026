@@ -72,31 +72,40 @@ export default async function MoodsPage({ params }: { params: Promise<{ locale: 
   return (
     <>
       {/* Hero */}
-      <section className="relative min-h-[50vh] flex items-center justify-center bg-heading">
-        <div className="relative z-10 text-center text-white px-5 py-20 max-w-3xl mx-auto">
-          <h1 className="font-heading font-extralight text-huge mb-4">{pageMoods?.title}</h1>
-          {pageMoods?.subtitle && (
-            <p className="font-serif italic text-beta text-white/80">{pageMoods.subtitle}</p>
-          )}
+      <section className="relative min-h-[55vh] flex items-end bg-dark">
+        <div className="absolute inset-0 bg-gradient-to-t from-dark/90 via-dark/40 to-dark/60" />
+        <div className="relative z-10 w-full px-8 pb-14 pt-32">
+          <div className="max-w-6xl mx-auto">
+            <h1 className="font-heading font-bold text-hero text-white leading-[1.05] mb-3">
+              {pageMoods?.title}
+            </h1>
+            {pageMoods?.subtitle && (
+              <p className="font-body text-body-lg text-white/70">{pageMoods.subtitle}</p>
+            )}
+          </div>
         </div>
       </section>
 
       {/* Description */}
       {pageMoods?.description && (
-        <section className="py-16 bg-cream">
-          <div className="mx-auto max-w-4xl px-5 text-center">
-            <HtmlContent
-              html={pageMoods.description}
-              className="font-serif text-delta text-heading"
-            />
+        <section className="py-20 lg:py-28 bg-surface-alt">
+          <div className="mx-auto max-w-3xl px-8 text-center">
+            <HtmlContent html={pageMoods.description} className="font-body text-body-lg text-dark" />
+            <div className="mx-auto mt-8 w-12 h-[3px] bg-rust rounded-sm" />
           </div>
         </section>
       )}
 
       {/* Moods Grid */}
-      <section className="py-16">
-        <div className="mx-auto max-w-7xl px-5">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <section className="py-20 lg:py-28 bg-surface">
+        <div className="mx-auto max-w-6xl px-8">
+          <p className="font-body text-label uppercase tracking-[0.22em] text-rust font-medium text-center mb-3">
+            {locale === 'en' ? 'Travel by feeling' : 'Viaggia per ispirazione'}
+          </p>
+          <h2 className="font-heading font-bold text-h1 text-dark text-center tracking-[-0.02em] mb-12">
+            {locale === 'en' ? 'Discover our moods' : 'Scopri i nostri mood'}
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-6">
             {allMoods.map((mood) => (
               <MoodCard key={mood.id} data={mood} locale={locale as Locale} />
             ))}

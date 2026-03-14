@@ -67,14 +67,14 @@ export default function ImageGallery({ data }: Props) {
                 />
               </div>
             )}
-            <div className="absolute inset-0 bg-heading/0 group-hover:bg-heading/20 transition-colors duration-300" />
+            <div className="absolute inset-0 bg-dark/0 group-hover:bg-dark/20 transition-colors duration-300" />
           </button>
         ))}
       </div>
 
       <dialog
         ref={dialogRef}
-        className="fixed inset-0 z-50 m-0 h-full w-full max-h-full max-w-full bg-heading/95 backdrop:bg-transparent p-0"
+        className="fixed inset-0 z-50 m-0 h-full w-full max-h-full max-w-full bg-dark/95 backdrop:bg-transparent p-0"
         onClick={(e) => {
           if (e.target === dialogRef.current) closeLightbox();
         }}
@@ -84,7 +84,7 @@ export default function ImageGallery({ data }: Props) {
             <button
               type="button"
               onClick={closeLightbox}
-              className="absolute top-4 right-4 z-10 text-white/70 hover:text-white text-beta transition-colors cursor-pointer"
+              className="absolute top-4 right-4 z-10 text-white/70 hover:text-white text-h2 transition-colors cursor-pointer"
               aria-label="Close"
             >
               &times;
@@ -95,7 +95,7 @@ export default function ImageGallery({ data }: Props) {
                 <button
                   type="button"
                   onClick={() => navigate(-1)}
-                  className="absolute left-4 top-1/2 -translate-y-1/2 z-10 text-white/50 hover:text-white text-alpha transition-colors cursor-pointer"
+                  className="absolute left-4 top-1/2 -translate-y-1/2 z-10 text-white/50 hover:text-white text-h1 transition-colors cursor-pointer"
                   aria-label="Previous"
                 >
                   &#8249;
@@ -103,7 +103,7 @@ export default function ImageGallery({ data }: Props) {
                 <button
                   type="button"
                   onClick={() => navigate(1)}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 z-10 text-white/50 hover:text-white text-alpha transition-colors cursor-pointer"
+                  className="absolute right-4 top-1/2 -translate-y-1/2 z-10 text-white/50 hover:text-white text-h1 transition-colors cursor-pointer"
                   aria-label="Next"
                 >
                   &#8250;
@@ -119,11 +119,11 @@ export default function ImageGallery({ data }: Props) {
                 />
               )}
               {activeImage.description && (
-                <p className="text-white/70 font-serif italic text-small mt-4 text-center">
+                <p className="text-white/70 font-heading italic text-body-sm mt-4 text-center">
                   {activeImage.description}
                 </p>
               )}
-              <p className="text-white/40 text-milli mt-2">
+              <p className="text-white/40 text-caption mt-2">
                 {(activeIndex ?? 0) + 1} / {images.length}
               </p>
             </div>

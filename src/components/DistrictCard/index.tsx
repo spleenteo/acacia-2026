@@ -12,7 +12,7 @@ export const DistrictCardFragment = graphql(
       slug
       gallery {
         image {
-          responsiveImage(imgixParams: { w: 400, h: 300, fit: crop }) {
+          responsiveImage(imgixParams: { w: 700, h: 520, fit: crop }) {
             ...ResponsiveImageFragment
           }
         }
@@ -27,24 +27,43 @@ type Props = {
   locale: Locale;
 };
 
+const discoverLabel = { en: 'Explore →', it: 'Esplora →' } as const;
+
 export default function DistrictCard({ data, locale }: Props) {
   const district = readFragment(DistrictCardFragment, data);
   const coverImage = district.gallery[0]?.image?.responsiveImage;
 
   return (
     <Link href={`/${locale}/florence/districts/${district.slug}`} className="group block">
-      <div className="border-b border-dotted border-heading mb-8 transition-colors duration-500 hover:bg-cream">
-        <div className="overflow-hidden">
+      <article
+        className="bg-white rounded-card shadow-card hover:shadow-card-hover transition-all duration-500 hover:-translate-y-1 overflow-hidden"
+        style={{ transitionTimingFunction: 'cubic-bezier(0.19,1,0.22,1)' }}
+      >
+        {/* Image */}
+        <div className="relative overflow-hidden">
           {coverImage && (
-            <div className="transition-transform duration-500 group-hover:scale-[1.3]">
+            <div
+              className="transition-transform duration-700 group-hover:scale-[1.04]"
+              style={{ transitionTimingFunction: 'cubic-bezier(0.19,1,0.22,1)' }}
+            >
               <ResponsiveImage data={coverImage} />
             </div>
           )}
+          <span className="absolute bottom-4 left-4 bg-rust text-white text-tag uppercase tracking-[0.14em] font-semibold px-3 py-1 rounded-pill">
+            Firenze
+          </span>
         </div>
-        <div className="px-4 pb-4 pt-3">
-          <h2 className="font-heading font-extralight text-gamma leading-tight">{district.name}</h2>
+
+        {/* Content */}
+        <div className="p-6">
+          <h3 className="font-heading text-h3 font-semibold text-dark leading-snug mb-4">
+            {district.name}
+          </h3>
+          <p className="font-body text-caption text-muted group-hover:text-rust transition-colors duration-300 font-medium">
+            {discoverLabel[locale]}
+          </p>
         </div>
-      </div>
+      </article>
     </Link>
   );
 }

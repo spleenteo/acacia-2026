@@ -14,37 +14,47 @@ const footerNav = [
 export default function SiteFooter({ locale }: Props) {
   return (
     <footer>
-      <div className="bg-cream py-12">
-        <div className="mx-auto max-w-7xl px-5 grid grid-cols-1 md:grid-cols-3 gap-8">
-          <div className="space-y-4">
-            <h3 className="font-bold uppercase text-small text-heading tracking-wider">
+      <div className="bg-dark py-16">
+        <div className="mx-auto max-w-6xl px-8 grid grid-cols-1 md:grid-cols-3 gap-10">
+          <div>
+            <span className="font-heading italic font-semibold text-h4 text-white tracking-tight block mb-5">
+              Acacia Firenze
+            </span>
+            <p className="font-body text-body-sm text-white/50 leading-relaxed">
+              {locale === 'en'
+                ? 'Curated apartments in the heart of Florence.'
+                : 'Appartamenti selezionati nel cuore di Firenze.'}
+            </p>
+          </div>
+          <div>
+            <h4 className="font-body text-label uppercase tracking-[0.18em] text-white/40 font-medium mb-5">
               {locale === 'en' ? 'Explore' : 'Esplora'}
-            </h3>
-            <nav className="flex flex-col gap-2">
+            </h4>
+            <nav className="flex flex-col gap-3">
               {footerNav.map((item) => (
                 <Link
                   key={item.href}
                   href={`/${locale}${item.href}`}
-                  className="text-body-light text-small hover:text-primary transition-colors"
+                  className="font-body text-body-sm text-white/55 hover:text-rust transition-colors duration-300"
                 >
                   {item.label[locale]}
                 </Link>
               ))}
             </nav>
           </div>
-          <div className="space-y-4">
-            <h3 className="font-bold uppercase text-small text-heading tracking-wider">
+          <div>
+            <h4 className="font-body text-label uppercase tracking-[0.18em] text-white/40 font-medium mb-5">
               {locale === 'en' ? 'Contact' : 'Contatti'}
-            </h3>
-            <div className="text-body-light text-small space-y-1">
+            </h4>
+            <div className="font-body text-body-sm text-white/55 space-y-1">
               <p>Acacia Firenze</p>
               <p>Florence, Italy</p>
             </div>
           </div>
         </div>
       </div>
-      <div className="bg-heading py-4 text-center">
-        <p className="text-white text-milli">
+      <div className="bg-dark border-t border-white/10 py-5 text-center">
+        <p className="font-body text-fine text-white/30">
           &copy; {new Date().getFullYear()} Acacia Firenze. All rights reserved.
         </p>
       </div>

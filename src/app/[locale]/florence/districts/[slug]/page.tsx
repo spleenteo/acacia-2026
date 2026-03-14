@@ -43,6 +43,7 @@ export async function generateMetadata({
     },
   };
 }
+
 import HtmlContent from '@/components/HtmlContent';
 import { GalleryImageFragment } from '@/components/ImageGallery/fragment';
 import ImageGallery from '@/components/ImageGallery';
@@ -133,33 +134,33 @@ export default async function DistrictDetailPage({
   return (
     <>
       {/* Hero */}
-      <section className="min-h-[40vh] flex items-end bg-heading">
-        <div className="w-full px-5 pb-12 pt-32">
-          <div className="mx-auto max-w-7xl">
-            <p className="font-bold text-small text-white/50 uppercase tracking-wider mb-3">
+      <section className="min-h-[55vh] flex items-end bg-dark">
+        <div className="w-full px-8 pb-14 pt-32">
+          <div className="mx-auto max-w-6xl">
+            <p className="font-body font-medium text-label text-white/50 uppercase tracking-[0.15em] mb-3">
               {locale === 'en' ? 'Florence' : 'Firenze'}
             </p>
-            <h1 className="font-heading font-extralight text-huge text-white">{district.name}</h1>
+            <h1 className="font-heading font-bold text-hero leading-tight text-white">
+              {district.name}
+            </h1>
           </div>
         </div>
       </section>
 
       {/* Abstract */}
       {district.abstract && (
-        <section className="py-16 bg-cream">
-          <div className="mx-auto max-w-3xl px-5 text-center">
-            <HtmlContent
-              html={district.abstract}
-              className="font-serif italic text-delta text-heading"
-            />
+        <section className="py-16 bg-surface-alt">
+          <div className="mx-auto max-w-3xl px-8 text-center">
+            <HtmlContent html={district.abstract} className="font-body text-body-lg text-dark" />
+            <div className="mx-auto mt-8 w-12 h-[3px] bg-rust rounded-sm" />
           </div>
         </section>
       )}
 
       {/* Gallery */}
       {district.gallery.length > 0 && (
-        <section className="py-12">
-          <div className="mx-auto max-w-7xl px-5">
+        <section className="py-16 bg-surface">
+          <div className="mx-auto max-w-6xl px-8">
             <ImageGallery data={district.gallery} />
           </div>
         </section>
@@ -167,11 +168,11 @@ export default async function DistrictDetailPage({
 
       {/* Description */}
       {district.description && (
-        <section className="py-16 bg-cream">
-          <div className="mx-auto max-w-3xl px-5">
+        <section className="py-20 lg:py-28 bg-surface-alt">
+          <div className="mx-auto max-w-3xl px-8">
             <HtmlContent
               html={district.description}
-              className="font-serif text-delta text-heading leading-relaxed"
+              className="font-body text-body-lg text-dark leading-relaxed"
             />
           </div>
         </section>
@@ -179,12 +180,15 @@ export default async function DistrictDetailPage({
 
       {/* Apartments in this district */}
       {allApartments.length > 0 && (
-        <section className="py-16">
-          <div className="mx-auto max-w-7xl px-5">
-            <h2 className="font-heading font-extralight text-alpha text-center mb-12">
+        <section className="py-20 lg:py-28 bg-surface">
+          <div className="mx-auto max-w-6xl px-8">
+            <p className="font-body text-label uppercase tracking-[0.22em] text-rust font-medium text-center mb-3">
+              {locale === 'en' ? 'Where to stay' : 'Dove alloggiare'}
+            </p>
+            <h2 className="font-heading font-bold text-h1 text-dark text-center tracking-[-0.02em] mb-12">
               {l.apartments} {district.name}
             </h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-6">
               {allApartments.map((apartment) => (
                 <ApartmentCard key={apartment.id} data={apartment} locale={locale as Locale} />
               ))}

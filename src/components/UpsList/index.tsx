@@ -20,7 +20,9 @@ export default function UpsList({ data, title }: Props) {
 
   return (
     <div>
-      <h3 className="font-serif italic text-gamma text-heading mb-6">{title}</h3>
+      <p className="font-body text-label uppercase tracking-[0.18em] text-rust font-medium mb-4">
+        {title}
+      </p>
       <div className="flex flex-wrap gap-2">
         {ups.map((up) => (
           <span key={up.id}>
@@ -29,12 +31,12 @@ export default function UpsList({ data, title }: Props) {
                 href={up.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-block border border-primary/30 text-primary text-small px-3 py-1.5 rounded-full hover:bg-primary hover:text-white transition-colors duration-300"
+                className="inline-block border border-rust/30 text-rust font-body text-body-sm px-3 py-1.5 rounded-pill hover:bg-rust hover:text-white hover:border-rust transition-all duration-300"
               >
                 {up.name}
               </a>
             ) : (
-              <span className="inline-block border border-beige text-body text-small px-3 py-1.5 rounded-full">
+              <span className="inline-block border border-border text-muted font-body text-body-sm px-3 py-1.5 rounded-pill">
                 {up.name}
               </span>
             )}

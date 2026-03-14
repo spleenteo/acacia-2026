@@ -72,31 +72,43 @@ export default async function DistrictsPage({ params }: { params: Promise<{ loca
   return (
     <>
       {/* Hero */}
-      <section className="relative min-h-[50vh] flex items-center justify-center bg-heading">
-        <div className="relative z-10 text-center text-white px-5 py-20 max-w-3xl mx-auto">
-          <h1 className="font-heading font-extralight text-huge mb-4">{pageDistricts?.title}</h1>
-          {pageDistricts?.subtitle && (
-            <p className="font-serif italic text-beta text-white/80">{pageDistricts.subtitle}</p>
-          )}
+      <section className="relative min-h-[55vh] flex items-end bg-dark">
+        <div className="absolute inset-0 bg-gradient-to-t from-dark/90 via-dark/40 to-dark/60" />
+        <div className="relative z-10 w-full px-8 pb-14 pt-32">
+          <div className="max-w-6xl mx-auto">
+            <h1 className="font-heading font-bold text-hero text-white leading-[1.05] mb-3">
+              {pageDistricts?.title}
+            </h1>
+            {pageDistricts?.subtitle && (
+              <p className="font-body text-body-lg text-white/70">{pageDistricts.subtitle}</p>
+            )}
+          </div>
         </div>
       </section>
 
       {/* Description */}
       {pageDistricts?.description && (
-        <section className="py-16 bg-cream">
-          <div className="mx-auto max-w-4xl px-5 text-center">
+        <section className="py-20 lg:py-28 bg-surface-alt">
+          <div className="mx-auto max-w-3xl px-8 text-center">
             <HtmlContent
               html={pageDistricts.description}
-              className="font-serif text-delta text-heading"
+              className="font-body text-body-lg text-dark"
             />
+            <div className="mx-auto mt-8 w-12 h-[3px] bg-rust rounded-sm" />
           </div>
         </section>
       )}
 
       {/* Districts Grid */}
-      <section className="py-16">
-        <div className="mx-auto max-w-7xl px-5">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <section className="py-20 lg:py-28 bg-surface">
+        <div className="mx-auto max-w-6xl px-8">
+          <p className="font-body text-label uppercase tracking-[0.22em] text-rust font-medium text-center mb-3">
+            {locale === 'en' ? 'Florence neighborhoods' : 'Quartieri di Firenze'}
+          </p>
+          <h2 className="font-heading font-bold text-h1 text-dark text-center tracking-[-0.02em] mb-12">
+            {locale === 'en' ? 'Explore the city' : 'Esplora la città'}
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-6">
             {allDistricts.map((district) => (
               <DistrictCard key={district.id} data={district} locale={locale as Locale} />
             ))}

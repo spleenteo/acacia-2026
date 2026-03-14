@@ -18,32 +18,33 @@ export default function SiteHeader({ locale, isDraftModeEnabled }: Props) {
 
   return (
     <header className="absolute top-0 left-0 right-0 z-50">
-      <div className="bg-primary/70">
-        <div className="mx-auto max-w-7xl flex items-center justify-between px-5 py-3">
-          <Link href={`/${locale}`} className="block">
-            <span className="bg-primary inline-block px-4 py-2 text-white font-body font-black text-delta tracking-wider uppercase">
-              Acacia Firenze
-            </span>
-          </Link>
-          <nav className="flex items-center gap-6">
-            {nav.map((item) => (
-              <Link
-                key={item.href}
-                href={`/${locale}${item.href}`}
-                className="text-white text-small font-bold uppercase tracking-wider hover:text-cream transition-colors"
-              >
-                {item.label[locale]}
-              </Link>
-            ))}
+      <div className="mx-auto max-w-6xl flex items-center justify-between px-8 py-6">
+        <Link href={`/${locale}`} className="block">
+          <span className="font-heading italic font-semibold text-h4 text-white tracking-tight">
+            Acacia Firenze
+          </span>
+        </Link>
+        <nav className="flex items-center gap-8">
+          {nav.map((item) => (
+            <Link
+              key={item.href}
+              href={`/${locale}${item.href}`}
+              className="font-body text-body-sm font-normal text-white/80 hover:text-white transition-colors duration-300 tracking-wide"
+            >
+              {item.label[locale]}
+            </Link>
+          ))}
+          <span className="font-body text-caption font-normal text-white/50">
+            {locale.toUpperCase()} /{' '}
             <Link
               href={`/${otherLocale}`}
-              className="text-white text-small font-bold uppercase tracking-wider border border-white/50 px-2 py-1 hover:bg-white/20 transition-colors"
+              className="text-white/50 hover:text-white transition-colors duration-300"
             >
               {otherLocale.toUpperCase()}
             </Link>
-            {isDraftModeEnabled && <DraftModeToggler draftModeEnabled={isDraftModeEnabled} />}
-          </nav>
-        </div>
+          </span>
+          {isDraftModeEnabled && <DraftModeToggler draftModeEnabled={isDraftModeEnabled} />}
+        </nav>
       </div>
     </header>
   );

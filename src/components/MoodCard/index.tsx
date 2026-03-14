@@ -12,7 +12,7 @@ export const MoodCardFragment = graphql(
       slug(locale: $locale)
       claim(locale: $locale)
       image {
-        responsiveImage(imgixParams: { w: 400, h: 300, fit: crop }) {
+        responsiveImage(imgixParams: { w: 700, h: 520, fit: crop }) {
           ...ResponsiveImageFragment
         }
       }
@@ -26,28 +26,45 @@ type Props = {
   locale: Locale;
 };
 
+const discoverLabel = { en: 'Explore →', it: 'Esplora →' } as const;
+
 export default function MoodCard({ data, locale }: Props) {
   const mood = readFragment(MoodCardFragment, data);
 
   return (
     <Link href={`/${locale}/moods/${mood.slug}`} className="group block">
-      <div className="border-b border-dotted border-heading mb-8 transition-colors duration-500 hover:bg-cream">
-        <div className="overflow-hidden">
+      <article
+        className="bg-white rounded-card shadow-card hover:shadow-card-hover transition-all duration-500 hover:-translate-y-1 overflow-hidden"
+        style={{ transitionTimingFunction: 'cubic-bezier(0.19,1,0.22,1)' }}
+      >
+        {/* Image */}
+        <div className="relative overflow-hidden">
           {mood.image?.responsiveImage && (
-            <div className="transition-transform duration-500 group-hover:scale-[1.3]">
+            <div
+              className="transition-transform duration-700 group-hover:scale-[1.04]"
+              style={{ transitionTimingFunction: 'cubic-bezier(0.19,1,0.22,1)' }}
+            >
               <ResponsiveImage data={mood.image.responsiveImage} />
             </div>
           )}
+          <span className="absolute bottom-4 left-4 bg-rust text-white text-tag uppercase tracking-[0.14em] font-semibold px-3 py-1 rounded-pill">
+            Mood
+          </span>
         </div>
-        <div className="px-4 pb-4">
-          <h2 className="font-heading font-extralight text-gamma leading-tight my-3">
+
+        {/* Content */}
+        <div className="p-6">
+          <h3 className="font-heading text-h3 font-semibold text-dark leading-snug mb-2">
             {mood.name}
-          </h2>
+          </h3>
           {mood.claim && (
-            <p className="font-serif italic text-small text-body-light">{mood.claim}</p>
+            <p className="font-body text-body-sm text-muted leading-relaxed mb-4">{mood.claim}</p>
           )}
+          <p className="font-body text-caption text-muted group-hover:text-rust transition-colors duration-300 font-medium">
+            {discoverLabel[locale]}
+          </p>
         </div>
-      </div>
+      </article>
     </Link>
   );
 }

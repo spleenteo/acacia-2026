@@ -1,5 +1,5 @@
 import { executeQuery } from '@/lib/datocms/executeQuery';
-import { graphql, readFragment } from '@/lib/datocms/graphql';
+import { graphql } from '@/lib/datocms/graphql';
 import { type Locale } from '@/i18n/config';
 import { draftMode } from 'next/headers';
 import { ApartmentCardFragment } from '@/components/ApartmentCard';
@@ -113,39 +113,42 @@ export default async function AccommodationsPage({
   return (
     <>
       {/* Hero Section */}
-      <section className="relative min-h-[50vh] flex items-center justify-center bg-heading">
+      <section className="relative min-h-[55vh] flex items-end bg-dark">
         {pageApartments?.featuredImage?.responsiveImage && (
           <div className="absolute inset-0">
             <ResponsiveImage
               data={pageApartments.featuredImage.responsiveImage}
-              className="w-full h-full object-cover opacity-50"
+              className="w-full h-full object-cover opacity-45"
               priority
             />
           </div>
         )}
-        <div className="relative z-10 text-center text-white px-5 py-20 max-w-3xl mx-auto">
-          <h1 className="font-heading font-extralight text-huge mb-4">{pageApartments?.title}</h1>
-          {pageApartments?.subtitle && (
-            <p className="font-serif italic text-beta text-white/80">{pageApartments.subtitle}</p>
-          )}
+        <div className="absolute inset-0 bg-gradient-to-t from-dark/80 via-dark/20 to-transparent" />
+        <div className="relative z-10 w-full px-8 pb-14 pt-32">
+          <div className="max-w-6xl mx-auto">
+            <h1 className="font-heading font-bold text-hero text-white leading-[1.05] mb-3">
+              {pageApartments?.title}
+            </h1>
+            {pageApartments?.subtitle && (
+              <p className="font-body text-body-lg text-white/70">{pageApartments.subtitle}</p>
+            )}
+          </div>
         </div>
       </section>
 
       {/* Intro */}
       {pageApartments?.intro && (
-        <section className="py-16 bg-cream">
-          <div className="mx-auto max-w-4xl px-5 text-center">
-            <HtmlContent
-              html={pageApartments.intro}
-              className="font-serif text-delta text-heading"
-            />
+        <section className="py-20 lg:py-28 bg-surface-alt">
+          <div className="mx-auto max-w-3xl px-8 text-center">
+            <HtmlContent html={pageApartments.intro} className="font-body text-body-lg text-dark" />
+            <div className="mx-auto mt-8 w-12 h-[3px] bg-rust rounded-sm" />
           </div>
         </section>
       )}
 
       {/* Apartments Grid with Filter */}
-      <section className="py-16">
-        <div className="mx-auto max-w-7xl px-5">
+      <section className="py-20 lg:py-28 bg-surface">
+        <div className="mx-auto max-w-6xl px-8">
           <CategoryFilter
             categories={categories}
             apartments={apartments}
@@ -157,9 +160,9 @@ export default async function AccommodationsPage({
 
       {/* Beddy Booking Bar */}
       {homePage?.beddyId && (
-        <section className="py-12 bg-cream">
-          <div className="mx-auto max-w-3xl px-5 text-center">
-            <p className="font-serif italic text-delta text-heading mb-6">
+        <section className="py-16 bg-surface-alt">
+          <div className="mx-auto max-w-3xl px-8 text-center">
+            <p className="font-body text-body-lg text-dark mb-8">
               {locale === 'en' ? 'Search availability' : 'Cerca disponibilità'}
             </p>
             <BeddyBar locale={locale as Locale} widgetCode={homePage.beddyId} />
