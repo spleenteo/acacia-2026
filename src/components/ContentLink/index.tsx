@@ -1,7 +1,7 @@
 'use client';
 
 import { ContentLink as DatoCMSContentLink } from 'react-datocms';
-import { usePathname, useRouter } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 
 /**
  * ContentLink component enables click-to-edit overlays for DatoCMS content.
@@ -51,7 +51,6 @@ import { usePathname, useRouter } from 'next/navigation';
  * @see https://www.datocms.com/marketplace/plugins/i/datocms-plugin-web-previews
  */
 export default function ContentLink() {
-  const router = useRouter();
   const pathname = usePathname();
 
   return (
@@ -60,7 +59,7 @@ export default function ContentLink() {
       // Inside Visual mode, users can navigate to different URLs (like a browser bar)
       // and the plugin will request the preview to navigate accordingly
       onNavigateTo={(path: string) => {
-        router.push(path);
+        window.location.assign(path);
       }}
       // Notify the Web Previews plugin when the URL changes
       // This keeps the plugin in sync with the current page being previewed

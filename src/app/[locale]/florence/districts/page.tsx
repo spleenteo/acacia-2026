@@ -22,11 +22,7 @@ const query = graphql(
   [DistrictCardFragment],
 );
 
-export default async function DistrictsPage({
-  params,
-}: {
-  params: Promise<{ locale: string }>;
-}) {
+export default async function DistrictsPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   const { isEnabled: isDraftModeEnabled } = await draftMode();
 
