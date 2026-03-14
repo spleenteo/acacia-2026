@@ -1,7 +1,7 @@
 'use client';
 
 import { ContentLink as DatoCMSContentLink } from 'react-datocms';
-import { usePathname } from 'next/navigation';
+import { useState, useEffect } from 'react';
 
 /**
  * ContentLink component enables click-to-edit overlays for DatoCMS content.
@@ -51,7 +51,17 @@ import { usePathname } from 'next/navigation';
  * @see https://www.datocms.com/marketplace/plugins/i/datocms-plugin-web-previews
  */
 export default function ContentLink() {
-  const pathname = usePathname();
+  // Avoid next/navigation hooks (usePathname, useRouter) — they subscribe to
+  // router state and trigger a Turbopack "unsubscribe" TypeError in Next.js 16.
+  const [currentPath, setCurrentPath] = useState(() =>
+    typeof window !== 'undefined' ? window.location.pathname : '/',
+  );
+
+  useEffect(() => {
+    const onPopState = () => setCurrentPath(window.location.pathname);
+    window.addEventListener('popstate', onPopState);
+    return () => window.removeEventListener('popstate', onPopState);
+  }, []);
 
   return (
     <DatoCMSContentLink
@@ -63,7 +73,7 @@ export default function ContentLink() {
       }}
       // Notify the Web Previews plugin when the URL changes
       // This keeps the plugin in sync with the current page being previewed
-      currentPath={pathname}
+      currentPath={currentPath}
       // Click-to-edit overlays are enabled only on devices with hover capability,
       // since they interfere with normal touch interactions on mobile devices.
       //

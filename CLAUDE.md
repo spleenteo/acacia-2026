@@ -45,9 +45,15 @@ Two type generation systems work together:
 
 **Record routing**: `src/lib/datocms/recordInfo.ts` maps DatoCMS item types to frontend URLs. Used by Web Previews and SEO Analysis plugins. Currently maps Apartment model (ID `2726`) to `/` (placeholder — full mapping for all models planned in V5 slice).
 
-**Locale routing**: App Router uses a `[locale]` dynamic segment (`src/app/[locale]/`). Supported locales are `en` and `it`, configured in `src/i18n/config.ts`. The root layout (`src/app/layout.tsx`) provides `<html>` and `<body>` tags; the locale layout adds header, footer, Beddy script, and draft mode controls. A minimal `middleware.ts` for redirecting `/` → `/en` is planned (V2 slice).
+**Locale routing**: App Router uses a `[locale]` dynamic segment (`src/app/[locale]/`). Supported locales are `en` and `it`, configured in `src/i18n/config.ts`. The root layout (`src/app/layout.tsx`) provides `<html lang>` dynamically from params; the locale layout adds header, footer, Beddy script, and draft mode controls. `middleware.ts` redirects paths without locale prefix to `/en`.
+
+**Mood apartments (union type)**: Moods link to apartments via `boxes` → `MoodItemsRecord[]` → `object` (union: `ApartmentRecord | PostRecord | ServiceRecord | TipRecord`). Apartments are extracted inline with `__typename === 'ApartmentRecord'` filtering.
 
 **HTML content from DatoCMS**: Legacy text fields (description, abstract, claim) are queried with `markdown: true` and rendered via the `<HtmlContent>` component (`dangerouslySetInnerHTML`). This will be replaced with a Structured Text renderer when DatoCMS schema migrates.
+
+**Fragment separation for client components**: When a GraphQL fragment is defined in a `'use client'` file but needs to be imported in server components, extract it to a separate `.ts` file (e.g., `ImageGallery/fragment.ts`). Importing from `'use client'` files in server components causes gql.tada build errors ("j.definitions is not iterable").
+
+**Turbopack workaround**: Next.js 16 Turbopack has a bug where `useRouter()`, `usePathname()`, and other `next/navigation` hooks that subscribe to router state cause "Cannot read properties of undefined (reading 'unsubscribe')" errors. Use `window.history.replaceState` instead of `router.push`, `window.location.pathname` instead of `usePathname()`, and `window.location.assign()` for full navigation. `useSearchParams` works when wrapped in a Suspense boundary.
 
 ### Styling
 
@@ -63,8 +69,15 @@ Tailwind CSS v4 with `@theme inline` design tokens in `src/app/global.css`. Bran
 | `HtmlContent`      | `src/components/HtmlContent/`      | Renders legacy HTML from DatoCMS text fields             |
 | `ApartmentCard`    | `src/components/ApartmentCard/`    | Apartment card with colocated GraphQL fragment           |
 | `MoodCard`         | `src/components/MoodCard/`         | Mood card with colocated GraphQL fragment                |
+| `DistrictCard`     | `src/components/DistrictCard/`     | District card with colocated GraphQL fragment             |
+| `ImageGallery`     | `src/components/ImageGallery/`     | Client component lightbox gallery (fragment in `fragment.ts`) |
+| `CategoryFilter`   | `src/components/CategoryFilter/`   | Client component for apartment category filtering        |
+| `CuddlesList`      | `src/components/CuddlesList/`      | Amenities list with colocated fragment                   |
+| `UpsList`          | `src/components/UpsList/`          | Lifestyle features pill list with colocated fragment     |
+| `InfoDetail`       | `src/components/InfoDetail/`       | Info blocks (text + address) with union type handling    |
+| `DistrictLink`     | `src/components/DistrictLink/`     | Editorial link to district detail page                   |
 | `ResponsiveImage`  | `src/components/ResponsiveImage/`  | DatoCMS responsive image with fragment                   |
-| `ContentLink`      | `src/components/ContentLink/`      | Click-to-edit overlays (draft mode)                      |
+| `ContentLink`      | `src/components/ContentLink/`      | Click-to-edit overlays (draft mode, no next/navigation hooks) |
 | `DraftModeToggler` | `src/components/DraftModeToggler/` | Draft mode toggle button                                 |
 
 ### Path Alias
