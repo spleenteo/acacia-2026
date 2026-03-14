@@ -27,7 +27,12 @@ const query = graphql(
         name(locale: $locale)
         slug
       }
-      allApartments(locale: $locale, first: 100, filter: { published: { eq: true } }, orderBy: [position_ASC]) {
+      allApartments(
+        locale: $locale
+        first: 100
+        filter: { published: { eq: true } }
+        orderBy: [position_ASC]
+      ) {
         id
         category {
           slug
@@ -83,9 +88,7 @@ export default async function AccommodationsPage({
           </div>
         )}
         <div className="relative z-10 text-center text-white px-5 py-20 max-w-3xl mx-auto">
-          <h1 className="font-heading font-extralight text-huge mb-4">
-            {pageApartments?.title}
-          </h1>
+          <h1 className="font-heading font-extralight text-huge mb-4">{pageApartments?.title}</h1>
           {pageApartments?.subtitle && (
             <p className="font-serif italic text-beta text-white/80">{pageApartments.subtitle}</p>
           )}

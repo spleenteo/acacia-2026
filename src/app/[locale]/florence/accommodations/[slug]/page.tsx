@@ -203,7 +203,10 @@ export default async function ApartmentDetailPage({
       {apartment.description && (
         <section className="py-16">
           <div className="mx-auto max-w-3xl px-5">
-            <HtmlContent html={apartment.description} className="font-serif text-delta text-heading leading-relaxed" />
+            <HtmlContent
+              html={apartment.description}
+              className="font-serif text-delta text-heading leading-relaxed"
+            />
           </div>
         </section>
       )}

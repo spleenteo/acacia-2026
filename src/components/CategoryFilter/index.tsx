@@ -26,9 +26,7 @@ type Props = {
 
 function CategoryFilterInner({ categories, apartments, locale, allLabel }: Props) {
   const searchParams = useSearchParams();
-  const [activeCategory, setActiveCategory] = useState<string | null>(
-    searchParams.get('category'),
-  );
+  const [activeCategory, setActiveCategory] = useState<string | null>(searchParams.get('category'));
 
   const setCategory = (slug: string | null) => {
     setActiveCategory(slug);
