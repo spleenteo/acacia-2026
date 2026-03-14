@@ -90,7 +90,10 @@ export default async function MoodsPage({ params }: { params: Promise<{ locale: 
       {pageMoods?.description && (
         <section className="py-20 lg:py-28 bg-surface-alt">
           <div className="mx-auto max-w-3xl px-8 text-center">
-            <HtmlContent html={pageMoods.description} className="font-body text-body-lg text-dark" />
+            <HtmlContent
+              html={pageMoods.description}
+              className="font-body text-body-lg text-dark"
+            />
             <div className="mx-auto mt-8 w-12 h-[3px] bg-rust rounded-sm" />
           </div>
         </section>

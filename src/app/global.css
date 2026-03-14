@@ -7,36 +7,36 @@
      ══════════════════════════════════════ */
 
   /* Backgrounds — warm cream/ivory progression */
-  --color-surface: #FDFBF8;
-  --color-surface-alt: #F5F0E8;
-  --color-surface-warm: #ECE6DB;
+  --color-surface: #fdfbf8;
+  --color-surface-alt: #f5f0e8;
+  --color-surface-warm: #ece6db;
 
   /* Dark tones — warm brown-black, NEVER pure #000 */
-  --color-dark: #2E2822;
-  --color-dark-soft: #3D352D;
+  --color-dark: #2e2822;
+  --color-dark-soft: #3d352d;
 
   /* Text hierarchy */
-  --color-body: #2E2822;
-  --color-muted: #847A6F;
-  --color-light: #B0A698;
+  --color-body: #2e2822;
+  --color-muted: #847a6f;
+  --color-light: #b0a698;
 
   /* Rust — THE identity accent color */
-  --color-rust: #D0512A;
-  --color-rust-hover: #B8441F;
-  --color-rust-soft: #E07A52;
-  --color-rust-pale: #FADDD2;
-  --color-rust-deep: #9C3A1A;
+  --color-rust: #d0512a;
+  --color-rust-hover: #b8441f;
+  --color-rust-soft: #e07a52;
+  --color-rust-pale: #faddd2;
+  --color-rust-deep: #9c3a1a;
 
   /* Supporting */
-  --color-gold: #D4A94B;
-  --color-card: #FFFFFF;
+  --color-gold: #d4a94b;
+  --color-card: #ffffff;
   --color-alert: #b62c3b;
   --color-notice: #e9604b;
   --color-white: #fff;
 
   /* Borders */
-  --color-border: #E5DDD2;
-  --color-border-light: #EFEADF;
+  --color-border: #e5ddd2;
+  --color-border-light: #efeadf;
 
   /* ══════════════════════════════════════
      FONTS
@@ -96,7 +96,7 @@
      ══════════════════════════════════════ */
 
   --shadow-card: 0 2px 12px rgba(46, 40, 34, 0.04);
-  --shadow-card-hover: 0 16px 48px rgba(46, 40, 34, 0.10);
+  --shadow-card-hover: 0 16px 48px rgba(46, 40, 34, 0.1);
 
   /* ══════════════════════════════════════
      BREAKPOINTS
