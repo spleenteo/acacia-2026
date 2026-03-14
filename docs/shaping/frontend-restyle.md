@@ -289,17 +289,18 @@ Il nav è `fixed top-0`, il `<main>` deve partire da `top: 0` per permettere l'o
 
 Tutte e tre le card condividono **la stessa struttura**:
 
-| Elemento       | ApartmentCard              | MoodCard                | DistrictCard              |
-| -------------- | -------------------------- | ----------------------- | ------------------------- |
-| Immagine       | 700×520 (4:3), crop center | 700×520 (4:3)           | 700×520 (4:3) dal gallery |
-| Tag pill       | `highlight` (se presente)  | "Mood" hardcoded        | "Firenze" hardcoded       |
-| Label sopra h3 | `category.name` in rust    | —                       | —                         |
-| Titolo         | `name` in Playfair h3      | `name` in Playfair h3   | `name` in Playfair h3     |
-| Sottotitolo    | `claim` body-sm muted      | `claim` body-sm muted   | —                         |
-| Footer         | "Discover →" rust on hover | "Explore →" rust hover  | "Explore →" rust hover    |
-| Interazione    | Lift + ombra + zoom img    | Stesso                  | Stesso                    |
+| Elemento       | ApartmentCard              | MoodCard               | DistrictCard              |
+| -------------- | -------------------------- | ---------------------- | ------------------------- |
+| Immagine       | 700×520 (4:3), crop center | 700×520 (4:3)          | 700×520 (4:3) dal gallery |
+| Tag pill       | `highlight` (se presente)  | "Mood" hardcoded       | "Firenze" hardcoded       |
+| Label sopra h3 | `category.name` in rust    | —                      | —                         |
+| Titolo         | `name` in Playfair h3      | `name` in Playfair h3  | `name` in Playfair h3     |
+| Sottotitolo    | `claim` body-sm muted      | `claim` body-sm muted  | —                         |
+| Footer         | "Discover →" rust on hover | "Explore →" rust hover | "Explore →" rust hover    |
+| Interazione    | Lift + ombra + zoom img    | Stesso                 | Stesso                    |
 
 **Problemi CURRENT**:
+
 - Tutte identiche — nessuna identità visiva per tipo di contenuto
 - 4:3 landscape è basso e compresso — la foto non respira
 - Tag pill sempre visibile anche senza contenuto significativo ("Mood", "Firenze" fissi)
@@ -310,15 +311,15 @@ Tutte e tre le card condividono **la stessa struttura**:
 
 ### Requisiti Cards (R-C)
 
-| ID   | Requirement                                                                                          | Status    |
-| ---- | ---------------------------------------------------------------------------------------------------- | --------- |
-| RC0  | La foto deve dominare — almeno 60-65% dell'altezza totale della card                                 | Must-have |
-| RC1  | ApartmentCard deve mostrare info funzionali: capienza (sleeps) o n. camere                          | Must-have |
-| RC2  | Le tre card condividono la struttura base ma ApartmentCard è distinta nelle info                     | Must-have |
-| RC3  | Funziona con titoli corti (3 parole) e lunghi (6-7 parole) senza layout break                       | Must-have |
-| RC4  | Mobile: 1 colonna, card leggibile a 375px di larghezza                                               | Must-have |
-| RC5  | Hover elegante — non eccessivo, coerente con tono editoriale                                         | Must-have |
-| RC6  | Il tag/pill deve essere significativo — niente label fisse che non aggiungono valore                 | Nice-to-have |
+| ID  | Requirement                                                                          | Status       |
+| --- | ------------------------------------------------------------------------------------ | ------------ |
+| RC0 | La foto deve dominare — almeno 60-65% dell'altezza totale della card                 | Must-have    |
+| RC1 | ApartmentCard deve mostrare info funzionali: capienza (sleeps) o n. camere           | Must-have    |
+| RC2 | Le tre card condividono la struttura base ma ApartmentCard è distinta nelle info     | Must-have    |
+| RC3 | Funziona con titoli corti (3 parole) e lunghi (6-7 parole) senza layout break        | Must-have    |
+| RC4 | Mobile: 1 colonna, card leggibile a 375px di larghezza                               | Must-have    |
+| RC5 | Hover elegante — non eccessivo, coerente con tono editoriale                         | Must-have    |
+| RC6 | Il tag/pill deve essere significativo — niente label fisse che non aggiungono valore | Nice-to-have |
 
 ---
 
@@ -328,24 +329,24 @@ Tutte e tre le card condividono **la stessa struttura**:
 
 Immagine ritagliata in formato verticale (3:4 o 5:7). Testo sotto l'immagine, stile attuale ma con più respiro. Approccio conservativo e robusto.
 
-| Part | Mechanism |
-|------|-----------|
-| D1.1 | Immagine 600×800 (3:4) — portrait, foto protagonista |
+| Part | Mechanism                                                                |
+| ---- | ------------------------------------------------------------------------ |
+| D1.1 | Immagine 600×800 (3:4) — portrait, foto protagonista                     |
 | D1.2 | Testo sotto: category label → h3 Playfair → claim body-sm → link freccia |
-| D1.3 | Pill tag solo se `highlight` ha contenuto (per ApartmentCard) |
-| D1.4 | ApartmentCard: riga con ícone 🛏 N camere o 👤 N persone |
+| D1.3 | Pill tag solo se `highlight` ha contenuto (per ApartmentCard)            |
+| D1.4 | ApartmentCard: riga con ícone 🛏 N camere o 👤 N persone                 |
 
 #### D2 — Overlay Text (Plum-like)
 
 Foto occupa tutta la card (aspect ratio 5:6 o square). Titolo e label in overlay scuro sul fondo dell'immagine. Stile più drammatico.
 
-| Part | Mechanism |
-|------|-----------|
+| Part | Mechanism                                                                        |
+| ---- | -------------------------------------------------------------------------------- |
 | D2.1 | Card senza padding text — foto full-bleed con `rounded-card` e `overflow-hidden` |
-| D2.2 | Gradient overlay sul fondo: `rgba(20,10,5,0.7) 0% → transparent 50%` |
-| D2.3 | Titolo in Playfair white sul fondo dell'immagine |
-| D2.4 | Label piccola rust-soft sopra al titolo (category o tipo) |
-| D2.5 | Al hover: gradient più scuro + zoom immagine |
+| D2.2 | Gradient overlay sul fondo: `rgba(20,10,5,0.7) 0% → transparent 50%`             |
+| D2.3 | Titolo in Playfair white sul fondo dell'immagine                                 |
+| D2.4 | Label piccola rust-soft sopra al titolo (category o tipo)                        |
+| D2.5 | Al hover: gradient più scuro + zoom immagine                                     |
 
 #### D3 — Ibrido (D1 base, D2 per featured)
 
@@ -355,17 +356,18 @@ La griglia usa D1 (text below) per la maggior parte delle card. Una card "featur
 
 ### Fit Check Cards
 
-| Req | Requirement                                           | Status       | D1  | D2  | D3  |
-| --- | ----------------------------------------------------- | ------------ | --- | --- | --- |
-| RC0 | Foto domina (60-65%+ altezza card)                    | Must-have    | ✅  | ✅  | ✅  |
-| RC1 | Info funzionali ApartmentCard (sleeps/camere)         | Must-have    | ✅  | ❌  | ✅  |
-| RC2 | Struttura base condivisa, ApartmentCard distinta      | Must-have    | ✅  | ✅  | ✅  |
-| RC3 | Titoli corti e lunghi senza break                     | Must-have    | ✅  | ❌  | ✅  |
-| RC4 | Mobile 375px leggibile                                | Must-have    | ✅  | ✅  | ✅  |
-| RC5 | Hover elegante                                        | Must-have    | ✅  | ✅  | ✅  |
-| RC6 | Pill tag significativo                                | Nice-to-have | ✅  | ✅  | ✅  |
+| Req | Requirement                                      | Status       | D1  | D2  | D3  |
+| --- | ------------------------------------------------ | ------------ | --- | --- | --- |
+| RC0 | Foto domina (60-65%+ altezza card)               | Must-have    | ✅  | ✅  | ✅  |
+| RC1 | Info funzionali ApartmentCard (sleeps/camere)    | Must-have    | ✅  | ❌  | ✅  |
+| RC2 | Struttura base condivisa, ApartmentCard distinta | Must-have    | ✅  | ✅  | ✅  |
+| RC3 | Titoli corti e lunghi senza break                | Must-have    | ✅  | ❌  | ✅  |
+| RC4 | Mobile 375px leggibile                           | Must-have    | ✅  | ✅  | ✅  |
+| RC5 | Hover elegante                                   | Must-have    | ✅  | ✅  | ✅  |
+| RC6 | Pill tag significativo                           | Nice-to-have | ✅  | ✅  | ✅  |
 
 **Note:**
+
 - D2 fallisce RC1: con overlay text non c'è spazio per info funzionali (sleeps, camere)
 - D2 fallisce RC3: titoli lunghi in overlay su immagine non garantiscono leggibilità — dipende troppo dal contenuto dell'immagine
 - D3 aggiunge complessità senza risolvere i problemi di D2 per le card in griglia
@@ -395,6 +397,7 @@ Foto portrait → spazio generoso → titolo serifa → info minimali. **Niente 
 ```
 
 **Decisioni confermate:**
+
 - Sleeps/camere: solo in pagina dettaglio, non nella card
 - "Scopri →": rimosso — tutta la card è cliccabile
 - Highlight come elemento bottom opzionale: se presente, è il gancio editoriale ("Vista sul Duomo", "Con terrazza")
@@ -407,6 +410,7 @@ FOTO 3:4 → p-5 → Nome mood (Playfair h3) → claim (hidden, appare in hover)
 ```
 
 Il titolo grande dà già l'informazione principale. Il claim è uno strato editoriale di profondità:
+
 - **Desktop**: `opacity-0 translate-y-1 → opacity-100 translate-y-0` on `group-hover`, duration 300ms
 - **Mobile** (no hover): claim sempre visibile — non c'è interazione hover, non si può nascondere
 
@@ -422,17 +426,17 @@ La massima semplicità — il quartiere si vende con la foto e il nome.
 
 ### Parts D1 (implementazione)
 
-| Part  | Mechanism                                                                                                                                 |
-| ----- | ----------------------------------------------------------------------------------------------------------------------------------------- |
-| D1.1  | **Immagine portrait**: `imgixParams: { w: 600, h: 800, fit: crop }` su tutti e tre i fragment — crop center                              |
-| D1.2  | **Card container**: `bg-card rounded-card overflow-hidden` — senza shadow a riposo, `hover:shadow-card-hover hover:-translate-y-0.5` leggero |
-| D1.3  | **Zoom immagine on hover**: `group-hover:scale-[1.03]` duration-600 — più sottile dell'attuale 1.04                                       |
-| D1.4  | **Categoria** (ApartmentCard only): `font-body text-caption text-muted font-normal mb-1.5` — sentence case, NO uppercase                 |
-| D1.5  | **Titolo**: `font-heading text-h3 font-normal text-dark leading-snug` — Playfair regular, invariato come peso                            |
-| D1.6  | **Highlight** (ApartmentCard, opzionale): `font-body text-caption text-rust font-normal mt-auto pt-3` — solo se il campo ha contenuto   |
-| D1.7  | **Padding content**: `p-5` (20px) — leggermente più stretto dell'attuale `p-6` per bilanciare l'immagine più alta                        |
-| D1.8  | **Pill tags**: rimossi da tutte e tre le card — niente "Mood" hardcoded, niente "Firenze" hardcoded                                       |
-| D1.9  | **Nessun footer link**: niente "Scopri →" / "Esplora →" — la card intera è il link                                                       |
+| Part  | Mechanism                                                                                                                                                                                        |
+| ----- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| D1.1  | **Immagine portrait**: `imgixParams: { w: 600, h: 800, fit: crop }` su tutti e tre i fragment — crop center                                                                                      |
+| D1.2  | **Card container**: `bg-card rounded-card overflow-hidden` — senza shadow a riposo, `hover:shadow-card-hover hover:-translate-y-0.5` leggero                                                     |
+| D1.3  | **Zoom immagine on hover**: `group-hover:scale-[1.03]` duration-600 — più sottile dell'attuale 1.04                                                                                              |
+| D1.4  | **Categoria** (ApartmentCard only): `font-body text-caption text-muted font-normal mb-1.5` — sentence case, NO uppercase                                                                         |
+| D1.5  | **Titolo**: `font-heading text-h3 font-normal text-dark leading-snug` — Playfair regular, invariato come peso                                                                                    |
+| D1.6  | **Highlight** (ApartmentCard, opzionale): `font-body text-caption text-rust font-normal mt-auto pt-3` — solo se il campo ha contenuto                                                            |
+| D1.7  | **Padding content**: `p-5` (20px) — leggermente più stretto dell'attuale `p-6` per bilanciare l'immagine più alta                                                                                |
+| D1.8  | **Pill tags**: rimossi da tutte e tre le card — niente "Mood" hardcoded, niente "Firenze" hardcoded                                                                                              |
+| D1.9  | **Nessun footer link**: niente "Scopri →" / "Esplora →" — la card intera è il link                                                                                                               |
 | D1.10 | **MoodCard claim reveal**: `opacity-0 translate-y-1 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300` — su mobile sempre visibile (`md:opacity-0 md:translate-y-1`) |
 
 ---
@@ -442,6 +446,7 @@ La massima semplicità — il quartiere si vende con la foto e il nome.
 Nei siti editoriali di riferimento le card si fondono con lo sfondo cream della pagina, e il confine visivo è dato solo dall'angolo arrotondato e dall'immagine.
 
 Acacia ha `shadow-card` (2px 12px rgba leggera). Opzioni:
+
 - **Senza shadow**: più Plum-like, card si fondono con `bg-surface`, elegante
 - **Con shadow leggera**: mantiene la sensazione di "carta fisica", più familiare
 

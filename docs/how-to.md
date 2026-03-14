@@ -34,17 +34,17 @@ AI-optimized compact reference for Acacia Firenze project behavior and patterns.
 
 ### Patterns
 
-| Pattern            | Implementation                                                                                              |
-| ------------------ | ----------------------------------------------------------------------------------------------------------- |
-| Section label      | `text-label uppercase tracking-[0.22em] text-rust font-medium` — sections only, NOT card metadata          |
-| Editorial emphasis | `<em>` in headings → italic (font-normal, no weight change)                                                 |
-| Heading weight     | Playfair Display always `font-normal` — never `font-bold` or `font-semibold`                                |
-| Card image hover   | `overflow-hidden rounded-sm` on image wrapper + `group-hover:shadow-card-hover` + image `scale-[1.03]`     |
-| Card container     | No background, no default shadow, no `overflow-hidden` on article — text fuses with page background        |
-| Card radius        | `rounded-sm` (2px) on image wrapper only                                                                    |
-| Hero layout        | `min-h-[88svh]` + `marginTop: calc(var(--header-height) * -1)` — slides under fixed nav                    |
-| Nav scroll-aware   | Transparent + `bg-dark/20 backdrop-blur-sm` at top → `bg-surface/95 backdrop-blur-xl` on scroll >50px      |
-| Prose HTML content | `.prose-acacia` class in `global.css` — use on `HtmlContent` wrapper for reliable CMS content styling      |
+| Pattern            | Implementation                                                                                         |
+| ------------------ | ------------------------------------------------------------------------------------------------------ |
+| Section label      | `text-label uppercase tracking-[0.22em] text-rust font-medium` — sections only, NOT card metadata      |
+| Editorial emphasis | `<em>` in headings → italic (font-normal, no weight change)                                            |
+| Heading weight     | Playfair Display always `font-normal` — never `font-bold` or `font-semibold`                           |
+| Card image hover   | `overflow-hidden rounded-sm` on image wrapper + `group-hover:shadow-card-hover` + image `scale-[1.03]` |
+| Card container     | No background, no default shadow, no `overflow-hidden` on article — text fuses with page background    |
+| Card radius        | `rounded-sm` (2px) on image wrapper only                                                               |
+| Hero layout        | `min-h-[88svh]` + `marginTop: calc(var(--header-height) * -1)` — slides under fixed nav                |
+| Nav scroll-aware   | Transparent + `bg-dark/20 backdrop-blur-sm` at top → `bg-surface/95 backdrop-blur-xl` on scroll >50px  |
+| Prose HTML content | `.prose-acacia` class in `global.css` — use on `HtmlContent` wrapper for reliable CMS content styling  |
 
 ---
 
@@ -85,18 +85,18 @@ Web component `<beddy-bar>` loaded via CDN script in layout.
 
 ## Key Components
 
-| Component      | Client? | Fragment? | Notes                              |
-| -------------- | ------- | --------- | ---------------------------------- |
+| Component      | Client? | Fragment? | Notes                                              |
+| -------------- | ------- | --------- | -------------------------------------------------- |
 | Hero           | No      | No        | Full-viewport hero, double gradient, children slot |
 | SiteHeader     | Yes     | No        | Scroll-aware nav, mobile overlay, SVG logo         |
-| SiteFooter     | No      | No        | Two-band (cream + dark)            |
-| ApartmentCard  | No      | Yes       | Colocated fragment                 |
-| MoodCard       | No      | Yes       | Colocated fragment                 |
-| DistrictCard   | No      | Yes       | Colocated fragment                 |
-| CategoryFilter | Yes     | No        | Client-side apartment filtering    |
-| ImageGallery   | Yes     | Yes       | Fragment in separate `fragment.ts` |
-| HtmlContent    | No      | No        | `dangerouslySetInnerHTML` wrapper  |
-| CuddlesList    | No      | Yes       | Amenities                          |
-| UpsList        | No      | Yes       | Lifestyle features pills           |
-| InfoDetail     | No      | Yes       | Text + address blocks              |
-| DistrictLink   | No      | No        | Editorial link to district         |
+| SiteFooter     | No      | No        | Two-band (cream + dark)                            |
+| ApartmentCard  | No      | Yes       | Colocated fragment                                 |
+| MoodCard       | No      | Yes       | Colocated fragment                                 |
+| DistrictCard   | No      | Yes       | Colocated fragment                                 |
+| CategoryFilter | Yes     | No        | Client-side apartment filtering                    |
+| ImageGallery   | Yes     | Yes       | Fragment in separate `fragment.ts`                 |
+| HtmlContent    | No      | No        | `dangerouslySetInnerHTML` wrapper                  |
+| CuddlesList    | No      | Yes       | Amenities                                          |
+| UpsList        | No      | Yes       | Lifestyle features pills                           |
+| InfoDetail     | No      | Yes       | Text + address blocks                              |
+| DistrictLink   | No      | No        | Editorial link to district                         |
