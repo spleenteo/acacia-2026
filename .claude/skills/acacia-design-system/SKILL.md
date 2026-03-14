@@ -167,7 +167,7 @@ Always use `font-light` (300) for body paragraphs. Reserve `font-normal` (400) f
 | Role            | Classes                                                                  |
 | --------------- | ------------------------------------------------------------------------ |
 | Hero title      | `font-heading text-hero font-normal text-dark tracking-tight`            |
-| Section title   | `font-heading text-h1 font-normal text-dark tracking-tight` + `<em>`    |
+| Section title   | `font-heading text-h1 font-normal text-dark tracking-tight` + `<em>`     |
 | Subsection      | `font-heading text-h2 font-normal text-dark`                             |
 | Card title      | `font-heading text-h3 font-normal text-dark`                             |
 | Grid card title | `font-heading text-h4 font-normal text-dark`                             |
