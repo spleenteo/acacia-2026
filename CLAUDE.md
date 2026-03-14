@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Next.js 16 (App Router) starter kit integrated with DatoCMS as headless CMS. Uses React 19, TypeScript (strict mode), and deploys to Netlify. Node 22 required (see .nvmrc).
+Acacia Firenze — Next.js 16 (App Router) website integrated with DatoCMS as headless CMS. Uses React 19, TypeScript (strict mode), Tailwind CSS v4, and deploys to Vercel. Node 22 required (see .nvmrc). Bilingual site (EN/IT) with locale-prefixed URLs (`/en/...`, `/it/...`).
 
 ## Commands
 
@@ -13,7 +13,7 @@ npm run dev              # Start dev server
 npm run build            # Production build
 npm run lint             # ESLint + Prettier check
 npm run format           # Auto-format with Prettier
-npm run generate-schema  # Regenerate GraphQL schema from DatoCMS (requires DATOCMS_PUBLISHED_CONTENT_CDA_TOKEN)
+npm run generate-schema  # Regenerate GraphQL schema + introspection types from DatoCMS
 npm run generate-cma-types # Regenerate CMA types (requires DATOCMS_CMA_TOKEN)
 ```
 
@@ -26,24 +26,46 @@ Pre-commit hook runs `npm run format` automatically via simple-git-hooks.
 All content comes from DatoCMS via its GraphQL Content Delivery API. The central data-fetching function is `src/lib/datocms/executeQuery.ts`, which wraps `@datocms/cda-client` with Next.js cache integration (force-cache + `datocms` cache tag). Cache is invalidated by a DatoCMS webhook hitting `/api/invalidate-cache`.
 
 Two CDA tokens control what content is returned:
+
 - `DATOCMS_PUBLISHED_CONTENT_CDA_TOKEN` — published content for production
 - `DATOCMS_DRAFT_CONTENT_CDA_TOKEN` — draft content with stega-encoded metadata for click-to-edit overlays
 
-### GraphQL Type Safety with gql.tada
+### GraphQL Type Safety
 
-Queries and fragments use `gql.tada` for compile-time type safety against the DatoCMS schema. The schema lives in `schema.graphql` (auto-generated, do not edit). Types are extracted with `ResultOf<>` and `VariablesOf<>`. After any DatoCMS schema change, run `npm run generate-schema`.
+Two type generation systems work together:
+
+- **gql.tada** — compile-time type safety for CDA GraphQL queries. Schema lives in `schema.graphql` (auto-generated via `gql.tada generate schema`). The TypeScript plugin in `tsconfig.json` reads it for editor inference. `gql.tada generate output` produces `graphql-env.d.ts` for build-time checks. After any DatoCMS schema change, run `npm run generate-schema`.
+- **@datocms/cli** — generates `src/lib/datocms/cma-types.ts` with typed CMA record definitions used in `recordInfo.ts` for record-to-URL mapping.
 
 ### Key Patterns
 
-**Fragment colocation**: GraphQL fragments are defined in the same file as the component that consumes them (e.g., `ImageBlockFragment` in `src/components/blocks/ImageBlock/index.tsx`). Components receive data typed as `FragmentOf<typeof SomeFragment>`.
+**Fragment colocation**: GraphQL fragments are defined in the same file as the component that consumes them (e.g., `ResponsiveImageFragment` in `src/components/ResponsiveImage/index.tsx`). Components receive data typed as `FragmentOf<typeof SomeFragment>`.
 
-**Page generation helpers**: `src/lib/datocms/realtime/` contains utilities (`generatePageComponent`, `generatePageComponentAndMetadataFn`) that produce page components with automatic draft-mode switching and real-time update support.
+**Draft mode**: Next.js Draft Mode is toggled via `/api/draft-mode/enable` and `/api/draft-mode/disable`. When active, pages use the draft CDA token and enable content-link click-to-edit overlays.
 
-**Draft mode**: Next.js Draft Mode is toggled via `/api/draft-mode/enable` and `/api/draft-mode/disable`. When active, pages use the draft CDA token and enable real-time WebSocket updates.
+**Record routing**: `src/lib/datocms/recordInfo.ts` maps DatoCMS item types to frontend URLs. Used by Web Previews and SEO Analysis plugins. Currently maps Apartment model (ID `2726`) to `/`.
+
+**Locale routing**: App Router uses a `[locale]` dynamic segment (`src/app/[locale]/`). Supported locales are `en` and `it`, configured in `src/i18n/config.ts`. The root layout (`src/app/layout.tsx`) provides `<html>` and `<body>` tags; the locale layout adds header, footer, Beddy script, and draft mode controls.
+
+**HTML content from DatoCMS**: Legacy text fields (description, abstract, claim) are queried with `markdown: true` and rendered via the `<HtmlContent>` component (`dangerouslySetInnerHTML`). This will be replaced with a Structured Text renderer when DatoCMS schema migrates.
 
 ### Styling
 
-Pure CSS with custom properties in `src/app/global.css`. OKLCH color space for color variables. No CSS framework (no Tailwind). highlight.js for code syntax highlighting.
+Tailwind CSS v4 with `@theme inline` design tokens in `src/app/global.css`. Brand colors (primary/rust `#C58049`, secondary/cyan `#48a3c7`, cream, heading, etc.), typography (Source Sans Pro for headings, Cormorant Garamond for serif, Lato for body), and custom breakpoints. PostCSS configured in `postcss.config.mjs`.
+
+### Components
+
+| Component | Path | Purpose |
+|-----------|------|---------|
+| `SiteHeader` | `src/components/SiteHeader/` | Navigation with locale switcher, primary bg |
+| `SiteFooter` | `src/components/SiteFooter/` | Two-band footer (cream + dark) |
+| `BeddyBar` | `src/components/BeddyBar/` | Wrapper for `<beddy-bar>` web component (booking widget) |
+| `HtmlContent` | `src/components/HtmlContent/` | Renders legacy HTML from DatoCMS text fields |
+| `ApartmentCard` | `src/components/ApartmentCard/` | Apartment card with colocated GraphQL fragment |
+| `MoodCard` | `src/components/MoodCard/` | Mood card with colocated GraphQL fragment |
+| `ResponsiveImage` | `src/components/ResponsiveImage/` | DatoCMS responsive image with fragment |
+| `ContentLink` | `src/components/ContentLink/` | Click-to-edit overlays (draft mode) |
+| `DraftModeToggler` | `src/components/DraftModeToggler/` | Draft mode toggle button |
 
 ### Path Alias
 
@@ -52,6 +74,7 @@ Pure CSS with custom properties in `src/app/global.css`. OKLCH color space for c
 ## Environment Variables
 
 Required in `.env.local` (see `.env.local.example`):
+
 - `DATOCMS_PUBLISHED_CONTENT_CDA_TOKEN` — CDA published content token
 - `DATOCMS_DRAFT_CONTENT_CDA_TOKEN` — CDA draft content token
 - `DATOCMS_CMA_TOKEN` — Content Management API token (read-only, for schema generation)
