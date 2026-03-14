@@ -5,6 +5,7 @@
 👉 [Visit the DatoCMS homepage](https://www.datocms.com) or see [What is DatoCMS?](#what-is-datocms)
 
 ---
+
 # Based on DatoCMS Next.js Starter Kit
 
 This project aims to be a great starting point for your Next.js projects that need to interact with DatoCMS.
