@@ -55,9 +55,24 @@ Two type generation systems work together:
 
 **Turbopack workaround**: Next.js 16 Turbopack has a bug where `useRouter()`, `usePathname()`, and other `next/navigation` hooks that subscribe to router state cause "Cannot read properties of undefined (reading 'unsubscribe')" errors. Use `window.history.replaceState` instead of `router.push`, `window.location.pathname` instead of `usePathname()`, and `window.location.assign()` for full navigation. `useSearchParams` works when wrapped in a Suspense boundary.
 
-### Styling
+### Styling — "Rinascimento Moderno" Design System
 
-Tailwind CSS v4 with `@theme inline` design tokens in `src/app/global.css`. Brand colors (primary/rust `#C58049`, secondary/cyan `#48a3c7`, cream, heading, etc.), typography (Source Sans Pro for headings, Cormorant Garamond for serif, Lato for body), and custom breakpoints. PostCSS configured in `postcss.config.mjs`.
+Tailwind CSS v4 with `@theme` (NOT `@theme inline`) design tokens in `src/app/global.css`. Full design system reference: `pitches/demostyle.jsx`.
+
+**Critical Tailwind v4 rules:**
+
+- Use `@theme` (without `inline`) so variables are emitted at `:root` and accessible in `@layer base`
+- Font-size tokens use `--text-*` namespace with `--text-*--line-height` companions (NOT `--font-size-*`)
+- All base/reset CSS must be inside `@layer base` — unlayered CSS overrides `@layer utilities` regardless of specificity
+- Never set `color`, `font-family`, or `font-weight` on `h1–h6` in base styles — use Tailwind utility classes
+
+**Palette:** Warm rust accent `#D0512A`, cream surfaces (`surface` #FDFBF8 / `surface-alt` #F5F0E8 / `surface-warm` #ECE6DB), warm dark `#2E2822` (never pure black).
+
+**Typography:** Playfair Display (`font-heading`) for all headings, DM Sans (`font-body`) for body text. Font sizes: `text-hero` (56px), `text-h1` (42px), `text-h2` (36px), `text-h3` (24px), `text-h4` (18px), `text-body-lg` (17px), `text-body` (15px), `text-body-sm` (14px), `text-caption` (13px), `text-label` (12px), `text-tag` (10px), `text-fine` (11px).
+
+**Editorial pattern:** Section headings use `<em>` for italic emphasis on one key word (rendered at `font-weight: 500` via `@layer base` rule). Section labels: `text-label uppercase tracking-[0.22em] text-rust font-medium`.
+
+**Cards:** `rounded-card shadow-card hover:shadow-card-hover hover:-translate-y-1` with image zoom `scale-[1.04]` and rust tag pills. PostCSS configured in `postcss.config.mjs`.
 
 ### Components
 

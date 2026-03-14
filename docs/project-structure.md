@@ -82,13 +82,13 @@ acacia-next/
 
 ## Tech Stack
 
-| Layer | Technology |
-|---|---|
+| Layer     | Technology              |
+| --------- | ----------------------- |
 | Framework | Next.js 16 (App Router) |
-| Language | TypeScript (strict) |
-| React | 19 |
-| CMS | DatoCMS (GraphQL CDA) |
-| Styling | Tailwind CSS v4 |
-| Type gen | gql.tada + @datocms/cli |
-| Deploy | Vercel |
-| Node | 22 |
+| Language  | TypeScript (strict)     |
+| React     | 19                      |
+| CMS       | DatoCMS (GraphQL CDA)   |
+| Styling   | Tailwind CSS v4         |
+| Type gen  | gql.tada + @datocms/cli |
+| Deploy    | Vercel                  |
+| Node      | 22                      |
