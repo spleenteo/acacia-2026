@@ -65,10 +65,7 @@ export default function ImageGallery({ items }: Props) {
             className="group relative overflow-hidden cursor-pointer aspect-[4/3]"
           >
             <div className="transition-transform duration-500 group-hover:scale-110">
-              <ResponsiveImage
-                data={item.thumb}
-                className="w-full h-full object-cover"
-              />
+              <ResponsiveImage data={item.thumb} className="w-full h-full object-cover" />
             </div>
             <div className="absolute inset-0 bg-dark/0 group-hover:bg-dark/20 transition-colors duration-300" />
           </button>

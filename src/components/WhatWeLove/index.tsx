@@ -51,9 +51,7 @@ export default function WhatWeLove({ data, title, label }: Props) {
       <div className="mt-6 text-center min-h-[2em]" aria-live="polite">
         <p
           className={`font-heading italic text-[1.375rem] leading-snug text-muted transition-all duration-500 ease-out ${
-            isTransitioning
-              ? 'opacity-0 translate-y-2'
-              : 'opacity-100 translate-y-0'
+            isTransitioning ? 'opacity-0 translate-y-2' : 'opacity-100 translate-y-0'
           }`}
         >
           {activeCaption || '\u00A0'}
