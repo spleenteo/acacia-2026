@@ -297,6 +297,8 @@ export default async function ApartmentDetailPage({
                     fragment: item as never,
                   }))}
                   title={l.info}
+                  locale={locale}
+                  district={apartment.district}
                 />
               </section>
             )}

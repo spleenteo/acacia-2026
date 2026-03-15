@@ -1,4 +1,5 @@
 import { type FragmentOf, graphql, readFragment } from '@/lib/datocms/graphql';
+import Link from 'next/link';
 
 export const InfoTextFragment = graphql(`
   fragment InfoTextFragment on InfoTextRecord {
@@ -34,12 +35,19 @@ type InfoAddressItem = {
   fragment: FragmentOf<typeof InfoAddressFragment>;
 };
 
+type District = {
+  name: string;
+  slug: string;
+};
+
 type Props = {
   data: (InfoTextItem | InfoAddressItem)[];
   title: string;
+  locale?: string;
+  district?: District | null;
 };
 
-export default function InfoDetail({ data, title }: Props) {
+export default function InfoDetail({ data, title, locale, district }: Props) {
   if (data.length === 0) return null;
 
   return (
@@ -67,16 +75,45 @@ export default function InfoDetail({ data, title }: Props) {
                   {info.detailsLabel.name}
                 </dt>
                 <dd className="text-muted text-body">
-                  {info.addressText && <p className="mb-2">{info.addressText}</p>}
+                  {info.addressText && (
+                    <p className="mb-3">
+                      {info.addressText}
+                      {district && locale && (
+                        <>
+                          {' – '}
+                          <Link
+                            href={`/${locale}/florence/districts/${district.slug}`}
+                            className="text-rust hover:text-rust-hover transition-colors"
+                          >
+                            {district.name}
+                          </Link>
+                        </>
+                      )}
+                    </p>
+                  )}
                   {info.addressMap && (
-                    <a
-                      href={`https://www.google.com/maps?q=${info.addressMap.latitude},${info.addressMap.longitude}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-block text-muted hover:text-rust transition-colors text-caption uppercase font-bold tracking-wider"
-                    >
-                      View on map &rarr;
-                    </a>
+                    <>
+                      <div className="mt-4 overflow-hidden rounded-card">
+                        <iframe
+                          src={`https://maps.google.com/maps?q=${info.addressMap.latitude},${info.addressMap.longitude}&z=15&output=embed`}
+                          width="100%"
+                          height="260"
+                          style={{ border: 0 }}
+                          allowFullScreen
+                          loading="lazy"
+                          referrerPolicy="no-referrer-when-downgrade"
+                          title="Map"
+                        />
+                      </div>
+                      <a
+                        href={`https://www.google.com/maps?q=${info.addressMap.latitude},${info.addressMap.longitude}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-block mt-3 text-muted hover:text-rust transition-colors text-caption uppercase font-bold tracking-wider"
+                      >
+                        Google Maps &rarr;
+                      </a>
+                    </>
                   )}
                 </dd>
               </div>
