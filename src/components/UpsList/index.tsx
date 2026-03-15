@@ -31,12 +31,12 @@ export default function UpsList({ data, title }: Props) {
                 href={up.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-block border border-rust/30 text-rust font-body text-body-sm px-3 py-1.5 rounded-pill hover:bg-rust hover:text-white hover:border-rust transition-all duration-300"
+                className="inline-block border border-rust/30 text-rust font-body text-body px-3 py-1.5 rounded-pill hover:bg-rust hover:text-white hover:border-rust transition-all duration-300"
               >
                 {up.name}
               </a>
             ) : (
-              <span className="inline-block border border-border text-muted font-body text-body-sm px-3 py-1.5 rounded-pill">
+              <span className="inline-block border border-border text-muted font-body text-body px-3 py-1.5 rounded-pill">
                 {up.name}
               </span>
             )}

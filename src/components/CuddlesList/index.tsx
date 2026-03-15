@@ -31,12 +31,12 @@ export default function CuddlesList({ data, title }: Props) {
                 href={cuddle.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="font-body text-body-sm text-muted hover:text-rust transition-colors duration-300"
+                className="font-body text-body text-muted hover:text-rust transition-colors duration-300"
               >
                 {cuddle.name}
               </a>
             ) : (
-              <span className="font-body text-body-sm text-muted">{cuddle.name}</span>
+              <span className="font-body text-body text-muted">{cuddle.name}</span>
             )}
           </li>
         ))}

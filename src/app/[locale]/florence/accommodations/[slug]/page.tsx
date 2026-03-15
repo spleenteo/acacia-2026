@@ -57,6 +57,7 @@ import DistrictLink from '@/components/DistrictLink';
 import BookingSidebar from '@/components/BookingSidebar';
 import WhatWeLove from '@/components/WhatWeLove';
 import { FeaturedSlideshowFragment } from '@/components/WhatWeLove/fragment';
+import HomeTruths, { TruthFragment } from '@/components/HomeTruths';
 import { readFragment } from '@/lib/datocms/graphql';
 
 const query = graphql(
@@ -76,6 +77,9 @@ const query = graphql(
         price
         cin
         acaciaReward
+        homeTruth(locale: $locale) {
+          ...TruthFragment
+        }
         featuredSlideshow {
           ...FeaturedSlideshowFragment
         }
@@ -120,6 +124,7 @@ const query = graphql(
     InfoTextFragment,
     InfoAddressFragment,
     FeaturedSlideshowFragment,
+    TruthFragment,
   ],
 );
 
@@ -150,6 +155,8 @@ const labels = {
     allPhotos: 'All photos',
     whatWeLoveLabel: 'Our favorites',
     whatWeLoveTitle: 'What We Love',
+    homeTruthsLabel: 'Good to know',
+    homeTruthsTitle: 'Home Truths',
   },
   it: {
     bedrooms: 'Camere',
@@ -162,6 +169,8 @@ const labels = {
     allPhotos: 'Tutte le foto',
     whatWeLoveLabel: 'I nostri preferiti',
     whatWeLoveTitle: 'Cosa ci piace',
+    homeTruthsLabel: 'Da sapere',
+    homeTruthsTitle: 'La verità, tutta la verità',
   },
 } as const;
 
@@ -265,6 +274,17 @@ export default async function ApartmentDetailPage({
                   <CuddlesList data={apartment.cuddles} title={l.cuddles} />
                   <UpsList data={apartment.ups} title={l.ups} />
                 </div>
+              </section>
+            )}
+
+            {/* Home Truths */}
+            {apartment.homeTruth.length > 0 && (
+              <section className="mb-16 lg:mb-20">
+                <HomeTruths
+                  data={apartment.homeTruth}
+                  label={l.homeTruthsLabel}
+                  title={l.homeTruthsTitle}
+                />
               </section>
             )}
 

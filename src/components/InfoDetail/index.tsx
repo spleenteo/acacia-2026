@@ -51,10 +51,10 @@ export default function InfoDetail({ data, title }: Props) {
             const info = readFragment(InfoTextFragment, item.fragment);
             return (
               <div key={info.id} className="border-b border-dotted border-border pb-3">
-                <dt className="font-bold text-body-sm text-dark uppercase tracking-wider mb-1">
+                <dt className="font-bold text-body text-dark uppercase tracking-wider mb-1">
                   {info.detailsLabel.name}
                 </dt>
-                <dd className="text-muted text-body-sm">{info.text}</dd>
+                <dd className="text-muted text-body">{info.text}</dd>
               </div>
             );
           }
@@ -63,10 +63,10 @@ export default function InfoDetail({ data, title }: Props) {
             const info = readFragment(InfoAddressFragment, item.fragment);
             return (
               <div key={info.id} className="border-b border-dotted border-border pb-3">
-                <dt className="font-bold text-body-sm text-dark uppercase tracking-wider mb-1">
+                <dt className="font-bold text-body text-dark uppercase tracking-wider mb-1">
                   {info.detailsLabel.name}
                 </dt>
-                <dd className="text-muted text-body-sm">
+                <dd className="text-muted text-body">
                   {info.addressText && <p className="mb-2">{info.addressText}</p>}
                   {info.addressMap && (
                     <a
