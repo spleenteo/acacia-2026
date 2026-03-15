@@ -19,6 +19,11 @@ export const ApartmentCardFragment = graphql(
           ...ResponsiveImageFragment
         }
       }
+      featuredImage {
+        responsiveImage(imgixParams: { w: 600, h: 800, fit: crop }) {
+          ...ResponsiveImageFragment
+        }
+      }
     }
   `,
   [ResponsiveImageFragment],
@@ -40,12 +45,12 @@ export default function ApartmentCard({ data, locale }: Props) {
           className="overflow-hidden rounded-sm transition-shadow duration-500 group-hover:shadow-card-hover"
           style={{ transitionTimingFunction: 'cubic-bezier(0.19,1,0.22,1)' }}
         >
-          {apartment.boxImage?.responsiveImage && (
+          {(apartment.boxImage?.responsiveImage || apartment.featuredImage?.responsiveImage) && (
             <div
               className="transition-transform duration-700 group-hover:scale-[1.03]"
               style={{ transitionTimingFunction: 'cubic-bezier(0.19,1,0.22,1)' }}
             >
-              <ResponsiveImage data={apartment.boxImage.responsiveImage} />
+              <ResponsiveImage data={(apartment.boxImage?.responsiveImage ?? apartment.featuredImage?.responsiveImage)!} />
             </div>
           )}
         </div>

@@ -59,6 +59,9 @@ import WhatWeLove from '@/components/WhatWeLove';
 import { FeaturedSlideshowFragment } from '@/components/WhatWeLove/fragment';
 import HomeTruths, { TruthFragment } from '@/components/HomeTruths';
 import ReviewsList from '@/components/ReviewsList';
+import RelatedContent from '@/components/RelatedContent';
+import { ApartmentCardFragment } from '@/components/ApartmentCard';
+import { MoodCardFragment } from '@/components/MoodCard';
 import { readFragment } from '@/lib/datocms/graphql';
 
 const query = graphql(
@@ -90,6 +93,7 @@ const query = graphql(
           }
         }
         category {
+          id
           name(locale: $locale)
         }
         district {
@@ -145,6 +149,40 @@ const reviewsQuery = graphql(`
   }
 `);
 
+const similarQuery = graphql(
+  `
+    query SimilarApartments($locale: SiteLocale!, $categoryId: ItemId!, $excludeId: ItemId!) {
+      allApartments(
+        locale: $locale
+        filter: { category: { eq: $categoryId }, id: { neq: $excludeId }, published: { eq: true } }
+        first: 3
+      ) {
+        ...ApartmentCardFragment
+      }
+    }
+  `,
+  [ApartmentCardFragment],
+);
+
+const moodsQuery = graphql(
+  `
+    query RelatedMoods($locale: SiteLocale!) {
+      allMoods(locale: $locale, first: 20) {
+        ...MoodCardFragment
+        boxes {
+          object {
+            __typename
+            ... on ApartmentRecord {
+              id
+            }
+          }
+        }
+      }
+    }
+  `,
+  [MoodCardFragment],
+);
+
 const allSlugsQuery = graphql(`
   query AllApartmentSlugs {
     allApartments(first: 100, filter: { published: { eq: true } }) {
@@ -176,6 +214,10 @@ const labels = {
     homeTruthsTitle: 'Home Truths',
     reviewsLabel: 'Guest reviews',
     reviewsTitle: 'What Our Guests Say',
+    similarLabel: 'You may also like',
+    similarTitle: 'Similar Apartments',
+    moodsLabel: 'Explore',
+    moodsTitle: 'Related Moods',
   },
   it: {
     bedrooms: 'Camere',
@@ -192,6 +234,10 @@ const labels = {
     homeTruthsTitle: 'La verità, tutta la verità',
     reviewsLabel: 'Recensioni',
     reviewsTitle: 'I nostri ospiti raccontano',
+    similarLabel: 'Potrebbe piacerti anche',
+    similarTitle: 'Appartamenti simili',
+    moodsLabel: 'Esplora',
+    moodsTitle: 'Mood correlati',
   },
 } as const;
 
@@ -216,6 +262,38 @@ export default async function ApartmentDetailPage({
     includeDrafts: isDraftModeEnabled,
   });
   const reviews = reviewsData.allGuestbooks;
+
+  // Similar apartments (same category)
+  const categoryId = apartment.category
+    ? (apartment.category as { id?: string }).id
+    : null;
+
+  const similarApartments = categoryId
+    ? (
+        await executeQuery(similarQuery, {
+          variables: {
+            locale: locale as Locale,
+            categoryId,
+            excludeId: apartment.id,
+          },
+          includeDrafts: isDraftModeEnabled,
+        })
+      ).allApartments
+    : [];
+
+  // Related moods (those that link to this apartment)
+  const moodsData = await executeQuery(moodsQuery, {
+    variables: { locale: locale as Locale },
+    includeDrafts: isDraftModeEnabled,
+  });
+  const relatedMoods = moodsData.allMoods.filter((mood) =>
+    mood.boxes.some((box) => {
+      const objects = box.object as { __typename: string; id?: string }[];
+      return objects.some(
+        (obj) => obj.__typename === 'ApartmentRecord' && obj.id === apartment.id,
+      );
+    }),
+  );
 
   const l = labels[locale as Locale];
 
@@ -364,6 +442,16 @@ export default async function ApartmentDetailPage({
       {/* Reviews */}
       {reviews.length > 0 && (
         <ReviewsList reviews={reviews} label={l.reviewsLabel} title={l.reviewsTitle} />
+      )}
+
+      {/* Related Content */}
+      {(similarApartments.length > 0 || relatedMoods.length > 0) && (
+        <RelatedContent
+          apartments={similarApartments}
+          moods={relatedMoods}
+          locale={locale as Locale}
+          labels={l}
+        />
       )}
 
       {/* Beddy Booking */}
