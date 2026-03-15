@@ -78,7 +78,7 @@ export default function SiteHeader({ locale, isDraftModeEnabled }: Props) {
             <span
               className={[
                 'font-body text-caption font-normal transition-colors duration-300',
-                scrolled ? 'text-light' : 'text-white/50',
+                scrolled ? 'text-muted' : 'text-white/70',
               ].join(' ')}
             >
               {locale.toUpperCase()} /{' '}
@@ -163,12 +163,12 @@ export default function SiteHeader({ locale, isDraftModeEnabled }: Props) {
 
         {/* Bottom bar: locale + CTA */}
         <div className="flex items-center justify-between pt-8 border-t border-white/10">
-          <span className="font-body text-caption text-white/40">
+          <span className="font-body text-caption text-white/70">
             {locale.toUpperCase()} /{' '}
             <Link
               href={`/${otherLocale}`}
               onClick={() => setMenuOpen(false)}
-              className="text-white/40 hover:text-white transition-colors duration-200"
+              className="text-white/70 hover:text-white transition-colors duration-200"
             >
               {otherLocale.toUpperCase()}
             </Link>
