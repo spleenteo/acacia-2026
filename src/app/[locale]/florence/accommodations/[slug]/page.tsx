@@ -58,6 +58,7 @@ import BookingSidebar from '@/components/BookingSidebar';
 import WhatWeLove from '@/components/WhatWeLove';
 import { FeaturedSlideshowFragment } from '@/components/WhatWeLove/fragment';
 import HomeTruths, { TruthFragment } from '@/components/HomeTruths';
+import ReviewsList from '@/components/ReviewsList';
 import { readFragment } from '@/lib/datocms/graphql';
 
 const query = graphql(
@@ -128,6 +129,22 @@ const query = graphql(
   ],
 );
 
+const reviewsQuery = graphql(`
+  query ApartmentReviews($apartmentId: ItemId!) {
+    allGuestbooks(
+      filter: { apartment: { eq: $apartmentId }, published: { eq: true } }
+      orderBy: date_DESC
+      first: 6
+    ) {
+      id
+      name
+      title
+      quote
+      date
+    }
+  }
+`);
+
 const allSlugsQuery = graphql(`
   query AllApartmentSlugs {
     allApartments(first: 100, filter: { published: { eq: true } }) {
@@ -157,6 +174,8 @@ const labels = {
     whatWeLoveTitle: 'What We Love',
     homeTruthsLabel: 'Good to know',
     homeTruthsTitle: 'Home Truths',
+    reviewsLabel: 'Guest reviews',
+    reviewsTitle: 'What Our Guests Say',
   },
   it: {
     bedrooms: 'Camere',
@@ -171,6 +190,8 @@ const labels = {
     whatWeLoveTitle: 'Cosa ci piace',
     homeTruthsLabel: 'Da sapere',
     homeTruthsTitle: 'La verità, tutta la verità',
+    reviewsLabel: 'Recensioni',
+    reviewsTitle: 'I nostri ospiti raccontano',
   },
 } as const;
 
@@ -189,6 +210,12 @@ export default async function ApartmentDetailPage({
 
   const { apartment } = data;
   if (!apartment) notFound();
+
+  const reviewsData = await executeQuery(reviewsQuery, {
+    variables: { apartmentId: apartment.id },
+    includeDrafts: isDraftModeEnabled,
+  });
+  const reviews = reviewsData.allGuestbooks;
 
   const l = labels[locale as Locale];
 
@@ -328,6 +355,15 @@ export default async function ApartmentDetailPage({
             locale={locale as Locale}
           />
         </section>
+      )}
+
+      {/* Reviews */}
+      {reviews.length > 0 && (
+        <ReviewsList
+          reviews={reviews}
+          label={l.reviewsLabel}
+          title={l.reviewsTitle}
+        />
       )}
 
       {/* Beddy Booking */}
