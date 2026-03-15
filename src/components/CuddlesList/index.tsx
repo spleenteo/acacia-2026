@@ -1,9 +1,11 @@
 import { type FragmentOf, graphql, readFragment } from '@/lib/datocms/graphql';
+import { getAmenityIcon } from '@/lib/amenity-icons';
 
 export const CuddleFragment = graphql(`
   fragment CuddleFragment on CuddleRecord {
     id
     name(locale: $locale)
+    icon
     url(locale: $locale)
   }
 `);
@@ -20,26 +22,36 @@ export default function CuddlesList({ data, title }: Props) {
 
   return (
     <div>
-      <p className="font-body text-label uppercase tracking-[0.18em] text-rust font-medium mb-2">
+      <p className="font-body text-label uppercase tracking-[0.18em] text-rust font-medium mb-4">
         {title}
       </p>
       <ul className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-0">
-        {cuddles.map((cuddle) => (
-          <li key={cuddle.id} className="border-b border-border-light py-2.5">
-            {cuddle.url ? (
-              <a
-                href={cuddle.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="font-body text-body text-muted hover:text-rust transition-colors duration-300"
-              >
-                {cuddle.name}
-              </a>
-            ) : (
-              <span className="font-body text-body text-muted">{cuddle.name}</span>
-            )}
-          </li>
-        ))}
+        {cuddles.map((cuddle) => {
+          const Icon = getAmenityIcon(cuddle.icon);
+          const content = (
+            <span className="flex items-start gap-3">
+              <Icon size={22} strokeWidth={1.5} className="shrink-0 text-rust/50 mt-0.5" />
+              <span>{cuddle.name}</span>
+            </span>
+          );
+
+          return (
+            <li key={cuddle.id} className="border-b border-border-light py-3">
+              {cuddle.url ? (
+                <a
+                  href={cuddle.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="font-body text-body text-muted hover:text-rust transition-colors duration-300"
+                >
+                  {content}
+                </a>
+              ) : (
+                <span className="font-body text-body text-muted">{content}</span>
+              )}
+            </li>
+          );
+        })}
       </ul>
     </div>
   );

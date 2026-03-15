@@ -294,13 +294,10 @@ export default async function ApartmentDetailPage({
               </section>
             )}
 
-            {/* Cuddles & Ups */}
-            {(apartment.cuddles.length > 0 || apartment.ups.length > 0) && (
+            {/* Amenities */}
+            {apartment.cuddles.length > 0 && (
               <section className="mb-16 lg:mb-20">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-14">
-                  <CuddlesList data={apartment.cuddles} title={l.cuddles} />
-                  <UpsList data={apartment.ups} title={l.ups} />
-                </div>
+                <CuddlesList data={apartment.cuddles} title={l.cuddles} />
               </section>
             )}
 
@@ -332,15 +329,22 @@ export default async function ApartmentDetailPage({
           </div>
 
           {/* ── Sidebar ── */}
-          <BookingSidebar
-            bedrooms={apartment.bedrooms}
-            bathrooms={apartment.bathrooms}
-            sleeps={apartment.sleeps}
-            price={apartment.price}
-            highlight={apartment.highlight}
-            acaciaReward={apartment.acaciaReward}
-            labels={l}
-          />
+          <div>
+            <BookingSidebar
+              bedrooms={apartment.bedrooms}
+              bathrooms={apartment.bathrooms}
+              sleeps={apartment.sleeps}
+              price={apartment.price}
+              highlight={apartment.highlight}
+              acaciaReward={apartment.acaciaReward}
+              labels={l}
+            />
+            {apartment.ups.length > 0 && (
+              <div className="mt-10 lg:mt-8">
+                <UpsList data={apartment.ups} title={l.ups} />
+              </div>
+            )}
+          </div>
         </div>
       </div>
 
@@ -359,11 +363,7 @@ export default async function ApartmentDetailPage({
 
       {/* Reviews */}
       {reviews.length > 0 && (
-        <ReviewsList
-          reviews={reviews}
-          label={l.reviewsLabel}
-          title={l.reviewsTitle}
-        />
+        <ReviewsList reviews={reviews} label={l.reviewsLabel} title={l.reviewsTitle} />
       )}
 
       {/* Beddy Booking */}
