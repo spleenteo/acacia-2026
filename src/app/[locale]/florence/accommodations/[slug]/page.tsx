@@ -264,9 +264,7 @@ export default async function ApartmentDetailPage({
   const reviews = reviewsData.allGuestbooks;
 
   // Similar apartments (same category)
-  const categoryId = apartment.category
-    ? (apartment.category as { id?: string }).id
-    : null;
+  const categoryId = apartment.category ? (apartment.category as { id?: string }).id : null;
 
   const similarApartments = categoryId
     ? (
@@ -289,9 +287,7 @@ export default async function ApartmentDetailPage({
   const relatedMoods = moodsData.allMoods.filter((mood) =>
     mood.boxes.some((box) => {
       const objects = box.object as { __typename: string; id?: string }[];
-      return objects.some(
-        (obj) => obj.__typename === 'ApartmentRecord' && obj.id === apartment.id,
-      );
+      return objects.some((obj) => obj.__typename === 'ApartmentRecord' && obj.id === apartment.id);
     }),
   );
 
@@ -313,14 +309,14 @@ export default async function ApartmentDetailPage({
             />
           </div>
         )}
-        <div className="relative z-10 w-full px-8 pb-14 pt-32">
+        <div className="relative z-10 w-full px-5 md:px-8 pb-14 pt-32">
           <div className="mx-auto max-w-7xl">
             {apartment.category && (
               <p className="font-body font-medium text-label text-white/60 uppercase tracking-[0.15em] mb-3">
                 {apartment.category.name}
               </p>
             )}
-            <h1 className="font-heading font-normal text-hero leading-tight text-white mb-3">
+            <h1 className="font-heading font-normal text-h1 md:text-hero leading-tight text-white mb-3">
               {apartment.name}
             </h1>
             {apartment.claim && (
@@ -347,7 +343,7 @@ export default async function ApartmentDetailPage({
       </section>
 
       {/* ── Two-column layout ── */}
-      <div className="mx-auto max-w-7xl px-8 py-16 lg:py-20">
+      <div className="mx-auto max-w-7xl px-5 md:px-8 py-16 lg:py-20">
         <div className="lg:grid lg:grid-cols-[1fr_320px] lg:gap-16 xl:gap-20">
           {/* ── Main content ── */}
           <div className="min-w-0">
@@ -356,7 +352,7 @@ export default async function ApartmentDetailPage({
               <section className="mb-16 lg:mb-20">
                 <HtmlContent
                   html={apartment.description}
-                  className="font-body text-body-lg text-dark leading-relaxed"
+                  className="font-body text-body-lg text-dark leading-relaxed prose-acacia"
                 />
               </section>
             )}
@@ -407,7 +403,7 @@ export default async function ApartmentDetailPage({
           </div>
 
           {/* ── Sidebar ── */}
-          <div>
+          <div className="mt-12 lg:mt-0">
             <BookingSidebar
               bedrooms={apartment.bedrooms}
               bathrooms={apartment.bathrooms}
@@ -467,7 +463,7 @@ export default async function ApartmentDetailPage({
       {/* CIN/CIR legal */}
       {apartment.cin && (
         <div className="bg-surface-alt border-t border-border-light">
-          <p className="mx-auto max-w-7xl px-8 py-3 font-body text-fine text-light">
+          <p className="mx-auto max-w-7xl px-5 md:px-8 py-3 font-body text-fine text-light">
             {apartment.cin}
           </p>
         </div>
