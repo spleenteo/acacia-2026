@@ -82,9 +82,7 @@ export default function ReviewsList({ reviews, label, title }: Props) {
             <footer className="border-t border-border-light pt-4">
               <p className="font-body text-body font-medium text-dark">{review.name}</p>
               {review.title && (
-                <p className="font-heading italic text-body-sm text-muted mt-0.5">
-                  {review.title}
-                </p>
+                <p className="font-heading italic text-body-sm text-muted mt-0.5">{review.title}</p>
               )}
               <time className="font-body text-caption text-light mt-1 block">
                 {new Date(review.date).toLocaleDateString('en-GB', {

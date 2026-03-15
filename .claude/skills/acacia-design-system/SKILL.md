@@ -31,8 +31,8 @@ All design tokens are defined in CSS using `@theme`. This block lives in the mai
   --color-dark-soft: #3d352d;
 
   --color-body: #2e2822;
-  --color-muted: #847a6f;
-  --color-light: #b0a698;
+  --color-muted: #5e5549;
+  --color-light: #847a6f;
 
   --color-rust: #d0512a;
   --color-rust-hover: #b8441f;
@@ -102,6 +102,12 @@ All design tokens are defined in CSS using `@theme`. This block lives in the mai
     color: var(--color-body);
     background-color: var(--color-surface);
   }
+  body {
+    font-weight: 400;
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
   ::selection {
     background-color: var(--color-rust);
     color: #fff;
@@ -160,7 +166,7 @@ Every major section starts with a rust uppercase micro-label above the headline:
 
 ### Body Text
 
-Always use `font-light` (300) for body paragraphs. Reserve `font-normal` (400) for metadata/captions only. Never use `font-medium`+ in body text except for links and buttons.
+Body text uses `font-normal` (400) — the base weight set on `<body>`. Lato at weight 300 was too thin for legibility on cream surfaces. Reserve `font-light` (300) only for large decorative text (hero subtitles on dark overlays). Never use `font-medium`+ in body text except for links and buttons.
 
 ### Type Scale Reference
 
@@ -172,12 +178,14 @@ Always use `font-light` (300) for body paragraphs. Reserve `font-normal` (400) f
 | Card title      | `font-heading text-h3 font-normal text-dark`                             |
 | Grid card title | `font-heading text-h4 font-normal text-dark`                             |
 | Label           | `font-body text-label font-medium uppercase text-rust tracking-[0.22em]` |
-| Body            | `font-body text-body font-light text-muted`                              |
-| Hero subtitle   | `font-body text-body-lg font-light text-white/75`                        |
+| Body            | `font-body text-body font-normal text-muted`                             |
+| Hero subtitle   | `font-body text-body-lg font-normal text-white/80`                       |
 | Nav link        | `font-body text-body-sm font-normal text-muted hover:text-rust`          |
 | Button          | `font-body text-caption font-medium tracking-[0.06em]`                   |
 | Tag pill        | `font-body text-tag font-semibold uppercase tracking-[0.14em]`           |
-| Footer          | `font-body text-fine font-light`                                         |
+| Footer nav      | `font-body text-body font-normal text-body hover:text-rust`              |
+| Footer dark     | `font-body text-body font-normal text-white/80`                          |
+| Footer bottom   | `font-body text-caption font-normal text-white/55`                       |
 
 ---
 
@@ -281,7 +289,7 @@ bg-surface (#FDFBF8) → bg-surface-alt (#F5F0E8) → bg-surface-warm (#ECE6DB)
 ```html
 <div class="bg-card rounded-card p-8 border-t-[3px] border-rust">
   <div class="flex gap-0.5 mb-4">★★★★★ in text-gold</div>
-  <p class="font-body text-body font-light text-dark">"Quote"</p>
+  <p class="font-body text-body font-normal text-dark">"Quote"</p>
   <div class="mt-5 pt-4 border-t border-border-light flex justify-between">
     <span class="font-body text-caption font-medium text-dark">Author</span>
     <span class="font-body text-fine text-light">Source</span>
@@ -337,7 +345,7 @@ Use IntersectionObserver. Elements enter with `opacity 0→1` and `translateY(28
 - Card grids: 3 cols featured/promise/reviews, 4 cols explore
 - Gaps: `gap-6` cards, `gap-[18px]` tight grids
 - About: `grid grid-cols-[1fr_1.2fr] gap-16`
-- Footer: `grid grid-cols-[1.8fr_1fr_1fr_1fr] gap-12`
+- Footer: 3-band layout (light nav `bg-surface-alt` + dark brand `bg-dark` + bottom bar `bg-dark border-t border-white/10`), each band uses `grid grid-cols-1 md:grid-cols-3 gap-12`
 
 ---
 
@@ -346,7 +354,7 @@ Use IntersectionObserver. Elements enter with `opacity 0→1` and `translateY(28
 - ❌ Pure black `#000` or `text-black` — use `text-dark` (#2E2822)
 - ❌ Cool grays — all grays must be warm/brownish
 - ❌ Inter, Roboto, system fonts — only `font-heading` or `font-body`
-- ❌ Body text above `font-normal` — prefer `font-light`
+- ❌ `font-light` (300) for body text — use `font-normal` (400) for legibility; reserve 300 only for large decorative text on dark overlays
 - ❌ Rust as background fill on large areas
 - ❌ Sharp corners on cards — minimum `rounded-[14px]`
 - ❌ Headlines without italic `<em>` emphasis

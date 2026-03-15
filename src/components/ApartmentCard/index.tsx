@@ -50,7 +50,11 @@ export default function ApartmentCard({ data, locale }: Props) {
               className="transition-transform duration-700 group-hover:scale-[1.03]"
               style={{ transitionTimingFunction: 'cubic-bezier(0.19,1,0.22,1)' }}
             >
-              <ResponsiveImage data={(apartment.boxImage?.responsiveImage ?? apartment.featuredImage?.responsiveImage)!} />
+              <ResponsiveImage
+                data={
+                  (apartment.boxImage?.responsiveImage ?? apartment.featuredImage?.responsiveImage)!
+                }
+              />
             </div>
           )}
         </div>
