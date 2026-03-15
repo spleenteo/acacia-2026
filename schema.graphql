@@ -640,6 +640,7 @@ input CuddleModelFilter {
   _updatedAt: UpdatedAtFilter
   updatedAt: UpdatedAtFilter
   _isValid: BooleanFilter
+  icon: StringFilter
   url: StringFilter
   name: StringFilter
   OR: [CuddleModelFilter]
@@ -671,6 +672,8 @@ enum CuddleModelOrderBy {
   updatedAt_DESC
   _isValid_ASC
   _isValid_DESC
+  icon_ASC
+  icon_DESC
   url_ASC
   url_DESC
   name_ASC
@@ -716,6 +719,7 @@ type CuddleRecord implements RecordInterface {
   _unpublishingScheduledAt: DateTime
   _updatedAt: DateTime!
   createdAt: DateTime!
+  icon: String
   id: ItemId!
   name(
     """The locale to use to fetch the field's content"""
@@ -8154,6 +8158,7 @@ input UpModelFilter {
   _updatedAt: UpdatedAtFilter
   updatedAt: UpdatedAtFilter
   _isValid: BooleanFilter
+  icon: StringFilter
   url: StringFilter
   name: StringFilter
   OR: [UpModelFilter]
@@ -8185,6 +8190,8 @@ enum UpModelOrderBy {
   updatedAt_DESC
   _isValid_ASC
   _isValid_DESC
+  icon_ASC
+  icon_DESC
   url_ASC
   url_DESC
   name_ASC
@@ -8230,6 +8237,7 @@ type UpRecord implements RecordInterface {
   _unpublishingScheduledAt: DateTime
   _updatedAt: DateTime!
   createdAt: DateTime!
+  icon: String
   id: ItemId!
   name(
     """The locale to use to fetch the field's content"""

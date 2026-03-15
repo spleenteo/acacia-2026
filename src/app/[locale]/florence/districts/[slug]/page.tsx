@@ -48,6 +48,7 @@ import HtmlContent from '@/components/HtmlContent';
 import { GalleryImageFragment } from '@/components/ImageGallery/fragment';
 import ImageGallery from '@/components/ImageGallery';
 import ApartmentCard, { ApartmentCardFragment } from '@/components/ApartmentCard';
+import { readFragment } from '@/lib/datocms/graphql';
 
 const query = graphql(
   `
@@ -164,7 +165,17 @@ export default async function DistrictDetailPage({
       {district.gallery.length > 0 && (
         <section className="py-16 bg-surface">
           <div className="mx-auto max-w-6xl px-8">
-            <ImageGallery data={district.gallery} />
+            <ImageGallery
+              items={district.gallery
+                .map((g) => readFragment(GalleryImageFragment, g))
+                .filter((img) => img.image?.responsiveImage && img.image?.full)
+                .map((img) => ({
+                  id: img.id,
+                  thumb: img.image!.responsiveImage!,
+                  full: img.image!.full!,
+                  caption: img.description,
+                }))}
+            />
           </div>
         </section>
       )}

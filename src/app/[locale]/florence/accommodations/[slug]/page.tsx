@@ -49,11 +49,15 @@ import ResponsiveImage, { ResponsiveImageFragment } from '@/components/Responsiv
 import HtmlContent from '@/components/HtmlContent';
 import BeddyBar from '@/components/BeddyBar';
 import { GalleryImageFragment } from '@/components/ImageGallery/fragment';
-import ImageGallery from '@/components/ImageGallery';
+import PhotoLightbox from '@/components/PhotoLightbox';
 import CuddlesList, { CuddleFragment } from '@/components/CuddlesList';
 import UpsList, { UpFragment } from '@/components/UpsList';
 import InfoDetail, { InfoTextFragment, InfoAddressFragment } from '@/components/InfoDetail';
 import DistrictLink from '@/components/DistrictLink';
+import BookingSidebar from '@/components/BookingSidebar';
+import WhatWeLove from '@/components/WhatWeLove';
+import { FeaturedSlideshowFragment } from '@/components/WhatWeLove/fragment';
+import { readFragment } from '@/lib/datocms/graphql';
 
 const query = graphql(
   `
@@ -69,6 +73,12 @@ const query = graphql(
         bathrooms
         sleeps
         beddyId
+        price
+        cin
+        acaciaReward
+        featuredSlideshow {
+          ...FeaturedSlideshowFragment
+        }
         featuredImage {
           responsiveImage(imgixParams: { w: 1400, h: 600, fit: crop }) {
             ...ResponsiveImageFragment
@@ -109,6 +119,7 @@ const query = graphql(
     UpFragment,
     InfoTextFragment,
     InfoAddressFragment,
+    FeaturedSlideshowFragment,
   ],
 );
 
@@ -136,6 +147,9 @@ const labels = {
     ups: 'Lifestyle',
     info: 'Details',
     book: 'Book this apartment',
+    allPhotos: 'All photos',
+    whatWeLoveLabel: 'Our favorites',
+    whatWeLoveTitle: 'What We Love',
   },
   it: {
     bedrooms: 'Camere',
@@ -145,6 +159,9 @@ const labels = {
     ups: 'Lifestyle',
     info: 'Dettagli',
     book: 'Prenota questo alloggio',
+    allPhotos: 'Tutte le foto',
+    whatWeLoveLabel: 'I nostri preferiti',
+    whatWeLoveTitle: 'Cosa ci piace',
   },
 } as const;
 
@@ -168,7 +185,7 @@ export default async function ApartmentDetailPage({
 
   return (
     <>
-      {/* Hero */}
+      {/* ── Hero (full width) ── */}
       <section
         className="relative min-h-[70vh] flex items-end bg-dark"
         style={{ marginTop: 'calc(var(--header-height) * -1)' }}
@@ -183,7 +200,7 @@ export default async function ApartmentDetailPage({
           </div>
         )}
         <div className="relative z-10 w-full px-8 pb-14 pt-32">
-          <div className="mx-auto max-w-6xl">
+          <div className="mx-auto max-w-7xl">
             {apartment.category && (
               <p className="font-body font-medium text-label text-white/60 uppercase tracking-[0.15em] mb-3">
                 {apartment.category.name}
@@ -197,98 +214,88 @@ export default async function ApartmentDetailPage({
                 {apartment.claim}
               </p>
             )}
-            {apartment.highlight && (
-              <span className="inline-block bg-rust/80 text-white text-tag uppercase font-medium tracking-wider px-3 py-1 mt-4 rounded-pill">
-                {apartment.highlight}
-              </span>
+            {apartment.featuredSlideshow.length > 0 && (
+              <PhotoLightbox
+                items={apartment.featuredSlideshow
+                  .map((f) => readFragment(FeaturedSlideshowFragment, f))
+                  .filter((img) => img.responsiveImage && img.full)
+                  .map((img) => ({
+                    id: img.id,
+                    thumb: img.responsiveImage!,
+                    full: img.full!,
+                    caption: img.title || img.alt,
+                  }))}
+                label={l.allPhotos}
+              />
             )}
           </div>
         </div>
       </section>
 
-      {/* Quick Facts */}
-      {(apartment.bedrooms || apartment.bathrooms || apartment.sleeps) && (
-        <section className="bg-surface-alt border-b border-border">
-          <div className="mx-auto max-w-6xl px-8 py-8 flex flex-wrap justify-center gap-10 sm:gap-20">
-            {apartment.bedrooms && (
-              <div className="text-center">
-                <p className="font-heading font-normal text-h1 text-rust leading-none">
-                  {apartment.bedrooms}
-                </p>
-                <p className="font-body text-label uppercase tracking-[0.12em] text-muted mt-1">
-                  {l.bedrooms}
-                </p>
-              </div>
+      {/* ── Two-column layout ── */}
+      <div className="mx-auto max-w-7xl px-8 py-16 lg:py-20">
+        <div className="lg:grid lg:grid-cols-[1fr_320px] lg:gap-16 xl:gap-20">
+          {/* ── Main content ── */}
+          <div className="min-w-0">
+            {/* Description */}
+            {apartment.description && (
+              <section className="mb-16 lg:mb-20">
+                <HtmlContent
+                  html={apartment.description}
+                  className="font-body text-body-lg text-dark leading-relaxed"
+                />
+              </section>
             )}
-            {apartment.bathrooms && (
-              <div className="text-center">
-                <p className="font-heading font-normal text-h1 text-rust leading-none">
-                  {apartment.bathrooms}
-                </p>
-                <p className="font-body text-label uppercase tracking-[0.12em] text-muted mt-1">
-                  {l.bathrooms}
-                </p>
-              </div>
+
+            {/* What We Love */}
+            {apartment.gallery.length >= 2 && (
+              <section className="mb-16 lg:mb-20">
+                <WhatWeLove
+                  data={apartment.gallery}
+                  label={l.whatWeLoveLabel}
+                  title={l.whatWeLoveTitle}
+                />
+              </section>
             )}
-            {apartment.sleeps && (
-              <div className="text-center">
-                <p className="font-heading font-normal text-h1 text-rust leading-none">
-                  {apartment.sleeps}
-                </p>
-                <p className="font-body text-label uppercase tracking-[0.12em] text-muted mt-1">
-                  {l.sleeps}
-                </p>
-              </div>
+
+            {/* Cuddles & Ups */}
+            {(apartment.cuddles.length > 0 || apartment.ups.length > 0) && (
+              <section className="mb-16 lg:mb-20">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-14">
+                  <CuddlesList data={apartment.cuddles} title={l.cuddles} />
+                  <UpsList data={apartment.ups} title={l.ups} />
+                </div>
+              </section>
+            )}
+
+            {/* Info Detail */}
+            {apartment.infoDetail.length > 0 && (
+              <section className="mb-16 lg:mb-20">
+                <InfoDetail
+                  data={apartment.infoDetail.map((item) => ({
+                    __typename: item.__typename as 'InfoTextRecord' | 'InfoAddressRecord',
+                    fragment: item as never,
+                  }))}
+                  title={l.info}
+                />
+              </section>
             )}
           </div>
-        </section>
-      )}
 
-      {/* Description */}
-      {apartment.description && (
-        <section className="py-20 lg:py-28 bg-surface">
-          <div className="mx-auto max-w-3xl px-8">
-            <HtmlContent
-              html={apartment.description}
-              className="font-body text-body-lg text-dark leading-relaxed"
-            />
-          </div>
-        </section>
-      )}
+          {/* ── Sidebar ── */}
+          <BookingSidebar
+            bedrooms={apartment.bedrooms}
+            bathrooms={apartment.bathrooms}
+            sleeps={apartment.sleeps}
+            price={apartment.price}
+            highlight={apartment.highlight}
+            acaciaReward={apartment.acaciaReward}
+            labels={l}
+          />
+        </div>
+      </div>
 
-      {/* Gallery */}
-      {apartment.gallery.length > 0 && (
-        <section className="py-16 bg-surface-alt">
-          <div className="mx-auto max-w-6xl px-8">
-            <ImageGallery data={apartment.gallery} />
-          </div>
-        </section>
-      )}
-
-      {/* Cuddles & Ups */}
-      {(apartment.cuddles.length > 0 || apartment.ups.length > 0) && (
-        <section className="py-20 lg:py-28 bg-surface">
-          <div className="mx-auto max-w-5xl px-8 grid grid-cols-1 md:grid-cols-2 gap-14">
-            <CuddlesList data={apartment.cuddles} title={l.cuddles} />
-            <UpsList data={apartment.ups} title={l.ups} />
-          </div>
-        </section>
-      )}
-
-      {/* Info Detail */}
-      {apartment.infoDetail.length > 0 && (
-        <section className="py-20 lg:py-28 bg-surface-alt">
-          <div className="mx-auto max-w-3xl px-8">
-            <InfoDetail
-              data={apartment.infoDetail.map((item) => ({
-                __typename: item.__typename as 'InfoTextRecord' | 'InfoAddressRecord',
-                fragment: item as never,
-              }))}
-              title={l.info}
-            />
-          </div>
-        </section>
-      )}
+      {/* ── Full-width sections ── */}
 
       {/* District Link */}
       {apartment.district && (
@@ -303,13 +310,25 @@ export default async function ApartmentDetailPage({
 
       {/* Beddy Booking */}
       {apartment.beddyId && (
-        <section className="py-16 bg-dark">
+        <section id="beddy-widget" className="py-16 bg-dark">
           <div className="mx-auto max-w-3xl px-8 text-center">
             <p className="font-body text-body-lg text-white/70 mb-8">{l.book}</p>
             <BeddyBar locale={locale as Locale} widgetCode={apartment.beddyId} />
           </div>
         </section>
       )}
+
+      {/* CIN/CIR legal */}
+      {apartment.cin && (
+        <div className="bg-surface-alt border-t border-border-light">
+          <p className="mx-auto max-w-7xl px-8 py-3 font-body text-fine text-light">
+            {apartment.cin}
+          </p>
+        </div>
+      )}
+
+      {/* Bottom bar spacer on mobile */}
+      <div className="h-16 lg:hidden" />
     </>
   );
 }

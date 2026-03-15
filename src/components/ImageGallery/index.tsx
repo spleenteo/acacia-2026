@@ -1,19 +1,24 @@
 'use client';
 
-import { type FragmentOf, readFragment } from '@/lib/datocms/graphql';
 import ResponsiveImage from '@/components/ResponsiveImage';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { GalleryImageFragment } from './fragment';
+import type { FragmentOf } from '@/lib/datocms/graphql';
+import type { ResponsiveImageFragment } from '@/components/ResponsiveImage';
 
-type Props = {
-  data: FragmentOf<typeof GalleryImageFragment>[];
+export type GalleryItem = {
+  id: string;
+  thumb: FragmentOf<typeof ResponsiveImageFragment>;
+  full: FragmentOf<typeof ResponsiveImageFragment>;
+  caption?: string | null;
 };
 
-export default function ImageGallery({ data }: Props) {
+type Props = {
+  items: GalleryItem[];
+};
+
+export default function ImageGallery({ items }: Props) {
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
   const dialogRef = useRef<HTMLDialogElement>(null);
-
-  const images = data.map((d) => readFragment(GalleryImageFragment, d));
 
   const openLightbox = useCallback((index: number) => {
     setActiveIndex(index);
@@ -28,10 +33,10 @@ export default function ImageGallery({ data }: Props) {
   const navigate = useCallback(
     (direction: 1 | -1) => {
       if (activeIndex === null) return;
-      const next = (activeIndex + direction + images.length) % images.length;
+      const next = (activeIndex + direction + items.length) % items.length;
       setActiveIndex(next);
     },
-    [activeIndex, images.length],
+    [activeIndex, items.length],
   );
 
   useEffect(() => {
@@ -45,28 +50,26 @@ export default function ImageGallery({ data }: Props) {
     return () => window.removeEventListener('keydown', handleKey);
   }, [activeIndex, navigate, closeLightbox]);
 
-  if (images.length === 0) return null;
+  if (items.length === 0) return null;
 
-  const activeImage = activeIndex !== null ? images[activeIndex] : null;
+  const activeItem = activeIndex !== null ? items[activeIndex] : null;
 
   return (
     <>
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2">
-        {images.map((img, index) => (
+        {items.map((item, index) => (
           <button
-            key={img.id}
+            key={item.id}
             type="button"
             onClick={() => openLightbox(index)}
             className="group relative overflow-hidden cursor-pointer aspect-[4/3]"
           >
-            {img.image?.responsiveImage && (
-              <div className="transition-transform duration-500 group-hover:scale-110">
-                <ResponsiveImage
-                  data={img.image.responsiveImage}
-                  className="w-full h-full object-cover"
-                />
-              </div>
-            )}
+            <div className="transition-transform duration-500 group-hover:scale-110">
+              <ResponsiveImage
+                data={item.thumb}
+                className="w-full h-full object-cover"
+              />
+            </div>
             <div className="absolute inset-0 bg-dark/0 group-hover:bg-dark/20 transition-colors duration-300" />
           </button>
         ))}
@@ -79,7 +82,7 @@ export default function ImageGallery({ data }: Props) {
           if (e.target === dialogRef.current) closeLightbox();
         }}
       >
-        {activeImage && (
+        {activeItem && (
           <div className="flex items-center justify-center h-full w-full p-4 sm:p-8">
             <button
               type="button"
@@ -90,7 +93,7 @@ export default function ImageGallery({ data }: Props) {
               &times;
             </button>
 
-            {images.length > 1 && (
+            {items.length > 1 && (
               <>
                 <button
                   type="button"
@@ -112,19 +115,17 @@ export default function ImageGallery({ data }: Props) {
             )}
 
             <div className="max-w-5xl max-h-[85vh] flex flex-col items-center">
-              {activeImage.image?.full && (
-                <ResponsiveImage
-                  data={activeImage.image.full}
-                  className="max-h-[75vh] w-auto object-contain"
-                />
-              )}
-              {activeImage.description && (
+              <ResponsiveImage
+                data={activeItem.full}
+                className="max-h-[75vh] w-auto object-contain"
+              />
+              {activeItem.caption && (
                 <p className="text-white/70 font-heading italic text-body-sm mt-4 text-center">
-                  {activeImage.description}
+                  {activeItem.caption}
                 </p>
               )}
               <p className="text-white/40 text-caption mt-2">
-                {(activeIndex ?? 0) + 1} / {images.length}
+                {(activeIndex ?? 0) + 1} / {items.length}
               </p>
             </div>
           </div>
