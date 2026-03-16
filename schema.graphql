@@ -221,7 +221,6 @@ input ApartmentModelFilter {
   updatedAt: UpdatedAtFilter
   _isValid: BooleanFilter
   boxImage: FileFilter
-  cuddles: LinksFilter
   featuredSlideshow: GalleryFilter
   published: BooleanFilter
   acaciaReward: BooleanFilter
@@ -246,6 +245,7 @@ input ApartmentModelFilter {
   kigoSlug: StringFilter
   slug: SlugFilter
   amenities: LinksFilter
+  comforts: LinksFilter
   OR: [ApartmentModelFilter]
   AND: [ApartmentModelFilter]
 }
@@ -406,8 +406,8 @@ type ApartmentRecord implements RecordInterface {
     """
     fallbackLocales: [SiteLocale!]
   ): String
+  comforts: [ComfortRecord!]!
   createdAt: DateTime!
-  cuddles: [EssentialRecord!]!
   description(
     """Process content as markdown"""
     markdown: Boolean

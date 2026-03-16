@@ -52,6 +52,7 @@ import { GalleryImageFragment } from '@/components/ImageGallery/fragment';
 import PhotoLightbox from '@/components/PhotoLightbox';
 import EssentialsList, { EssentialFragment } from '@/components/EssentialsList';
 import AmenitiesList, { AmenityFragment } from '@/components/AmenitiesList';
+import ComfortsList, { ComfortFragment } from '@/components/ComfortsList';
 import InfoDetail, { InfoTextFragment, InfoAddressFragment } from '@/components/InfoDetail';
 import DistrictLink from '@/components/DistrictLink';
 import BookingSidebar from '@/components/BookingSidebar';
@@ -112,11 +113,11 @@ const query = graphql(
         gallery {
           ...GalleryImageFragment
         }
-        cuddles {
-          ...EssentialFragment
-        }
         amenities {
           ...AmenityFragment
+        }
+        comforts {
+          ...ComfortFragment
         }
         infoDetail(locale: $locale) {
           __typename
@@ -133,8 +134,8 @@ const query = graphql(
   [
     ResponsiveImageFragment,
     GalleryImageFragment,
-    EssentialFragment,
     AmenityFragment,
+    ComfortFragment,
     InfoTextFragment,
     InfoAddressFragment,
     FeaturedSlideshowFragment,
@@ -193,6 +194,17 @@ const moodsQuery = graphql(
   [MoodCardFragment],
 );
 
+const essentialsQuery = graphql(
+  `
+    query AllEssentials($locale: SiteLocale!) {
+      allEssentials(locale: $locale, orderBy: [position_ASC]) {
+        ...EssentialFragment
+      }
+    }
+  `,
+  [EssentialFragment],
+);
+
 const allSlugsQuery = graphql(`
   query AllApartmentSlugs {
     allApartments(first: 100, filter: { published: { eq: true } }) {
@@ -215,6 +227,7 @@ const labels = {
     sleeps: 'Sleeps',
     essentials: 'Acacia® Essentials',
     amenities: 'Amenities',
+    comforts: 'Comforts',
     info: 'Details',
     book: 'Book this apartment',
     allPhotos: 'All photos',
@@ -235,6 +248,7 @@ const labels = {
     sleeps: 'Ospiti',
     essentials: 'Acacia® Essentials',
     amenities: 'Amenities',
+    comforts: 'Comforts',
     info: 'Dettagli',
     book: 'Prenota questo alloggio',
     allPhotos: 'Tutte le foto',
@@ -266,6 +280,12 @@ export default async function ApartmentDetailPage({
 
   const { apartment } = data;
   if (!apartment) notFound();
+
+  const essentialsData = await executeQuery(essentialsQuery, {
+    variables: { locale: locale as Locale },
+    includeDrafts: isDraftModeEnabled,
+  });
+  const essentials = essentialsData.allEssentials;
 
   const reviewsData = await executeQuery(reviewsQuery, {
     variables: { apartmentId: apartment.id },
@@ -373,9 +393,9 @@ export default async function ApartmentDetailPage({
             )}
 
             {/* Amenities */}
-            {apartment.cuddles.length > 0 && (
+            {apartment.amenities.length > 0 && (
               <section className="mb-16 lg:mb-20">
-                <EssentialsList data={apartment.cuddles} title={l.essentials} />
+                <AmenitiesList data={apartment.amenities} title={l.amenities} />
               </section>
             )}
 
@@ -415,9 +435,14 @@ export default async function ApartmentDetailPage({
                 />
               </div>
             )}
-            {apartment.amenities.length > 0 && (
+            {essentials.length > 0 && (
               <div className="mt-8">
-                <AmenitiesList data={apartment.amenities} title={l.amenities} />
+                <EssentialsList data={essentials} title={l.essentials} />
+              </div>
+            )}
+            {apartment.comforts.length > 0 && (
+              <div className="mt-8">
+                <ComfortsList data={apartment.comforts} title={l.comforts} />
               </div>
             )}
           </div>
