@@ -226,15 +226,16 @@ const labels = {
     bathrooms: 'Bathrooms',
     sleeps: 'Sleeps',
     essentials: 'Acacia® Essentials',
-    amenities: 'Amenities',
+    amenitiesLabel: 'Amenities',
+    amenitiesTitle: 'The House Includes',
     comforts: 'Comforts',
     info: 'Details',
     book: 'Book this apartment',
     allPhotos: 'All photos',
-    whatWeLoveLabel: 'Our favorites',
+    whatWeLoveLabel: 'Acacia® crew',
     whatWeLoveTitle: 'What We Love',
-    homeTruthsLabel: 'Good to know',
-    homeTruthsTitle: 'Home Truths',
+    homeTruthsLabel: 'Good to Know',
+    homeTruthsTitle: 'For a Great Experience',
     reviewsLabel: 'Guest reviews',
     reviewsTitle: 'What Our Guests Say',
     similarLabel: 'You may also like',
@@ -247,15 +248,16 @@ const labels = {
     bathrooms: 'Bagni',
     sleeps: 'Ospiti',
     essentials: 'Acacia® Essentials',
-    amenities: 'Amenities',
+    amenitiesLabel: 'Amenities',
+    amenitiesTitle: 'La casa include',
     comforts: 'Comforts',
     info: 'Dettagli',
     book: 'Prenota questo alloggio',
     allPhotos: 'Tutte le foto',
-    whatWeLoveLabel: 'I nostri preferiti',
+    whatWeLoveLabel: 'Acacia® crew',
     whatWeLoveTitle: 'Cosa ci piace',
     homeTruthsLabel: 'Da sapere',
-    homeTruthsTitle: 'La verità, tutta la verità',
+    homeTruthsTitle: 'Per una grande esperienza',
     reviewsLabel: 'Recensioni',
     reviewsTitle: 'I nostri ospiti raccontano',
     similarLabel: 'Potrebbe piacerti anche',
@@ -395,7 +397,11 @@ export default async function ApartmentDetailPage({
             {/* Amenities */}
             {apartment.amenities.length > 0 && (
               <section className="mb-16 lg:mb-20">
-                <AmenitiesList data={apartment.amenities} title={l.amenities} />
+                <AmenitiesList
+                  data={apartment.amenities}
+                  label={l.amenitiesLabel}
+                  title={l.amenitiesTitle}
+                />
               </section>
             )}
 

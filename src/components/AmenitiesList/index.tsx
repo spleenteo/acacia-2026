@@ -12,19 +12,21 @@ export const AmenityFragment = graphql(`
 
 type Props = {
   data: FragmentOf<typeof AmenityFragment>[];
+  label: string;
   title: string;
 };
 
-export default function AmenitiesList({ data, title }: Props) {
+export default function AmenitiesList({ data, label, title }: Props) {
   if (data.length === 0) return null;
 
   const amenities = data.map((d) => readFragment(AmenityFragment, d));
 
   return (
     <div>
-      <p className="font-body text-label uppercase tracking-[0.18em] text-rust font-medium mb-4">
-        {title}
+      <p className="font-body text-label uppercase tracking-[0.18em] text-rust font-medium mb-2">
+        {label}
       </p>
+      <h3 className="font-heading italic text-h3 text-dark mb-6">{title}</h3>
       <div className="flex flex-wrap gap-2">
         {amenities.map((amenity) => {
           const Icon = getAmenityIcon(amenity.icon);

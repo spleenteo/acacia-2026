@@ -52,7 +52,9 @@ export default function InfoDetail({ data, title, locale, district }: Props) {
 
   return (
     <div>
-      <h3 className="font-heading italic text-h4 text-dark mb-4">{title}</h3>
+      <p className="font-body text-label uppercase tracking-[0.18em] text-rust font-medium mb-4">
+        {title}
+      </p>
       <dl className="divide-y divide-dotted divide-border">
         {data.map((item) => {
           if (item.__typename === 'InfoTextRecord') {
@@ -69,27 +71,40 @@ export default function InfoDetail({ data, title, locale, district }: Props) {
 
           if (item.__typename === 'InfoAddressRecord') {
             const info = readFragment(InfoAddressFragment, item.fragment);
+            const mapsUrl = info.addressMap
+              ? `https://www.google.com/maps?q=${info.addressMap.latitude},${info.addressMap.longitude}`
+              : null;
             return (
-              <div key={info.id} className="py-2.5 space-y-3">
-                <div className="flex gap-4">
-                  <dt className="shrink-0 w-24 font-medium text-caption text-dark uppercase tracking-wider pt-0.5">
-                    {info.detailsLabel.name}
-                  </dt>
-                  <dd className="text-muted text-body-sm">
-                    {info.addressText}
-                    {district && locale && (
-                      <>
-                        {' – '}
-                        <Link
-                          href={`/${locale}/florence/districts/${district.slug}`}
-                          className="text-rust hover:text-rust-hover transition-colors"
-                        >
-                          {district.name}
-                        </Link>
-                      </>
-                    )}
-                  </dd>
-                </div>
+              <div
+                key={info.id}
+                className="border-t border-dotted border-border pt-4 mt-2 pb-6 space-y-3"
+              >
+                <p className="text-muted text-body-sm">
+                  {info.addressText && mapsUrl ? (
+                    <a
+                      href={mapsUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="hover:text-rust transition-colors"
+                    >
+                      {info.addressText}
+                    </a>
+                  ) : (
+                    info.addressText
+                  )}
+                  {district && locale && (
+                    <>
+                      {' ('}
+                      <Link
+                        href={`/${locale}/florence/districts/${district.slug}`}
+                        className="text-rust hover:text-rust-hover transition-colors"
+                      >
+                        {district.name}
+                      </Link>
+                      {' area)'}
+                    </>
+                  )}
+                </p>
                 {info.addressMap && (
                   <div>
                     <div className="overflow-hidden rounded-card">
@@ -104,14 +119,16 @@ export default function InfoDetail({ data, title, locale, district }: Props) {
                         title="Map"
                       />
                     </div>
-                    <a
-                      href={`https://www.google.com/maps?q=${info.addressMap.latitude},${info.addressMap.longitude}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-block mt-3 text-muted hover:text-rust transition-colors text-caption uppercase font-bold tracking-wider"
-                    >
-                      Google Maps &rarr;
-                    </a>
+                    <div className="text-center mt-3">
+                      <a
+                        href={mapsUrl!}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-block border border-border text-muted hover:text-rust hover:border-rust font-body text-caption uppercase tracking-wider font-medium px-4 py-1.5 rounded-pill transition-all duration-300"
+                      >
+                        Google Maps &rarr;
+                      </a>
+                    </div>
                   </div>
                 )}
               </div>
