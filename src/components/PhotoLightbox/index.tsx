@@ -7,9 +7,10 @@ import type { GalleryItem } from '@/components/ImageGallery';
 type Props = {
   items: GalleryItem[];
   label: string;
+  variant?: 'dark' | 'light';
 };
 
-export default function PhotoLightbox({ items, label }: Props) {
+export default function PhotoLightbox({ items, label, variant = 'dark' }: Props) {
   const [activeIndex, setActiveIndex] = useState(0);
   const dialogRef = useRef<HTMLDialogElement>(null);
 
@@ -49,7 +50,11 @@ export default function PhotoLightbox({ items, label }: Props) {
       <button
         type="button"
         onClick={openLightbox}
-        className="inline-flex items-center gap-2 bg-white/15 hover:bg-white/25 backdrop-blur-sm text-white font-body text-body-sm font-medium tracking-wide px-5 py-2.5 rounded-pill border border-white/20 transition-all duration-300 cursor-pointer mt-5"
+        className={`inline-flex items-center gap-2 font-body text-body-sm font-medium tracking-wide px-5 py-2.5 rounded-pill border transition-all duration-300 cursor-pointer mt-5 ${
+          variant === 'light'
+            ? 'bg-surface-alt hover:bg-surface-warm text-dark border-border-light'
+            : 'bg-white/15 hover:bg-white/25 backdrop-blur-sm text-white border-white/20'
+        }`}
       >
         <svg
           width="18"
@@ -60,7 +65,7 @@ export default function PhotoLightbox({ items, label }: Props) {
           strokeWidth="1.5"
           strokeLinecap="round"
           strokeLinejoin="round"
-          className="opacity-80"
+          className={variant === 'light' ? 'opacity-60' : 'opacity-80'}
         >
           <rect x="3" y="3" width="7" height="7" rx="1" />
           <rect x="14" y="3" width="7" height="7" rx="1" />
@@ -68,7 +73,11 @@ export default function PhotoLightbox({ items, label }: Props) {
           <rect x="14" y="14" width="7" height="7" rx="1" />
         </svg>
         {label}
-        <span className="text-white/50 text-caption ml-0.5">{items.length}</span>
+        <span
+          className={`text-caption ml-0.5 ${variant === 'light' ? 'text-muted' : 'text-white/50'}`}
+        >
+          {items.length}
+        </span>
       </button>
 
       <dialog

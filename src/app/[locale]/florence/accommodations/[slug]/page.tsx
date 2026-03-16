@@ -232,7 +232,7 @@ const labels = {
     comforts: 'Comforts',
     info: 'Details',
     book: 'Check availability',
-    allPhotos: 'All photos',
+    allPhotos: 'View gallery',
     whatWeLoveLabel: 'Acacia® crew',
     whatWeLoveTitle: 'What We Love',
     homeTruthsLabel: 'Good to Know',
@@ -261,7 +261,7 @@ const labels = {
     comforts: 'Comforts',
     info: 'Dettagli',
     book: 'Verifica disponibilità',
-    allPhotos: 'Tutte le foto',
+    allPhotos: 'View gallery',
     whatWeLoveLabel: 'Acacia® crew',
     whatWeLoveTitle: 'Cosa ci piace',
     homeTruthsLabel: 'Da sapere',
@@ -345,7 +345,7 @@ export default async function ApartmentDetailPage({
     <>
       {/* ── Hero (full width) ── */}
       <section
-        className="relative min-h-[70vh] flex items-end bg-dark"
+        className="relative min-h-[50vh] flex items-end bg-dark"
         style={{ marginTop: 'calc(var(--header-height) * -1)' }}
       >
         {apartment.featuredImage?.responsiveImage && (
@@ -362,7 +362,7 @@ export default async function ApartmentDetailPage({
         <div className="relative z-10 w-full px-5 md:px-8 pb-14 pt-32">
           <div className="mx-auto max-w-7xl">
             {apartment.category && (
-              <p className="font-body font-medium text-label text-white/60 uppercase tracking-[0.15em] mb-3">
+              <p className="inline-block bg-rust text-white font-body font-medium text-label uppercase tracking-[0.15em] px-3 py-1 rounded-sm mb-4">
                 {apartment.category.name}
               </p>
             )}
@@ -370,7 +370,7 @@ export default async function ApartmentDetailPage({
               {apartment.name}
             </h1>
             {apartment.claim && (
-              <p className="font-body text-[1.125rem] md:text-[1.25rem] text-white/80 max-w-2xl leading-relaxed">
+              <p className="font-heading italic text-h2 text-white/80 max-w-2xl leading-relaxed">
                 {apartment.claim}
               </p>
             )}
@@ -406,6 +406,15 @@ export default async function ApartmentDetailPage({
                   title={l.whatWeLoveTitle}
                   description={apartment.description}
                   acaciaReward={apartment.acaciaReward}
+                  lightboxItems={apartment.featuredSlideshow
+                    .map((f) => readFragment(FeaturedSlideshowFragment, f))
+                    .filter((img) => img.responsiveImage && img.full)
+                    .map((img) => ({
+                      id: img.id,
+                      thumb: img.responsiveImage!,
+                      full: img.full!,
+                      caption: img.title || img.alt,
+                    }))}
                 />
               </section>
             )}

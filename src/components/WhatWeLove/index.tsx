@@ -5,6 +5,8 @@ import { type FragmentOf, type ResultOf, readFragment } from '@/lib/datocms/grap
 import ResponsiveImage from '@/components/ResponsiveImage';
 import { GalleryImageFragment } from '@/components/ImageGallery/fragment';
 import HtmlContent from '@/components/HtmlContent';
+import PhotoLightbox from '@/components/PhotoLightbox';
+import type { GalleryItem } from '@/components/ImageGallery';
 
 type Props = {
   data: FragmentOf<typeof GalleryImageFragment>[];
@@ -12,14 +14,23 @@ type Props = {
   label: string;
   description?: string | null;
   acaciaReward?: boolean | null;
+  lightboxItems?: GalleryItem[];
 };
 
 type Photo = ResultOf<typeof GalleryImageFragment>;
 
-export default function WhatWeLove({ data, title, label, description, acaciaReward }: Props) {
+export default function WhatWeLove({
+  data,
+  title,
+  label,
+  description,
+  acaciaReward,
+  lightboxItems,
+}: Props) {
   const photos = data.map((d) => readFragment(GalleryImageFragment, d));
   const [activeCaptionIndex, setActiveCaptionIndex] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
+  const [showCaption, setShowCaption] = useState(false);
   const timeoutRef = useRef<ReturnType<typeof setTimeout>>(null);
 
   const hasPhotos = photos.length >= 2;
@@ -67,22 +78,48 @@ export default function WhatWeLove({ data, title, label, description, acaciaRewa
         </div>
       )}
 
-      {hasPhotos && photos.length === 2 && <TwoUp photos={photos} onHover={handleHover} />}
-      {hasPhotos && photos.length === 3 && <ThreeUp photos={photos} onHover={handleHover} />}
-      {hasPhotos && photos.length === 4 && <FourUp photos={photos} onHover={handleHover} />}
-      {hasPhotos && photos.length >= 5 && <FiveUp photos={photos} onHover={handleHover} />}
-
-      {/* Single caption area — centered, elegant crossfade */}
       {hasPhotos && (
-        <div className="mt-6 text-center min-h-[2em]" aria-live="polite">
-          <p
-            className={`font-heading italic text-[1.375rem] leading-snug text-muted transition-all duration-500 ease-out ${
-              isTransitioning ? 'opacity-0 translate-y-2' : 'opacity-100 translate-y-0'
-            }`}
-          >
-            {activeCaption || '\u00A0'}
-          </p>
-        </div>
+        <>
+          <div className="relative" onMouseLeave={() => setShowCaption(false)}>
+            {photos.length === 2 && (
+              <TwoUp photos={photos} onHover={handleHover} onEnter={() => setShowCaption(true)} />
+            )}
+            {photos.length === 3 && (
+              <ThreeUp photos={photos} onHover={handleHover} onEnter={() => setShowCaption(true)} />
+            )}
+            {photos.length === 4 && (
+              <FourUp photos={photos} onHover={handleHover} onEnter={() => setShowCaption(true)} />
+            )}
+            {photos.length >= 5 && (
+              <FiveUp photos={photos} onHover={handleHover} onEnter={() => setShowCaption(true)} />
+            )}
+
+            {/* Caption overlay — centered on the gallery */}
+            {activeCaption && (
+              <div
+                className={`absolute inset-0 flex items-center justify-center pointer-events-none transition-opacity duration-300 ${
+                  showCaption ? 'opacity-100' : 'opacity-0'
+                }`}
+                aria-live="polite"
+              >
+                <div
+                  className={`bg-dark/85 backdrop-blur-sm rounded-card px-8 py-4 max-w-md mx-4 transition-all duration-500 ease-out ${
+                    isTransitioning ? 'opacity-0 scale-95' : 'opacity-100 scale-100'
+                  }`}
+                >
+                  <p className="font-heading italic text-[1.25rem] leading-snug text-white text-center">
+                    {activeCaption}
+                  </p>
+                </div>
+              </div>
+            )}
+          </div>
+          {lightboxItems && lightboxItems.length > 0 && (
+            <div className="mt-4">
+              <PhotoLightbox items={lightboxItems} label="View gallery" variant="light" />
+            </div>
+          )}
+        </>
       )}
     </div>
   );
@@ -91,21 +128,30 @@ export default function WhatWeLove({ data, title, label, description, acaciaRewa
 type LayoutProps = {
   photos: Photo[];
   onHover: (index: number) => void;
+  onEnter: () => void;
 };
 
 function PhotoCard({
   photo,
   index,
   onHover,
+  onEnter,
   aspect = 'aspect-[4/3]',
 }: {
   photo: Photo;
   index: number;
   onHover: (index: number) => void;
+  onEnter?: () => void;
   aspect?: string;
 }) {
   return (
-    <div className="group" onMouseEnter={() => onHover(index)}>
+    <div
+      className="group"
+      onMouseEnter={() => {
+        onHover(index);
+        onEnter?.();
+      }}
+    >
       <div className={`${aspect} relative overflow-hidden bg-surface-alt`}>
         {photo.image?.responsiveImage && (
           <div className="absolute inset-0 transition-transform duration-700 ease-out group-hover:scale-[1.04]">
@@ -123,49 +169,56 @@ function PhotoCard({
 }
 
 /** Two equal columns */
-function TwoUp({ photos, onHover }: LayoutProps) {
+function TwoUp({ photos, onHover, onEnter }: LayoutProps) {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-      <PhotoCard photo={photos[0]} index={0} onHover={onHover} />
-      <PhotoCard photo={photos[1]} index={1} onHover={onHover} />
+      <PhotoCard photo={photos[0]} index={0} onHover={onHover} onEnter={onEnter} />
+      <PhotoCard photo={photos[1]} index={1} onHover={onHover} onEnter={onEnter} />
     </div>
   );
 }
 
 /** One large left + two stacked right */
-function ThreeUp({ photos, onHover }: LayoutProps) {
+function ThreeUp({ photos, onHover, onEnter }: LayoutProps) {
   return (
     <div className="grid grid-cols-1 md:grid-cols-[1.2fr_1fr] gap-3">
       <PhotoCard
         photo={photos[0]}
         index={0}
         onHover={onHover}
+        onEnter={onEnter}
         aspect="aspect-[3/4] md:aspect-auto md:h-full"
       />
       <div className="flex flex-col gap-3">
-        <PhotoCard photo={photos[1]} index={1} onHover={onHover} />
-        <PhotoCard photo={photos[2]} index={2} onHover={onHover} />
+        <PhotoCard photo={photos[1]} index={1} onHover={onHover} onEnter={onEnter} />
+        <PhotoCard photo={photos[2]} index={2} onHover={onHover} onEnter={onEnter} />
       </div>
     </div>
   );
 }
 
 /** 2×2 grid */
-function FourUp({ photos, onHover }: LayoutProps) {
+function FourUp({ photos, onHover, onEnter }: LayoutProps) {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
       {photos.map((photo, i) => (
-        <PhotoCard key={photo.id} photo={photo} index={i} onHover={onHover} />
+        <PhotoCard key={photo.id} photo={photo} index={i} onHover={onHover} onEnter={onEnter} />
       ))}
     </div>
   );
 }
 
 /** One large spanning top + four smaller below */
-function FiveUp({ photos, onHover }: LayoutProps) {
+function FiveUp({ photos, onHover, onEnter }: LayoutProps) {
   return (
     <div className="space-y-3">
-      <PhotoCard photo={photos[0]} index={0} onHover={onHover} aspect="aspect-[16/9]" />
+      <PhotoCard
+        photo={photos[0]}
+        index={0}
+        onHover={onHover}
+        onEnter={onEnter}
+        aspect="aspect-[16/9]"
+      />
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
         {photos.slice(1, 5).map((photo, i) => (
           <PhotoCard
@@ -173,6 +226,7 @@ function FiveUp({ photos, onHover }: LayoutProps) {
             photo={photo}
             index={i + 1}
             onHover={onHover}
+            onEnter={onEnter}
             aspect="aspect-square"
           />
         ))}
