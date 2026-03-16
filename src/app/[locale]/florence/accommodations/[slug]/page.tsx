@@ -366,11 +366,11 @@ export default async function ApartmentDetailPage({
                 {apartment.category.name}
               </p>
             )}
-            <h1 className="font-heading font-normal text-h1 md:text-hero leading-tight text-white mb-3">
+            <h1 className="font-heading font-normal text-h1 md:text-hero leading-none text-white">
               {apartment.name}
             </h1>
             {apartment.claim && (
-              <p className="font-heading italic text-h2 text-white/80 max-w-2xl leading-relaxed">
+              <p className="font-heading italic text-h2 text-white/80 max-w-2xl leading-snug mt-1">
                 {apartment.claim}
               </p>
             )}
