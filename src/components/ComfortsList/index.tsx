@@ -25,7 +25,7 @@ export default function ComfortsList({ data, title }: Props) {
       <p className="font-body text-label uppercase tracking-[0.18em] text-rust font-medium mb-4">
         {title}
       </p>
-      <ul className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-0">
+      <ul className="grid grid-cols-1 gap-y-0">
         {comforts.map((comfort) => {
           const Icon = getAmenityIcon(comfort.icon);
           const content = (

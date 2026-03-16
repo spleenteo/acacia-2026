@@ -418,7 +418,7 @@ export default async function ApartmentDetailPage({
           </div>
 
           {/* ── Sidebar ── */}
-          <div className="mt-12 lg:mt-0">
+          <div className="mt-12 lg:mt-0 lg:relative lg:top-[-180px]">
             <BookingSidebar
               bedrooms={apartment.bedrooms}
               bathrooms={apartment.bathrooms}
