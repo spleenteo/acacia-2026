@@ -11,11 +11,12 @@ type Props = {
   title: string;
   label: string;
   description?: string | null;
+  acaciaReward?: boolean | null;
 };
 
 type Photo = ResultOf<typeof GalleryImageFragment>;
 
-export default function WhatWeLove({ data, title, label, description }: Props) {
+export default function WhatWeLove({ data, title, label, description, acaciaReward }: Props) {
   const photos = data.map((d) => readFragment(GalleryImageFragment, d));
   const [activeCaptionIndex, setActiveCaptionIndex] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
@@ -37,12 +38,29 @@ export default function WhatWeLove({ data, title, label, description }: Props) {
 
   return (
     <div>
-      <p className="font-body text-label uppercase tracking-[0.22em] text-rust font-medium mb-2">
-        {label}
-      </p>
-      <h2 className="font-heading text-h2 text-dark mb-6">
-        <em>{title}</em>
-      </h2>
+      <div className="flex items-start justify-between gap-4 mb-6">
+        <div>
+          <p className="font-body text-label uppercase tracking-[0.22em] text-rust font-medium mb-2">
+            {label}
+          </p>
+          <h2 className="font-heading text-h2 text-dark">
+            <em>{title}</em>
+          </h2>
+        </div>
+        {acaciaReward && (
+          <div className="shrink-0 flex items-center gap-2 bg-surface-alt border border-border-light rounded-pill px-4 py-2">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/acacia-isologo.svg"
+              alt="Acacia Reward"
+              className="w-6 h-6"
+            />
+            <span className="font-body text-caption font-medium text-dark tracking-wide">
+              Acacia Reward
+            </span>
+          </div>
+        )}
+      </div>
 
       {description && (
         <div className="mb-10">

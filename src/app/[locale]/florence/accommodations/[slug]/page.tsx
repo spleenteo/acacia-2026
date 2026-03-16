@@ -357,6 +357,7 @@ export default async function ApartmentDetailPage({
                   label={l.whatWeLoveLabel}
                   title={l.whatWeLoveTitle}
                   description={apartment.description}
+                  acaciaReward={apartment.acaciaReward}
                 />
               </section>
             )}
@@ -378,7 +379,6 @@ export default async function ApartmentDetailPage({
                 />
               </section>
             )}
-
           </div>
 
           {/* ── Sidebar ── */}

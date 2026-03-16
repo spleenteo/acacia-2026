@@ -54,19 +54,12 @@ export default function BookingSidebar({
       {/* ── Desktop Sidebar ── */}
       <div className="hidden lg:block">
         <div className="sticky top-[calc(var(--header-height)+2rem)] rounded-card bg-card border border-border-light shadow-card p-6">
-          {/* Highlight / Acacia Reward badge */}
-          {(highlight || acaciaReward) && (
+          {/* Highlight badge */}
+          {highlight && (
             <div className="mb-5">
-              {acaciaReward && (
-                <span className="inline-block bg-gold/15 text-gold font-body text-tag uppercase font-medium tracking-wider px-2.5 py-1 rounded-pill border border-gold/30">
-                  Acacia Reward
-                </span>
-              )}
-              {highlight && (
-                <span className="inline-block bg-rust/10 text-rust font-body text-tag uppercase font-medium tracking-wider px-2.5 py-1 rounded-pill border border-rust/20 ml-1.5">
-                  {highlight}
-                </span>
-              )}
+              <span className="inline-block bg-rust/10 text-rust font-body text-tag uppercase font-medium tracking-wider px-2.5 py-1 rounded-pill border border-rust/20">
+                {highlight}
+              </span>
             </div>
           )}
 
