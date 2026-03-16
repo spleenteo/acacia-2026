@@ -1506,12 +1506,13 @@ input GuestbookModelFilter {
   updatedAt: UpdatedAtFilter
   _isValid: BooleanFilter
   published: BooleanFilter
-  date: DateFilter
   service: LinkFilter
   apartment: LinkFilter
   name: StringFilter
   quote: TextFilter
   title: StringFilter
+  date: DateFilter
+  channel: StringFilter
   OR: [GuestbookModelFilter]
   AND: [GuestbookModelFilter]
 }
@@ -1541,12 +1542,14 @@ enum GuestbookModelOrderBy {
   _isValid_DESC
   published_ASC
   published_DESC
-  date_ASC
-  date_DESC
   name_ASC
   name_DESC
   title_ASC
   title_DESC
+  date_ASC
+  date_DESC
+  channel_ASC
+  channel_DESC
 }
 
 """Record of type Guestbooks (guestbook)"""
@@ -1570,6 +1573,7 @@ type GuestbookRecord implements RecordInterface {
   _unpublishingScheduledAt: DateTime
   _updatedAt: DateTime!
   apartment: ApartmentRecord
+  channel: String
   createdAt: DateTime!
   date: Date!
   id: ItemId!

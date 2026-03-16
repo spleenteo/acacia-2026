@@ -50,11 +50,7 @@ export default function WhatWeLove({ data, title, label, description, acaciaRewa
         {acaciaReward && (
           <div className="shrink-0 flex items-center gap-2 bg-surface-alt border border-border-light rounded-pill px-4 py-2">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src="/acacia-isologo.svg"
-              alt="Acacia Reward"
-              className="w-6 h-6"
-            />
+            <img src="/acacia-isologo.svg" alt="Acacia Reward" className="w-6 h-6" />
             <span className="font-body text-caption font-medium text-dark tracking-wide">
               Acacia Reward
             </span>

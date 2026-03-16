@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 56" fill="none">
+  <rect width="200" height="56" rx="8" fill="#FF5A5F"/>
+  <circle cx="30" cy="28" r="16" fill="white"/>
+  <path d="M30 18l2.5 5 5.5.8-4 3.9.9 5.5L30 30.8l-4.9 2.4.9-5.5-4-3.9 5.5-.8z" fill="#FF5A5F"/>
+  <text x="56" y="28" font-family="Arial, sans-serif" font-size="11" font-weight="bold" fill="white">Superhost</text>
+  <text x="56" y="42" font-family="Arial, sans-serif" font-size="9" fill="white" opacity="0.8">Airbnb</text>
+</svg>

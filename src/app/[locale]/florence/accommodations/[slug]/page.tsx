@@ -145,6 +145,7 @@ const reviewsQuery = graphql(`
       title
       quote
       date
+      channel
     }
   }
 `);
@@ -416,6 +417,11 @@ export default async function ApartmentDetailPage({
 
       {/* ── Full-width sections ── */}
 
+      {/* Reviews */}
+      {reviews.length > 0 && (
+        <ReviewsList reviews={reviews} label={l.reviewsLabel} title={l.reviewsTitle} />
+      )}
+
       {/* District Link */}
       {apartment.district && (
         <section>
@@ -425,11 +431,6 @@ export default async function ApartmentDetailPage({
             locale={locale as Locale}
           />
         </section>
-      )}
-
-      {/* Reviews */}
-      {reviews.length > 0 && (
-        <ReviewsList reviews={reviews} label={l.reviewsLabel} title={l.reviewsTitle} />
       )}
 
       {/* Related Content */}
