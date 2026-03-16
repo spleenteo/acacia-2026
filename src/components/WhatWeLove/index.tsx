@@ -4,22 +4,24 @@ import { useRef, useState } from 'react';
 import { type FragmentOf, type ResultOf, readFragment } from '@/lib/datocms/graphql';
 import ResponsiveImage from '@/components/ResponsiveImage';
 import { GalleryImageFragment } from '@/components/ImageGallery/fragment';
+import HtmlContent from '@/components/HtmlContent';
 
 type Props = {
   data: FragmentOf<typeof GalleryImageFragment>[];
   title: string;
   label: string;
+  description?: string | null;
 };
 
 type Photo = ResultOf<typeof GalleryImageFragment>;
 
-export default function WhatWeLove({ data, title, label }: Props) {
+export default function WhatWeLove({ data, title, label, description }: Props) {
   const photos = data.map((d) => readFragment(GalleryImageFragment, d));
   const [activeCaptionIndex, setActiveCaptionIndex] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const timeoutRef = useRef<ReturnType<typeof setTimeout>>(null);
 
-  if (photos.length < 2) return null;
+  const hasPhotos = photos.length >= 2;
 
   const activeCaption = photos[activeCaptionIndex]?.description;
 
@@ -38,17 +40,26 @@ export default function WhatWeLove({ data, title, label }: Props) {
       <p className="font-body text-label uppercase tracking-[0.22em] text-rust font-medium mb-2">
         {label}
       </p>
-      <h2 className="font-heading text-h2 text-dark mb-8">
+      <h2 className="font-heading text-h2 text-dark mb-6">
         <em>{title}</em>
       </h2>
 
-      {photos.length === 2 && <TwoUp photos={photos} onHover={handleHover} />}
-      {photos.length === 3 && <ThreeUp photos={photos} onHover={handleHover} />}
-      {photos.length === 4 && <FourUp photos={photos} onHover={handleHover} />}
-      {photos.length >= 5 && <FiveUp photos={photos} onHover={handleHover} />}
+      {description && (
+        <div className="mb-10">
+          <HtmlContent
+            html={description}
+            className="font-body text-body-lg text-dark leading-relaxed prose-acacia"
+          />
+        </div>
+      )}
+
+      {hasPhotos && photos.length === 2 && <TwoUp photos={photos} onHover={handleHover} />}
+      {hasPhotos && photos.length === 3 && <ThreeUp photos={photos} onHover={handleHover} />}
+      {hasPhotos && photos.length === 4 && <FourUp photos={photos} onHover={handleHover} />}
+      {hasPhotos && photos.length >= 5 && <FiveUp photos={photos} onHover={handleHover} />}
 
       {/* Single caption area — centered, elegant crossfade */}
-      <div className="mt-6 text-center min-h-[2em]" aria-live="polite">
+      {hasPhotos && <div className="mt-6 text-center min-h-[2em]" aria-live="polite">
         <p
           className={`font-heading italic text-[1.375rem] leading-snug text-muted transition-all duration-500 ease-out ${
             isTransitioning ? 'opacity-0 translate-y-2' : 'opacity-100 translate-y-0'
@@ -56,7 +67,7 @@ export default function WhatWeLove({ data, title, label }: Props) {
         >
           {activeCaption || '\u00A0'}
         </p>
-      </div>
+      </div>}
     </div>
   );
 }

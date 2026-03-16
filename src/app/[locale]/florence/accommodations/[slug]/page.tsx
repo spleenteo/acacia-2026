@@ -304,7 +304,9 @@ export default async function ApartmentDetailPage({
           <div className="absolute inset-0">
             <ResponsiveImage
               data={apartment.featuredImage.responsiveImage}
-              className="w-full h-full object-cover opacity-55"
+              pictureClassName="absolute inset-0 w-full h-full"
+              imgClassName="w-full h-full object-cover opacity-55"
+              imgStyle={{ maxWidth: 'none', height: '100%', aspectRatio: 'unset' }}
               priority
             />
           </div>
@@ -347,23 +349,14 @@ export default async function ApartmentDetailPage({
         <div className="lg:grid lg:grid-cols-[1fr_320px] lg:gap-16 xl:gap-20">
           {/* ── Main content ── */}
           <div className="min-w-0">
-            {/* Description */}
-            {apartment.description && (
-              <section className="mb-16 lg:mb-20">
-                <HtmlContent
-                  html={apartment.description}
-                  className="font-body text-body-lg text-dark leading-relaxed prose-acacia"
-                />
-              </section>
-            )}
-
-            {/* What We Love */}
-            {apartment.gallery.length >= 2 && (
+            {/* What We Love + Description */}
+            {(apartment.gallery.length >= 2 || apartment.description) && (
               <section className="mb-16 lg:mb-20">
                 <WhatWeLove
                   data={apartment.gallery}
                   label={l.whatWeLoveLabel}
                   title={l.whatWeLoveTitle}
+                  description={apartment.description}
                 />
               </section>
             )}

@@ -1,98 +1,26 @@
-import {
-  Info,
-  Wifi,
-  AirVent,
-  Coffee,
-  Tv,
-  WashingMachine,
-  CookingPot,
-  Bath,
-  Bed,
-  Snowflake,
-  Wind,
-  Flame,
-  ParkingCircle,
-  Baby,
-  Dog,
-  ShowerHead,
-  Shirt,
-  Microwave,
-  Refrigerator,
-  UtensilsCrossed,
-  KeyRound,
-  DoorOpen,
-  Lock,
-  Sparkles,
-  Heart,
-  Star,
-  Leaf,
-  Sun,
-  Bike,
-  Music,
-  BookOpen,
-  Dumbbell,
-  Waves,
-  Mountain,
-  type LucideIcon,
-} from 'lucide-react';
+import { icons, type LucideIcon } from 'lucide-react';
 
-export const amenityIcons: Record<string, LucideIcon> = {
-  info: Info,
-  wifi: Wifi,
-  'air-conditioning': AirVent,
-  ac: AirVent,
-  coffee: Coffee,
-  'coffee-machine': Coffee,
-  nespresso: Coffee,
-  tv: Tv,
-  'smart-tv': Tv,
-  'washing-machine': WashingMachine,
-  laundry: WashingMachine,
-  kitchen: CookingPot,
-  cooking: CookingPot,
-  bath: Bath,
-  bathtub: Bath,
-  bed: Bed,
-  'bed-linen': Bed,
-  heating: Flame,
-  snowflake: Snowflake,
-  fan: Wind,
-  hairdryer: Wind,
-  parking: ParkingCircle,
-  baby: Baby,
-  'baby-cot': Baby,
-  pets: Dog,
-  dog: Dog,
-  shower: ShowerHead,
-  iron: Shirt,
-  ironing: Shirt,
-  microwave: Microwave,
-  fridge: Refrigerator,
-  refrigerator: Refrigerator,
-  breakfast: UtensilsCrossed,
-  dining: UtensilsCrossed,
-  key: KeyRound,
-  'self-checkin': KeyRound,
-  entrance: DoorOpen,
-  safe: Lock,
-  cleaning: Sparkles,
-  welcome: Heart,
-  premium: Star,
-  luxury: Star,
-  garden: Leaf,
-  terrace: Sun,
-  balcony: Sun,
-  bike: Bike,
-  music: Music,
-  books: BookOpen,
-  library: BookOpen,
-  gym: Dumbbell,
-  fitness: Dumbbell,
-  pool: Waves,
-  view: Mountain,
-};
+/**
+ * Resolve a Lucide icon by name. Accepts both formats:
+ * - kebab-case from Lucide URL: "air-vent", "washing-machine", "shower-head"
+ * - PascalCase component name: "AirVent", "WashingMachine", "ShowerHead"
+ *
+ * Browse all available icons at: https://lucide.dev/icons/
+ * Fallback: "Info" icon.
+ */
+function toPascalCase(str: string): string {
+  return str
+    .split('-')
+    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+    .join('');
+}
 
-export function getAmenityIcon(slug: string | null | undefined): LucideIcon {
-  if (!slug) return Info;
-  return amenityIcons[slug] ?? Info;
+export function getAmenityIcon(name: string | null | undefined): LucideIcon {
+  if (!name) return icons.Info;
+  // Try as-is first (already PascalCase), then convert from kebab-case
+  return (
+    icons[name as keyof typeof icons] ??
+    icons[toPascalCase(name) as keyof typeof icons] ??
+    icons.Info
+  );
 }
