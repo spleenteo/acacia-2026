@@ -379,20 +379,6 @@ export default async function ApartmentDetailPage({
               </section>
             )}
 
-            {/* Info Detail */}
-            {apartment.infoDetail.length > 0 && (
-              <section className="mb-16 lg:mb-20">
-                <InfoDetail
-                  data={apartment.infoDetail.map((item) => ({
-                    __typename: item.__typename as 'InfoTextRecord' | 'InfoAddressRecord',
-                    fragment: item as never,
-                  }))}
-                  title={l.info}
-                  locale={locale}
-                  district={apartment.district}
-                />
-              </section>
-            )}
           </div>
 
           {/* ── Sidebar ── */}
@@ -406,8 +392,21 @@ export default async function ApartmentDetailPage({
               acaciaReward={apartment.acaciaReward}
               labels={l}
             />
+            {apartment.infoDetail.length > 0 && (
+              <div className="mt-8">
+                <InfoDetail
+                  data={apartment.infoDetail.map((item) => ({
+                    __typename: item.__typename as 'InfoTextRecord' | 'InfoAddressRecord',
+                    fragment: item as never,
+                  }))}
+                  title={l.info}
+                  locale={locale}
+                  district={apartment.district}
+                />
+              </div>
+            )}
             {apartment.ups.length > 0 && (
-              <div className="mt-10 lg:mt-8">
+              <div className="mt-8">
                 <UpsList data={apartment.ups} title={l.ups} />
               </div>
             )}

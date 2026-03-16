@@ -52,17 +52,17 @@ export default function InfoDetail({ data, title, locale, district }: Props) {
 
   return (
     <div>
-      <h3 className="font-heading italic text-h3 text-dark mb-6">{title}</h3>
-      <dl className="space-y-4">
+      <h3 className="font-heading italic text-h4 text-dark mb-4">{title}</h3>
+      <dl className="space-y-2">
         {data.map((item) => {
           if (item.__typename === 'InfoTextRecord') {
             const info = readFragment(InfoTextFragment, item.fragment);
             return (
-              <div key={info.id} className="border-b border-dotted border-border pb-3">
-                <dt className="font-bold text-body text-dark uppercase tracking-wider mb-1">
+              <div key={info.id} className="border-b border-dotted border-border pb-2">
+                <dt className="font-medium text-caption text-dark uppercase tracking-wider mb-0.5">
                   {info.detailsLabel.name}
                 </dt>
-                <dd className="text-muted text-body">{info.text}</dd>
+                <dd className="text-muted text-body-sm">{info.text}</dd>
               </div>
             );
           }
@@ -70,11 +70,11 @@ export default function InfoDetail({ data, title, locale, district }: Props) {
           if (item.__typename === 'InfoAddressRecord') {
             const info = readFragment(InfoAddressFragment, item.fragment);
             return (
-              <div key={info.id} className="border-b border-dotted border-border pb-3">
-                <dt className="font-bold text-body text-dark uppercase tracking-wider mb-1">
+              <div key={info.id} className="border-b border-dotted border-border pb-2">
+                <dt className="font-medium text-caption text-dark uppercase tracking-wider mb-0.5">
                   {info.detailsLabel.name}
                 </dt>
-                <dd className="text-muted text-body">
+                <dd className="text-muted text-body-sm">
                   {info.addressText && (
                     <p className="mb-3">
                       {info.addressText}
@@ -95,7 +95,7 @@ export default function InfoDetail({ data, title, locale, district }: Props) {
                     <>
                       <div className="mt-4 overflow-hidden rounded-card">
                         <iframe
-                          src={`https://maps.google.com/maps?q=${info.addressMap.latitude},${info.addressMap.longitude}&z=15&output=embed`}
+                          src={`https://maps.google.com/maps?q=${info.addressMap.latitude},${info.addressMap.longitude}&z=15&layer=transit&output=embed`}
                           width="100%"
                           height="260"
                           style={{ border: 0 }}
