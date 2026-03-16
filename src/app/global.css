@@ -183,6 +183,26 @@
   }
 }
 
+/* Beddy widget highlight animation */
+@keyframes beddy-pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(208, 81, 42, 0);
+  }
+  25%,
+  75% {
+    box-shadow: 0 0 0 8px rgba(208, 81, 42, 0.25);
+  }
+  50% {
+    box-shadow: 0 0 0 12px rgba(208, 81, 42, 0.15);
+  }
+}
+
+.beddy-highlight {
+  animation: beddy-pulse 2s ease-in-out;
+  border-radius: 12px;
+}
+
 @layer components {
   /* ── PROSE ACACIA ──────────────────────────────────────────────
      Styles for HTML content from DatoCMS (markdown: true fields).

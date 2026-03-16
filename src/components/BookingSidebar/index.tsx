@@ -40,6 +40,8 @@ export default function BookingSidebar({
     const el = document.getElementById('beddy-widget');
     if (el) {
       el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      el.classList.add('beddy-highlight');
+      setTimeout(() => el.classList.remove('beddy-highlight'), 2000);
     }
   };
 
