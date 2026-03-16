@@ -23,6 +23,7 @@ export async function executeQuery<Result, Variables>(
     variables: options?.variables,
     excludeInvalid: true,
     includeDrafts: options?.includeDrafts,
+    environment: process.env.DATOCMS_ENVIRONMENT || undefined,
     token: options?.includeDrafts
       ? process.env.DATOCMS_DRAFT_CONTENT_CDA_TOKEN!
       : process.env.DATOCMS_PUBLISHED_CONTENT_CDA_TOKEN!,
