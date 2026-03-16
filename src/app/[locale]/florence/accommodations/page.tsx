@@ -63,11 +63,7 @@ const query = graphql(
         name(locale: $locale)
         slug
       }
-      allApartments(
-        locale: $locale
-        first: 100
-        orderBy: [position_ASC]
-      ) {
+      allApartments(locale: $locale, first: 100, orderBy: [name_ASC]) {
         id
         category {
           slug
