@@ -179,9 +179,7 @@ export default function ReviewsList({ reviews, label, title }: Props) {
               {selectedReview.quote}
             </p>
             <footer className="border-t border-border-light pt-5">
-              <p className="font-body text-body-lg font-medium text-dark">
-                {selectedReview.name}
-              </p>
+              <p className="font-body text-body-lg font-medium text-dark">{selectedReview.name}</p>
               {selectedReview.title && (
                 <p className="font-heading italic text-body text-muted mt-1">
                   {selectedReview.title}

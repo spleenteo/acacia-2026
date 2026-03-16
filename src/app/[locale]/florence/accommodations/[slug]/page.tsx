@@ -99,6 +99,15 @@ const query = graphql(
         district {
           name
           slug
+          abstract(locale: $locale, markdown: true)
+          description(locale: $locale, markdown: true)
+          gallery {
+            image {
+              responsiveImage(imgixParams: { w: 600, h: 400, fit: crop }) {
+                ...ResponsiveImageFragment
+              }
+            }
+          }
         }
         gallery {
           ...GalleryImageFragment
@@ -422,15 +431,16 @@ export default async function ApartmentDetailPage({
         <ReviewsList reviews={reviews} label={l.reviewsLabel} title={l.reviewsTitle} />
       )}
 
-      {/* District Link */}
+      {/* District */}
       {apartment.district && (
-        <section>
-          <DistrictLink
-            name={apartment.district.name}
-            slug={apartment.district.slug}
-            locale={locale as Locale}
-          />
-        </section>
+        <DistrictLink
+          name={apartment.district.name}
+          slug={apartment.district.slug}
+          locale={locale as Locale}
+          abstract={apartment.district.abstract}
+          description={apartment.district.description}
+          image={apartment.district.gallery[0]?.image?.responsiveImage}
+        />
       )}
 
       {/* Related Content */}
