@@ -20,7 +20,12 @@ async function main() {
     process.exit(1);
   }
 
-  const client = buildClient({ apiToken });
+  const client = buildClient({
+    apiToken,
+    environment: process.env.DATOCMS_ENVIRONMENT || undefined,
+  });
+
+  console.log(`Environment: ${process.env.DATOCMS_ENVIRONMENT || 'primary'}`);
 
   console.log('Fetching all apartments...');
 
