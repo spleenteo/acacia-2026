@@ -6,7 +6,7 @@ import Link from 'next/link';
 
 export const DistrictCardFragment = graphql(
   `
-    fragment DistrictCardFragment on DistrictsRecord {
+    fragment DistrictCardFragment on DistrictRecord {
       id
       name
       slug

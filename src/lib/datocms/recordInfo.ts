@@ -43,7 +43,7 @@ export async function recordToWebsiteRoute(
     // Apartment model (ID 2726) — non-localized slug
     case '2726':
       return slug ? `/${locale}/florence/accommodations/${slug}` : null;
-    // Districts model (ID 2735) — localized slug
+    // District model (ID 2735) — localized slug
     case '2735':
       return slug ? `/${locale}/florence/districts/${slug}` : null;
     // Mood model (ID 2738) — localized slug

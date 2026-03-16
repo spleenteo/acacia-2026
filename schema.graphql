@@ -54,18 +54,12 @@ enum AmenityModelOrderBy {
 """Record of type 🚿 Amenities (amenity)"""
 type AmenityRecord implements RecordInterface {
   _allNameLocales(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
     """
     If you want to fallback to a default translation when a translation has not been found
     """
     fallbackLocales: [SiteLocale!]
   ): [StringNonNullMultiLocaleField!]
   _allUrlLocales(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
     """
     If you want to fallback to a default translation when a translation has not been found
     """
@@ -162,12 +156,9 @@ enum ApartmentCategoryModelOrderBy {
   name_DESC
 }
 
-"""Record of type Apartment category (apartment_category)"""
+"""Record of type ⛺ Apartment category (apartment_category)"""
 type ApartmentCategoryRecord implements RecordInterface {
   _allNameLocales(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
     """
     If you want to fallback to a default translation when a translation has not been found
     """
@@ -207,12 +198,16 @@ type ApartmentCategoryRecord implements RecordInterface {
   updatedAt: DateTime!
 }
 
+"""Linking fields"""
+enum ApartmentModelFieldsReferencingDistrictModel {
+  apartment_district
+}
+
 input ApartmentModelFilter {
   _createdAt: CreatedAtFilter
   createdAt: CreatedAtFilter
   id: ItemIdFilter
   _firstPublishedAt: PublishedAtFilter
-  position: PositionFilter
   _publicationScheduledAt: PublishedAtFilter
   _unpublishingScheduledAt: PublishedAtFilter
   _publishedAt: PublishedAtFilter
@@ -233,19 +228,17 @@ input ApartmentModelFilter {
   category: LinkFilter
   notes: JsonFilter
   seo: SeoFilter
-  description: TextFilter
   bedrooms: IntegerFilter
   bathrooms: IntegerFilter
   propertyId: StringFilter
   highlight: StringFilter
   price: StringFilter
-  kigoId: StringFilter
   sleeps: IntegerFilter
   beddyId: StringFilter
-  kigoSlug: StringFilter
   slug: SlugFilter
   amenities: LinksFilter
   comforts: LinksFilter
+  description: TextFilter
   OR: [ApartmentModelFilter]
   AND: [ApartmentModelFilter]
 }
@@ -266,8 +259,6 @@ enum ApartmentModelOrderBy {
   id_DESC
   _firstPublishedAt_ASC
   _firstPublishedAt_DESC
-  position_ASC
-  position_DESC
   _publicationScheduledAt_ASC
   _publicationScheduledAt_DESC
   _unpublishingScheduledAt_ASC
@@ -302,22 +293,15 @@ enum ApartmentModelOrderBy {
   highlight_DESC
   price_ASC
   price_DESC
-  kigoId_ASC
-  kigoId_DESC
   sleeps_ASC
   sleeps_DESC
   beddyId_ASC
   beddyId_DESC
-  kigoSlug_ASC
-  kigoSlug_DESC
 }
 
 """Record of type 🏠 Apartments (apartment)"""
 type ApartmentRecord implements RecordInterface {
   _allClaimLocales(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
     """
     If you want to fallback to a default translation when a translation has not been found
     """
@@ -327,33 +311,33 @@ type ApartmentRecord implements RecordInterface {
     """Process content as markdown"""
     markdown: Boolean
 
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
     """
     If you want to fallback to a default translation when a translation has not been found
     """
     fallbackLocales: [SiteLocale!]
   ): [StringMultiLocaleField!]
   _allHighlightLocales(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
     """
     If you want to fallback to a default translation when a translation has not been found
     """
     fallbackLocales: [SiteLocale!]
   ): [StringMultiLocaleField!]
   _allHomeTruthLocales(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
     """
     If you want to fallback to a default translation when a translation has not been found
     """
     fallbackLocales: [SiteLocale!]
   ): [TruthRecordListListNonNullMultiLocaleField!]
   _allInfoDetailLocales(
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): [ApartmentModelInfoDetailFieldListListNonNullMultiLocaleField!]
+  _allReferencingGuestbooks(
+    """Specifies how to filter linking records"""
+    through: InverseRelationshipFilterBetweenGuestbookAndApartment
+
     """The locale to use to fetch the field's content"""
     locale: SiteLocale
 
@@ -361,11 +345,116 @@ type ApartmentRecord implements RecordInterface {
     If you want to fallback to a default translation when a translation has not been found
     """
     fallbackLocales: [SiteLocale!]
-  ): [ApartmentModelInfoDetailFieldListListNonNullMultiLocaleField!]
-  _allSeoLocales(
+
+    """Skip the first results"""
+    skip: IntType
+
+    """Limit the number of results"""
+    first: IntType = 20
+    filter: GuestbookModelFilter
+    orderBy: [GuestbookModelOrderBy] = [_updatedAt_DESC]
+  ): [GuestbookRecord!]!
+
+  """Returns meta information regarding a record collection"""
+  _allReferencingGuestbooksMeta(
+    """Specifies how to filter linking records"""
+    through: InverseRelationshipFilterBetweenGuestbookAndApartment
+
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+    filter: GuestbookModelFilter
+  ): CollectionMetadata!
+  _allReferencingHomePages(
+    """Specifies how to filter linking records"""
+    through: InverseRelationshipFilterBetweenHomePageAndApartment
+
     """The locale to use to fetch the field's content"""
     locale: SiteLocale
 
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+
+    """Skip the first results"""
+    skip: IntType
+
+    """Limit the number of results"""
+    first: IntType = 20
+    filter: HomePageModelFilter
+    orderBy: [HomePageModelOrderBy] = [_updatedAt_DESC]
+  ): [HomePageRecord!]!
+
+  """Returns meta information regarding a record collection"""
+  _allReferencingHomePagesMeta(
+    """Specifies how to filter linking records"""
+    through: InverseRelationshipFilterBetweenHomePageAndApartment
+
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+    filter: HomePageModelFilter
+  ): CollectionMetadata!
+  _allReferencingMoodItems(
+    """Specifies how to filter linking records"""
+    through: InverseRelationshipFilterBetweenMoodItemsAndApartment
+
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+
+    """Skip the first results"""
+    skip: IntType
+
+    """Limit the number of results"""
+    first: IntType = 20
+    filter: MoodItemsModelFilter
+    orderBy: [MoodItemsModelOrderBy] = [position_ASC]
+  ): [MoodItemsRecord!]!
+
+  """Returns meta information regarding a record collection"""
+  _allReferencingMoodItemsMeta(
+    """Specifies how to filter linking records"""
+    through: InverseRelationshipFilterBetweenMoodItemsAndApartment
+
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+    filter: MoodItemsModelFilter
+  ): CollectionMetadata!
+  _allReferencingPosts(
+    """Specifies how to filter linking records"""
+    through: InverseRelationshipFilterBetweenPostAndApartment
+
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+
+    """Skip the first results"""
+    skip: IntType
+
+    """Limit the number of results"""
+    first: IntType = 20
+    filter: PostModelFilter
+    orderBy: [PostModelOrderBy] = [_updatedAt_DESC]
+  ): [PostRecord!]!
+
+  """Returns meta information regarding a record collection"""
+  _allReferencingPostsMeta(
+    """Specifies how to filter linking records"""
+    through: InverseRelationshipFilterBetweenPostAndApartment
+
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+    filter: PostModelFilter
+  ): CollectionMetadata!
+  _allSeoLocales(
     """
     If you want to fallback to a default translation when a translation has not been found
     """
@@ -389,7 +478,7 @@ type ApartmentRecord implements RecordInterface {
   _status: ItemStatus!
   _unpublishingScheduledAt: DateTime
   _updatedAt: DateTime!
-  acaciaReward: BooleanType
+  acaciaReward: BooleanType!
   amenities: [AmenityRecord!]!
   bathrooms: IntType
   beddyId: String
@@ -420,7 +509,7 @@ type ApartmentRecord implements RecordInterface {
     """
     fallbackLocales: [SiteLocale!]
   ): String
-  district: DistrictsRecord
+  district: DistrictRecord
   featuredImage: FileField!
   featuredSlideshow: [FileField!]!
   gallery: [GalleryImageRecord!]!
@@ -452,14 +541,11 @@ type ApartmentRecord implements RecordInterface {
     """
     fallbackLocales: [SiteLocale!]
   ): [ApartmentModelInfoDetailField!]!
-  kigoId: String
-  kigoSlug: String
   name: String!
   notes: JsonField
-  position: IntType
   price: String
   propertyId: String
-  published: BooleanType
+  published: BooleanType!
   seo(
     """The locale to use to fetch the field's content"""
     locale: SiteLocale
@@ -559,9 +645,9 @@ input BooleanFilter {
 """Represents `true` or `false` values."""
 scalar BooleanType
 
-type BooleanTypeMultiLocaleField {
+type BooleanTypeNonNullMultiLocaleField {
   locale: SiteLocale
-  value: BooleanType
+  value: BooleanType!
 }
 
 input CallToActionModelFilter {
@@ -614,18 +700,12 @@ enum CallToActionModelOrderBy {
 """Record of type Call to action (call_to_action)"""
 type CallToActionRecord implements RecordInterface {
   _allLabelLocales(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
     """
     If you want to fallback to a default translation when a translation has not been found
     """
     fallbackLocales: [SiteLocale!]
   ): [StringNonNullMultiLocaleField!]
   _allUrlLocales(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
     """
     If you want to fallback to a default translation when a translation has not been found
     """
@@ -761,18 +841,12 @@ enum ComfortModelOrderBy {
 """Record of type 🚙 Comfort (comfort)"""
 type ComfortRecord implements RecordInterface {
   _allNameLocales(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
     """
     If you want to fallback to a default translation when a translation has not been found
     """
     fallbackLocales: [SiteLocale!]
   ): [StringNonNullMultiLocaleField!]
   _allUrlLocales(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
     """
     If you want to fallback to a default translation when a translation has not been found
     """
@@ -899,7 +973,7 @@ input DateFilter {
 """A ISO 8601 compliant datetime value"""
 scalar DateTime
 
-input DistrictsModelFilter {
+input DistrictModelFilter {
   _createdAt: CreatedAtFilter
   createdAt: CreatedAtFilter
   id: ItemIdFilter
@@ -918,11 +992,11 @@ input DistrictsModelFilter {
   name: StringFilter
   abstract: TextFilter
   slug: SlugFilter
-  OR: [DistrictsModelFilter]
-  AND: [DistrictsModelFilter]
+  OR: [DistrictModelFilter]
+  AND: [DistrictModelFilter]
 }
 
-enum DistrictsModelOrderBy {
+enum DistrictModelOrderBy {
   _createdAt_ASC
   _createdAt_DESC
   createdAt_ASC
@@ -951,14 +1025,11 @@ enum DistrictsModelOrderBy {
   name_DESC
 }
 
-"""Record of type Districts (districts)"""
-type DistrictsRecord implements RecordInterface {
+"""Record of type 🕌 Districts (district)"""
+type DistrictRecord implements RecordInterface {
   _allAbstractLocales(
     """Process content as markdown"""
     markdown: Boolean
-
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
 
     """
     If you want to fallback to a default translation when a translation has not been found
@@ -969,6 +1040,15 @@ type DistrictsRecord implements RecordInterface {
     """Process content as markdown"""
     markdown: Boolean
 
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): [StringMultiLocaleField!]
+  _allReferencingApartments(
+    """Specifies how to filter linking records"""
+    through: InverseRelationshipFilterBetweenApartmentAndDistrict
+
     """The locale to use to fetch the field's content"""
     locale: SiteLocale
 
@@ -976,11 +1056,86 @@ type DistrictsRecord implements RecordInterface {
     If you want to fallback to a default translation when a translation has not been found
     """
     fallbackLocales: [SiteLocale!]
-  ): [StringMultiLocaleField!]
-  _allSeoLocales(
+
+    """Skip the first results"""
+    skip: IntType
+
+    """Limit the number of results"""
+    first: IntType = 20
+    filter: ApartmentModelFilter
+    orderBy: [ApartmentModelOrderBy] = [_updatedAt_DESC]
+  ): [ApartmentRecord!]!
+
+  """Returns meta information regarding a record collection"""
+  _allReferencingApartmentsMeta(
+    """Specifies how to filter linking records"""
+    through: InverseRelationshipFilterBetweenApartmentAndDistrict
+
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+    filter: ApartmentModelFilter
+  ): CollectionMetadata!
+  _allReferencingHomePages(
+    """Specifies how to filter linking records"""
+    through: InverseRelationshipFilterBetweenHomePageAndDistrict
+
     """The locale to use to fetch the field's content"""
     locale: SiteLocale
 
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+
+    """Skip the first results"""
+    skip: IntType
+
+    """Limit the number of results"""
+    first: IntType = 20
+    filter: HomePageModelFilter
+    orderBy: [HomePageModelOrderBy] = [_updatedAt_DESC]
+  ): [HomePageRecord!]!
+
+  """Returns meta information regarding a record collection"""
+  _allReferencingHomePagesMeta(
+    """Specifies how to filter linking records"""
+    through: InverseRelationshipFilterBetweenHomePageAndDistrict
+
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+    filter: HomePageModelFilter
+  ): CollectionMetadata!
+  _allReferencingPosts(
+    """Specifies how to filter linking records"""
+    through: InverseRelationshipFilterBetweenPostAndDistrict
+
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+
+    """Skip the first results"""
+    skip: IntType
+
+    """Limit the number of results"""
+    first: IntType = 20
+    filter: PostModelFilter
+    orderBy: [PostModelOrderBy] = [_updatedAt_DESC]
+  ): [PostRecord!]!
+
+  """Returns meta information regarding a record collection"""
+  _allReferencingPostsMeta(
+    """Specifies how to filter linking records"""
+    through: InverseRelationshipFilterBetweenPostAndDistrict
+
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+    filter: PostModelFilter
+  ): CollectionMetadata!
+  _allSeoLocales(
     """
     If you want to fallback to a default translation when a translation has not been found
     """
@@ -1102,18 +1257,12 @@ enum EssentialModelOrderBy {
 """Record of type 🧰 Essentials (essential)"""
 type EssentialRecord implements RecordInterface {
   _allNameLocales(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
     """
     If you want to fallback to a default translation when a translation has not been found
     """
     fallbackLocales: [SiteLocale!]
   ): [StringNonNullMultiLocaleField!]
   _allUrlLocales(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
     """
     If you want to fallback to a default translation when a translation has not been found
     """
@@ -1219,18 +1368,12 @@ type FaqRecord implements RecordInterface {
     """Process content as markdown"""
     markdown: Boolean
 
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
     """
     If you want to fallback to a default translation when a translation has not been found
     """
     fallbackLocales: [SiteLocale!]
   ): [StringNonNullMultiLocaleField!]
   _allQuestionLocales(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
     """
     If you want to fallback to a default translation when a translation has not been found
     """
@@ -1594,9 +1737,6 @@ type GalleryImageRecord implements RecordInterface {
     """Process content as markdown"""
     markdown: Boolean
 
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
     """
     If you want to fallback to a default translation when a translation has not been found
     """
@@ -1725,6 +1865,11 @@ type GuestPostRecord implements RecordInterface {
   url: String
 }
 
+"""Linking fields"""
+enum GuestbookModelFieldsReferencingApartmentModel {
+  guestbook_apartment
+}
+
 input GuestbookModelFilter {
   _createdAt: CreatedAtFilter
   createdAt: CreatedAtFilter
@@ -1810,7 +1955,7 @@ type GuestbookRecord implements RecordInterface {
   date: Date!
   id: ItemId!
   name: String!
-  published: BooleanType
+  published: BooleanType!
   quote(
     """Process content as markdown"""
     markdown: Boolean
@@ -1820,23 +1965,94 @@ type GuestbookRecord implements RecordInterface {
   updatedAt: DateTime!
 }
 
-union HomePageModelCtaLinkField = DistrictsRecord | MoodRecord | OfferRecord | PostRecord | ServiceRecord
+union HomePageModelCtaLinkField = DistrictRecord | MoodRecord | OfferRecord | PostRecord | ServiceRecord
+
+"""Linking fields"""
+enum HomePageModelFieldsReferencingApartmentModel {
+  homePage_promo
+  homePage_promo__promoApartment_apartment
+}
+
+"""Linking fields"""
+enum HomePageModelFieldsReferencingDistrictModel {
+  homePage_ctaLink
+}
+
+input HomePageModelFilter {
+  _createdAt: CreatedAtFilter
+  createdAt: CreatedAtFilter
+  id: ItemIdFilter
+  _firstPublishedAt: PublishedAtFilter
+  _publicationScheduledAt: PublishedAtFilter
+  _unpublishingScheduledAt: PublishedAtFilter
+  _publishedAt: PublishedAtFilter
+  _status: StatusFilter
+  _updatedAt: UpdatedAtFilter
+  updatedAt: UpdatedAtFilter
+  _isValid: BooleanFilter
+  ctaText: TextFilter
+  ctaLink: LinkFilter
+  ctaImage: FileFilter
+  moods: LinksFilter
+  seo: SeoFilter
+  ctaLabel: StringFilter
+  promoTitle: StringFilter
+  doText: TextFilter
+  title: StringFilter
+  moodsTitle: StringFilter
+  claim: StringFilter
+  stayText: TextFilter
+  beddyId: StringFilter
+  OR: [HomePageModelFilter]
+  AND: [HomePageModelFilter]
+}
+
+enum HomePageModelOrderBy {
+  _createdAt_ASC
+  _createdAt_DESC
+  createdAt_ASC
+  createdAt_DESC
+  id_ASC
+  id_DESC
+  _firstPublishedAt_ASC
+  _firstPublishedAt_DESC
+  _publicationScheduledAt_ASC
+  _publicationScheduledAt_DESC
+  _unpublishingScheduledAt_ASC
+  _unpublishingScheduledAt_DESC
+  _publishedAt_ASC
+  _publishedAt_DESC
+  _status_ASC
+  _status_DESC
+  _updatedAt_ASC
+  _updatedAt_DESC
+  updatedAt_ASC
+  updatedAt_DESC
+  _isValid_ASC
+  _isValid_DESC
+  ctaLabel_ASC
+  ctaLabel_DESC
+  promoTitle_ASC
+  promoTitle_DESC
+  title_ASC
+  title_DESC
+  moodsTitle_ASC
+  moodsTitle_DESC
+  claim_ASC
+  claim_DESC
+  beddyId_ASC
+  beddyId_DESC
+}
 
 """Record of type Home page (home_page)"""
 type HomePageRecord implements RecordInterface {
   _allClaimLocales(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
     """
     If you want to fallback to a default translation when a translation has not been found
     """
     fallbackLocales: [SiteLocale!]
   ): [StringMultiLocaleField!]
   _allCtaLabelLocales(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
     """
     If you want to fallback to a default translation when a translation has not been found
     """
@@ -1845,9 +2061,6 @@ type HomePageRecord implements RecordInterface {
   _allCtaTextLocales(
     """Process content as markdown"""
     markdown: Boolean
-
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
 
     """
     If you want to fallback to a default translation when a translation has not been found
@@ -1858,45 +2071,30 @@ type HomePageRecord implements RecordInterface {
     """Process content as markdown"""
     markdown: Boolean
 
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
     """
     If you want to fallback to a default translation when a translation has not been found
     """
     fallbackLocales: [SiteLocale!]
   ): [StringMultiLocaleField!]
   _allMoodsTitleLocales(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
     """
     If you want to fallback to a default translation when a translation has not been found
     """
     fallbackLocales: [SiteLocale!]
   ): [StringNonNullMultiLocaleField!]
   _allPromoLocales(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
     """
     If you want to fallback to a default translation when a translation has not been found
     """
     fallbackLocales: [SiteLocale!]
   ): [PromoApartmentRecordListListNonNullMultiLocaleField!]
   _allPromoTitleLocales(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
     """
     If you want to fallback to a default translation when a translation has not been found
     """
     fallbackLocales: [SiteLocale!]
   ): [StringNonNullMultiLocaleField!]
   _allSeoLocales(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
     """
     If you want to fallback to a default translation when a translation has not been found
     """
@@ -1906,18 +2104,12 @@ type HomePageRecord implements RecordInterface {
     """Process content as markdown"""
     markdown: Boolean
 
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
     """
     If you want to fallback to a default translation when a translation has not been found
     """
     fallbackLocales: [SiteLocale!]
   ): [StringMultiLocaleField!]
   _allTitleLocales(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
     """
     If you want to fallback to a default translation when a translation has not been found
     """
@@ -2103,18 +2295,12 @@ enum ImageModelOrderBy {
 """Record of type Image (image)"""
 type ImageRecord implements RecordInterface {
   _allDescriptionLocales(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
     """
     If you want to fallback to a default translation when a translation has not been found
     """
     fallbackLocales: [SiteLocale!]
   ): [StringMultiLocaleField!]
   _allUrlLocales(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
     """
     If you want to fallback to a default translation when a translation has not been found
     """
@@ -4207,12 +4393,9 @@ enum InfoLabelModelOrderBy {
   name_DESC
 }
 
-"""Record of type Info label (info_label)"""
+"""Record of type 🏷️ Info label (info_label)"""
 type InfoLabelRecord implements RecordInterface {
   _allNameLocales(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
     """
     If you want to fallback to a default translation when a translation has not been found
     """
@@ -4314,6 +4497,160 @@ input IntegerFilter {
   neq: IntType
 }
 
+"""Specifies how to filter by linking fields"""
+input InverseRelationshipFieldFilterBetweenApartmentAndDistrict {
+  """
+  Filter linking records that reference current record in at least one of the specified fields
+  """
+  anyIn: [ApartmentModelFieldsReferencingDistrictModel!]
+
+  """
+  Filter linking records that do not reference current record in any of the specified fields
+  """
+  notIn: [ApartmentModelFieldsReferencingDistrictModel!]
+}
+
+"""Specifies how to filter by linking fields"""
+input InverseRelationshipFieldFilterBetweenGuestbookAndApartment {
+  """
+  Filter linking records that reference current record in at least one of the specified fields
+  """
+  anyIn: [GuestbookModelFieldsReferencingApartmentModel!]
+
+  """
+  Filter linking records that do not reference current record in any of the specified fields
+  """
+  notIn: [GuestbookModelFieldsReferencingApartmentModel!]
+}
+
+"""Specifies how to filter by linking fields"""
+input InverseRelationshipFieldFilterBetweenHomePageAndApartment {
+  """
+  Filter linking records that reference current record in at least one of the specified fields
+  """
+  anyIn: [HomePageModelFieldsReferencingApartmentModel!]
+
+  """
+  Filter linking records that do not reference current record in any of the specified fields
+  """
+  notIn: [HomePageModelFieldsReferencingApartmentModel!]
+}
+
+"""Specifies how to filter by linking fields"""
+input InverseRelationshipFieldFilterBetweenHomePageAndDistrict {
+  """
+  Filter linking records that reference current record in at least one of the specified fields
+  """
+  anyIn: [HomePageModelFieldsReferencingDistrictModel!]
+
+  """
+  Filter linking records that do not reference current record in any of the specified fields
+  """
+  notIn: [HomePageModelFieldsReferencingDistrictModel!]
+}
+
+"""Specifies how to filter by linking fields"""
+input InverseRelationshipFieldFilterBetweenMoodItemsAndApartment {
+  """
+  Filter linking records that reference current record in at least one of the specified fields
+  """
+  anyIn: [MoodItemsModelFieldsReferencingApartmentModel!]
+
+  """
+  Filter linking records that do not reference current record in any of the specified fields
+  """
+  notIn: [MoodItemsModelFieldsReferencingApartmentModel!]
+}
+
+"""Specifies how to filter by linking fields"""
+input InverseRelationshipFieldFilterBetweenPostAndApartment {
+  """
+  Filter linking records that reference current record in at least one of the specified fields
+  """
+  anyIn: [PostModelFieldsReferencingApartmentModel!]
+
+  """
+  Filter linking records that do not reference current record in any of the specified fields
+  """
+  notIn: [PostModelFieldsReferencingApartmentModel!]
+}
+
+"""Specifies how to filter by linking fields"""
+input InverseRelationshipFieldFilterBetweenPostAndDistrict {
+  """
+  Filter linking records that reference current record in at least one of the specified fields
+  """
+  anyIn: [PostModelFieldsReferencingDistrictModel!]
+
+  """
+  Filter linking records that do not reference current record in any of the specified fields
+  """
+  notIn: [PostModelFieldsReferencingDistrictModel!]
+}
+
+"""Specifies how to filter linking records"""
+input InverseRelationshipFilterBetweenApartmentAndDistrict {
+  """Specifies how to filter by linking fields"""
+  fields: InverseRelationshipFieldFilterBetweenApartmentAndDistrict
+
+  """Specifies how to filter by linking locales"""
+  locales: LinkingLocalesFilter
+}
+
+"""Specifies how to filter linking records"""
+input InverseRelationshipFilterBetweenGuestbookAndApartment {
+  """Specifies how to filter by linking fields"""
+  fields: InverseRelationshipFieldFilterBetweenGuestbookAndApartment
+
+  """Specifies how to filter by linking locales"""
+  locales: LinkingLocalesFilter
+}
+
+"""Specifies how to filter linking records"""
+input InverseRelationshipFilterBetweenHomePageAndApartment {
+  """Specifies how to filter by linking fields"""
+  fields: InverseRelationshipFieldFilterBetweenHomePageAndApartment
+
+  """Specifies how to filter by linking locales"""
+  locales: LinkingLocalesFilter
+}
+
+"""Specifies how to filter linking records"""
+input InverseRelationshipFilterBetweenHomePageAndDistrict {
+  """Specifies how to filter by linking fields"""
+  fields: InverseRelationshipFieldFilterBetweenHomePageAndDistrict
+
+  """Specifies how to filter by linking locales"""
+  locales: LinkingLocalesFilter
+}
+
+"""Specifies how to filter linking records"""
+input InverseRelationshipFilterBetweenMoodItemsAndApartment {
+  """Specifies how to filter by linking fields"""
+  fields: InverseRelationshipFieldFilterBetweenMoodItemsAndApartment
+
+  """Specifies how to filter by linking locales"""
+  locales: LinkingLocalesFilter
+}
+
+"""Specifies how to filter linking records"""
+input InverseRelationshipFilterBetweenPostAndApartment {
+  """Specifies how to filter by linking fields"""
+  fields: InverseRelationshipFieldFilterBetweenPostAndApartment
+
+  """Specifies how to filter by linking locales"""
+  locales: LinkingLocalesFilter
+}
+
+"""Specifies how to filter linking records"""
+input InverseRelationshipFilterBetweenPostAndDistrict {
+  """Specifies how to filter by linking fields"""
+  fields: InverseRelationshipFieldFilterBetweenPostAndDistrict
+
+  """Specifies how to filter by linking locales"""
+  locales: LinkingLocalesFilter
+}
+
 scalar ItemId
 
 """Specifies how to filter by ID"""
@@ -4376,6 +4713,26 @@ input LinkFilter {
   exists: BooleanType
 }
 
+"""Linking locales"""
+enum LinkingLocale {
+  en
+  it
+  _nonLocalized
+}
+
+"""Specifies how to filter by linking locales"""
+input LinkingLocalesFilter {
+  """
+  Filter linking records that link to current record in at least one of the specified locales
+  """
+  anyIn: [LinkingLocale!]
+
+  """
+  Filter linking records that do not link to current record in any of the specified locales
+  """
+  notIn: [LinkingLocale!]
+}
+
 """Specifies how to filter Multiple-links fields"""
 input LinksFilter {
   """
@@ -4419,6 +4776,11 @@ input LocalesFilter {
 }
 
 scalar MetaTagAttributes
+
+"""Linking fields"""
+enum MoodItemsModelFieldsReferencingApartmentModel {
+  moodItems_object
+}
 
 input MoodItemsModelFilter {
   _createdAt: CreatedAtFilter
@@ -4484,27 +4846,18 @@ type MoodItemsRecord implements RecordInterface {
     """Process content as markdown"""
     markdown: Boolean
 
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
     """
     If you want to fallback to a default translation when a translation has not been found
     """
     fallbackLocales: [SiteLocale!]
   ): [StringMultiLocaleField!]
   _allLabelLocales(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
     """
     If you want to fallback to a default translation when a translation has not been found
     """
     fallbackLocales: [SiteLocale!]
   ): [StringMultiLocaleField!]
   _allUrlLocales(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
     """
     If you want to fallback to a default translation when a translation has not been found
     """
@@ -4628,9 +4981,6 @@ enum MoodModelOrderBy {
 """Record of type Moods (mood)"""
 type MoodRecord implements RecordInterface {
   _allClaimLocales(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
     """
     If you want to fallback to a default translation when a translation has not been found
     """
@@ -4640,36 +4990,24 @@ type MoodRecord implements RecordInterface {
     """Process content as markdown"""
     markdown: Boolean
 
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
     """
     If you want to fallback to a default translation when a translation has not been found
     """
     fallbackLocales: [SiteLocale!]
   ): [StringMultiLocaleField!]
   _allNameLocales(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
     """
     If you want to fallback to a default translation when a translation has not been found
     """
     fallbackLocales: [SiteLocale!]
   ): [StringNonNullMultiLocaleField!]
   _allSeoLocales(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
     """
     If you want to fallback to a default translation when a translation has not been found
     """
     fallbackLocales: [SiteLocale!]
   ): [SeoFieldMultiLocaleField!]
   _allSlugLocales(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
     """
     If you want to fallback to a default translation when a translation has not been found
     """
@@ -4728,7 +5066,7 @@ type MoodRecord implements RecordInterface {
     fallbackLocales: [SiteLocale!]
   ): String!
   position: IntType
-  published: BooleanType
+  published: BooleanType!
   seo(
     """The locale to use to fetch the field's content"""
     locale: SiteLocale
@@ -4819,18 +5157,12 @@ type OfferRecord implements RecordInterface {
     """Process content as markdown"""
     markdown: Boolean
 
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
     """
     If you want to fallback to a default translation when a translation has not been found
     """
     fallbackLocales: [SiteLocale!]
   ): [StringMultiLocaleField!]
   _allCtaLocales(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
     """
     If you want to fallback to a default translation when a translation has not been found
     """
@@ -4840,27 +5172,18 @@ type OfferRecord implements RecordInterface {
     """Process content as markdown"""
     markdown: Boolean
 
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
     """
     If you want to fallback to a default translation when a translation has not been found
     """
     fallbackLocales: [SiteLocale!]
   ): [StringMultiLocaleField!]
   _allTitleLocales(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
     """
     If you want to fallback to a default translation when a translation has not been found
     """
     fallbackLocales: [SiteLocale!]
   ): [StringNonNullMultiLocaleField!]
   _allValidityLocales(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
     """
     If you want to fallback to a default translation when a translation has not been found
     """
@@ -4909,7 +5232,7 @@ type OfferRecord implements RecordInterface {
   featuredImage: FileField!
   id: ItemId!
   position: IntType
-  published: BooleanType
+  published: BooleanType!
   terms(
     """Process content as markdown"""
     markdown: Boolean
@@ -4955,9 +5278,6 @@ input OrientationFilter {
 """Record of type Page Acacialife (page_acacialife)"""
 type PageAcacialifeRecord implements RecordInterface {
   _allCtaLocales(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
     """
     If you want to fallback to a default translation when a translation has not been found
     """
@@ -4967,36 +5287,24 @@ type PageAcacialifeRecord implements RecordInterface {
     """Process content as markdown"""
     markdown: Boolean
 
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
     """
     If you want to fallback to a default translation when a translation has not been found
     """
     fallbackLocales: [SiteLocale!]
   ): [StringMultiLocaleField!]
   _allSeoLocales(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
     """
     If you want to fallback to a default translation when a translation has not been found
     """
     fallbackLocales: [SiteLocale!]
   ): [SeoFieldMultiLocaleField!]
   _allSubtitleLocales(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
     """
     If you want to fallback to a default translation when a translation has not been found
     """
     fallbackLocales: [SiteLocale!]
   ): [StringMultiLocaleField!]
   _allTitleLocales(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
     """
     If you want to fallback to a default translation when a translation has not been found
     """
@@ -5081,36 +5389,24 @@ type PageApartmentsRecord implements RecordInterface {
     """Process content as markdown"""
     markdown: Boolean
 
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
     """
     If you want to fallback to a default translation when a translation has not been found
     """
     fallbackLocales: [SiteLocale!]
   ): [StringMultiLocaleField!]
   _allSeoLocales(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
     """
     If you want to fallback to a default translation when a translation has not been found
     """
     fallbackLocales: [SiteLocale!]
   ): [SeoFieldMultiLocaleField!]
   _allSubtitleLocales(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
     """
     If you want to fallback to a default translation when a translation has not been found
     """
     fallbackLocales: [SiteLocale!]
   ): [StringMultiLocaleField!]
   _allTitleLocales(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
     """
     If you want to fallback to a default translation when a translation has not been found
     """
@@ -5185,36 +5481,24 @@ type PageBlogRecord implements RecordInterface {
     """Process content as markdown"""
     markdown: Boolean
 
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
     """
     If you want to fallback to a default translation when a translation has not been found
     """
     fallbackLocales: [SiteLocale!]
   ): [StringMultiLocaleField!]
   _allSeoLocales(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
     """
     If you want to fallback to a default translation when a translation has not been found
     """
     fallbackLocales: [SiteLocale!]
   ): [SeoFieldMultiLocaleField!]
   _allSubtitleLocales(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
     """
     If you want to fallback to a default translation when a translation has not been found
     """
     fallbackLocales: [SiteLocale!]
   ): [StringMultiLocaleField!]
   _allTitleLocales(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
     """
     If you want to fallback to a default translation when a translation has not been found
     """
@@ -5289,36 +5573,24 @@ type PageDistrictsRecord implements RecordInterface {
     """Process content as markdown"""
     markdown: Boolean
 
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
     """
     If you want to fallback to a default translation when a translation has not been found
     """
     fallbackLocales: [SiteLocale!]
   ): [StringMultiLocaleField!]
   _allSeoLocales(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
     """
     If you want to fallback to a default translation when a translation has not been found
     """
     fallbackLocales: [SiteLocale!]
   ): [SeoFieldMultiLocaleField!]
   _allSubtitleLocales(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
     """
     If you want to fallback to a default translation when a translation has not been found
     """
     fallbackLocales: [SiteLocale!]
   ): [StringMultiLocaleField!]
   _allTitleLocales(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
     """
     If you want to fallback to a default translation when a translation has not been found
     """
@@ -5392,36 +5664,24 @@ type PageEventRecord implements RecordInterface {
     """Process content as markdown"""
     markdown: Boolean
 
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
     """
     If you want to fallback to a default translation when a translation has not been found
     """
     fallbackLocales: [SiteLocale!]
   ): [StringMultiLocaleField!]
   _allSeoLocales(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
     """
     If you want to fallback to a default translation when a translation has not been found
     """
     fallbackLocales: [SiteLocale!]
   ): [SeoFieldMultiLocaleField!]
   _allSubtitleLocales(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
     """
     If you want to fallback to a default translation when a translation has not been found
     """
     fallbackLocales: [SiteLocale!]
   ): [StringMultiLocaleField!]
   _allTitleLocales(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
     """
     If you want to fallback to a default translation when a translation has not been found
     """
@@ -5496,36 +5756,24 @@ type PageFaqRecord implements RecordInterface {
     """Process content as markdown"""
     markdown: Boolean
 
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
     """
     If you want to fallback to a default translation when a translation has not been found
     """
     fallbackLocales: [SiteLocale!]
   ): [StringMultiLocaleField!]
   _allSeoLocales(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
     """
     If you want to fallback to a default translation when a translation has not been found
     """
     fallbackLocales: [SiteLocale!]
   ): [SeoFieldMultiLocaleField!]
   _allSubtitleLocales(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
     """
     If you want to fallback to a default translation when a translation has not been found
     """
     fallbackLocales: [SiteLocale!]
   ): [StringMultiLocaleField!]
   _allTitleLocales(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
     """
     If you want to fallback to a default translation when a translation has not been found
     """
@@ -5600,36 +5848,24 @@ type PageGuestbookRecord implements RecordInterface {
     """Process content as markdown"""
     markdown: Boolean
 
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
     """
     If you want to fallback to a default translation when a translation has not been found
     """
     fallbackLocales: [SiteLocale!]
   ): [StringMultiLocaleField!]
   _allSeoLocales(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
     """
     If you want to fallback to a default translation when a translation has not been found
     """
     fallbackLocales: [SiteLocale!]
   ): [SeoFieldMultiLocaleField!]
   _allSubtitleLocales(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
     """
     If you want to fallback to a default translation when a translation has not been found
     """
     fallbackLocales: [SiteLocale!]
   ): [StringMultiLocaleField!]
   _allTitleLocales(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
     """
     If you want to fallback to a default translation when a translation has not been found
     """
@@ -5704,36 +5940,24 @@ type PageMoodsRecord implements RecordInterface {
     """Process content as markdown"""
     markdown: Boolean
 
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
     """
     If you want to fallback to a default translation when a translation has not been found
     """
     fallbackLocales: [SiteLocale!]
   ): [StringMultiLocaleField!]
   _allSeoLocales(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
     """
     If you want to fallback to a default translation when a translation has not been found
     """
     fallbackLocales: [SiteLocale!]
   ): [SeoFieldMultiLocaleField!]
   _allSubtitleLocales(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
     """
     If you want to fallback to a default translation when a translation has not been found
     """
     fallbackLocales: [SiteLocale!]
   ): [StringMultiLocaleField!]
   _allTitleLocales(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
     """
     If you want to fallback to a default translation when a translation has not been found
     """
@@ -5807,36 +6031,24 @@ type PageOffersRecord implements RecordInterface {
     """Process content as markdown"""
     markdown: Boolean
 
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
     """
     If you want to fallback to a default translation when a translation has not been found
     """
     fallbackLocales: [SiteLocale!]
   ): [StringMultiLocaleField!]
   _allSeoLocales(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
     """
     If you want to fallback to a default translation when a translation has not been found
     """
     fallbackLocales: [SiteLocale!]
   ): [SeoFieldMultiLocaleField!]
   _allSubtitleLocales(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
     """
     If you want to fallback to a default translation when a translation has not been found
     """
     fallbackLocales: [SiteLocale!]
   ): [StringMultiLocaleField!]
   _allTitleLocales(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
     """
     If you want to fallback to a default translation when a translation has not been found
     """
@@ -5911,36 +6123,24 @@ type PageServicesRecord implements RecordInterface {
     """Process content as markdown"""
     markdown: Boolean
 
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
     """
     If you want to fallback to a default translation when a translation has not been found
     """
     fallbackLocales: [SiteLocale!]
   ): [StringMultiLocaleField!]
   _allSeoLocales(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
     """
     If you want to fallback to a default translation when a translation has not been found
     """
     fallbackLocales: [SiteLocale!]
   ): [SeoFieldMultiLocaleField!]
   _allSubtitleLocales(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
     """
     If you want to fallback to a default translation when a translation has not been found
     """
     fallbackLocales: [SiteLocale!]
   ): [StringMultiLocaleField!]
   _allTitleLocales(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
     """
     If you want to fallback to a default translation when a translation has not been found
     """
@@ -6113,6 +6313,16 @@ input PositionFilter {
 
 union PostModelContentField = GalleryImageRecord | GuestPostRecord | ImageRecord | ParagraphRecord
 
+"""Linking fields"""
+enum PostModelFieldsReferencingApartmentModel {
+  post_relatedApartments
+}
+
+"""Linking fields"""
+enum PostModelFieldsReferencingDistrictModel {
+  post_relatedDistricts
+}
+
 input PostModelFilter {
   _createdAt: CreatedAtFilter
   createdAt: CreatedAtFilter
@@ -6211,15 +6421,15 @@ type PostRecord implements RecordInterface {
   featuredImage: FileField!
   id: ItemId!
   language: String!
-  published: BooleanType
+  published: BooleanType!
   publishedAt: Date!
   relatedApartments: [ApartmentRecord!]!
-  relatedDistricts: [DistrictsRecord!]!
+  relatedDistricts: [DistrictRecord!]!
   relatedPosts: [PostRecord!]!
   relatedServices: [ServiceRecord!]!
   seo: SeoField
   slug: String!
-  sticky: BooleanType
+  sticky: BooleanType!
   title: String!
   updatedAt: DateTime!
 }
@@ -6302,11 +6512,6 @@ type Query {
     """The locale to use to fetch the field's content"""
     locale: SiteLocale
     filter: AmenityModelFilter
-
-    """
-    If you want to fallback to a default translation when a translation has not been found
-    """
-    fallbackLocales: [SiteLocale!]
   ): CollectionMetadata!
 
   """Returns meta information regarding a record collection"""
@@ -6314,11 +6519,6 @@ type Query {
     """The locale to use to fetch the field's content"""
     locale: SiteLocale
     filter: ApartmentCategoryModelFilter
-
-    """
-    If you want to fallback to a default translation when a translation has not been found
-    """
-    fallbackLocales: [SiteLocale!]
   ): CollectionMetadata!
 
   """Returns meta information regarding a record collection"""
@@ -6326,11 +6526,6 @@ type Query {
     """The locale to use to fetch the field's content"""
     locale: SiteLocale
     filter: ApartmentModelFilter
-
-    """
-    If you want to fallback to a default translation when a translation has not been found
-    """
-    fallbackLocales: [SiteLocale!]
   ): CollectionMetadata!
 
   """Returns meta information regarding a record collection"""
@@ -6338,11 +6533,6 @@ type Query {
     """The locale to use to fetch the field's content"""
     locale: SiteLocale
     filter: BlogCategoryModelFilter
-
-    """
-    If you want to fallback to a default translation when a translation has not been found
-    """
-    fallbackLocales: [SiteLocale!]
   ): CollectionMetadata!
 
   """Returns meta information regarding a record collection"""
@@ -6350,11 +6540,6 @@ type Query {
     """The locale to use to fetch the field's content"""
     locale: SiteLocale
     filter: CallToActionModelFilter
-
-    """
-    If you want to fallback to a default translation when a translation has not been found
-    """
-    fallbackLocales: [SiteLocale!]
   ): CollectionMetadata!
 
   """Returns meta information regarding a record collection"""
@@ -6362,23 +6547,13 @@ type Query {
     """The locale to use to fetch the field's content"""
     locale: SiteLocale
     filter: ComfortModelFilter
-
-    """
-    If you want to fallback to a default translation when a translation has not been found
-    """
-    fallbackLocales: [SiteLocale!]
   ): CollectionMetadata!
 
   """Returns meta information regarding a record collection"""
   _allDistrictsMeta(
     """The locale to use to fetch the field's content"""
     locale: SiteLocale
-    filter: DistrictsModelFilter
-
-    """
-    If you want to fallback to a default translation when a translation has not been found
-    """
-    fallbackLocales: [SiteLocale!]
+    filter: DistrictModelFilter
   ): CollectionMetadata!
 
   """Returns meta information regarding a record collection"""
@@ -6386,11 +6561,6 @@ type Query {
     """The locale to use to fetch the field's content"""
     locale: SiteLocale
     filter: EssentialModelFilter
-
-    """
-    If you want to fallback to a default translation when a translation has not been found
-    """
-    fallbackLocales: [SiteLocale!]
   ): CollectionMetadata!
 
   """Returns meta information regarding a record collection"""
@@ -6398,11 +6568,6 @@ type Query {
     """The locale to use to fetch the field's content"""
     locale: SiteLocale
     filter: FaqModelFilter
-
-    """
-    If you want to fallback to a default translation when a translation has not been found
-    """
-    fallbackLocales: [SiteLocale!]
   ): CollectionMetadata!
 
   """Returns meta information regarding a record collection"""
@@ -6410,11 +6575,6 @@ type Query {
     """The locale to use to fetch the field's content"""
     locale: SiteLocale
     filter: GalleryImageModelFilter
-
-    """
-    If you want to fallback to a default translation when a translation has not been found
-    """
-    fallbackLocales: [SiteLocale!]
   ): CollectionMetadata!
 
   """Returns meta information regarding a record collection"""
@@ -6422,11 +6582,6 @@ type Query {
     """The locale to use to fetch the field's content"""
     locale: SiteLocale
     filter: GuestPostModelFilter
-
-    """
-    If you want to fallback to a default translation when a translation has not been found
-    """
-    fallbackLocales: [SiteLocale!]
   ): CollectionMetadata!
 
   """Returns meta information regarding a record collection"""
@@ -6434,11 +6589,6 @@ type Query {
     """The locale to use to fetch the field's content"""
     locale: SiteLocale
     filter: GuestbookModelFilter
-
-    """
-    If you want to fallback to a default translation when a translation has not been found
-    """
-    fallbackLocales: [SiteLocale!]
   ): CollectionMetadata!
 
   """Returns meta information regarding a record collection"""
@@ -6446,11 +6596,6 @@ type Query {
     """The locale to use to fetch the field's content"""
     locale: SiteLocale
     filter: ImageModelFilter
-
-    """
-    If you want to fallback to a default translation when a translation has not been found
-    """
-    fallbackLocales: [SiteLocale!]
   ): CollectionMetadata!
 
   """Returns meta information regarding a record collection"""
@@ -6458,11 +6603,6 @@ type Query {
     """The locale to use to fetch the field's content"""
     locale: SiteLocale
     filter: InfoLabelModelFilter
-
-    """
-    If you want to fallback to a default translation when a translation has not been found
-    """
-    fallbackLocales: [SiteLocale!]
   ): CollectionMetadata!
 
   """Returns meta information regarding a record collection"""
@@ -6470,11 +6610,6 @@ type Query {
     """The locale to use to fetch the field's content"""
     locale: SiteLocale
     filter: MoodItemsModelFilter
-
-    """
-    If you want to fallback to a default translation when a translation has not been found
-    """
-    fallbackLocales: [SiteLocale!]
   ): CollectionMetadata!
 
   """Returns meta information regarding a record collection"""
@@ -6482,11 +6617,6 @@ type Query {
     """The locale to use to fetch the field's content"""
     locale: SiteLocale
     filter: MoodModelFilter
-
-    """
-    If you want to fallback to a default translation when a translation has not been found
-    """
-    fallbackLocales: [SiteLocale!]
   ): CollectionMetadata!
 
   """Returns meta information regarding a record collection"""
@@ -6494,11 +6624,6 @@ type Query {
     """The locale to use to fetch the field's content"""
     locale: SiteLocale
     filter: OfferModelFilter
-
-    """
-    If you want to fallback to a default translation when a translation has not been found
-    """
-    fallbackLocales: [SiteLocale!]
   ): CollectionMetadata!
 
   """Returns meta information regarding a record collection"""
@@ -6506,11 +6631,6 @@ type Query {
     """The locale to use to fetch the field's content"""
     locale: SiteLocale
     filter: ParagraphModelFilter
-
-    """
-    If you want to fallback to a default translation when a translation has not been found
-    """
-    fallbackLocales: [SiteLocale!]
   ): CollectionMetadata!
 
   """Returns meta information regarding a record collection"""
@@ -6518,11 +6638,6 @@ type Query {
     """The locale to use to fetch the field's content"""
     locale: SiteLocale
     filter: PostModelFilter
-
-    """
-    If you want to fallback to a default translation when a translation has not been found
-    """
-    fallbackLocales: [SiteLocale!]
   ): CollectionMetadata!
 
   """Returns meta information regarding a record collection"""
@@ -6530,11 +6645,6 @@ type Query {
     """The locale to use to fetch the field's content"""
     locale: SiteLocale
     filter: RedirectModelFilter
-
-    """
-    If you want to fallback to a default translation when a translation has not been found
-    """
-    fallbackLocales: [SiteLocale!]
   ): CollectionMetadata!
 
   """Returns meta information regarding a record collection"""
@@ -6542,11 +6652,6 @@ type Query {
     """The locale to use to fetch the field's content"""
     locale: SiteLocale
     filter: ServiceCategoriesModelFilter
-
-    """
-    If you want to fallback to a default translation when a translation has not been found
-    """
-    fallbackLocales: [SiteLocale!]
   ): CollectionMetadata!
 
   """Returns meta information regarding a record collection"""
@@ -6554,23 +6659,6 @@ type Query {
     """The locale to use to fetch the field's content"""
     locale: SiteLocale
     filter: ServiceModelFilter
-
-    """
-    If you want to fallback to a default translation when a translation has not been found
-    """
-    fallbackLocales: [SiteLocale!]
-  ): CollectionMetadata!
-
-  """Returns meta information regarding a record collection"""
-  _allTestModelPrimariesMeta(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-    filter: TestModelPrimaryModelFilter
-
-    """
-    If you want to fallback to a default translation when a translation has not been found
-    """
-    fallbackLocales: [SiteLocale!]
   ): CollectionMetadata!
 
   """Returns meta information regarding a record collection"""
@@ -6578,11 +6666,6 @@ type Query {
     """The locale to use to fetch the field's content"""
     locale: SiteLocale
     filter: TipModelFilter
-
-    """
-    If you want to fallback to a default translation when a translation has not been found
-    """
-    fallbackLocales: [SiteLocale!]
   ): CollectionMetadata!
 
   """Returns meta information regarding an assets collection"""
@@ -6657,7 +6740,7 @@ type Query {
     """Limit the number of results"""
     first: IntType = 20
     filter: ApartmentModelFilter
-    orderBy: [ApartmentModelOrderBy] = [position_ASC]
+    orderBy: [ApartmentModelOrderBy] = [_updatedAt_DESC]
   ): [ApartmentRecord!]!
 
   """Returns a collection of records"""
@@ -6732,9 +6815,9 @@ type Query {
 
     """Limit the number of results"""
     first: IntType = 20
-    filter: DistrictsModelFilter
-    orderBy: [DistrictsModelOrderBy] = [position_ASC]
-  ): [DistrictsRecord!]!
+    filter: DistrictModelFilter
+    orderBy: [DistrictModelOrderBy] = [position_ASC]
+  ): [DistrictRecord!]!
 
   """Returns a collection of records"""
   allEssentials(
@@ -7022,25 +7105,6 @@ type Query {
   ): [ServiceRecord!]!
 
   """Returns a collection of records"""
-  allTestModelPrimaries(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
-    """
-    If you want to fallback to a default translation when a translation has not been found
-    """
-    fallbackLocales: [SiteLocale!]
-
-    """Skip the first results"""
-    skip: IntType
-
-    """Limit the number of results"""
-    first: IntType = 20
-    filter: TestModelPrimaryModelFilter
-    orderBy: [TestModelPrimaryModelOrderBy] = [_updatedAt_DESC]
-  ): [TestModelPrimaryRecord!]!
-
-  """Returns a collection of records"""
   allTips(
     """The locale to use to fetch the field's content"""
     locale: SiteLocale
@@ -7101,7 +7165,7 @@ type Query {
     """
     fallbackLocales: [SiteLocale!]
     filter: ApartmentModelFilter
-    orderBy: [ApartmentModelOrderBy] = [position_ASC]
+    orderBy: [ApartmentModelOrderBy] = [_updatedAt_DESC]
   ): ApartmentRecord
 
   """Returns a specific record"""
@@ -7157,7 +7221,7 @@ type Query {
   ): ComfortRecord
 
   """Returns a specific record"""
-  districts(
+  district(
     """The locale to use to fetch the field's content"""
     locale: SiteLocale
 
@@ -7165,9 +7229,9 @@ type Query {
     If you want to fallback to a default translation when a translation has not been found
     """
     fallbackLocales: [SiteLocale!]
-    filter: DistrictsModelFilter
-    orderBy: [DistrictsModelOrderBy] = [position_ASC]
-  ): DistrictsRecord
+    filter: DistrictModelFilter
+    orderBy: [DistrictModelOrderBy] = [position_ASC]
+  ): DistrictRecord
 
   """Returns a specific record"""
   essential(
@@ -7486,19 +7550,6 @@ type Query {
   ): ServiceCategoriesRecord
 
   """Returns a specific record"""
-  testModelPrimary(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
-    """
-    If you want to fallback to a default translation when a translation has not been found
-    """
-    fallbackLocales: [SiteLocale!]
-    filter: TestModelPrimaryModelFilter
-    orderBy: [TestModelPrimaryModelOrderBy] = [_updatedAt_DESC]
-  ): TestModelPrimaryRecord
-
-  """Returns a specific record"""
   tip(
     """The locale to use to fetch the field's content"""
     locale: SiteLocale
@@ -7733,18 +7784,12 @@ enum ServiceCategoriesModelOrderBy {
 """Record of type Service Categories (service_categories)"""
 type ServiceCategoriesRecord implements RecordInterface {
   _allNameLocales(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
     """
     If you want to fallback to a default translation when a translation has not been found
     """
     fallbackLocales: [SiteLocale!]
   ): [StringNonNullMultiLocaleField!]
   _allSlugLocales(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
     """
     If you want to fallback to a default translation when a translation has not been found
     """
@@ -7867,9 +7912,6 @@ type ServiceRecord implements RecordInterface {
     """Process content as markdown"""
     markdown: Boolean
 
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
     """
     If you want to fallback to a default translation when a translation has not been found
     """
@@ -7879,45 +7921,30 @@ type ServiceRecord implements RecordInterface {
     """Process content as markdown"""
     markdown: Boolean
 
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
     """
     If you want to fallback to a default translation when a translation has not been found
     """
     fallbackLocales: [SiteLocale!]
   ): [StringMultiLocaleField!]
   _allHighlightLocales(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
     """
     If you want to fallback to a default translation when a translation has not been found
     """
     fallbackLocales: [SiteLocale!]
   ): [StringMultiLocaleField!]
   _allNameLocales(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
     """
     If you want to fallback to a default translation when a translation has not been found
     """
     fallbackLocales: [SiteLocale!]
   ): [StringNonNullMultiLocaleField!]
   _allSeoLocales(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
     """
     If you want to fallback to a default translation when a translation has not been found
     """
     fallbackLocales: [SiteLocale!]
   ): [SeoFieldMultiLocaleField!]
   _allSlugLocales(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
     """
     If you want to fallback to a default translation when a translation has not been found
     """
@@ -7990,7 +8017,7 @@ type ServiceRecord implements RecordInterface {
   ): String!
   position: IntType
   price: String
-  published: BooleanType
+  published: BooleanType!
   seo(
     """The locale to use to fetch the field's content"""
     locale: SiteLocale
@@ -8000,7 +8027,7 @@ type ServiceRecord implements RecordInterface {
     """
     fallbackLocales: [SiteLocale!]
   ): SeoField
-  shopItem: BooleanType
+  shopItem: BooleanType!
   slug(
     """The locale to use to fetch the field's content"""
     locale: SiteLocale
@@ -8126,72 +8153,6 @@ type Tag {
   tag: String!
 }
 
-input TestModelPrimaryModelFilter {
-  _createdAt: CreatedAtFilter
-  createdAt: CreatedAtFilter
-  id: ItemIdFilter
-  _firstPublishedAt: PublishedAtFilter
-  _publicationScheduledAt: PublishedAtFilter
-  _unpublishingScheduledAt: PublishedAtFilter
-  _publishedAt: PublishedAtFilter
-  _status: StatusFilter
-  _updatedAt: UpdatedAtFilter
-  updatedAt: UpdatedAtFilter
-  _isValid: BooleanFilter
-  OR: [TestModelPrimaryModelFilter]
-  AND: [TestModelPrimaryModelFilter]
-}
-
-enum TestModelPrimaryModelOrderBy {
-  _createdAt_ASC
-  _createdAt_DESC
-  createdAt_ASC
-  createdAt_DESC
-  id_ASC
-  id_DESC
-  _firstPublishedAt_ASC
-  _firstPublishedAt_DESC
-  _publicationScheduledAt_ASC
-  _publicationScheduledAt_DESC
-  _unpublishingScheduledAt_ASC
-  _unpublishingScheduledAt_DESC
-  _publishedAt_ASC
-  _publishedAt_DESC
-  _status_ASC
-  _status_DESC
-  _updatedAt_ASC
-  _updatedAt_DESC
-  updatedAt_ASC
-  updatedAt_DESC
-  _isValid_ASC
-  _isValid_DESC
-}
-
-"""Record of type Test Model Primary (test_model_primary)"""
-type TestModelPrimaryRecord implements RecordInterface {
-  _createdAt: DateTime!
-
-  """Editing URL"""
-  _editingUrl: String
-  _firstPublishedAt: DateTime!
-  _isValid: BooleanType!
-  _modelApiKey: String!
-  _publicationScheduledAt: DateTime
-  _publishedAt: DateTime!
-
-  """Generates SEO and Social card meta tags to be used in your frontend"""
-  _seoMetaTags(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-  ): [Tag!]!
-  _status: ItemStatus!
-  _unpublishingScheduledAt: DateTime
-  _updatedAt: DateTime!
-  createdAt: DateTime!
-  id: ItemId!
-  updatedAt: DateTime!
-}
-
 """Specifies how to filter text fields"""
 input TextFilter {
   """Filter records based on a regular expression"""
@@ -8277,36 +8238,24 @@ type TipRecord implements RecordInterface {
     """Process content as markdown"""
     markdown: Boolean
 
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
     """
     If you want to fallback to a default translation when a translation has not been found
     """
     fallbackLocales: [SiteLocale!]
   ): [StringMultiLocaleField!]
   _allPublishedLocales(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
     """
     If you want to fallback to a default translation when a translation has not been found
     """
     fallbackLocales: [SiteLocale!]
-  ): [BooleanTypeMultiLocaleField!]
+  ): [BooleanTypeNonNullMultiLocaleField!]
   _allTitleLocales(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
     """
     If you want to fallback to a default translation when a translation has not been found
     """
     fallbackLocales: [SiteLocale!]
   ): [StringNonNullMultiLocaleField!]
   _allUrlLocales(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
     """
     If you want to fallback to a default translation when a translation has not been found
     """
@@ -8354,7 +8303,7 @@ type TipRecord implements RecordInterface {
     If you want to fallback to a default translation when a translation has not been found
     """
     fallbackLocales: [SiteLocale!]
-  ): BooleanType
+  ): BooleanType!
   title(
     """The locale to use to fetch the field's content"""
     locale: SiteLocale

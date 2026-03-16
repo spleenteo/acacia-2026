@@ -10,7 +10,7 @@ import type { Metadata } from 'next';
 const metaQuery = graphql(
   `
     query DistrictMetaQuery($locale: SiteLocale!, $slug: String!) {
-      districts(locale: $locale, filter: { slug: { eq: $slug } }) {
+      district(locale: $locale, filter: { slug: { eq: $slug } }) {
         _seoMetaTags(locale: $locale) {
           ...TagFragment
         }
@@ -33,7 +33,7 @@ export async function generateMetadata({
     includeDrafts: isEnabled,
   });
   return {
-    ...toNextMetadata(data.districts?._seoMetaTags ?? []),
+    ...toNextMetadata(data.district?._seoMetaTags ?? []),
     alternates: {
       canonical: `/${locale}/florence/districts/${slug}`,
       languages: {
@@ -53,7 +53,7 @@ import { readFragment } from '@/lib/datocms/graphql';
 const query = graphql(
   `
     query DistrictDetailQuery($locale: SiteLocale!, $slug: String!) {
-      districts(locale: $locale, filter: { slug: { eq: $slug } }) {
+      district(locale: $locale, filter: { slug: { eq: $slug } }) {
         id
         name
         slug
@@ -121,7 +121,7 @@ export default async function DistrictDetailPage({
     null,
   ]);
 
-  const { districts: district } = districtData;
+  const { district } = districtData;
   if (!district) notFound();
 
   const aptData = await executeQuery(apartmentsQuery, {
