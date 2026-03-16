@@ -7,7 +7,7 @@ const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000';
 
 const slugsQuery = graphql(`
   query SitemapSlugsQuery {
-    allApartments(first: 100, filter: { published: { eq: true } }) {
+    allApartments(first: 100) {
       slug
     }
     allDistricts {

@@ -74,7 +74,7 @@ const apartmentsQuery = graphql(
       allApartments(
         locale: $locale
         first: 100
-        filter: { district: { eq: $districtId }, published: { eq: true } }
+        filter: { district: { eq: $districtId } }
         orderBy: [position_ASC]
       ) {
         id

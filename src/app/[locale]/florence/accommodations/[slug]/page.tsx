@@ -166,7 +166,7 @@ const similarQuery = graphql(
     query SimilarApartments($locale: SiteLocale!, $categoryId: ItemId!, $excludeId: ItemId!) {
       allApartments(
         locale: $locale
-        filter: { category: { eq: $categoryId }, id: { neq: $excludeId }, published: { eq: true } }
+        filter: { category: { eq: $categoryId }, id: { neq: $excludeId } }
         first: 3
       ) {
         ...ApartmentCardFragment
@@ -208,7 +208,7 @@ const essentialsQuery = graphql(
 
 const allSlugsQuery = graphql(`
   query AllApartmentSlugs {
-    allApartments(first: 100, filter: { published: { eq: true } }) {
+    allApartments(first: 100) {
       slug
     }
   }

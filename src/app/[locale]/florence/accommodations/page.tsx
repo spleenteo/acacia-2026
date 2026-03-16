@@ -66,7 +66,6 @@ const query = graphql(
       allApartments(
         locale: $locale
         first: 100
-        filter: { published: { eq: true } }
         orderBy: [position_ASC]
       ) {
         id

@@ -68,7 +68,7 @@ const query = graphql(
         stayText(locale: $locale, markdown: true)
         doText(locale: $locale, markdown: true)
       }
-      allApartments(locale: $locale, first: 100, filter: { published: { eq: true } }) {
+      allApartments(locale: $locale, first: 100) {
         id
         ...ApartmentCardFragment
       }
