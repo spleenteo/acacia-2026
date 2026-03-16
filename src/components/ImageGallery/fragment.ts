@@ -3,7 +3,7 @@ import { ResponsiveImageFragment } from '@/components/ResponsiveImage';
 
 export const GalleryImageFragment = graphql(
   `
-    fragment GalleryImageFragment on GalleryImagesRecord {
+    fragment GalleryImageFragment on GalleryImageRecord {
       id
       description(locale: $locale)
       image {

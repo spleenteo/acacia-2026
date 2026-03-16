@@ -50,8 +50,8 @@ import HtmlContent from '@/components/HtmlContent';
 import BeddyBar from '@/components/BeddyBar';
 import { GalleryImageFragment } from '@/components/ImageGallery/fragment';
 import PhotoLightbox from '@/components/PhotoLightbox';
-import CuddlesList, { CuddleFragment } from '@/components/CuddlesList';
-import UpsList, { UpFragment } from '@/components/UpsList';
+import EssentialsList, { EssentialFragment } from '@/components/EssentialsList';
+import AmenitiesList, { AmenityFragment } from '@/components/AmenitiesList';
 import InfoDetail, { InfoTextFragment, InfoAddressFragment } from '@/components/InfoDetail';
 import DistrictLink from '@/components/DistrictLink';
 import BookingSidebar from '@/components/BookingSidebar';
@@ -113,10 +113,10 @@ const query = graphql(
           ...GalleryImageFragment
         }
         cuddles {
-          ...CuddleFragment
+          ...EssentialFragment
         }
-        ups {
-          ...UpFragment
+        amenities {
+          ...AmenityFragment
         }
         infoDetail(locale: $locale) {
           __typename
@@ -133,8 +133,8 @@ const query = graphql(
   [
     ResponsiveImageFragment,
     GalleryImageFragment,
-    CuddleFragment,
-    UpFragment,
+    EssentialFragment,
+    AmenityFragment,
     InfoTextFragment,
     InfoAddressFragment,
     FeaturedSlideshowFragment,
@@ -213,8 +213,8 @@ const labels = {
     bedrooms: 'Bedrooms',
     bathrooms: 'Bathrooms',
     sleeps: 'Sleeps',
-    cuddles: 'Amenities & Cuddles',
-    ups: 'Lifestyle',
+    essentials: 'Acacia® Essentials',
+    amenities: 'Amenities',
     info: 'Details',
     book: 'Book this apartment',
     allPhotos: 'All photos',
@@ -233,8 +233,8 @@ const labels = {
     bedrooms: 'Camere',
     bathrooms: 'Bagni',
     sleeps: 'Ospiti',
-    cuddles: 'Comfort & Coccole',
-    ups: 'Lifestyle',
+    essentials: 'Acacia® Essentials',
+    amenities: 'Amenities',
     info: 'Dettagli',
     book: 'Prenota questo alloggio',
     allPhotos: 'Tutte le foto',
@@ -375,7 +375,7 @@ export default async function ApartmentDetailPage({
             {/* Amenities */}
             {apartment.cuddles.length > 0 && (
               <section className="mb-16 lg:mb-20">
-                <CuddlesList data={apartment.cuddles} title={l.cuddles} />
+                <EssentialsList data={apartment.cuddles} title={l.essentials} />
               </section>
             )}
 
@@ -415,9 +415,9 @@ export default async function ApartmentDetailPage({
                 />
               </div>
             )}
-            {apartment.ups.length > 0 && (
+            {apartment.amenities.length > 0 && (
               <div className="mt-8">
-                <UpsList data={apartment.ups} title={l.ups} />
+                <AmenitiesList data={apartment.amenities} title={l.amenities} />
               </div>
             )}
           </div>

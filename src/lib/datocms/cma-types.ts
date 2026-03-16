@@ -2,6 +2,31 @@ import type { ItemTypeDefinition } from '@datocms/cma-client';
 type EnvironmentSettings = {
   locales: 'en' | 'it';
 };
+export type PageEvent = ItemTypeDefinition<
+  EnvironmentSettings,
+  '16694',
+  {
+    title: {
+      type: 'string';
+      localized: true;
+    };
+    subtitle: {
+      type: 'string';
+      localized: true;
+    };
+    intro: {
+      type: 'text';
+      localized: true;
+    };
+    featured_image: {
+      type: 'file';
+    };
+    seo: {
+      type: 'seo';
+      localized: true;
+    };
+  }
+>;
 export type TestModelPrimary = ItemTypeDefinition<
   EnvironmentSettings,
   'Ct9bxD2dQsWwkGjtN98moA',
@@ -259,33 +284,6 @@ export type Faq = ItemTypeDefinition<
     };
     position: {
       type: 'integer';
-    };
-  }
->;
-export type Guestbook = ItemTypeDefinition<
-  EnvironmentSettings,
-  '2804',
-  {
-    published: {
-      type: 'boolean';
-    };
-    name: {
-      type: 'string';
-    };
-    title: {
-      type: 'string';
-    };
-    quote: {
-      type: 'text';
-    };
-    date: {
-      type: 'date';
-    };
-    apartment: {
-      type: 'link';
-    };
-    service: {
-      type: 'link';
     };
   }
 >;
@@ -612,31 +610,6 @@ export type Districts = ItemTypeDefinition<
     };
   }
 >;
-export type PageEvent = ItemTypeDefinition<
-  EnvironmentSettings,
-  '16694',
-  {
-    title: {
-      type: 'string';
-      localized: true;
-    };
-    subtitle: {
-      type: 'string';
-      localized: true;
-    };
-    intro: {
-      type: 'text';
-      localized: true;
-    };
-    featured_image: {
-      type: 'file';
-    };
-    seo: {
-      type: 'seo';
-      localized: true;
-    };
-  }
->;
 export type Up = ItemTypeDefinition<
   EnvironmentSettings,
   '114485',
@@ -649,22 +622,8 @@ export type Up = ItemTypeDefinition<
       type: 'string';
       localized: true;
     };
-    position: {
-      type: 'integer';
-    };
-  }
->;
-export type Cuddle = ItemTypeDefinition<
-  EnvironmentSettings,
-  '110157',
-  {
-    name: {
+    icon: {
       type: 'string';
-      localized: true;
-    };
-    url: {
-      type: 'string';
-      localized: true;
     };
     position: {
       type: 'integer';
@@ -969,8 +928,79 @@ export type HomePage = ItemTypeDefinition<
     };
   }
 >;
+export type Guestbook = ItemTypeDefinition<
+  EnvironmentSettings,
+  '2804',
+  {
+    published: {
+      type: 'boolean';
+    };
+    name: {
+      type: 'string';
+    };
+    title: {
+      type: 'string';
+    };
+    quote: {
+      type: 'text';
+    };
+    channel: {
+      type: 'string';
+    };
+    date: {
+      type: 'date';
+    };
+    apartment: {
+      type: 'link';
+    };
+    service: {
+      type: 'link';
+    };
+  }
+>;
+export type Comfort = ItemTypeDefinition<
+  EnvironmentSettings,
+  'dX-XZIRRRqKPsbO3gBn0rA',
+  {
+    name: {
+      type: 'string';
+      localized: true;
+    };
+    url: {
+      type: 'string';
+      localized: true;
+    };
+    icon: {
+      type: 'string';
+    };
+    position: {
+      type: 'integer';
+    };
+  }
+>;
+export type Cuddle = ItemTypeDefinition<
+  EnvironmentSettings,
+  '110157',
+  {
+    name: {
+      type: 'string';
+      localized: true;
+    };
+    url: {
+      type: 'string';
+      localized: true;
+    };
+    icon: {
+      type: 'string';
+    };
+    position: {
+      type: 'integer';
+    };
+  }
+>;
 export type AnyBlock = PromoApartment | Truth | InfoAddress | InfoText;
 export type AnyModel =
+  | PageEvent
   | TestModelPrimary
   | MoodItems
   | Offer
@@ -983,7 +1013,6 @@ export type AnyModel =
   | GalleryImages
   | Paragraph
   | Faq
-  | Guestbook
   | Image
   | BlogCategory
   | PageBlog
@@ -997,12 +1026,13 @@ export type AnyModel =
   | Tip
   | PageOffers
   | Districts
-  | PageEvent
   | Up
-  | Cuddle
   | InfoLabel
   | Mood
   | Service
   | Apartment
-  | HomePage;
+  | HomePage
+  | Guestbook
+  | Comfort
+  | Cuddle;
 export type AnyBlockOrModel = AnyBlock | AnyModel;

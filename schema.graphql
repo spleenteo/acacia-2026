@@ -1,3 +1,119 @@
+input AmenityModelFilter {
+  _createdAt: CreatedAtFilter
+  createdAt: CreatedAtFilter
+  id: ItemIdFilter
+  _firstPublishedAt: PublishedAtFilter
+  position: PositionFilter
+  _publicationScheduledAt: PublishedAtFilter
+  _unpublishingScheduledAt: PublishedAtFilter
+  _publishedAt: PublishedAtFilter
+  _status: StatusFilter
+  _updatedAt: UpdatedAtFilter
+  updatedAt: UpdatedAtFilter
+  _isValid: BooleanFilter
+  icon: StringFilter
+  url: StringFilter
+  name: StringFilter
+  OR: [AmenityModelFilter]
+  AND: [AmenityModelFilter]
+}
+
+enum AmenityModelOrderBy {
+  _createdAt_ASC
+  _createdAt_DESC
+  createdAt_ASC
+  createdAt_DESC
+  id_ASC
+  id_DESC
+  _firstPublishedAt_ASC
+  _firstPublishedAt_DESC
+  position_ASC
+  position_DESC
+  _publicationScheduledAt_ASC
+  _publicationScheduledAt_DESC
+  _unpublishingScheduledAt_ASC
+  _unpublishingScheduledAt_DESC
+  _publishedAt_ASC
+  _publishedAt_DESC
+  _status_ASC
+  _status_DESC
+  _updatedAt_ASC
+  _updatedAt_DESC
+  updatedAt_ASC
+  updatedAt_DESC
+  _isValid_ASC
+  _isValid_DESC
+  icon_ASC
+  icon_DESC
+  url_ASC
+  url_DESC
+  name_ASC
+  name_DESC
+}
+
+"""Record of type 🚿 Amenities (amenity)"""
+type AmenityRecord implements RecordInterface {
+  _allNameLocales(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): [StringNonNullMultiLocaleField!]
+  _allUrlLocales(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): [StringMultiLocaleField!]
+  _createdAt: DateTime!
+
+  """Editing URL"""
+  _editingUrl: String
+  _firstPublishedAt: DateTime!
+  _isValid: BooleanType!
+  _modelApiKey: String!
+  _publicationScheduledAt: DateTime
+  _publishedAt: DateTime!
+
+  """Generates SEO and Social card meta tags to be used in your frontend"""
+  _seoMetaTags(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+  ): [Tag!]!
+  _status: ItemStatus!
+  _unpublishingScheduledAt: DateTime
+  _updatedAt: DateTime!
+  createdAt: DateTime!
+  icon: String
+  id: ItemId!
+  name(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): String!
+  position: IntType
+  updatedAt: DateTime!
+  url(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): String
+}
+
 input ApartmentCategoryModelFilter {
   _createdAt: CreatedAtFilter
   createdAt: CreatedAtFilter
@@ -116,7 +232,6 @@ input ApartmentModelFilter {
   cin: StringFilter
   featuredImage: FileFilter
   category: LinkFilter
-  ups: LinksFilter
   notes: JsonFilter
   seo: SeoFilter
   description: TextFilter
@@ -130,6 +245,7 @@ input ApartmentModelFilter {
   beddyId: StringFilter
   kigoSlug: StringFilter
   slug: SlugFilter
+  amenities: LinksFilter
   OR: [ApartmentModelFilter]
   AND: [ApartmentModelFilter]
 }
@@ -274,6 +390,7 @@ type ApartmentRecord implements RecordInterface {
   _unpublishingScheduledAt: DateTime
   _updatedAt: DateTime!
   acaciaReward: BooleanType
+  amenities: [AmenityRecord!]!
   bathrooms: IntType
   beddyId: String
   bedrooms: IntType
@@ -290,7 +407,7 @@ type ApartmentRecord implements RecordInterface {
     fallbackLocales: [SiteLocale!]
   ): String
   createdAt: DateTime!
-  cuddles: [CuddleRecord!]!
+  cuddles: [EssentialRecord!]!
   description(
     """Process content as markdown"""
     markdown: Boolean
@@ -306,7 +423,7 @@ type ApartmentRecord implements RecordInterface {
   district: DistrictsRecord
   featuredImage: FileField!
   featuredSlideshow: [FileField!]!
-  gallery: [GalleryImagesRecord!]!
+  gallery: [GalleryImageRecord!]!
   highlight(
     """The locale to use to fetch the field's content"""
     locale: SiteLocale
@@ -355,7 +472,6 @@ type ApartmentRecord implements RecordInterface {
   sleeps: IntType
   slug: String!
   updatedAt: DateTime!
-  ups: [UpRecord!]!
 }
 
 input BlogCategoryModelFilter {
@@ -743,122 +859,6 @@ input CreatedAtFilter {
   exists: BooleanType
 }
 
-input CuddleModelFilter {
-  _createdAt: CreatedAtFilter
-  createdAt: CreatedAtFilter
-  id: ItemIdFilter
-  _firstPublishedAt: PublishedAtFilter
-  position: PositionFilter
-  _publicationScheduledAt: PublishedAtFilter
-  _unpublishingScheduledAt: PublishedAtFilter
-  _publishedAt: PublishedAtFilter
-  _status: StatusFilter
-  _updatedAt: UpdatedAtFilter
-  updatedAt: UpdatedAtFilter
-  _isValid: BooleanFilter
-  icon: StringFilter
-  url: StringFilter
-  name: StringFilter
-  OR: [CuddleModelFilter]
-  AND: [CuddleModelFilter]
-}
-
-enum CuddleModelOrderBy {
-  _createdAt_ASC
-  _createdAt_DESC
-  createdAt_ASC
-  createdAt_DESC
-  id_ASC
-  id_DESC
-  _firstPublishedAt_ASC
-  _firstPublishedAt_DESC
-  position_ASC
-  position_DESC
-  _publicationScheduledAt_ASC
-  _publicationScheduledAt_DESC
-  _unpublishingScheduledAt_ASC
-  _unpublishingScheduledAt_DESC
-  _publishedAt_ASC
-  _publishedAt_DESC
-  _status_ASC
-  _status_DESC
-  _updatedAt_ASC
-  _updatedAt_DESC
-  updatedAt_ASC
-  updatedAt_DESC
-  _isValid_ASC
-  _isValid_DESC
-  icon_ASC
-  icon_DESC
-  url_ASC
-  url_DESC
-  name_ASC
-  name_DESC
-}
-
-"""Record of type ©️ Cuddle (cuddle)"""
-type CuddleRecord implements RecordInterface {
-  _allNameLocales(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
-    """
-    If you want to fallback to a default translation when a translation has not been found
-    """
-    fallbackLocales: [SiteLocale!]
-  ): [StringNonNullMultiLocaleField!]
-  _allUrlLocales(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
-    """
-    If you want to fallback to a default translation when a translation has not been found
-    """
-    fallbackLocales: [SiteLocale!]
-  ): [StringMultiLocaleField!]
-  _createdAt: DateTime!
-
-  """Editing URL"""
-  _editingUrl: String
-  _firstPublishedAt: DateTime!
-  _isValid: BooleanType!
-  _modelApiKey: String!
-  _publicationScheduledAt: DateTime
-  _publishedAt: DateTime!
-
-  """Generates SEO and Social card meta tags to be used in your frontend"""
-  _seoMetaTags(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-  ): [Tag!]!
-  _status: ItemStatus!
-  _unpublishingScheduledAt: DateTime
-  _updatedAt: DateTime!
-  createdAt: DateTime!
-  icon: String
-  id: ItemId!
-  name(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
-    """
-    If you want to fallback to a default translation when a translation has not been found
-    """
-    fallbackLocales: [SiteLocale!]
-  ): String!
-  position: IntType
-  updatedAt: DateTime!
-  url(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
-    """
-    If you want to fallback to a default translation when a translation has not been found
-    """
-    fallbackLocales: [SiteLocale!]
-  ): String
-}
-
 scalar CustomData
 
 """A ISO 8601 compliant date value"""
@@ -1029,7 +1029,7 @@ type DistrictsRecord implements RecordInterface {
     """
     fallbackLocales: [SiteLocale!]
   ): String
-  gallery: [GalleryImagesRecord!]!
+  gallery: [GalleryImageRecord!]!
   id: ItemId!
   name: String!
   position: IntType
@@ -1044,6 +1044,122 @@ type DistrictsRecord implements RecordInterface {
   ): SeoField
   slug: String!
   updatedAt: DateTime!
+}
+
+input EssentialModelFilter {
+  _createdAt: CreatedAtFilter
+  createdAt: CreatedAtFilter
+  id: ItemIdFilter
+  _firstPublishedAt: PublishedAtFilter
+  position: PositionFilter
+  _publicationScheduledAt: PublishedAtFilter
+  _unpublishingScheduledAt: PublishedAtFilter
+  _publishedAt: PublishedAtFilter
+  _status: StatusFilter
+  _updatedAt: UpdatedAtFilter
+  updatedAt: UpdatedAtFilter
+  _isValid: BooleanFilter
+  icon: StringFilter
+  url: StringFilter
+  name: StringFilter
+  OR: [EssentialModelFilter]
+  AND: [EssentialModelFilter]
+}
+
+enum EssentialModelOrderBy {
+  _createdAt_ASC
+  _createdAt_DESC
+  createdAt_ASC
+  createdAt_DESC
+  id_ASC
+  id_DESC
+  _firstPublishedAt_ASC
+  _firstPublishedAt_DESC
+  position_ASC
+  position_DESC
+  _publicationScheduledAt_ASC
+  _publicationScheduledAt_DESC
+  _unpublishingScheduledAt_ASC
+  _unpublishingScheduledAt_DESC
+  _publishedAt_ASC
+  _publishedAt_DESC
+  _status_ASC
+  _status_DESC
+  _updatedAt_ASC
+  _updatedAt_DESC
+  updatedAt_ASC
+  updatedAt_DESC
+  _isValid_ASC
+  _isValid_DESC
+  icon_ASC
+  icon_DESC
+  url_ASC
+  url_DESC
+  name_ASC
+  name_DESC
+}
+
+"""Record of type 🧰 Essentials (essential)"""
+type EssentialRecord implements RecordInterface {
+  _allNameLocales(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): [StringNonNullMultiLocaleField!]
+  _allUrlLocales(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): [StringMultiLocaleField!]
+  _createdAt: DateTime!
+
+  """Editing URL"""
+  _editingUrl: String
+  _firstPublishedAt: DateTime!
+  _isValid: BooleanType!
+  _modelApiKey: String!
+  _publicationScheduledAt: DateTime
+  _publishedAt: DateTime!
+
+  """Generates SEO and Social card meta tags to be used in your frontend"""
+  _seoMetaTags(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+  ): [Tag!]!
+  _status: ItemStatus!
+  _unpublishingScheduledAt: DateTime
+  _updatedAt: DateTime!
+  createdAt: DateTime!
+  icon: String
+  id: ItemId!
+  name(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): String!
+  position: IntType
+  updatedAt: DateTime!
+  url(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): String
 }
 
 input FaqModelFilter {
@@ -1429,7 +1545,7 @@ input GalleryFilter {
   exists: BooleanType
 }
 
-input GalleryImagesModelFilter {
+input GalleryImageModelFilter {
   _createdAt: CreatedAtFilter
   createdAt: CreatedAtFilter
   id: ItemIdFilter
@@ -1443,11 +1559,11 @@ input GalleryImagesModelFilter {
   _isValid: BooleanFilter
   image: FileFilter
   description: TextFilter
-  OR: [GalleryImagesModelFilter]
-  AND: [GalleryImagesModelFilter]
+  OR: [GalleryImageModelFilter]
+  AND: [GalleryImageModelFilter]
 }
 
-enum GalleryImagesModelOrderBy {
+enum GalleryImageModelOrderBy {
   _createdAt_ASC
   _createdAt_DESC
   createdAt_ASC
@@ -1472,8 +1588,8 @@ enum GalleryImagesModelOrderBy {
   _isValid_DESC
 }
 
-"""Record of type Gallery_images (gallery_images)"""
-type GalleryImagesRecord implements RecordInterface {
+"""Record of type Gallery Image (gallery_image)"""
+type GalleryImageRecord implements RecordInterface {
   _allDescriptionLocales(
     """Process content as markdown"""
     markdown: Boolean
@@ -5995,7 +6111,7 @@ input PositionFilter {
   neq: IntType
 }
 
-union PostModelContentField = GalleryImagesRecord | GuestPostRecord | ImageRecord | ParagraphRecord
+union PostModelContentField = GalleryImageRecord | GuestPostRecord | ImageRecord | ParagraphRecord
 
 input PostModelFilter {
   _createdAt: CreatedAtFilter
@@ -6182,6 +6298,18 @@ input PublishedAtFilter {
 """The query root for this schema"""
 type Query {
   """Returns meta information regarding a record collection"""
+  _allAmenitiesMeta(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+    filter: AmenityModelFilter
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): CollectionMetadata!
+
+  """Returns meta information regarding a record collection"""
   _allApartmentCategoriesMeta(
     """The locale to use to fetch the field's content"""
     locale: SiteLocale
@@ -6242,10 +6370,10 @@ type Query {
   ): CollectionMetadata!
 
   """Returns meta information regarding a record collection"""
-  _allCuddlesMeta(
+  _allDistrictsMeta(
     """The locale to use to fetch the field's content"""
     locale: SiteLocale
-    filter: CuddleModelFilter
+    filter: DistrictsModelFilter
 
     """
     If you want to fallback to a default translation when a translation has not been found
@@ -6254,10 +6382,10 @@ type Query {
   ): CollectionMetadata!
 
   """Returns meta information regarding a record collection"""
-  _allDistrictsMeta(
+  _allEssentialsMeta(
     """The locale to use to fetch the field's content"""
     locale: SiteLocale
-    filter: DistrictsModelFilter
+    filter: EssentialModelFilter
 
     """
     If you want to fallback to a default translation when a translation has not been found
@@ -6281,7 +6409,7 @@ type Query {
   _allGalleryImagesMeta(
     """The locale to use to fetch the field's content"""
     locale: SiteLocale
-    filter: GalleryImagesModelFilter
+    filter: GalleryImageModelFilter
 
     """
     If you want to fallback to a default translation when a translation has not been found
@@ -6464,18 +6592,6 @@ type Query {
     filter: UploadFilter
   ): CollectionMetadata!
 
-  """Returns meta information regarding a record collection"""
-  _allUpsMeta(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-    filter: UpModelFilter
-
-    """
-    If you want to fallback to a default translation when a translation has not been found
-    """
-    fallbackLocales: [SiteLocale!]
-  ): CollectionMetadata!
-
   """Returns the single instance record"""
   _site(
     """The locale to use to fetch the field's content"""
@@ -6486,6 +6602,25 @@ type Query {
     """
     fallbackLocales: [SiteLocale!]
   ): Site!
+
+  """Returns a collection of records"""
+  allAmenities(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+
+    """Skip the first results"""
+    skip: IntType
+
+    """Limit the number of results"""
+    first: IntType = 20
+    filter: AmenityModelFilter
+    orderBy: [AmenityModelOrderBy] = [position_ASC]
+  ): [AmenityRecord!]!
 
   """Returns a collection of records"""
   allApartmentCategories(
@@ -6583,25 +6718,6 @@ type Query {
   ): [ComfortRecord!]!
 
   """Returns a collection of records"""
-  allCuddles(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
-    """
-    If you want to fallback to a default translation when a translation has not been found
-    """
-    fallbackLocales: [SiteLocale!]
-
-    """Skip the first results"""
-    skip: IntType
-
-    """Limit the number of results"""
-    first: IntType = 20
-    filter: CuddleModelFilter
-    orderBy: [CuddleModelOrderBy] = [position_ASC]
-  ): [CuddleRecord!]!
-
-  """Returns a collection of records"""
   allDistricts(
     """The locale to use to fetch the field's content"""
     locale: SiteLocale
@@ -6619,6 +6735,25 @@ type Query {
     filter: DistrictsModelFilter
     orderBy: [DistrictsModelOrderBy] = [position_ASC]
   ): [DistrictsRecord!]!
+
+  """Returns a collection of records"""
+  allEssentials(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+
+    """Skip the first results"""
+    skip: IntType
+
+    """Limit the number of results"""
+    first: IntType = 20
+    filter: EssentialModelFilter
+    orderBy: [EssentialModelOrderBy] = [position_ASC]
+  ): [EssentialRecord!]!
 
   """Returns a collection of records"""
   allFaqs(
@@ -6654,9 +6789,9 @@ type Query {
 
     """Limit the number of results"""
     first: IntType = 20
-    filter: GalleryImagesModelFilter
-    orderBy: [GalleryImagesModelOrderBy] = [_updatedAt_DESC]
-  ): [GalleryImagesRecord!]!
+    filter: GalleryImageModelFilter
+    orderBy: [GalleryImageModelOrderBy] = [_updatedAt_DESC]
+  ): [GalleryImageRecord!]!
 
   """Returns a collection of records"""
   allGuestPosts(
@@ -6943,8 +7078,8 @@ type Query {
     orderBy: [UploadOrderBy] = [_createdAt_DESC]
   ): [FileField!]!
 
-  """Returns a collection of records"""
-  allUps(
+  """Returns a specific record"""
+  amenity(
     """The locale to use to fetch the field's content"""
     locale: SiteLocale
 
@@ -6952,15 +7087,9 @@ type Query {
     If you want to fallback to a default translation when a translation has not been found
     """
     fallbackLocales: [SiteLocale!]
-
-    """Skip the first results"""
-    skip: IntType
-
-    """Limit the number of results"""
-    first: IntType = 20
-    filter: UpModelFilter
-    orderBy: [UpModelOrderBy] = [position_ASC]
-  ): [UpRecord!]!
+    filter: AmenityModelFilter
+    orderBy: [AmenityModelOrderBy] = [position_ASC]
+  ): AmenityRecord
 
   """Returns a specific record"""
   apartment(
@@ -7028,19 +7157,6 @@ type Query {
   ): ComfortRecord
 
   """Returns a specific record"""
-  cuddle(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
-    """
-    If you want to fallback to a default translation when a translation has not been found
-    """
-    fallbackLocales: [SiteLocale!]
-    filter: CuddleModelFilter
-    orderBy: [CuddleModelOrderBy] = [position_ASC]
-  ): CuddleRecord
-
-  """Returns a specific record"""
   districts(
     """The locale to use to fetch the field's content"""
     locale: SiteLocale
@@ -7052,6 +7168,19 @@ type Query {
     filter: DistrictsModelFilter
     orderBy: [DistrictsModelOrderBy] = [position_ASC]
   ): DistrictsRecord
+
+  """Returns a specific record"""
+  essential(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+    filter: EssentialModelFilter
+    orderBy: [EssentialModelOrderBy] = [position_ASC]
+  ): EssentialRecord
 
   """Returns a specific record"""
   faq(
@@ -7067,7 +7196,7 @@ type Query {
   ): FaqRecord
 
   """Returns a specific record"""
-  galleryImages(
+  galleryImage(
     """The locale to use to fetch the field's content"""
     locale: SiteLocale
 
@@ -7075,9 +7204,9 @@ type Query {
     If you want to fallback to a default translation when a translation has not been found
     """
     fallbackLocales: [SiteLocale!]
-    filter: GalleryImagesModelFilter
-    orderBy: [GalleryImagesModelOrderBy] = [_updatedAt_DESC]
-  ): GalleryImagesRecord
+    filter: GalleryImageModelFilter
+    orderBy: [GalleryImageModelOrderBy] = [_updatedAt_DESC]
+  ): GalleryImageRecord
 
   """Returns a specific record"""
   guestPost(
@@ -7381,19 +7510,6 @@ type Query {
     filter: TipModelFilter
     orderBy: [TipModelOrderBy] = [_updatedAt_DESC]
   ): TipRecord
-
-  """Returns a specific record"""
-  up(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
-    """
-    If you want to fallback to a default translation when a translation has not been found
-    """
-    fallbackLocales: [SiteLocale!]
-    filter: UpModelFilter
-    orderBy: [UpModelOrderBy] = [position_ASC]
-  ): UpRecord
 
   """Returns a specific asset"""
   upload(
@@ -7852,7 +7968,7 @@ type ServiceRecord implements RecordInterface {
     fallbackLocales: [SiteLocale!]
   ): String
   featuredImage: FileField!
-  gallery: [GalleryImagesRecord!]!
+  gallery: [GalleryImageRecord!]!
   highlight(
     """The locale to use to fetch the field's content"""
     locale: SiteLocale
@@ -8307,122 +8423,6 @@ input TypeFilter {
 
   """Search uploads without the specified types"""
   notIn: [UploadType]
-}
-
-input UpModelFilter {
-  _createdAt: CreatedAtFilter
-  createdAt: CreatedAtFilter
-  id: ItemIdFilter
-  _firstPublishedAt: PublishedAtFilter
-  position: PositionFilter
-  _publicationScheduledAt: PublishedAtFilter
-  _unpublishingScheduledAt: PublishedAtFilter
-  _publishedAt: PublishedAtFilter
-  _status: StatusFilter
-  _updatedAt: UpdatedAtFilter
-  updatedAt: UpdatedAtFilter
-  _isValid: BooleanFilter
-  icon: StringFilter
-  url: StringFilter
-  name: StringFilter
-  OR: [UpModelFilter]
-  AND: [UpModelFilter]
-}
-
-enum UpModelOrderBy {
-  _createdAt_ASC
-  _createdAt_DESC
-  createdAt_ASC
-  createdAt_DESC
-  id_ASC
-  id_DESC
-  _firstPublishedAt_ASC
-  _firstPublishedAt_DESC
-  position_ASC
-  position_DESC
-  _publicationScheduledAt_ASC
-  _publicationScheduledAt_DESC
-  _unpublishingScheduledAt_ASC
-  _unpublishingScheduledAt_DESC
-  _publishedAt_ASC
-  _publishedAt_DESC
-  _status_ASC
-  _status_DESC
-  _updatedAt_ASC
-  _updatedAt_DESC
-  updatedAt_ASC
-  updatedAt_DESC
-  _isValid_ASC
-  _isValid_DESC
-  icon_ASC
-  icon_DESC
-  url_ASC
-  url_DESC
-  name_ASC
-  name_DESC
-}
-
-"""Record of type Up (up)"""
-type UpRecord implements RecordInterface {
-  _allNameLocales(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
-    """
-    If you want to fallback to a default translation when a translation has not been found
-    """
-    fallbackLocales: [SiteLocale!]
-  ): [StringNonNullMultiLocaleField!]
-  _allUrlLocales(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
-    """
-    If you want to fallback to a default translation when a translation has not been found
-    """
-    fallbackLocales: [SiteLocale!]
-  ): [StringMultiLocaleField!]
-  _createdAt: DateTime!
-
-  """Editing URL"""
-  _editingUrl: String
-  _firstPublishedAt: DateTime!
-  _isValid: BooleanType!
-  _modelApiKey: String!
-  _publicationScheduledAt: DateTime
-  _publishedAt: DateTime!
-
-  """Generates SEO and Social card meta tags to be used in your frontend"""
-  _seoMetaTags(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-  ): [Tag!]!
-  _status: ItemStatus!
-  _unpublishingScheduledAt: DateTime
-  _updatedAt: DateTime!
-  createdAt: DateTime!
-  icon: String
-  id: ItemId!
-  name(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
-    """
-    If you want to fallback to a default translation when a translation has not been found
-    """
-    fallbackLocales: [SiteLocale!]
-  ): String!
-  position: IntType
-  updatedAt: DateTime!
-  url(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
-    """
-    If you want to fallback to a default translation when a translation has not been found
-    """
-    fallbackLocales: [SiteLocale!]
-  ): String
 }
 
 """Specifies how to filter by update datetime"""
