@@ -248,6 +248,20 @@ export default function ApartmentDetailContent({
                 <ComfortsList data={apartment.comforts} title={l.comforts} />
               </div>
             )}
+            {(apartment.cin || apartment.ape) && (
+              <div className="mt-10 pt-6 border-t border-border/50 flex flex-wrap gap-x-6 gap-y-1">
+                {apartment.cin && (
+                  <p className="font-body text-fine text-muted">
+                    <span className="font-medium">CIN:</span> {apartment.cin}
+                  </p>
+                )}
+                {apartment.ape && (
+                  <p className="font-body text-fine text-muted">
+                    <span className="font-medium">APE:</span> {apartment.ape}
+                  </p>
+                )}
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -327,15 +341,6 @@ export default function ApartmentDetailContent({
             <BeddyBar locale={locale} widgetCode={apartment.beddyId} />
           </div>
         </section>
-      )}
-
-      {/* CIN/CIR legal */}
-      {apartment.cin && (
-        <div className="bg-surface-alt border-t border-border-light">
-          <p className="mx-auto max-w-7xl px-5 md:px-8 py-3 font-body text-fine text-light">
-            {apartment.cin}
-          </p>
-        </div>
       )}
 
       {/* Bottom bar spacer on mobile */}

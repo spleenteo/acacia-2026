@@ -220,24 +220,24 @@ input ApartmentModelFilter {
   _updatedAt: UpdatedAtFilter
   updatedAt: UpdatedAtFilter
   _isValid: BooleanFilter
+  sleeps: IntegerFilter
+  seo: SeoFilter
   houseBadge: LinkFilter
-  boxImage: FileFilter
+  gallery: LinksFilter
+  ape: StringFilter
   featuredSlideshow: GalleryFilter
   acaciaReward: BooleanFilter
   name: StringFilter
   district: LinkFilter
-  gallery: LinksFilter
   claim: StringFilter
   cin: StringFilter
   featuredImage: FileFilter
   category: LinkFilter
-  seo: SeoFilter
   bedrooms: IntegerFilter
   bathrooms: IntegerFilter
   propertyId: StringFilter
   notes: JsonFilter
   price: StringFilter
-  sleeps: IntegerFilter
   beddyId: StringFilter
   slug: SlugFilter
   amenities: LinksFilter
@@ -277,6 +277,10 @@ enum ApartmentModelOrderBy {
   updatedAt_DESC
   _isValid_ASC
   _isValid_DESC
+  sleeps_ASC
+  sleeps_DESC
+  ape_ASC
+  ape_DESC
   acaciaReward_ASC
   acaciaReward_DESC
   name_ASC
@@ -293,8 +297,6 @@ enum ApartmentModelOrderBy {
   propertyId_DESC
   price_ASC
   price_DESC
-  sleeps_ASC
-  sleeps_DESC
   beddyId_ASC
   beddyId_DESC
 }
@@ -474,10 +476,10 @@ type ApartmentRecord implements RecordInterface {
   _updatedAt: DateTime!
   acaciaReward: BooleanType!
   amenities: [AmenityRecord!]!
+  ape: String
   bathrooms: IntType
   beddyId: String
   bedrooms: IntType
-  boxImage: FileField
   category: ApartmentCategoryRecord!
   cin: String
   claim(

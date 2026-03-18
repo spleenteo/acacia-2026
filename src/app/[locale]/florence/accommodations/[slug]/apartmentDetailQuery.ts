@@ -25,6 +25,7 @@ export const apartmentDetailQuery = graphql(
         beddyId
         price
         cin
+        ape
         acaciaReward
         homeTruth(locale: $locale) {
           ...TruthFragment
