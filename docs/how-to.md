@@ -73,17 +73,18 @@ AI-optimized compact reference for Acacia Firenze project behavior and patterns.
 
 ### Real-Time Draft Preview
 
-| Concept | Implementation |
-|---|---|
-| Pattern | Server fetch → `initialData` → client `useQuerySubscription` (SSE) |
-| Helpers | `generatePageComponent` (server), `generateRealtimeComponent` (client) |
-| Location | `src/lib/datocms/realtime/` |
-| Scope | Main query per page only; secondary queries fetched server-side |
-| Token | `DATOCMS_DRAFT_CONTENT_CDA_TOKEN` passed to client in draft mode |
+| Concept  | Implementation                                                         |
+| -------- | ---------------------------------------------------------------------- |
+| Pattern  | Server fetch → `initialData` → client `useQuerySubscription` (SSE)     |
+| Helpers  | `generatePageComponent` (server), `generateRealtimeComponent` (client) |
+| Location | `src/lib/datocms/realtime/`                                            |
+| Scope    | Main query per page only; secondary queries fetched server-side        |
+| Token    | `DATOCMS_DRAFT_CONTENT_CDA_TOKEN` passed to client in draft mode       |
 
 ### Page File Structure (with realtime)
 
 Each page directory contains:
+
 - `*Query.ts` — GraphQL query extracted to standalone file
 - `*Content.tsx` — Presentational component (server-compatible, receives resolved props + data)
 - `*Realtime.tsx` — `'use client'` wrapper with `useQuerySubscription`
@@ -93,21 +94,21 @@ Each page directory contains:
 
 ## Web Previews & Visual Editing
 
-| Endpoint | Purpose |
-|---|---|
-| `/api/preview-links` | Returns draft/published URLs for Web Previews plugin sidebar |
-| `/api/draft-mode/enable` | Enables Next.js Draft Mode + partitioned cookie for iframe |
-| `/api/draft-mode/disable` | Disables Draft Mode |
-| `/api/seo-analysis` | SEO Analysis plugin HTML endpoint |
+| Endpoint                  | Purpose                                                      |
+| ------------------------- | ------------------------------------------------------------ |
+| `/api/preview-links`      | Returns draft/published URLs for Web Previews plugin sidebar |
+| `/api/draft-mode/enable`  | Enables Next.js Draft Mode + partitioned cookie for iframe   |
+| `/api/draft-mode/disable` | Disables Draft Mode                                          |
+| `/api/seo-analysis`       | SEO Analysis plugin HTML endpoint                            |
 
-| Config | Value |
-|---|---|
-| Plugin | `datocms-plugin-web-previews` (configured in DatoCMS UI) |
-| Preview webhook | `{SITE_URL}/api/preview-links?token={SECRET_API_TOKEN}` |
-| Draft mode URL | `{SITE_URL}/api/draft-mode/enable?token={SECRET_API_TOKEN}` |
-| Reload on save | `reloadPreviewOnRecordUpdate: { delayInMs: 500 }` (sidebar only) |
-| Content Link | `@datocms/content-link` controller, hover-only overlays |
-| baseEditingUrl | Auto-appends `/environments/{DATOCMS_ENVIRONMENT}` when set |
+| Config          | Value                                                            |
+| --------------- | ---------------------------------------------------------------- |
+| Plugin          | `datocms-plugin-web-previews` (configured in DatoCMS UI)         |
+| Preview webhook | `{SITE_URL}/api/preview-links?token={SECRET_API_TOKEN}`          |
+| Draft mode URL  | `{SITE_URL}/api/draft-mode/enable?token={SECRET_API_TOKEN}`      |
+| Reload on save  | `reloadPreviewOnRecordUpdate: { delayInMs: 500 }` (sidebar only) |
+| Content Link    | `@datocms/content-link` controller, hover-only overlays          |
+| baseEditingUrl  | Auto-appends `/environments/{DATOCMS_ENVIRONMENT}` when set      |
 
 ---
 

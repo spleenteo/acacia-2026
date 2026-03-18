@@ -27,9 +27,7 @@ export function generatePageComponent<ResolvedProps, Result, Variables>({
 
     const resolvedProps = await resolveProps(rawPageProps);
 
-    const variables = buildQueryVariables
-      ? buildQueryVariables(resolvedProps)
-      : ({} as Variables);
+    const variables = buildQueryVariables ? buildQueryVariables(resolvedProps) : ({} as Variables);
 
     const data = await executeQuery(query, {
       variables,
