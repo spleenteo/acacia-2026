@@ -37,17 +37,17 @@ Gli editor in DatoCMS possono:
 
 ## Requirements (R)
 
-| ID  | Requirement                                                                 | Status    |
-| --- | --------------------------------------------------------------------------- | --------- |
-| R0  | Plugin Web Previews installato e configurato in DatoCMS con URL corretti    | Core goal |
-| R1  | Preview links funzionanti per Apartment, District, Mood (draft + published) | Core goal |
-| R2  | Visual Editing tab funzionante con draft mode automatico nell'iframe        | Core goal |
-| R3  | Content Link overlay (click-to-edit) funzionanti nel Visual tab             | Core goal |
-| R4  | Variabili d'ambiente allineate tra Next.js e plugin DatoCMS                 | Must-have |
-| R5  | Supporto bilingue: preview links generati nella lingua corretta (en/it)     | Must-have |
-| R6  | Sicurezza: token validato su tutti gli endpoint, redirect solo relativi     | Must-have |
-| R7  | CSP header permette iframe da `plugins-cdn.datocms.com`                     | Out       |
-| 🟡 R8  | 🟡 Widget Beddy disabilitato in draft mode (blocca reload e UX nell'iframe)    | 🟡 Must-have |
+| ID    | Requirement                                                                 | Status       |
+| ----- | --------------------------------------------------------------------------- | ------------ |
+| R0    | Plugin Web Previews installato e configurato in DatoCMS con URL corretti    | Core goal    |
+| R1    | Preview links funzionanti per Apartment, District, Mood (draft + published) | Core goal    |
+| R2    | Visual Editing tab funzionante con draft mode automatico nell'iframe        | Core goal    |
+| R3    | Content Link overlay (click-to-edit) funzionanti nel Visual tab             | Core goal    |
+| R4    | Variabili d'ambiente allineate tra Next.js e plugin DatoCMS                 | Must-have    |
+| R5    | Supporto bilingue: preview links generati nella lingua corretta (en/it)     | Must-have    |
+| R6    | Sicurezza: token validato su tutti gli endpoint, redirect solo relativi     | Must-have    |
+| R7    | CSP header permette iframe da `plugins-cdn.datocms.com`                     | Out          |
+| 🟡 R8 | 🟡 Widget Beddy disabilitato in draft mode (blocca reload e UX nell'iframe) | 🟡 Must-have |
 
 **R7 Note:** Nessun CSP header è configurato nel progetto (né in next.config, né middleware, né vercel.json). Senza CSP, l'iframe del plugin può caricare il sito senza restrizioni. Non è un blocker — è una hardening opzionale da valutare in futuro.
 
