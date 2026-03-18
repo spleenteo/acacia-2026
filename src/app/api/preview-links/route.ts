@@ -66,6 +66,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
             `/api/draft-mode/enable?redirect=${url}&token=${token}`,
             request.url,
           ).toString(),
+          reloadPreviewOnRecordUpdate: false,
         });
       }
 
