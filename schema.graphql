@@ -217,12 +217,12 @@ input ApartmentModelFilter {
   _isValid: BooleanFilter
   boxImage: FileFilter
   featuredSlideshow: GalleryFilter
-  published: BooleanFilter
   acaciaReward: BooleanFilter
   claim: StringFilter
   name: StringFilter
   district: LinkFilter
   gallery: LinksFilter
+  publishedOld: BooleanFilter
   cin: StringFilter
   featuredImage: FileFilter
   category: LinkFilter
@@ -273,14 +273,14 @@ enum ApartmentModelOrderBy {
   updatedAt_DESC
   _isValid_ASC
   _isValid_DESC
-  published_ASC
-  published_DESC
   acaciaReward_ASC
   acaciaReward_DESC
   claim_ASC
   claim_DESC
   name_ASC
   name_DESC
+  publishedOld_ASC
+  publishedOld_DESC
   cin_ASC
   cin_DESC
   bedrooms_ASC
@@ -545,7 +545,7 @@ type ApartmentRecord implements RecordInterface {
   notes: JsonField
   price: String
   propertyId: String
-  published: BooleanType!
+  publishedOld: BooleanType!
   seo(
     """The locale to use to fetch the field's content"""
     locale: SiteLocale
