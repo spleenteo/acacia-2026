@@ -1,5 +1,17 @@
 # Changelog
 
+## v0.4.2 — 2026-03-18 — Simplify realtime pattern to 2 files per page
+
+Replaced per-page `*Realtime.tsx` and `*Query.ts` files with a single shared `RealtimeWrapper` client component. Queries are now inline in `page.tsx`.
+
+- **RealtimeWrapper**: Single generic `'use client'` component at `src/lib/datocms/realtime/RealtimeWrapper.tsx` — receives query, token, and data as props from the server component. Eliminates the need for per-page client wrappers.
+- **File reduction**: From 4 files per page (Query, Content, Realtime, page) to 2 (page.tsx + Content.tsx). Deleted 17 files total (7 Realtime, 8 Query, 2 helper generators).
+- **Realtime page pattern skill**: Added `.claude/skills/realtime-page-pattern/` with templates and rules for creating new pages with this pattern.
+
+Design decision: `Variables` type in `RealtimeWrapper` uses `any` because type safety is enforced at the call site in the server component, where gql.tada already types the query and variables correctly.
+
+---
+
 ## v0.4.1 — 2026-03-18 — Apartment schema alignment, APE field, gallery 6-up
 
 Aligned frontend with updated DatoCMS apartment schema and added new features.

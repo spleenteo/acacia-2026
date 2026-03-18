@@ -73,22 +73,20 @@ AI-optimized compact reference for Acacia Firenze project behavior and patterns.
 
 ### Real-Time Draft Preview
 
-| Concept  | Implementation                                                         |
-| -------- | ---------------------------------------------------------------------- |
-| Pattern  | Server fetch → `initialData` → client `useQuerySubscription` (SSE)     |
-| Helpers  | `generatePageComponent` (server), `generateRealtimeComponent` (client) |
-| Location | `src/lib/datocms/realtime/`                                            |
-| Scope    | Main query per page only; secondary queries fetched server-side        |
-| Token    | `DATOCMS_DRAFT_CONTENT_CDA_TOKEN` passed to client in draft mode       |
+| Concept  | Implementation                                                     |
+| -------- | ------------------------------------------------------------------ |
+| Pattern  | Server fetch → `initialData` → client `useQuerySubscription` (SSE) |
+| Wrapper  | `RealtimeWrapper` — single shared `'use client'` component         |
+| Location | `src/lib/datocms/realtime/RealtimeWrapper.tsx`                     |
+| Scope    | Main query per page only; secondary queries fetched server-side    |
+| Token    | `DATOCMS_DRAFT_CONTENT_CDA_TOKEN` passed to client in draft mode   |
 
 ### Page File Structure (with realtime)
 
-Each page directory contains:
+Each page directory contains 2 files:
 
-- `*Query.ts` — GraphQL query extracted to standalone file
-- `*Content.tsx` — Presentational component (server-compatible, receives resolved props + data)
-- `*Realtime.tsx` — `'use client'` wrapper with `useQuerySubscription`
-- `page.tsx` — Server component, `generateMetadata`, `generateStaticParams`, draft/published switch
+- `page.tsx` — Server component: query inline, data fetching, metadata, static params, draft/published switch with `RealtimeWrapper`
+- `*Content.tsx` — Presentational component (receives resolved props + data, shared by both server and realtime paths)
 
 ---
 

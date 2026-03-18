@@ -11,45 +11,30 @@ acacia-next/
 │   │   ├── sitemap.ts                          # Dynamic sitemap generation
 │   │   ├── [locale]/
 │   │   │   ├── layout.tsx                      # Locale layout (header, footer, beddy, draft)
-│   │   │   ├── page.tsx                        # Home page (realtime-enabled)
-│   │   │   ├── homeQuery.ts                    # Home GraphQL query
+│   │   │   ├── page.tsx                        # Home page (query + realtime)
 │   │   │   ├── HomeContent.tsx                 # Home presentational component
-│   │   │   ├── HomeRealtime.tsx                # Home realtime client wrapper
 │   │   │   ├── error.tsx                       # Error boundary (client)
 │   │   │   ├── loading.tsx                     # Loading skeleton
 │   │   │   ├── not-found.tsx                   # 404 page
 │   │   │   ├── florence/
 │   │   │   │   ├── accommodations/
-│   │   │   │   │   ├── page.tsx                # Apartments listing (realtime-enabled)
-│   │   │   │   │   ├── accommodationsQuery.ts
+│   │   │   │   │   ├── page.tsx                # Apartments listing
 │   │   │   │   │   ├── AccommodationsContent.tsx
-│   │   │   │   │   ├── AccommodationsRealtime.tsx
 │   │   │   │   │   └── [slug]/
-│   │   │   │   │       ├── page.tsx            # Apartment detail (realtime-enabled)
-│   │   │   │   │       ├── apartmentDetailQuery.ts
-│   │   │   │   │       ├── ApartmentDetailContent.tsx
-│   │   │   │   │       └── ApartmentDetailRealtime.tsx
+│   │   │   │   │       ├── page.tsx            # Apartment detail (multi-query)
+│   │   │   │   │       └── ApartmentDetailContent.tsx
 │   │   │   │   └── districts/
-│   │   │   │       ├── page.tsx                # Districts listing (realtime-enabled)
-│   │   │   │       ├── districtsQuery.ts
+│   │   │   │       ├── page.tsx                # Districts listing
 │   │   │   │       ├── DistrictsContent.tsx
-│   │   │   │       ├── DistrictsRealtime.tsx
 │   │   │   │       └── [slug]/
-│   │   │   │           ├── page.tsx            # District detail (realtime-enabled)
-│   │   │   │           ├── districtDetailQuery.ts
-│   │   │   │           ├── apartmentsInDistrictQuery.ts
-│   │   │   │           ├── DistrictDetailContent.tsx
-│   │   │   │           └── DistrictDetailRealtime.tsx
+│   │   │   │           ├── page.tsx            # District detail (multi-query)
+│   │   │   │           └── DistrictDetailContent.tsx
 │   │   │   └── moods/
-│   │   │       ├── page.tsx                    # Moods listing (realtime-enabled)
-│   │   │       ├── moodsQuery.ts
+│   │   │       ├── page.tsx                    # Moods listing
 │   │   │       ├── MoodsContent.tsx
-│   │   │       ├── MoodsRealtime.tsx
 │   │   │       └── [slug]/
-│   │   │           ├── page.tsx                # Mood detail (realtime-enabled)
-│   │   │           ├── moodDetailQuery.ts
-│   │   │           ├── MoodDetailContent.tsx
-│   │   │           └── MoodDetailRealtime.tsx
+│   │   │           ├── page.tsx                # Mood detail
+│   │   │           └── MoodDetailContent.tsx
 │   │   └── api/
 │   │       ├── draft-mode/
 │   │       │   ├── enable/route.ts
@@ -78,6 +63,9 @@ acacia-next/
 │   │   ├── ResponsiveImage/index.tsx
 │   │   ├── SiteFooter/index.tsx
 │   │   ├── SiteHeader/index.tsx
+│   │   ├── WhatWeLove/
+│   │   │   ├── index.tsx                       # 2-6 photo gallery with caption overlay
+│   │   │   └── fragment.ts
 │   │   └── UpsList/index.tsx
 │   ├── i18n/
 │   │   └── config.ts                          # Locale config (en, it)
@@ -87,9 +75,11 @@ acacia-next/
 │           ├── recordInfo.ts                   # Record type → URL mapping
 │           ├── cma-types.ts                    # Generated CMA types
 │           ├── graphql-env.d.ts                # Generated gql.tada types
-│           └── realtime/                       # Real-time draft preview helpers
-│               ├── generatePageComponent.tsx   # Server: draft/published switch
-│               └── generateRealtimeComponent.tsx # Client: useQuerySubscription wrapper
+│           └── realtime/
+│               └── RealtimeWrapper.tsx         # Shared 'use client' SSE subscription wrapper
+├── .claude/
+│   └── skills/
+│       └── realtime-page-pattern/SKILL.md     # Project skill: page creation pattern
 ├── docs/
 │   ├── change-log.md                          # Version changelog
 │   ├── how-to.md                              # Internal reference (AI-optimized)
@@ -115,7 +105,7 @@ acacia-next/
 ├── public/
 │   ├── logo--main.svg                         # Full wordmark SVG (ratio ~3.6:1)
 │   └── acacia-isologo.svg                     # Isologo (copyright: not for standalone use)
-└── package.json                               # v0.4.0
+└── package.json                               # v0.4.2
 ```
 
 ## Tech Stack
