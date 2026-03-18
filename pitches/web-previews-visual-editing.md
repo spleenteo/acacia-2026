@@ -47,8 +47,11 @@ Gli editor in DatoCMS possono:
 | R5  | Supporto bilingue: preview links generati nella lingua corretta (en/it)     | Must-have |
 | R6  | Sicurezza: token validato su tutti gli endpoint, redirect solo relativi     | Must-have |
 | R7  | CSP header permette iframe da `plugins-cdn.datocms.com`                     | Out       |
+| 🟡 R8  | 🟡 Widget Beddy disabilitato in draft mode (blocca reload e UX nell'iframe)    | 🟡 Must-have |
 
 **R7 Note:** Nessun CSP header è configurato nel progetto (né in next.config, né middleware, né vercel.json). Senza CSP, l'iframe del plugin può caricare il sito senza restrizioni. Non è un blocker — è una hardening opzionale da valutare in futuro.
+
+**R8 Note:** Il widget Beddy (booking via web component `<beddy-bar>`) carica all'infinito dentro l'iframe del Visual Editing tab, impedendo il reload dopo salvataggio. In draft mode il widget non serve — l'editor sta editando contenuti, non prenotando.
 
 ---
 

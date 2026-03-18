@@ -51,10 +51,12 @@ export default async function LocaleLayout({
 
   return (
     <>
-      <Script
-        src="https://cdn.beddy.io/bol/prod/beddybar.js?release13052020_v0"
-        strategy="lazyOnload"
-      />
+      {!isDraftModeEnabled && (
+        <Script
+          src="https://cdn.beddy.io/bol/prod/beddybar.js?release13052020_v0"
+          strategy="lazyOnload"
+        />
+      )}
       {isDraftModeEnabled && <ContentLink />}
       <SiteHeader locale={locale} isDraftModeEnabled={isDraftModeEnabled} />
       <main style={{ paddingTop: 'var(--header-height)' }}>{children}</main>
