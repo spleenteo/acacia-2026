@@ -1,5 +1,17 @@
 # Changelog
 
+## v0.4.1 — 2026-03-18 — Apartment schema alignment, APE field, gallery 6-up
+
+Aligned frontend with updated DatoCMS apartment schema and added new features.
+
+- **highlight → houseBadge.label**: Replaced the `highlight` string field with a linked `HouseBadge` record. The badge label is localized and displayed in both ApartmentCard and BookingSidebar.
+- **boxImage removed**: ApartmentCard now uses `featuredImage` exclusively — the `boxImage` fallback has been removed.
+- **APE field**: New `apartment.ape` field displayed alongside CIN in the apartment detail body (after comforts, muted style). Values migrated from infoDetail text blocks via CMA script, APE blocks then removed from infoDetail in both EN and IT locales.
+- **What We Love 6-photo grid**: Gallery now supports up to 6 photos with a responsive 3×2 grid layout (SixUp component).
+- **lint-staged**: Pre-commit hook now uses lint-staged to format only staged files, preventing unrelated Prettier changes on unstaged files.
+
+---
+
 ## v0.4.0 — 2026-03-18 — Web Previews, Visual Editing, Real-Time Draft Preview
 
 Full DatoCMS editorial workflow integration. Editors can now preview draft content from the CMS sidebar, use the Visual Editing tab with click-to-edit overlays, and see content updates in real-time without page reload.

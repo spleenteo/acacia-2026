@@ -101,14 +101,14 @@ Each page directory contains:
 | `/api/draft-mode/disable` | Disables Draft Mode                                          |
 | `/api/seo-analysis`       | SEO Analysis plugin HTML endpoint                            |
 
-| Config          | Value                                                            |
-| --------------- | ---------------------------------------------------------------- |
-| Plugin          | `datocms-plugin-web-previews` (configured in DatoCMS UI)         |
-| Preview webhook | `{SITE_URL}/api/preview-links?token={SECRET_API_TOKEN}`          |
-| Draft mode URL  | `{SITE_URL}/api/draft-mode/enable?token={SECRET_API_TOKEN}`      |
-| Reload on save  | `reloadPreviewOnRecordUpdate: { delayInMs: 500 }` (sidebar only) |
-| Content Link    | `@datocms/content-link` controller, hover-only overlays          |
-| baseEditingUrl  | Auto-appends `/environments/{DATOCMS_ENVIRONMENT}` when set      |
+| Config          | Value                                                                      |
+| --------------- | -------------------------------------------------------------------------- |
+| Plugin          | `datocms-plugin-web-previews` (configured in DatoCMS UI)                   |
+| Preview webhook | `{SITE_URL}/api/preview-links?token={SECRET_API_TOKEN}`                    |
+| Draft mode URL  | `{SITE_URL}/api/draft-mode/enable?token={SECRET_API_TOKEN}`                |
+| Reload on save  | Disabled (`reloadPreviewOnRecordUpdate: false`) — SSE handles live updates |
+| Content Link    | `@datocms/content-link` controller, hover-only overlays                    |
+| baseEditingUrl  | Auto-appends `/environments/{DATOCMS_ENVIRONMENT}` when set                |
 
 ---
 
@@ -120,6 +120,18 @@ Each page directory contains:
 | Apartment detail | `Apartment.beddyId` (if present) |
 
 Web component `<beddy-bar>` loaded via CDN script in layout. **Disabled in draft mode** — script not loaded when `isDraftModeEnabled` is true.
+
+---
+
+## Apartment Schema
+
+| Field              | Source                       | Notes                                                     |
+| ------------------ | ---------------------------- | --------------------------------------------------------- |
+| `houseBadge.label` | Linked `HouseBadge` record   | Localized, replaces old `highlight` string                |
+| `featuredImage`    | Direct file field (required) | Used everywhere — card, hero, listing. `boxImage` removed |
+| `ape`              | String field                 | Energy class (A–G), displayed with CIN after comforts     |
+| `cin`              | String field                 | Italian accommodation ID, displayed after comforts        |
+| `published`        | Removed                      | Uses native DatoCMS draft/published status                |
 
 ---
 
