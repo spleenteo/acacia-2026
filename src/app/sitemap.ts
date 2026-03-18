@@ -13,7 +13,7 @@ const slugsQuery = graphql(`
     allDistricts {
       slug
     }
-    allMoods(filter: { published: { eq: true } }) {
+    allMoods {
       slug
     }
   }

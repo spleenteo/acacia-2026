@@ -13,7 +13,7 @@ import type { Metadata } from 'next';
 const metaQuery = graphql(
   `
     query MoodMetaQuery($locale: SiteLocale!, $slug: String!) {
-      mood(locale: $locale, filter: { slug: { eq: $slug }, published: { eq: true } }) {
+      mood(locale: $locale, filter: { slug: { eq: $slug } }) {
         _seoMetaTags(locale: $locale) {
           ...TagFragment
         }
@@ -47,7 +47,7 @@ export async function generateMetadata({
 const query = graphql(
   `
     query MoodDetailQuery($locale: SiteLocale!, $slug: String!) {
-      mood(locale: $locale, filter: { slug: { eq: $slug }, published: { eq: true } }) {
+      mood(locale: $locale, filter: { slug: { eq: $slug } }) {
         id
         name(locale: $locale)
         slug(locale: $locale)
@@ -76,7 +76,7 @@ const query = graphql(
 
 const allSlugsQuery = graphql(`
   query AllMoodSlugs {
-    allMoods(filter: { published: { eq: true } }) {
+    allMoods {
       slug
     }
   }

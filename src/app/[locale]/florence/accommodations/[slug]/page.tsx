@@ -147,7 +147,7 @@ const query = graphql(
 const reviewsQuery = graphql(`
   query ApartmentReviews($apartmentId: ItemId!) {
     allGuestbooks(
-      filter: { apartment: { eq: $apartmentId }, published: { eq: true } }
+      filter: { apartment: { eq: $apartmentId } }
       orderBy: date_DESC
       first: 6
     ) {
