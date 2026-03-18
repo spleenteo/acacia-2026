@@ -43,26 +43,28 @@ export async function executeQuery<Result, Variables>(
     baseEditingUrl: options?.includeDrafts
       ? `${process.env.DATOCMS_BASE_EDITING_URL}${process.env.DATOCMS_ENVIRONMENT ? `/environments/${process.env.DATOCMS_ENVIRONMENT}` : ''}`
       : undefined,
-    requestInitOptions: {
-      cache: 'force-cache',
-      /*
-       * This project utilizes an extremely basic cache invalidation
-       * technique: by using the `next.tags` option, all requests to DatoCMS
-       * are tagged with "datocms" in the Next.js Data Cache. Whenever DatoCMS
-       * notifies us of any updates via webhook, we invalidate all requests
-       * with the same tag.
-       *
-       * Although this caching strategy may be sufficient for smaller
-       * websites, it is not advised for larger projects. Fortunately, with
-       * DatoCMS and Next, it is possible to implement a much more detailed
-       * invalidation strategy!
-       *
-       * For more info: https://www.datocms.com/docs/next-js/using-cache-tags
-       */
-      next: {
-        tags: [cacheTag],
-      },
-    },
+    requestInitOptions: options?.includeDrafts
+      ? { cache: 'no-store' }
+      : {
+          cache: 'force-cache',
+          /*
+           * This project utilizes an extremely basic cache invalidation
+           * technique: by using the `next.tags` option, all requests to DatoCMS
+           * are tagged with "datocms" in the Next.js Data Cache. Whenever DatoCMS
+           * notifies us of any updates via webhook, we invalidate all requests
+           * with the same tag.
+           *
+           * Although this caching strategy may be sufficient for smaller
+           * websites, it is not advised for larger projects. Fortunately, with
+           * DatoCMS and Next, it is possible to implement a much more detailed
+           * invalidation strategy!
+           *
+           * For more info: https://www.datocms.com/docs/next-js/using-cache-tags
+           */
+          next: {
+            tags: [cacheTag],
+          },
+        },
   });
 
   return result;
