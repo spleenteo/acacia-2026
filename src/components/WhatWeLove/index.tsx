@@ -90,8 +90,11 @@ export default function WhatWeLove({
             {photos.length === 4 && (
               <FourUp photos={photos} onHover={handleHover} onEnter={() => setShowCaption(true)} />
             )}
-            {photos.length >= 5 && (
+            {photos.length === 5 && (
               <FiveUp photos={photos} onHover={handleHover} onEnter={() => setShowCaption(true)} />
+            )}
+            {photos.length >= 6 && (
+              <SixUp photos={photos} onHover={handleHover} onEnter={() => setShowCaption(true)} />
             )}
 
             {/* Caption overlay — centered on the gallery */}
@@ -231,6 +234,17 @@ function FiveUp({ photos, onHover, onEnter }: LayoutProps) {
           />
         ))}
       </div>
+    </div>
+  );
+}
+
+/** 3×2 grid — two rows of three */
+function SixUp({ photos, onHover, onEnter }: LayoutProps) {
+  return (
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+      {photos.slice(0, 6).map((photo, i) => (
+        <PhotoCard key={photo.id} photo={photo} index={i} onHover={onHover} onEnter={onEnter} />
+      ))}
     </div>
   );
 }
