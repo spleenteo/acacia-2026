@@ -6,6 +6,10 @@ import { notFound } from 'next/navigation';
 import { TagFragment } from '@/lib/datocms/commonFragments';
 import { toNextMetadata } from 'react-datocms';
 import type { Metadata } from 'next';
+import DistrictDetailContent, { type DistrictDetailProps } from './DistrictDetailContent';
+import { DistrictDetailRealtime } from './DistrictDetailRealtime';
+import { districtDetailQuery } from './districtDetailQuery';
+import { apartmentsInDistrictQuery } from './apartmentsInDistrictQuery';
 
 const metaQuery = graphql(
   `
@@ -44,47 +48,6 @@ export async function generateMetadata({
   };
 }
 
-import HtmlContent from '@/components/HtmlContent';
-import { GalleryImageFragment } from '@/components/ImageGallery/fragment';
-import ImageGallery from '@/components/ImageGallery';
-import ApartmentCard, { ApartmentCardFragment } from '@/components/ApartmentCard';
-import { readFragment } from '@/lib/datocms/graphql';
-
-const query = graphql(
-  `
-    query DistrictDetailQuery($locale: SiteLocale!, $slug: String!) {
-      district(locale: $locale, filter: { slug: { eq: $slug } }) {
-        id
-        name
-        slug
-        abstract(locale: $locale, markdown: true)
-        description(locale: $locale, markdown: true)
-        gallery {
-          ...GalleryImageFragment
-        }
-      }
-    }
-  `,
-  [GalleryImageFragment],
-);
-
-const apartmentsQuery = graphql(
-  `
-    query DistrictApartmentsQuery($locale: SiteLocale!, $districtId: ItemId!) {
-      allApartments(
-        locale: $locale
-        first: 100
-        filter: { district: { eq: $districtId } }
-        orderBy: [name_ASC]
-      ) {
-        id
-        ...ApartmentCardFragment
-      }
-    }
-  `,
-  [ApartmentCardFragment],
-);
-
 const allSlugsQuery = graphql(`
   query AllDistrictSlugs {
     allDistricts {
@@ -99,11 +62,6 @@ export async function generateStaticParams() {
   return locales.flatMap((locale) => slugs.map((slug) => ({ locale, slug })));
 }
 
-const labels = {
-  en: { apartments: 'Apartments in' },
-  it: { apartments: 'Alloggi a' },
-} as const;
-
 export default async function DistrictDetailPage({
   params,
 }: {
@@ -112,104 +70,40 @@ export default async function DistrictDetailPage({
   const { locale, slug } = await params;
   const { isEnabled: isDraftModeEnabled } = await draftMode();
 
-  const [districtData, apartmentsData] = await Promise.all([
-    executeQuery(query, {
-      variables: { locale: locale as Locale, slug },
-      includeDrafts: isDraftModeEnabled,
-    }),
-    // We need the district id first — fetch it separately
-    null,
-  ]);
-
-  const { district } = districtData;
-  if (!district) notFound();
-
-  const aptData = await executeQuery(apartmentsQuery, {
-    variables: { locale: locale as Locale, districtId: district.id },
+  const variables = { locale: locale as Locale, slug };
+  const data = await executeQuery(districtDetailQuery, {
+    variables,
     includeDrafts: isDraftModeEnabled,
   });
 
-  const { allApartments } = aptData;
-  const l = labels[locale as Locale];
+  if (!data.district) notFound();
 
-  return (
-    <>
-      {/* Hero */}
-      <section
-        className="min-h-[55vh] flex items-end bg-dark"
-        style={{ marginTop: 'calc(var(--header-height) * -1)' }}
-      >
-        <div className="w-full px-8 pb-14 pt-32">
-          <div className="mx-auto max-w-6xl">
-            <p className="font-body font-medium text-label text-white/50 uppercase tracking-[0.15em] mb-3">
-              {locale === 'en' ? 'Florence' : 'Firenze'}
-            </p>
-            <h1 className="font-heading font-normal text-hero leading-tight text-white">
-              {district.name}
-            </h1>
-          </div>
-        </div>
-      </section>
+  const apartmentsData = await executeQuery(apartmentsInDistrictQuery, {
+    variables: { locale: locale as Locale, districtId: data.district.id },
+    includeDrafts: isDraftModeEnabled,
+  });
 
-      {/* Abstract */}
-      {district.abstract && (
-        <section className="py-16 bg-surface-alt">
-          <div className="mx-auto max-w-3xl px-8 text-center">
-            <HtmlContent html={district.abstract} className="font-body text-body-lg text-dark" />
-            <div className="mx-auto mt-8 w-12 h-[3px] bg-rust rounded-sm" />
-          </div>
-        </section>
-      )}
+  const resolvedProps: DistrictDetailProps = {
+    locale: locale as Locale,
+    apartmentsData,
+  };
 
-      {/* Gallery */}
-      {district.gallery.length > 0 && (
-        <section className="py-16 bg-surface">
-          <div className="mx-auto max-w-6xl px-8">
-            <ImageGallery
-              items={district.gallery
-                .map((g) => readFragment(GalleryImageFragment, g))
-                .filter((img) => img.image?.responsiveImage && img.image?.full)
-                .map((img) => ({
-                  id: img.id,
-                  thumb: img.image!.responsiveImage!,
-                  full: img.image!.full!,
-                  caption: img.description,
-                }))}
-            />
-          </div>
-        </section>
-      )}
+  if (isDraftModeEnabled) {
+    return (
+      <DistrictDetailRealtime
+        token={process.env.DATOCMS_DRAFT_CONTENT_CDA_TOKEN!}
+        query={districtDetailQuery}
+        variables={variables}
+        initialData={data}
+        resolvedProps={resolvedProps}
+        includeDrafts={isDraftModeEnabled}
+        excludeInvalid={true}
+        contentLink="v1"
+        baseEditingUrl={`${process.env.DATOCMS_BASE_EDITING_URL}${process.env.DATOCMS_ENVIRONMENT ? `/environments/${process.env.DATOCMS_ENVIRONMENT}` : ''}`}
+        environment={process.env.DATOCMS_ENVIRONMENT || undefined}
+      />
+    );
+  }
 
-      {/* Description */}
-      {district.description && (
-        <section className="py-20 lg:py-28 bg-surface-alt">
-          <div className="mx-auto max-w-3xl px-8">
-            <HtmlContent
-              html={district.description}
-              className="font-body text-body-lg text-dark leading-relaxed"
-            />
-          </div>
-        </section>
-      )}
-
-      {/* Apartments in this district */}
-      {allApartments.length > 0 && (
-        <section className="py-20 lg:py-28 bg-surface">
-          <div className="mx-auto max-w-6xl px-8">
-            <p className="font-body text-label uppercase tracking-[0.22em] text-rust font-medium text-center mb-3">
-              {locale === 'en' ? 'Where to stay' : 'Dove alloggiare'}
-            </p>
-            <h2 className="font-heading font-normal text-h1 text-dark text-center tracking-[-0.02em] mb-12">
-              {l.apartments} {district.name}
-            </h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-6">
-              {allApartments.map((apartment) => (
-                <ApartmentCard key={apartment.id} data={apartment} locale={locale as Locale} />
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
-    </>
-  );
+  return <DistrictDetailContent {...resolvedProps} data={data} />;
 }

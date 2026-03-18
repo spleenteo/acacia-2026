@@ -11,34 +11,60 @@ acacia-next/
 │   │   ├── sitemap.ts                          # Dynamic sitemap generation
 │   │   ├── [locale]/
 │   │   │   ├── layout.tsx                      # Locale layout (header, footer, beddy, draft)
-│   │   │   ├── page.tsx                        # Home page
+│   │   │   ├── page.tsx                        # Home page (realtime-enabled)
+│   │   │   ├── homeQuery.ts                    # Home GraphQL query
+│   │   │   ├── HomeContent.tsx                 # Home presentational component
+│   │   │   ├── HomeRealtime.tsx                # Home realtime client wrapper
 │   │   │   ├── error.tsx                       # Error boundary (client)
 │   │   │   ├── loading.tsx                     # Loading skeleton
 │   │   │   ├── not-found.tsx                   # 404 page
 │   │   │   ├── florence/
 │   │   │   │   ├── accommodations/
-│   │   │   │   │   ├── page.tsx                # Apartments listing
+│   │   │   │   │   ├── page.tsx                # Apartments listing (realtime-enabled)
+│   │   │   │   │   ├── accommodationsQuery.ts
+│   │   │   │   │   ├── AccommodationsContent.tsx
+│   │   │   │   │   ├── AccommodationsRealtime.tsx
 │   │   │   │   │   └── [slug]/
-│   │   │   │   │       └── page.tsx            # Apartment detail
+│   │   │   │   │       ├── page.tsx            # Apartment detail (realtime-enabled)
+│   │   │   │   │       ├── apartmentDetailQuery.ts
+│   │   │   │   │       ├── ApartmentDetailContent.tsx
+│   │   │   │   │       └── ApartmentDetailRealtime.tsx
 │   │   │   │   └── districts/
-│   │   │   │       ├── page.tsx                # Districts listing
+│   │   │   │       ├── page.tsx                # Districts listing (realtime-enabled)
+│   │   │   │       ├── districtsQuery.ts
+│   │   │   │       ├── DistrictsContent.tsx
+│   │   │   │       ├── DistrictsRealtime.tsx
 │   │   │   │       └── [slug]/
-│   │   │   │           └── page.tsx            # District detail
+│   │   │   │           ├── page.tsx            # District detail (realtime-enabled)
+│   │   │   │           ├── districtDetailQuery.ts
+│   │   │   │           ├── apartmentsInDistrictQuery.ts
+│   │   │   │           ├── DistrictDetailContent.tsx
+│   │   │   │           └── DistrictDetailRealtime.tsx
 │   │   │   └── moods/
-│   │   │       ├── page.tsx                    # Moods listing
+│   │   │       ├── page.tsx                    # Moods listing (realtime-enabled)
+│   │   │       ├── moodsQuery.ts
+│   │   │       ├── MoodsContent.tsx
+│   │   │       ├── MoodsRealtime.tsx
 │   │   │       └── [slug]/
-│   │   │           └── page.tsx                # Mood detail
+│   │   │           ├── page.tsx                # Mood detail (realtime-enabled)
+│   │   │           ├── moodDetailQuery.ts
+│   │   │           ├── MoodDetailContent.tsx
+│   │   │           └── MoodDetailRealtime.tsx
 │   │   └── api/
 │   │       ├── draft-mode/
 │   │       │   ├── enable/route.ts
 │   │       │   └── disable/route.ts
-│   │       └── invalidate-cache/route.ts
+│   │       ├── invalidate-cache/route.ts
+│   │       ├── preview-links/route.ts          # Web Previews plugin webhook
+│   │       ├── seo-analysis/route.ts           # SEO Analysis plugin endpoint
+│   │       ├── post-deploy/route.ts            # One-time plugin setup (legacy)
+│   │       └── utils.ts                        # CORS, cookie fix, response helpers
 │   ├── components/
 │   │   ├── ApartmentCard/index.tsx
 │   │   ├── BeddyBar/index.tsx
 │   │   ├── Hero/index.tsx                      # Full-viewport hero (portrait img, double gradient)
 │   │   ├── CategoryFilter/index.tsx
-│   │   ├── ContentLink/index.tsx
+│   │   ├── ContentLink/index.tsx               # Click-to-edit overlays (draft mode)
 │   │   ├── CuddlesList/index.tsx
 │   │   ├── DistrictCard/index.tsx
 │   │   ├── DistrictLink/index.tsx
@@ -57,10 +83,13 @@ acacia-next/
 │   │   └── config.ts                          # Locale config (en, it)
 │   └── lib/
 │       └── datocms/
-│           ├── executeQuery.ts                 # Central CDA fetch wrapper
+│           ├── executeQuery.ts                 # Central CDA fetch wrapper (cache/no-store)
 │           ├── recordInfo.ts                   # Record type → URL mapping
 │           ├── cma-types.ts                    # Generated CMA types
-│           └── graphql-env.d.ts                # Generated gql.tada types
+│           ├── graphql-env.d.ts                # Generated gql.tada types
+│           └── realtime/                       # Real-time draft preview helpers
+│               ├── generatePageComponent.tsx   # Server: draft/published switch
+│               └── generateRealtimeComponent.tsx # Client: useQuerySubscription wrapper
 ├── docs/
 │   ├── change-log.md                          # Version changelog
 │   ├── how-to.md                              # Internal reference (AI-optimized)
@@ -70,19 +99,23 @@ acacia-next/
 │   │   └── init.md                            # Original project pitch
 │   └── shaping/
 │       ├── frontend-restyle.md                # Active shaping: Hero, Nav, Cards, Sections
+│       ├── datocms-schema-migration.md        # CMS schema migration docs
 │       └── completed/
 │           ├── init-shaping.md                # Shape A: full rebuild
 │           └── init-slices.md                 # V1–V5 slice breakdown
+├── pitches/
+│   ├── apartment-detail-redesign.md           # Apartment detail page pitch
+│   └── web-previews-visual-editing.md         # Web Previews & Visual Editing pitch
 ├── middleware.ts                               # Locale redirect (/ → /en)
 ├── schema.graphql                             # Auto-generated DatoCMS schema
 ├── tsconfig.json                              # TypeScript strict + gql.tada plugin
 ├── postcss.config.mjs                         # PostCSS with Tailwind
-├── next.config.ts                             # Next.js config
+├── next.config.mjs                            # Next.js config
 ├── .nvmrc                                     # Node 22
 ├── public/
 │   ├── logo--main.svg                         # Full wordmark SVG (ratio ~3.6:1)
 │   └── acacia-isologo.svg                     # Isologo (copyright: not for standalone use)
-└── package.json                               # v0.3.0
+└── package.json                               # v0.4.0
 ```
 
 ## Tech Stack

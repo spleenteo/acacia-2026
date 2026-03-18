@@ -1,5 +1,23 @@
 # Changelog
 
+## v0.4.0 — 2026-03-18 — Web Previews, Visual Editing, Real-Time Draft Preview
+
+Full DatoCMS editorial workflow integration. Editors can now preview draft content from the CMS sidebar, use the Visual Editing tab with click-to-edit overlays, and see content updates in real-time without page reload.
+
+- **Web Previews plugin**: Configured in DatoCMS with preview webhook (`/api/preview-links`) and draft mode URL. Sidebar shows Draft/Published preview links for Apartment, District, and Mood records.
+- **Visual Editing tab**: Full-screen iframe preview inside DatoCMS with Content Link overlays. Click any text to open the corresponding field in the editor side panel.
+- **Real-time draft updates**: All 7 pages converted to use `useQuerySubscription` (SSE) in draft mode. Editors see content changes live as they type, without page reload. Published mode unchanged (static with cache).
+- **Realtime architecture**: New `src/lib/datocms/realtime/` helpers — `generatePageComponent` (server) and `generateRealtimeComponent` (client). Each page split into query, ContentComponent, and RealtimeComponent. Detail pages use manual pattern for `notFound()` support and multiple queries.
+- **Draft mode cache bypass**: Switched from `force-cache` to `no-store` for CDA requests when `includeDrafts` is true, ensuring fresh content on every request.
+- **Beddy widget disabled in draft mode**: CDN script not loaded when draft mode is active — the booking widget caused infinite loading in the Visual Editing iframe.
+- **Environment-aware baseEditingUrl**: `executeQuery` auto-appends `/environments/{name}` to `DATOCMS_BASE_EDITING_URL` when `DATOCMS_ENVIRONMENT` is set.
+- **Removed published boolean filter**: Stripped `published: { eq: true }` from all Mood and Guestbook queries — DatoCMS native draft/published status system used instead.
+- **Preview reload on save**: Draft preview links include `reloadPreviewOnRecordUpdate` with 500ms delay for sidebar auto-refresh.
+
+Design decision: only the main query per page is subscribed to real-time updates. Secondary queries (reviews, similar apartments, related moods) are fetched server-side and passed via props — sufficient because editors typically edit the current record.
+
+---
+
 ## v0.3.0 — 2026-03-14 — Frontend restyle phase 1: Hero, Navigation, Cards
 
 First implementation sprint of the frontend restyle shaping doc — Hero component, scroll-aware navigation with mobile overlay, and editorial card redesign across all three card types.
