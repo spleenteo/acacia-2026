@@ -16,7 +16,9 @@ export const apartmentDetailQuery = graphql(
         slug
         claim(locale: $locale)
         description(locale: $locale, markdown: true)
-        highlight(locale: $locale)
+        houseBadge {
+          label(locale: $locale)
+        }
         bedrooms
         bathrooms
         sleeps

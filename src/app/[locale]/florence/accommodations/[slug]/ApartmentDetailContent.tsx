@@ -221,7 +221,7 @@ export default function ApartmentDetailContent({
               bathrooms={apartment.bathrooms}
               sleeps={apartment.sleeps}
               price={apartment.price}
-              highlight={apartment.highlight}
+              highlight={apartment.houseBadge?.label}
               acaciaReward={apartment.acaciaReward}
               labels={l}
             />

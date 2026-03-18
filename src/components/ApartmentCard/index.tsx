@@ -10,14 +10,11 @@ export const ApartmentCardFragment = graphql(
       id
       name
       slug
-      highlight(locale: $locale)
+      houseBadge {
+        label(locale: $locale)
+      }
       category {
         name(locale: $locale)
-      }
-      boxImage {
-        responsiveImage(imgixParams: { w: 600, h: 800, fit: crop }) {
-          ...ResponsiveImageFragment
-        }
       }
       featuredImage {
         responsiveImage(imgixParams: { w: 600, h: 800, fit: crop }) {
@@ -45,16 +42,12 @@ export default function ApartmentCard({ data, locale }: Props) {
           className="overflow-hidden rounded-sm transition-shadow duration-500 group-hover:shadow-card-hover"
           style={{ transitionTimingFunction: 'cubic-bezier(0.19,1,0.22,1)' }}
         >
-          {(apartment.boxImage?.responsiveImage || apartment.featuredImage?.responsiveImage) && (
+          {apartment.featuredImage?.responsiveImage && (
             <div
               className="transition-transform duration-700 group-hover:scale-[1.03]"
               style={{ transitionTimingFunction: 'cubic-bezier(0.19,1,0.22,1)' }}
             >
-              <ResponsiveImage
-                data={
-                  (apartment.boxImage?.responsiveImage ?? apartment.featuredImage?.responsiveImage)!
-                }
-              />
+              <ResponsiveImage data={apartment.featuredImage.responsiveImage} />
             </div>
           )}
         </div>
@@ -69,9 +62,9 @@ export default function ApartmentCard({ data, locale }: Props) {
           <h3 className="font-heading text-h3 font-normal text-dark leading-snug">
             {apartment.name}
           </h3>
-          {apartment.highlight && (
+          {apartment.houseBadge?.label && (
             <p className="font-body text-caption text-rust font-normal mt-2">
-              {apartment.highlight}
+              {apartment.houseBadge.label}
             </p>
           )}
         </div>
