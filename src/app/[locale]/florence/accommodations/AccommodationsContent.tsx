@@ -1,3 +1,5 @@
+'use client';
+
 import { type Locale } from '@/i18n/config';
 import ResponsiveImage from '@/components/ResponsiveImage';
 import BeddyBar from '@/components/BeddyBar';

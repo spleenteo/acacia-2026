@@ -1,3 +1,5 @@
+'use client';
+
 import { type Locale } from '@/i18n/config';
 import DistrictCard from '@/components/DistrictCard';
 import HtmlContent from '@/components/HtmlContent';

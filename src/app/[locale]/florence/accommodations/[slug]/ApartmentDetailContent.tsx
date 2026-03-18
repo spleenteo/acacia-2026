@@ -1,3 +1,5 @@
+'use client';
+
 import { type Locale } from '@/i18n/config';
 import type { FragmentOf } from '@/lib/datocms/graphql';
 import ResponsiveImage from '@/components/ResponsiveImage';

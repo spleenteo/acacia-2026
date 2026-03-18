@@ -1,3 +1,5 @@
+'use client';
+
 import { type Locale } from '@/i18n/config';
 import ApartmentCard from '@/components/ApartmentCard';
 import MoodCard from '@/components/MoodCard';
