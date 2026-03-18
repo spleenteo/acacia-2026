@@ -6,10 +6,10 @@ import { notFound } from 'next/navigation';
 import { TagFragment } from '@/lib/datocms/commonFragments';
 import { toNextMetadata } from 'react-datocms';
 import type { Metadata } from 'next';
+import { GalleryImageFragment } from '@/components/ImageGallery/fragment';
+import { ApartmentCardFragment } from '@/components/ApartmentCard';
+import RealtimeWrapper from '@/lib/datocms/realtime/RealtimeWrapper';
 import DistrictDetailContent, { type DistrictDetailProps } from './DistrictDetailContent';
-import { DistrictDetailRealtime } from './DistrictDetailRealtime';
-import { districtDetailQuery } from './districtDetailQuery';
-import { apartmentsInDistrictQuery } from './apartmentsInDistrictQuery';
 
 const metaQuery = graphql(
   `
@@ -48,6 +48,41 @@ export async function generateMetadata({
   };
 }
 
+export const query = graphql(
+  `
+    query DistrictDetailQuery($locale: SiteLocale!, $slug: String!) {
+      district(locale: $locale, filter: { slug: { eq: $slug } }) {
+        id
+        name
+        slug
+        abstract(locale: $locale, markdown: true)
+        description(locale: $locale, markdown: true)
+        gallery {
+          ...GalleryImageFragment
+        }
+      }
+    }
+  `,
+  [GalleryImageFragment],
+);
+
+export const apartmentsInDistrictQuery = graphql(
+  `
+    query DistrictApartmentsQuery($locale: SiteLocale!, $districtId: ItemId!) {
+      allApartments(
+        locale: $locale
+        first: 100
+        filter: { district: { eq: $districtId } }
+        orderBy: [name_ASC]
+      ) {
+        id
+        ...ApartmentCardFragment
+      }
+    }
+  `,
+  [ApartmentCardFragment],
+);
+
 const allSlugsQuery = graphql(`
   query AllDistrictSlugs {
     allDistricts {
@@ -71,7 +106,7 @@ export default async function DistrictDetailPage({
   const { isEnabled: isDraftModeEnabled } = await draftMode();
 
   const variables = { locale: locale as Locale, slug };
-  const data = await executeQuery(districtDetailQuery, {
+  const data = await executeQuery(query, {
     variables,
     includeDrafts: isDraftModeEnabled,
   });
@@ -90,12 +125,13 @@ export default async function DistrictDetailPage({
 
   if (isDraftModeEnabled) {
     return (
-      <DistrictDetailRealtime
+      <RealtimeWrapper
+        contentComponent={DistrictDetailContent}
+        resolvedProps={resolvedProps}
         token={process.env.DATOCMS_DRAFT_CONTENT_CDA_TOKEN!}
-        query={districtDetailQuery}
+        query={query}
         variables={variables}
         initialData={data}
-        resolvedProps={resolvedProps}
         includeDrafts={isDraftModeEnabled}
         excludeInvalid={true}
         contentLink="v1"

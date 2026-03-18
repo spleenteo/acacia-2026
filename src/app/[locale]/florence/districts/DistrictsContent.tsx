@@ -2,10 +2,10 @@ import { type Locale } from '@/i18n/config';
 import DistrictCard from '@/components/DistrictCard';
 import HtmlContent from '@/components/HtmlContent';
 import type { ResultOf } from 'gql.tada';
-import type { districtsQuery } from './districtsQuery';
+import type { query } from './page';
 
 export type DistrictsProps = { locale: Locale };
-type DistrictsData = ResultOf<typeof districtsQuery>;
+type DistrictsData = ResultOf<typeof query>;
 
 export default function DistrictsContent({
   locale,

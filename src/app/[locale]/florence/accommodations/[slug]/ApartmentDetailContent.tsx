@@ -20,7 +20,7 @@ import { type ApartmentCardFragment } from '@/components/ApartmentCard';
 import { type MoodCardFragment } from '@/components/MoodCard';
 import { readFragment } from '@/lib/datocms/graphql';
 import type { ResultOf } from 'gql.tada';
-import type { apartmentDetailQuery } from './apartmentDetailQuery';
+import type { query as apartmentDetailQuery } from './page';
 
 export type ApartmentDetailProps = {
   locale: Locale;

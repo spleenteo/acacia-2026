@@ -6,12 +6,18 @@ import { notFound } from 'next/navigation';
 import { TagFragment } from '@/lib/datocms/commonFragments';
 import { toNextMetadata } from 'react-datocms';
 import type { Metadata } from 'next';
+import { ResponsiveImageFragment } from '@/components/ResponsiveImage';
+import { GalleryImageFragment } from '@/components/ImageGallery/fragment';
+import { AmenityFragment } from '@/components/AmenitiesList';
+import { ComfortFragment } from '@/components/ComfortsList';
+import { InfoTextFragment, InfoAddressFragment } from '@/components/InfoDetail';
+import { FeaturedSlideshowFragment } from '@/components/WhatWeLove/fragment';
+import { TruthFragment } from '@/components/HomeTruths';
 import { ApartmentCardFragment } from '@/components/ApartmentCard';
 import { MoodCardFragment } from '@/components/MoodCard';
 import { EssentialFragment } from '@/components/EssentialsList';
+import RealtimeWrapper from '@/lib/datocms/realtime/RealtimeWrapper';
 import ApartmentDetailContent, { type ApartmentDetailProps } from './ApartmentDetailContent';
-import { ApartmentDetailRealtime } from './ApartmentDetailRealtime';
-import { apartmentDetailQuery } from './apartmentDetailQuery';
 
 const metaQuery = graphql(
   `
@@ -50,6 +56,87 @@ export async function generateMetadata({
     },
   };
 }
+
+export const query = graphql(
+  `
+    query ApartmentDetailQuery($locale: SiteLocale!, $slug: String!) {
+      apartment(locale: $locale, filter: { slug: { eq: $slug } }) {
+        id
+        name
+        slug
+        claim(locale: $locale)
+        description(locale: $locale, markdown: true)
+        houseBadge {
+          label(locale: $locale)
+        }
+        bedrooms
+        bathrooms
+        sleeps
+        beddyId
+        price
+        cin
+        ape
+        acaciaReward
+        homeTruth(locale: $locale) {
+          ...TruthFragment
+        }
+        featuredSlideshow {
+          ...FeaturedSlideshowFragment
+        }
+        featuredImage {
+          responsiveImage(imgixParams: { w: 1400, h: 600, fit: crop }) {
+            ...ResponsiveImageFragment
+          }
+        }
+        category {
+          id
+          name(locale: $locale)
+        }
+        district {
+          name
+          slug
+          abstract(locale: $locale, markdown: true)
+          description(locale: $locale, markdown: true)
+          gallery {
+            image {
+              responsiveImage(imgixParams: { w: 600, h: 400, fit: crop }) {
+                ...ResponsiveImageFragment
+              }
+            }
+          }
+        }
+        gallery {
+          ...GalleryImageFragment
+        }
+        amenities {
+          ...AmenityFragment
+        }
+        comforts {
+          ...ComfortFragment
+        }
+        infoDetail(locale: $locale) {
+          __typename
+          ... on InfoTextRecord {
+            ...InfoTextFragment
+          }
+          ... on InfoAddressRecord {
+            ...InfoAddressFragment
+          }
+        }
+      }
+    }
+  `,
+  [
+    ResponsiveImageFragment,
+    GalleryImageFragment,
+    AmenityFragment,
+    ComfortFragment,
+    InfoTextFragment,
+    InfoAddressFragment,
+    FeaturedSlideshowFragment,
+    TruthFragment,
+  ],
+);
 
 const reviewsQuery = graphql(`
   query ApartmentReviews($apartmentId: ItemId!) {
@@ -132,7 +219,7 @@ export default async function ApartmentDetailPage({
   const { isEnabled: isDraftModeEnabled } = await draftMode();
 
   const variables = { locale: locale as Locale, slug };
-  const data = await executeQuery(apartmentDetailQuery, {
+  const data = await executeQuery(query, {
     variables,
     includeDrafts: isDraftModeEnabled,
   });
@@ -190,12 +277,13 @@ export default async function ApartmentDetailPage({
 
   if (isDraftModeEnabled) {
     return (
-      <ApartmentDetailRealtime
+      <RealtimeWrapper
+        contentComponent={ApartmentDetailContent}
+        resolvedProps={resolvedProps}
         token={process.env.DATOCMS_DRAFT_CONTENT_CDA_TOKEN!}
-        query={apartmentDetailQuery}
+        query={query}
         variables={variables}
         initialData={data}
-        resolvedProps={resolvedProps}
         includeDrafts={isDraftModeEnabled}
         excludeInvalid={true}
         contentLink="v1"

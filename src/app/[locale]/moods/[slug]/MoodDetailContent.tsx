@@ -3,10 +3,10 @@ import HtmlContent from '@/components/HtmlContent';
 import ResponsiveImage from '@/components/ResponsiveImage';
 import ApartmentCard from '@/components/ApartmentCard';
 import type { ResultOf } from 'gql.tada';
-import type { moodDetailQuery } from './moodDetailQuery';
+import type { query } from './page';
 
 export type MoodDetailProps = { locale: Locale };
-type MoodDetailData = ResultOf<typeof moodDetailQuery>;
+type MoodDetailData = ResultOf<typeof query>;
 
 const labels = {
   en: { apartments: 'Apartments for this mood' },

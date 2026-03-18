@@ -4,10 +4,10 @@ import BeddyBar from '@/components/BeddyBar';
 import HtmlContent from '@/components/HtmlContent';
 import CategoryFilter from '@/components/CategoryFilter';
 import type { ResultOf } from 'gql.tada';
-import type { accommodationsQuery } from './accommodationsQuery';
+import type { query } from './page';
 
 export type AccommodationsProps = { locale: Locale };
-type AccommodationsData = ResultOf<typeof accommodationsQuery>;
+type AccommodationsData = ResultOf<typeof query>;
 
 export default function AccommodationsContent({
   locale,

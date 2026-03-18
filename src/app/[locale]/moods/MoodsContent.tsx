@@ -2,10 +2,10 @@ import { type Locale } from '@/i18n/config';
 import MoodCard from '@/components/MoodCard';
 import HtmlContent from '@/components/HtmlContent';
 import type { ResultOf } from 'gql.tada';
-import type { moodsQuery } from './moodsQuery';
+import type { query } from './page';
 
 export type MoodsProps = { locale: Locale };
-type MoodsData = ResultOf<typeof moodsQuery>;
+type MoodsData = ResultOf<typeof query>;
 
 export default function MoodsContent({ locale, data }: MoodsProps & { data: MoodsData }) {
   const { pageMoods, allMoods } = data;

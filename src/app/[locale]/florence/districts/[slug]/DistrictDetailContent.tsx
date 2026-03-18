@@ -5,8 +5,7 @@ import ImageGallery from '@/components/ImageGallery';
 import ApartmentCard from '@/components/ApartmentCard';
 import { readFragment } from '@/lib/datocms/graphql';
 import type { ResultOf } from 'gql.tada';
-import type { districtDetailQuery } from './districtDetailQuery';
-import type { apartmentsInDistrictQuery } from './apartmentsInDistrictQuery';
+import type { query as districtDetailQuery, apartmentsInDistrictQuery } from './page';
 
 export type DistrictDetailProps = {
   locale: Locale;

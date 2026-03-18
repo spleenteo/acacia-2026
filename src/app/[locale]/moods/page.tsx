@@ -5,11 +5,9 @@ import { draftMode } from 'next/headers';
 import { TagFragment } from '@/lib/datocms/commonFragments';
 import { toNextMetadata } from 'react-datocms';
 import type { Metadata } from 'next';
-import { generatePageComponent } from '@/lib/datocms/realtime/generatePageComponent';
-import type { ResultOf } from 'gql.tada';
+import { MoodCardFragment } from '@/components/MoodCard';
+import RealtimeWrapper from '@/lib/datocms/realtime/RealtimeWrapper';
 import MoodsContent, { type MoodsProps } from './MoodsContent';
-import { MoodsRealtime } from './MoodsRealtime';
-import { moodsQuery } from './moodsQuery';
 
 const metaQuery = graphql(
   `
@@ -44,13 +42,52 @@ export async function generateMetadata({
   };
 }
 
-export default generatePageComponent<MoodsProps, ResultOf<typeof moodsQuery>, { locale: Locale }>({
-  query: moodsQuery,
-  resolveProps: async (rawProps) => {
-    const { locale } = await (rawProps as { params: Promise<{ locale: string }> }).params;
-    return { locale: locale as Locale };
-  },
-  buildQueryVariables: ({ locale }) => ({ locale }),
-  contentComponent: MoodsContent,
-  realtimeComponent: MoodsRealtime,
-});
+export const query = graphql(
+  `
+    query MoodsQuery($locale: SiteLocale!) {
+      pageMoods(locale: $locale) {
+        title(locale: $locale)
+        subtitle(locale: $locale)
+        description(locale: $locale, markdown: true)
+      }
+      allMoods(locale: $locale, orderBy: [position_ASC]) {
+        id
+        ...MoodCardFragment
+      }
+    }
+  `,
+  [MoodCardFragment],
+);
+
+export default async function MoodsPage({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
+  const { isEnabled: isDraftModeEnabled } = await draftMode();
+
+  const variables = { locale: locale as Locale };
+  const data = await executeQuery(query, {
+    variables,
+    includeDrafts: isDraftModeEnabled,
+  });
+
+  const resolvedProps: MoodsProps = { locale: locale as Locale };
+
+  if (isDraftModeEnabled) {
+    return (
+      <RealtimeWrapper
+        contentComponent={MoodsContent}
+        resolvedProps={resolvedProps}
+        token={process.env.DATOCMS_DRAFT_CONTENT_CDA_TOKEN!}
+        query={query}
+        variables={variables}
+        initialData={data}
+        includeDrafts={isDraftModeEnabled}
+        excludeInvalid={true}
+        contentLink="v1"
+        baseEditingUrl={`${process.env.DATOCMS_BASE_EDITING_URL}${process.env.DATOCMS_ENVIRONMENT ? `/environments/${process.env.DATOCMS_ENVIRONMENT}` : ''}`}
+        environment={process.env.DATOCMS_ENVIRONMENT || undefined}
+      />
+    );
+  }
+
+  return <MoodsContent {...resolvedProps} data={data} />;
+}

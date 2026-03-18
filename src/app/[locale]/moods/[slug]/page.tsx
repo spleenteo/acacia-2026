@@ -6,9 +6,10 @@ import { notFound } from 'next/navigation';
 import { TagFragment } from '@/lib/datocms/commonFragments';
 import { toNextMetadata } from 'react-datocms';
 import type { Metadata } from 'next';
+import { ResponsiveImageFragment } from '@/components/ResponsiveImage';
+import { ApartmentCardFragment } from '@/components/ApartmentCard';
+import RealtimeWrapper from '@/lib/datocms/realtime/RealtimeWrapper';
 import MoodDetailContent, { type MoodDetailProps } from './MoodDetailContent';
-import { MoodDetailRealtime } from './MoodDetailRealtime';
-import { moodDetailQuery } from './moodDetailQuery';
 
 const metaQuery = graphql(
   `
@@ -44,6 +45,36 @@ export async function generateMetadata({
   };
 }
 
+export const query = graphql(
+  `
+    query MoodDetailQuery($locale: SiteLocale!, $slug: String!) {
+      mood(locale: $locale, filter: { slug: { eq: $slug } }) {
+        id
+        name(locale: $locale)
+        slug(locale: $locale)
+        claim(locale: $locale)
+        description(locale: $locale, markdown: true)
+        image {
+          responsiveImage(imgixParams: { w: 1200, h: 600, fit: crop }) {
+            ...ResponsiveImageFragment
+          }
+        }
+        boxes {
+          id
+          object {
+            ... on ApartmentRecord {
+              __typename
+              id
+              ...ApartmentCardFragment
+            }
+          }
+        }
+      }
+    }
+  `,
+  [ResponsiveImageFragment, ApartmentCardFragment],
+);
+
 const allSlugsQuery = graphql(`
   query AllMoodSlugs {
     allMoods {
@@ -67,7 +98,7 @@ export default async function MoodDetailPage({
   const { isEnabled: isDraftModeEnabled } = await draftMode();
 
   const variables = { locale: locale as Locale, slug };
-  const data = await executeQuery(moodDetailQuery, {
+  const data = await executeQuery(query, {
     variables,
     includeDrafts: isDraftModeEnabled,
   });
@@ -78,12 +109,13 @@ export default async function MoodDetailPage({
 
   if (isDraftModeEnabled) {
     return (
-      <MoodDetailRealtime
+      <RealtimeWrapper
+        contentComponent={MoodDetailContent}
+        resolvedProps={resolvedProps}
         token={process.env.DATOCMS_DRAFT_CONTENT_CDA_TOKEN!}
-        query={moodDetailQuery}
+        query={query}
         variables={variables}
         initialData={data}
-        resolvedProps={resolvedProps}
         includeDrafts={isDraftModeEnabled}
         excludeInvalid={true}
         contentLink="v1"

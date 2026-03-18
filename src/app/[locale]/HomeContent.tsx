@@ -5,10 +5,10 @@ import BeddyBar from '@/components/BeddyBar';
 import HtmlContent from '@/components/HtmlContent';
 import Hero from '@/components/Hero';
 import type { ResultOf } from 'gql.tada';
-import type { homeQuery } from './homeQuery';
+import type { query } from './page';
 
 export type HomeProps = { locale: Locale };
-type HomeData = ResultOf<typeof homeQuery>;
+type HomeData = ResultOf<typeof query>;
 
 export default function HomeContent({ locale, data }: HomeProps & { data: HomeData }) {
   const { homePage, allApartments } = data;

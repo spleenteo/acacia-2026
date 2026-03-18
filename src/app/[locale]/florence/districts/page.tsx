@@ -5,11 +5,9 @@ import { draftMode } from 'next/headers';
 import { TagFragment } from '@/lib/datocms/commonFragments';
 import { toNextMetadata } from 'react-datocms';
 import type { Metadata } from 'next';
-import { generatePageComponent } from '@/lib/datocms/realtime/generatePageComponent';
-import type { ResultOf } from 'gql.tada';
+import { DistrictCardFragment } from '@/components/DistrictCard';
+import RealtimeWrapper from '@/lib/datocms/realtime/RealtimeWrapper';
 import DistrictsContent, { type DistrictsProps } from './DistrictsContent';
-import { DistrictsRealtime } from './DistrictsRealtime';
-import { districtsQuery } from './districtsQuery';
 
 const metaQuery = graphql(
   `
@@ -44,17 +42,52 @@ export async function generateMetadata({
   };
 }
 
-export default generatePageComponent<
-  DistrictsProps,
-  ResultOf<typeof districtsQuery>,
-  { locale: Locale }
->({
-  query: districtsQuery,
-  resolveProps: async (rawProps) => {
-    const { locale } = await (rawProps as { params: Promise<{ locale: string }> }).params;
-    return { locale: locale as Locale };
-  },
-  buildQueryVariables: ({ locale }) => ({ locale }),
-  contentComponent: DistrictsContent,
-  realtimeComponent: DistrictsRealtime,
-});
+export const query = graphql(
+  `
+    query DistrictsQuery($locale: SiteLocale!) {
+      pageDistricts(locale: $locale) {
+        title(locale: $locale)
+        subtitle(locale: $locale)
+        description(locale: $locale, markdown: true)
+      }
+      allDistricts(locale: $locale, orderBy: [position_ASC]) {
+        id
+        ...DistrictCardFragment
+      }
+    }
+  `,
+  [DistrictCardFragment],
+);
+
+export default async function DistrictsPage({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
+  const { isEnabled: isDraftModeEnabled } = await draftMode();
+
+  const variables = { locale: locale as Locale };
+  const data = await executeQuery(query, {
+    variables,
+    includeDrafts: isDraftModeEnabled,
+  });
+
+  const resolvedProps: DistrictsProps = { locale: locale as Locale };
+
+  if (isDraftModeEnabled) {
+    return (
+      <RealtimeWrapper
+        contentComponent={DistrictsContent}
+        resolvedProps={resolvedProps}
+        token={process.env.DATOCMS_DRAFT_CONTENT_CDA_TOKEN!}
+        query={query}
+        variables={variables}
+        initialData={data}
+        includeDrafts={isDraftModeEnabled}
+        excludeInvalid={true}
+        contentLink="v1"
+        baseEditingUrl={`${process.env.DATOCMS_BASE_EDITING_URL}${process.env.DATOCMS_ENVIRONMENT ? `/environments/${process.env.DATOCMS_ENVIRONMENT}` : ''}`}
+        environment={process.env.DATOCMS_ENVIRONMENT || undefined}
+      />
+    );
+  }
+
+  return <DistrictsContent {...resolvedProps} data={data} />;
+}
