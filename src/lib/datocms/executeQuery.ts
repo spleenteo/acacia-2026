@@ -40,7 +40,9 @@ export async function executeQuery<Result, Variables>(
      * Only enabled for draft content to avoid the overhead in production.
      */
     contentLink: options?.includeDrafts ? 'v1' : undefined,
-    baseEditingUrl: options?.includeDrafts ? process.env.DATOCMS_BASE_EDITING_URL : undefined,
+    baseEditingUrl: options?.includeDrafts
+      ? `${process.env.DATOCMS_BASE_EDITING_URL}${process.env.DATOCMS_ENVIRONMENT ? `/environments/${process.env.DATOCMS_ENVIRONMENT}` : ''}`
+      : undefined,
     requestInitOptions: {
       cache: 'force-cache',
       /*
