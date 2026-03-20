@@ -60,6 +60,7 @@ acacia-next/
 │   │   │   └── fragment.ts
 │   │   ├── InfoDetail/index.tsx
 │   │   ├── MoodCard/index.tsx
+│   │   ├── SectionHeader/index.tsx                 # Reusable label/title/subtitle header (SectionHeaderRecord)
 │   │   ├── ResponsiveImage/index.tsx
 │   │   ├── SiteFooter/index.tsx
 │   │   ├── SiteHeader/index.tsx
@@ -105,7 +106,7 @@ acacia-next/
 ├── public/
 │   ├── logo--main.svg                         # Full wordmark SVG (ratio ~3.6:1)
 │   └── acacia-isologo.svg                     # Isologo (copyright: not for standalone use)
-└── package.json                               # v0.4.2
+└── package.json                               # v0.5.0
 ```
 
 ## Tech Stack

@@ -38,6 +38,8 @@ AI-optimized compact reference for Acacia Firenze project behavior and patterns.
 | ------------------ | ------------------------------------------------------------------------------------------------------ |
 | Section label      | `text-label uppercase tracking-[0.22em] text-rust font-medium` — sections only, NOT card metadata      |
 | Editorial emphasis | `<em>` in headings → italic (font-normal, no weight change)                                            |
+| Section title em   | `.section-title em` → rust color + italic + semi-transparent underline (1.5px, offset 6px)             |
+| SectionHeader      | Use `<SectionHeader data={...} />` + `SectionHeaderFragment` for all CMS-driven section headers        |
 | Heading weight     | Playfair Display always `font-normal` — never `font-bold` or `font-semibold`                           |
 | Card image hover   | `overflow-hidden rounded-sm` on image wrapper + `group-hover:shadow-card-hover` + image `scale-[1.03]` |
 | Card container     | No background, no default shadow, no `overflow-hidden` on article — text fuses with page background    |

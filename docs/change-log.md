@@ -1,5 +1,20 @@
 # Changelog
 
+## v0.5.0 — 2026-03-20 — SectionHeader component, CMS-driven section headers
+
+Introduced a reusable `SectionHeader` component backed by a `SectionHeaderRecord` block in DatoCMS. Home page section headers (featured apartments, moods) are now fully editable from the CMS with no hardcoded strings.
+
+- **SectionHeader component**: New `src/components/SectionHeader/index.tsx` — renders `label` (eyebrow), `title` (h2, HTML with em support), `subtitle` (plain text). Colocated `SectionHeaderFragment` on `SectionHeaderRecord`.
+- **Em emphasis in section titles**: `<em>` inside `.section-title` headings renders in rust color, italic, with a semi-transparent rust underline (`text-decoration-thickness: 1.5px`, `text-underline-offset: 6px`). Scoped to `.section-title` in `@layer base`.
+- **highlightsHeader**: Home page featured apartments section replaced `promoLabel/promoTitle/promoSubtitle` (flat fields) with a `SectionHeaderRecord` block linked as `highlightsHeader`. Title rendered as HTML via `title(markdown: true)`.
+- **moodsHeader**: Moods section replaced the hardcoded `moodsTitle` + locale-conditional eyebrow strings with a `moodsHeader` SectionHeaderRecord block.
+- **highlightedApartments**: Featured apartments section now uses `homePage.highlightedApartments` (explicit CMS selection) instead of querying `allApartments(first: 100)`.
+- **Schema cleanup**: Removed obsolete `promo`, `promoLabel`, `promoTitle`, `promoSubtitle` fields after CMS deletion. Regenerated `schema.graphql` and `graphql-env.d.ts`.
+
+Design decision: `title` is queried with `markdown: true` and stripped of its `<p>` wrapper via `unwrapParagraph()` before injection into the `<h2>` — avoids block-level nesting inside a heading while preserving inline `<em>` markup.
+
+---
+
 ## v0.4.2 — 2026-03-18 — Simplify realtime pattern to 2 files per page
 
 Replaced per-page `*Realtime.tsx` and `*Query.ts` files with a single shared `RealtimeWrapper` client component. Queries are now inline in `page.tsx`.
