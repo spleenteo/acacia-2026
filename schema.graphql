@@ -220,10 +220,10 @@ input ApartmentModelFilter {
   _updatedAt: UpdatedAtFilter
   updatedAt: UpdatedAtFilter
   _isValid: BooleanFilter
-  sleeps: IntegerFilter
-  seo: SeoFilter
   houseBadge: LinkFilter
   gallery: LinksFilter
+  sleeps: IntegerFilter
+  seo: SeoFilter
   ape: StringFilter
   featuredSlideshow: GalleryFilter
   acaciaReward: BooleanFilter
@@ -233,9 +233,9 @@ input ApartmentModelFilter {
   cin: StringFilter
   featuredImage: FileFilter
   category: LinkFilter
+  propertyId: StringFilter
   bedrooms: IntegerFilter
   bathrooms: IntegerFilter
-  propertyId: StringFilter
   notes: JsonFilter
   price: StringFilter
   beddyId: StringFilter
@@ -289,12 +289,12 @@ enum ApartmentModelOrderBy {
   claim_DESC
   cin_ASC
   cin_DESC
+  propertyId_ASC
+  propertyId_DESC
   bedrooms_ASC
   bedrooms_DESC
   bathrooms_ASC
   bathrooms_DESC
-  propertyId_ASC
-  propertyId_DESC
   price_ASC
   price_DESC
   beddyId_ASC
@@ -1956,6 +1956,7 @@ union HomePageModelCtaLinkField = DistrictRecord | MoodRecord | OfferRecord | Po
 
 """Linking fields"""
 enum HomePageModelFieldsReferencingApartmentModel {
+  homePage_highlightedApartments
   homePage_promo
   homePage_promo__promoApartment_apartment
 }
@@ -1977,12 +1978,15 @@ input HomePageModelFilter {
   _updatedAt: UpdatedAtFilter
   updatedAt: UpdatedAtFilter
   _isValid: BooleanFilter
-  doText: TextFilter
-  stayText: TextFilter
   moodsTitle: StringFilter
   beddyId: StringFilter
   claim: StringFilter
   moods: LinksFilter
+  doText: TextFilter
+  stayText: TextFilter
+  promoSubtitle: TextFilter
+  promoLabel: StringFilter
+  highlightedApartments: LinksFilter
   ctaText: TextFilter
   ctaLink: LinkFilter
   ctaImage: FileFilter
@@ -2023,6 +2027,8 @@ enum HomePageModelOrderBy {
   beddyId_DESC
   claim_ASC
   claim_DESC
+  promoLabel_ASC
+  promoLabel_DESC
   ctaLabel_ASC
   ctaLabel_DESC
   promoTitle_ASC
@@ -2069,12 +2075,27 @@ type HomePageRecord implements RecordInterface {
     """
     fallbackLocales: [SiteLocale!]
   ): [StringNonNullMultiLocaleField!]
+  _allPromoLabelLocales(
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): [StringMultiLocaleField!]
   _allPromoLocales(
     """
     If you want to fallback to a default translation when a translation has not been found
     """
     fallbackLocales: [SiteLocale!]
   ): [PromoApartmentRecordListListNonNullMultiLocaleField!]
+  _allPromoSubtitleLocales(
+    """Process content as markdown"""
+    markdown: Boolean
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): [StringMultiLocaleField!]
   _allPromoTitleLocales(
     """
     If you want to fallback to a default translation when a translation has not been found
@@ -2166,6 +2187,7 @@ type HomePageRecord implements RecordInterface {
     """
     fallbackLocales: [SiteLocale!]
   ): String
+  highlightedApartments: [ApartmentRecord!]!
   id: ItemId!
   moods: [MoodRecord!]!
   moodsTitle(
@@ -2186,6 +2208,27 @@ type HomePageRecord implements RecordInterface {
     """
     fallbackLocales: [SiteLocale!]
   ): [PromoApartmentRecord!]!
+  promoLabel(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): String
+  promoSubtitle(
+    """Process content as markdown"""
+    markdown: Boolean
+
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): String
   promoTitle(
     """The locale to use to fetch the field's content"""
     locale: SiteLocale

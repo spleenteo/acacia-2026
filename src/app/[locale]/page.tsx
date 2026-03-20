@@ -63,13 +63,15 @@ export const query = graphql(
           id
           ...MoodCardFragment
         }
+        promoLabel(locale: $locale)
         promoTitle(locale: $locale)
+        promoSubtitle(locale: $locale, markdown: true)
+        highlightedApartments {
+          id
+          ...ApartmentCardFragment
+        }
         stayText(locale: $locale, markdown: true)
         doText(locale: $locale, markdown: true)
-      }
-      allApartments(locale: $locale, first: 100) {
-        id
-        ...ApartmentCardFragment
       }
     }
   `,

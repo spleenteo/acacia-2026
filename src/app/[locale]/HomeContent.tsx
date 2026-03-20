@@ -13,7 +13,7 @@ export type HomeProps = { locale: Locale };
 type HomeData = ResultOf<typeof query>;
 
 export default function HomeContent({ locale, data }: HomeProps & { data: HomeData }) {
-  const { homePage, allApartments } = data;
+  const { homePage } = data;
 
   return (
     <>
@@ -37,25 +37,37 @@ export default function HomeContent({ locale, data }: HomeProps & { data: HomeDa
       )}
 
       {/* Featured Apartments */}
-      <section className="py-20 lg:py-28 bg-surface">
-        <div className="mx-auto max-w-6xl px-8">
-          {homePage?.promoTitle && (
-            <>
-              <p className="font-body text-label uppercase tracking-[0.22em] text-rust font-medium text-center mb-3">
-                {locale === 'en' ? 'Our spaces' : 'I nostri spazi'}
-              </p>
-              <h2 className="font-heading font-normal text-h1 text-dark text-center tracking-[-0.02em] mb-12">
-                {homePage.promoTitle}
-              </h2>
-            </>
-          )}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-6">
-            {allApartments.map((apartment) => (
-              <ApartmentCard key={apartment.id} data={apartment} locale={locale} />
-            ))}
+      {homePage?.highlightedApartments && homePage.highlightedApartments.length > 0 && (
+        <section className="py-20 lg:py-28 bg-surface">
+          <div className="mx-auto max-w-6xl px-8">
+            {homePage?.promoTitle && (
+              <>
+                {homePage?.promoLabel && (
+                  <p className="font-body text-label uppercase tracking-[0.22em] text-rust font-medium text-center mb-3">
+                    {homePage.promoLabel}
+                  </p>
+                )}
+                <h2 className="font-heading font-normal text-h1 text-dark text-center tracking-[-0.02em] mb-4">
+                  {homePage.promoTitle}
+                </h2>
+              </>
+            )}
+            {homePage?.promoSubtitle && (
+              <div className="max-w-2xl mx-auto text-center mb-12">
+                <HtmlContent
+                  html={homePage.promoSubtitle}
+                  className="font-body text-body-lg text-muted"
+                />
+              </div>
+            )}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-6">
+              {homePage.highlightedApartments.map((apartment) => (
+                <ApartmentCard key={apartment.id} data={apartment} locale={locale} />
+              ))}
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       {/* Moods Section */}
       {homePage?.moods && homePage.moods.length > 0 && (
