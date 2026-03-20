@@ -59,6 +59,9 @@ export const query = graphql(
             ...ResponsiveImageFragment
           }
         }
+        moodsHeader(locale: $locale) {
+          ...SectionHeaderFragment
+        }
         moodsTitle(locale: $locale)
         moods {
           id

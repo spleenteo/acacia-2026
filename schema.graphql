@@ -1957,8 +1957,6 @@ union HomePageModelCtaLinkField = DistrictRecord | MoodRecord | OfferRecord | Po
 """Linking fields"""
 enum HomePageModelFieldsReferencingApartmentModel {
   homePage_highlightedApartments
-  homePage_promo
-  homePage_promo__promoApartment_apartment
 }
 
 """Linking fields"""
@@ -1980,11 +1978,11 @@ input HomePageModelFilter {
   _isValid: BooleanFilter
   moodsTitle: StringFilter
   beddyId: StringFilter
-  claim: StringFilter
-  moods: LinksFilter
   doText: TextFilter
   stayText: TextFilter
   highlightedApartments: LinksFilter
+  claim: StringFilter
+  moods: LinksFilter
   ctaText: TextFilter
   ctaLink: LinkFilter
   ctaImage: FileFilter
@@ -2068,18 +2066,18 @@ type HomePageRecord implements RecordInterface {
     """
     fallbackLocales: [SiteLocale!]
   ): [SectionHeaderRecordNonNullMultiLocaleField!]
+  _allMoodsHeaderLocales(
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): [SectionHeaderRecordNonNullMultiLocaleField!]
   _allMoodsTitleLocales(
     """
     If you want to fallback to a default translation when a translation has not been found
     """
     fallbackLocales: [SiteLocale!]
   ): [StringNonNullMultiLocaleField!]
-  _allPromoLocales(
-    """
-    If you want to fallback to a default translation when a translation has not been found
-    """
-    fallbackLocales: [SiteLocale!]
-  ): [PromoApartmentRecordListListNonNullMultiLocaleField!]
   _allSeoLocales(
     """
     If you want to fallback to a default translation when a translation has not been found
@@ -2177,6 +2175,15 @@ type HomePageRecord implements RecordInterface {
   ): SectionHeaderRecord!
   id: ItemId!
   moods: [MoodRecord!]!
+  moodsHeader(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): SectionHeaderRecord!
   moodsTitle(
     """The locale to use to fetch the field's content"""
     locale: SiteLocale
@@ -2186,15 +2193,6 @@ type HomePageRecord implements RecordInterface {
     """
     fallbackLocales: [SiteLocale!]
   ): String!
-  promo(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
-    """
-    If you want to fallback to a default translation when a translation has not been found
-    """
-    fallbackLocales: [SiteLocale!]
-  ): [PromoApartmentRecord!]!
   seo(
     """The locale to use to fetch the field's content"""
     locale: SiteLocale
@@ -6555,39 +6553,6 @@ type PostRecord implements RecordInterface {
   sticky: BooleanType!
   title: String!
   updatedAt: DateTime!
-}
-
-"""Block of type promo_apartment (promo_apartment)"""
-type PromoApartmentRecord implements RecordInterface {
-  _createdAt: DateTime!
-
-  """Editing URL"""
-  _editingUrl: String
-  _firstPublishedAt: DateTime!
-  _isValid: BooleanType!
-  _modelApiKey: String!
-  _publicationScheduledAt: DateTime
-  _publishedAt: DateTime!
-
-  """Generates SEO and Social card meta tags to be used in your frontend"""
-  _seoMetaTags(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-  ): [Tag!]!
-  _status: ItemStatus!
-  _unpublishingScheduledAt: DateTime
-  _updatedAt: DateTime!
-  apartment: ApartmentRecord!
-  createdAt: DateTime!
-  description: String!
-  foto: FileField!
-  id: ItemId!
-  updatedAt: DateTime!
-}
-
-type PromoApartmentRecordListListNonNullMultiLocaleField {
-  locale: SiteLocale
-  value: [PromoApartmentRecord!]!
 }
 
 """Specifies how to filter by publication datetime"""

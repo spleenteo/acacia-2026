@@ -55,16 +55,7 @@ export default function HomeContent({ locale, data }: HomeProps & { data: HomeDa
       {homePage?.moods && homePage.moods.length > 0 && (
         <section className="py-20 lg:py-28 bg-surface-alt">
           <div className="mx-auto max-w-6xl px-8">
-            {homePage.moodsTitle && (
-              <>
-                <p className="font-body text-label uppercase tracking-[0.22em] text-rust font-medium text-center mb-3">
-                  {locale === 'en' ? 'Travel inspirations' : 'Ispirazioni di viaggio'}
-                </p>
-                <h2 className="font-heading font-normal text-h1 text-dark text-center tracking-[-0.02em] mb-12">
-                  {homePage.moodsTitle}
-                </h2>
-              </>
-            )}
+            {homePage.moodsHeader && <SectionHeader data={homePage.moodsHeader} />}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-6">
               {homePage.moods.map((mood) => (
                 <MoodCard key={mood.id} data={mood} locale={locale} />
