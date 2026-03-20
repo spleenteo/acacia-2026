@@ -8,6 +8,7 @@ import type { Metadata } from 'next';
 import { ResponsiveImageFragment } from '@/components/ResponsiveImage';
 import { ApartmentCardFragment } from '@/components/ApartmentCard';
 import { MoodCardFragment } from '@/components/MoodCard';
+import { SectionHeaderFragment } from '@/components/SectionHeader';
 import RealtimeWrapper from '@/lib/datocms/realtime/RealtimeWrapper';
 import HomeContent, { type HomeProps } from './HomeContent';
 
@@ -63,9 +64,9 @@ export const query = graphql(
           id
           ...MoodCardFragment
         }
-        promoLabel(locale: $locale)
-        promoTitle(locale: $locale)
-        promoSubtitle(locale: $locale, markdown: true)
+        highlightsHeader(locale: $locale) {
+          ...SectionHeaderFragment
+        }
         highlightedApartments {
           id
           ...ApartmentCardFragment
@@ -75,7 +76,7 @@ export const query = graphql(
       }
     }
   `,
-  [ResponsiveImageFragment, ApartmentCardFragment, MoodCardFragment],
+  [ResponsiveImageFragment, ApartmentCardFragment, MoodCardFragment, SectionHeaderFragment],
 );
 
 export default async function HomePage({ params }: { params: Promise<{ locale: string }> }) {

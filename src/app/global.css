@@ -131,6 +131,16 @@
     font-style: italic;
   }
 
+  /* Editorial em emphasis in section titles */
+  .section-title em {
+    color: var(--color-rust);
+    font-style: italic;
+    text-decoration: underline;
+    text-decoration-color: color-mix(in srgb, var(--color-rust) 40%, transparent);
+    text-decoration-thickness: 1.5px;
+    text-underline-offset: 6px;
+  }
+
   body {
     font-weight: 400;
     line-height: 1.7;

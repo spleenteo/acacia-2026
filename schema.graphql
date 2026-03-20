@@ -1984,15 +1984,12 @@ input HomePageModelFilter {
   moods: LinksFilter
   doText: TextFilter
   stayText: TextFilter
-  promoSubtitle: TextFilter
-  promoLabel: StringFilter
   highlightedApartments: LinksFilter
   ctaText: TextFilter
   ctaLink: LinkFilter
   ctaImage: FileFilter
   ctaLabel: StringFilter
   seo: SeoFilter
-  promoTitle: StringFilter
   title: StringFilter
   OR: [HomePageModelFilter]
   AND: [HomePageModelFilter]
@@ -2027,12 +2024,8 @@ enum HomePageModelOrderBy {
   beddyId_DESC
   claim_ASC
   claim_DESC
-  promoLabel_ASC
-  promoLabel_DESC
   ctaLabel_ASC
   ctaLabel_DESC
-  promoTitle_ASC
-  promoTitle_DESC
   title_ASC
   title_DESC
 }
@@ -2069,39 +2062,24 @@ type HomePageRecord implements RecordInterface {
     """
     fallbackLocales: [SiteLocale!]
   ): [StringMultiLocaleField!]
+  _allHighlightsHeaderLocales(
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): [SectionHeaderRecordNonNullMultiLocaleField!]
   _allMoodsTitleLocales(
     """
     If you want to fallback to a default translation when a translation has not been found
     """
     fallbackLocales: [SiteLocale!]
   ): [StringNonNullMultiLocaleField!]
-  _allPromoLabelLocales(
-    """
-    If you want to fallback to a default translation when a translation has not been found
-    """
-    fallbackLocales: [SiteLocale!]
-  ): [StringMultiLocaleField!]
   _allPromoLocales(
     """
     If you want to fallback to a default translation when a translation has not been found
     """
     fallbackLocales: [SiteLocale!]
   ): [PromoApartmentRecordListListNonNullMultiLocaleField!]
-  _allPromoSubtitleLocales(
-    """Process content as markdown"""
-    markdown: Boolean
-
-    """
-    If you want to fallback to a default translation when a translation has not been found
-    """
-    fallbackLocales: [SiteLocale!]
-  ): [StringMultiLocaleField!]
-  _allPromoTitleLocales(
-    """
-    If you want to fallback to a default translation when a translation has not been found
-    """
-    fallbackLocales: [SiteLocale!]
-  ): [StringNonNullMultiLocaleField!]
   _allSeoLocales(
     """
     If you want to fallback to a default translation when a translation has not been found
@@ -2188,6 +2166,15 @@ type HomePageRecord implements RecordInterface {
     fallbackLocales: [SiteLocale!]
   ): String
   highlightedApartments: [ApartmentRecord!]!
+  highlightsHeader(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): SectionHeaderRecord!
   id: ItemId!
   moods: [MoodRecord!]!
   moodsTitle(
@@ -2208,36 +2195,6 @@ type HomePageRecord implements RecordInterface {
     """
     fallbackLocales: [SiteLocale!]
   ): [PromoApartmentRecord!]!
-  promoLabel(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
-    """
-    If you want to fallback to a default translation when a translation has not been found
-    """
-    fallbackLocales: [SiteLocale!]
-  ): String
-  promoSubtitle(
-    """Process content as markdown"""
-    markdown: Boolean
-
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
-    """
-    If you want to fallback to a default translation when a translation has not been found
-    """
-    fallbackLocales: [SiteLocale!]
-  ): String
-  promoTitle(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
-    """
-    If you want to fallback to a default translation when a translation has not been found
-    """
-    fallbackLocales: [SiteLocale!]
-  ): String!
   seo(
     """The locale to use to fetch the field's content"""
     locale: SiteLocale
@@ -7915,6 +7872,42 @@ type ResponsiveImage {
   title: String
   webpSrcSet: String!
   width: IntType!
+}
+
+"""Block of type 🔝 Section header (section_header)"""
+type SectionHeaderRecord implements RecordInterface {
+  _createdAt: DateTime!
+
+  """Editing URL"""
+  _editingUrl: String
+  _firstPublishedAt: DateTime!
+  _isValid: BooleanType!
+  _modelApiKey: String!
+  _publicationScheduledAt: DateTime
+  _publishedAt: DateTime!
+
+  """Generates SEO and Social card meta tags to be used in your frontend"""
+  _seoMetaTags(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+  ): [Tag!]!
+  _status: ItemStatus!
+  _unpublishingScheduledAt: DateTime
+  _updatedAt: DateTime!
+  createdAt: DateTime!
+  id: ItemId!
+  label: String
+  subtitle: String
+  title(
+    """Process content as markdown"""
+    markdown: Boolean
+  ): String!
+  updatedAt: DateTime!
+}
+
+type SectionHeaderRecordNonNullMultiLocaleField {
+  locale: SiteLocale
+  value: SectionHeaderRecord!
 }
 
 type SeoField {

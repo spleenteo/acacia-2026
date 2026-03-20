@@ -3,6 +3,7 @@
 import { type Locale } from '@/i18n/config';
 import ApartmentCard from '@/components/ApartmentCard';
 import MoodCard from '@/components/MoodCard';
+import SectionHeader from '@/components/SectionHeader';
 import BeddyBar from '@/components/BeddyBar';
 import HtmlContent from '@/components/HtmlContent';
 import Hero from '@/components/Hero';
@@ -40,26 +41,7 @@ export default function HomeContent({ locale, data }: HomeProps & { data: HomeDa
       {homePage?.highlightedApartments && homePage.highlightedApartments.length > 0 && (
         <section className="py-20 lg:py-28 bg-surface">
           <div className="mx-auto max-w-6xl px-8">
-            {homePage?.promoTitle && (
-              <>
-                {homePage?.promoLabel && (
-                  <p className="font-body text-label uppercase tracking-[0.22em] text-rust font-medium text-center mb-3">
-                    {homePage.promoLabel}
-                  </p>
-                )}
-                <h2 className="font-heading font-normal text-h1 text-dark text-center tracking-[-0.02em] mb-4">
-                  {homePage.promoTitle}
-                </h2>
-              </>
-            )}
-            {homePage?.promoSubtitle && (
-              <div className="max-w-2xl mx-auto text-center mb-12">
-                <HtmlContent
-                  html={homePage.promoSubtitle}
-                  className="font-body text-body-lg text-muted"
-                />
-              </div>
-            )}
+            {homePage.highlightsHeader && <SectionHeader data={homePage.highlightsHeader} />}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-6">
               {homePage.highlightedApartments.map((apartment) => (
                 <ApartmentCard key={apartment.id} data={apartment} locale={locale} />
