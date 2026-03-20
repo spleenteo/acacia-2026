@@ -34,19 +34,20 @@ AI-optimized compact reference for Acacia Firenze project behavior and patterns.
 
 ### Patterns
 
-| Pattern            | Implementation                                                                                         |
-| ------------------ | ------------------------------------------------------------------------------------------------------ |
-| Section label      | `text-label uppercase tracking-[0.22em] text-rust font-medium` — sections only, NOT card metadata      |
-| Editorial emphasis | `<em>` in headings → italic (font-normal, no weight change)                                            |
-| Section title em   | `.section-title em` → rust color + italic + semi-transparent underline (1.5px, offset 6px)             |
-| SectionHeader      | Use `<SectionHeader data={...} />` + `SectionHeaderFragment` for all CMS-driven section headers        |
-| Heading weight     | Playfair Display always `font-normal` — never `font-bold` or `font-semibold`                           |
-| Card image hover   | `overflow-hidden rounded-sm` on image wrapper + `group-hover:shadow-card-hover` + image `scale-[1.03]` |
-| Card container     | No background, no default shadow, no `overflow-hidden` on article — text fuses with page background    |
-| Card radius        | `rounded-sm` (2px) on image wrapper only                                                               |
-| Hero layout        | `min-h-[88svh]` + `marginTop: calc(var(--header-height) * -1)` — slides under fixed nav                |
-| Nav scroll-aware   | Transparent + `bg-dark/20 backdrop-blur-sm` at top → `bg-surface/95 backdrop-blur-xl` on scroll >50px  |
-| Prose HTML content | `.prose-acacia` class in `global.css` — use on `HtmlContent` wrapper for reliable CMS content styling  |
+| Pattern            | Implementation                                                                                          |
+| ------------------ | ------------------------------------------------------------------------------------------------------- |
+| Section label      | `text-label uppercase tracking-[0.22em] text-rust font-medium` — sections only, NOT card metadata       |
+| Editorial emphasis | `<em>` in headings → italic (font-normal, no weight change)                                             |
+| Section title em   | `.section-title em` → rust color + italic + semi-transparent underline (1.5px, offset 6px)              |
+| SectionHeader      | Use `<SectionHeader data={...} />` + `SectionHeaderFragment` for all CMS-driven section headers         |
+| Heading weight     | Playfair Display always `font-normal` — never `font-bold` or `font-semibold`                            |
+| Card image hover   | `overflow-hidden rounded-sm` on image wrapper + `group-hover:shadow-card-hover` + image `scale-[1.03]`  |
+| Card container     | No background, no default shadow, no `overflow-hidden` on article — text fuses with page background     |
+| Card radius        | `rounded-sm` (2px) on image wrapper only                                                                |
+| Hero layout        | `min-h-[88svh]` + `marginTop: calc(var(--header-height) * -1)` — slides under fixed nav                 |
+| Nav scroll-aware   | Transparent + `bg-dark/20 backdrop-blur-sm` at top → `bg-surface/95 backdrop-blur-xl` on scroll >50px   |
+| Prose HTML content | `.prose-acacia` class in `global.css` — use on `HtmlContent` wrapper for reliable CMS content styling   |
+| BeddyBar dates     | Default dates set via Angular internals (`ngElementStrategy.componentRef`). May break on Beddy updates. |
 
 ---
 

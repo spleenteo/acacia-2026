@@ -106,7 +106,7 @@ acacia-next/
 ├── public/
 │   ├── logo--main.svg                         # Full wordmark SVG (ratio ~3.6:1)
 │   └── acacia-isologo.svg                     # Isologo (copyright: not for standalone use)
-└── package.json                               # v0.5.0
+└── package.json                               # v0.5.1
 ```
 
 ## Tech Stack

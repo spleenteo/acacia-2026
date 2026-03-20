@@ -1,5 +1,17 @@
 # Changelog
 
+## v0.5.1 — 2026-03-20 — Beddy widget default dates
+
+Pre-populate the Beddy booking widget with arrival = today+3 and departure = today+5 to reflect the minimum booking lead time.
+
+- **Default dates**: BeddyBar now sets arrival to today+3 and departure to today+5 via Angular's internal form API, discovered through DOM inspection of the minified Angular bundle.
+- **Implementation**: Polls every 500ms (max 10s) for Angular initialization, then calls `form.get('trip').setValue(...)` + `changeDetectorRef.detectChanges()` + `updateTripPreview()`. Falls back silently if the widget isn't loaded (e.g. draft mode).
+- **Scope**: Applies to all BeddyBar instances (home page and apartment detail).
+
+Design decision: Beddy exposes no documented HTML attributes for date pre-population. The approach uses undocumented Angular internals (`ngElementStrategy.componentRef`) and may break on Beddy bundle updates — worth monitoring.
+
+---
+
 ## v0.5.0 — 2026-03-20 — SectionHeader component, CMS-driven section headers
 
 Introduced a reusable `SectionHeader` component backed by a `SectionHeaderRecord` block in DatoCMS. Home page section headers (featured apartments, moods) are now fully editable from the CMS with no hardcoded strings.
