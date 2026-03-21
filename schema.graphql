@@ -1211,36 +1211,6 @@ type DistrictRecord implements RecordInterface {
     locale: SiteLocale
     filter: ApartmentModelFilter
   ): CollectionMetadata!
-  _allReferencingHomePages(
-    """Specifies how to filter linking records"""
-    through: InverseRelationshipFilterBetweenHomePageAndDistrict
-
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
-    """
-    If you want to fallback to a default translation when a translation has not been found
-    """
-    fallbackLocales: [SiteLocale!]
-
-    """Skip the first results"""
-    skip: IntType
-
-    """Limit the number of results"""
-    first: IntType = 20
-    filter: HomePageModelFilter
-    orderBy: [HomePageModelOrderBy] = [_updatedAt_DESC]
-  ): [HomePageRecord!]!
-
-  """Returns meta information regarding a record collection"""
-  _allReferencingHomePagesMeta(
-    """Specifies how to filter linking records"""
-    through: InverseRelationshipFilterBetweenHomePageAndDistrict
-
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-    filter: HomePageModelFilter
-  ): CollectionMetadata!
   _allReferencingPosts(
     """Specifies how to filter linking records"""
     through: InverseRelationshipFilterBetweenPostAndDistrict
@@ -2246,16 +2216,9 @@ type HomePageImportRecord implements RecordInterface {
   updatedAt: DateTime!
 }
 
-union HomePageModelCtaLinkField = DistrictRecord | MoodRecord | OfferRecord | PostRecord | ServiceRecord
-
 """Linking fields"""
 enum HomePageModelFieldsReferencingApartmentModel {
   homePage_highlightedApartments
-}
-
-"""Linking fields"""
-enum HomePageModelFieldsReferencingDistrictModel {
-  homePage_ctaLink
 }
 
 input HomePageModelFilter {
@@ -2279,10 +2242,6 @@ input HomePageModelFilter {
   highlightedApartments: LinksFilter
   claim: StringFilter
   moods: LinksFilter
-  ctaText: TextFilter
-  ctaLink: LinkFilter
-  ctaImage: FileFilter
-  ctaLabel: StringFilter
   seo: SeoFilter
   OR: [HomePageModelFilter]
   AND: [HomePageModelFilter]
@@ -2319,28 +2278,11 @@ enum HomePageModelOrderBy {
   beddyId_DESC
   claim_ASC
   claim_DESC
-  ctaLabel_ASC
-  ctaLabel_DESC
 }
 
 """Record of type 🏡 Home page (home_page)"""
 type HomePageRecord implements RecordInterface {
   _allClaimLocales(
-    """
-    If you want to fallback to a default translation when a translation has not been found
-    """
-    fallbackLocales: [SiteLocale!]
-  ): [StringMultiLocaleField!]
-  _allCtaLabelLocales(
-    """
-    If you want to fallback to a default translation when a translation has not been found
-    """
-    fallbackLocales: [SiteLocale!]
-  ): [StringMultiLocaleField!]
-  _allCtaTextLocales(
-    """Process content as markdown"""
-    markdown: Boolean
-
     """
     If you want to fallback to a default translation when a translation has not been found
     """
@@ -2433,29 +2375,6 @@ type HomePageRecord implements RecordInterface {
     fallbackLocales: [SiteLocale!]
   ): String
   createdAt: DateTime!
-  ctaImage: FileField!
-  ctaLabel(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
-    """
-    If you want to fallback to a default translation when a translation has not been found
-    """
-    fallbackLocales: [SiteLocale!]
-  ): String
-  ctaLink: HomePageModelCtaLinkField
-  ctaText(
-    """Process content as markdown"""
-    markdown: Boolean
-
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
-    """
-    If you want to fallback to a default translation when a translation has not been found
-    """
-    fallbackLocales: [SiteLocale!]
-  ): String
   doText(
     """Process content as markdown"""
     markdown: Boolean
@@ -5217,19 +5136,6 @@ input InverseRelationshipFieldFilterBetweenHomePageAndApartment {
 }
 
 """Specifies how to filter by linking fields"""
-input InverseRelationshipFieldFilterBetweenHomePageAndDistrict {
-  """
-  Filter linking records that reference current record in at least one of the specified fields
-  """
-  anyIn: [HomePageModelFieldsReferencingDistrictModel!]
-
-  """
-  Filter linking records that do not reference current record in any of the specified fields
-  """
-  notIn: [HomePageModelFieldsReferencingDistrictModel!]
-}
-
-"""Specifies how to filter by linking fields"""
 input InverseRelationshipFieldFilterBetweenMoodItemsAndApartment {
   """
   Filter linking records that reference current record in at least one of the specified fields
@@ -5299,15 +5205,6 @@ input InverseRelationshipFilterBetweenGuestbookAndApartment {
 input InverseRelationshipFilterBetweenHomePageAndApartment {
   """Specifies how to filter by linking fields"""
   fields: InverseRelationshipFieldFilterBetweenHomePageAndApartment
-
-  """Specifies how to filter by linking locales"""
-  locales: LinkingLocalesFilter
-}
-
-"""Specifies how to filter linking records"""
-input InverseRelationshipFilterBetweenHomePageAndDistrict {
-  """Specifies how to filter by linking fields"""
-  fields: InverseRelationshipFieldFilterBetweenHomePageAndDistrict
 
   """Specifies how to filter by linking locales"""
   locales: LinkingLocalesFilter
@@ -5518,6 +5415,8 @@ type MenuExternalItemRecord implements RecordInterface {
   url: String!
 }
 
+union MenuItemModelPageField = HomePageRecord | IndexApartmentRecord | PageDistrictsRecord | PageMoodsRecord
+
 """Block of type 🔗 Menu Item (menu_item)"""
 type MenuItemRecord implements RecordInterface {
   _createdAt: DateTime!
@@ -5541,7 +5440,7 @@ type MenuItemRecord implements RecordInterface {
   createdAt: DateTime!
   id: ItemId!
   label: String
-  page: String!
+  page: MenuItemModelPageField
   updatedAt: DateTime!
 }
 

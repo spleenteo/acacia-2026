@@ -1,21 +1,19 @@
-import { type FragmentOf } from '@/lib/datocms/graphql';
+import { type FragmentOf, readFragment } from '@/lib/datocms/graphql';
 import ResponsiveImage, { ResponsiveImageFragment } from '@/components/ResponsiveImage';
-import Link from 'next/link';
+import Button, { ButtonBlockFragment } from '@/components/Button';
 
 type Props = {
   /** Title HTML — can contain inline <em> for italic emphasis */
   title: string;
   subtitle?: string | null;
-  ctaLabel?: string | null;
-  ctaUrl?: string | null;
-  /** Secondary CTA — plain link, no fill */
-  ctaSecondaryLabel?: string | null;
-  ctaSecondaryUrl?: string | null;
+  buttons?: FragmentOf<typeof ButtonBlockFragment>[];
   image?: FragmentOf<typeof ResponsiveImageFragment> | null;
   /** Slot for extra content at the bottom (e.g. BeddyBar booking widget) */
   children?: React.ReactNode;
   priority?: boolean;
 };
+
+export { ButtonBlockFragment };
 
 /**
  * Full-viewport hero component. Sits flush against the top of the page,
@@ -25,17 +23,7 @@ type Props = {
  * - Top: subtle dark veil to keep nav links readable regardless of photo content
  * - Bottom: heavier warm gradient to make title/CTA legible
  */
-export default function Hero({
-  title,
-  subtitle,
-  ctaLabel,
-  ctaUrl,
-  ctaSecondaryLabel,
-  ctaSecondaryUrl,
-  image,
-  children,
-  priority,
-}: Props) {
+export default function Hero({ title, subtitle, buttons, image, children, priority }: Props) {
   return (
     <section
       className="relative flex items-end min-h-[88svh] overflow-hidden bg-dark"
@@ -82,30 +70,14 @@ export default function Hero({
             </p>
           )}
 
-          {(ctaLabel && ctaUrl) || (ctaSecondaryLabel && ctaSecondaryUrl) ? (
+          {buttons && buttons.length > 0 && (
             <div className="flex flex-wrap gap-3">
-              {ctaLabel && ctaUrl && (
-                <Link
-                  href={ctaUrl}
-                  className="font-body text-caption font-medium tracking-[0.06em]
-                    text-white bg-rust hover:bg-rust-hover
-                    px-8 py-3.5 rounded-pill transition-colors duration-300"
-                >
-                  {ctaLabel}
-                </Link>
-              )}
-              {ctaSecondaryLabel && ctaSecondaryUrl && (
-                <Link
-                  href={ctaSecondaryUrl}
-                  className="font-body text-caption font-medium tracking-[0.06em]
-                    text-white border border-white/40 hover:border-white/70
-                    px-8 py-3.5 rounded-pill transition-colors duration-300"
-                >
-                  {ctaSecondaryLabel}
-                </Link>
-              )}
+              {buttons.map((button) => {
+                const { id } = readFragment(ButtonBlockFragment, button);
+                return <Button key={id} data={button} />;
+              })}
             </div>
-          ) : null}
+          )}
 
           {children && <div className="mt-8">{children}</div>}
         </div>

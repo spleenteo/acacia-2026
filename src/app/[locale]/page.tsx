@@ -5,10 +5,10 @@ import { draftMode } from 'next/headers';
 import { TagFragment } from '@/lib/datocms/commonFragments';
 import { toNextMetadata } from 'react-datocms';
 import type { Metadata } from 'next';
-import { ResponsiveImageFragment } from '@/components/ResponsiveImage';
 import { ApartmentCardFragment } from '@/components/ApartmentCard';
 import { MoodCardFragment } from '@/components/MoodCard';
 import { SectionHeaderFragment } from '@/components/SectionHeader';
+import { ButtonBlockFragment } from '@/components/Button';
 import RealtimeWrapper from '@/lib/datocms/realtime/RealtimeWrapper';
 import HomeContent, { type HomeProps } from './HomeContent';
 
@@ -50,14 +50,11 @@ export const query = graphql(
     query HomeQuery($locale: SiteLocale!) {
       homePage(locale: $locale) {
         title(locale: $locale)
+        subtitle(locale: $locale, markdown: true)
         claim(locale: $locale)
         beddyId
-        ctaText(locale: $locale, markdown: true)
-        ctaLabel(locale: $locale)
-        ctaImage {
-          responsiveImage(imgixParams: { w: 1200, h: 600, fit: crop }) {
-            ...ResponsiveImageFragment
-          }
+        buttons {
+          ...ButtonBlockFragment
         }
         moodsHeader(locale: $locale) {
           ...SectionHeaderFragment
@@ -79,7 +76,7 @@ export const query = graphql(
       }
     }
   `,
-  [ResponsiveImageFragment, ApartmentCardFragment, MoodCardFragment, SectionHeaderFragment],
+  [ApartmentCardFragment, MoodCardFragment, SectionHeaderFragment, ButtonBlockFragment],
 );
 
 export default async function HomePage({ params }: { params: Promise<{ locale: string }> }) {
