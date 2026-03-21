@@ -1,0 +1,71 @@
+{
+  "gallery": {
+    "viewAll": "View gallery"
+  },
+  "apartment": {
+    "moodsTitle": "Related Moods",
+    "moodsLabel": "Explore",
+    "similarTitle": "Similar Apartments",
+    "similarLabel": "You may also like",
+    "reviewsTitle": "What Our Guests Say",
+    "reviewsLabel": "Guest reviews",
+    "ctaBookText": "See real-time availability and pricing for this apartment.",
+    "ctaBookTitle": "Check availability",
+    "ctaBookLabel": "Do you like the idea?",
+    "ctaContactButton": "Chat on WhatsApp",
+    "ctaContactText": "Chat with the Acacia® crew on WhatsApp for personalized advice on your stay.",
+    "ctaContactTitle": "Have a question?",
+    "ctaContactLabel": "Talk to us",
+    "truthsTitle": "For a Great Experience",
+    "truthsLabel": "Good to Know",
+    "wwlTitle": "What We Love",
+    "wwlLabel": "Acacia® crew",
+    "allPhotos": "View gallery",
+    "amenitiesTitle": "The House Includes",
+    "amenitiesLabel": "Amenities",
+    "book": "Check availability",
+    "info": "Details",
+    "comforts": "Comforts",
+    "essentials": "Acacia® Essentials",
+    "sleeps": "Sleeps",
+    "bathrooms": "Bathrooms",
+    "bedrooms": "Bedrooms"
+  },
+  "listing": {
+    "whereToStay": "Where to stay",
+    "exploreDistrict": "Explore {name}",
+    "discoverArea": "Discover the area",
+    "noApartments": "No apartments in this category",
+    "searchAvailability": "Search availability",
+    "allFilter": "All",
+    "florence": "Florence"
+  },
+  "footer": {
+    "brandDescription": "Curated apartments in the heart of Florence, crafted for those who seek beauty in every detail.",
+    "getInTouch": "Get in touch",
+    "privacyPolicy": "Privacy Policy",
+    "aboutUs": "About us",
+    "address": "Address",
+    "faq": "FAQ",
+    "info": "Info",
+    "explore": "Explore"
+  },
+  "district": {
+    "apartments": "Apartments in"
+  },
+  "moods": {
+    "apartments": "Apartments for this mood",
+    "title": "Discover our moods",
+    "label": "Travel by feeling"
+  },
+  "districts": {
+    "title": "Explore the city",
+    "label": "Florence neighborhoods"
+  },
+  "nav": {
+    "book": "Book",
+    "moods": "Moods",
+    "districts": "Districts",
+    "accommodations": "Accommodations"
+  }
+}

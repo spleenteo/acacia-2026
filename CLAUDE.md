@@ -9,12 +9,13 @@ Acacia Firenze — Next.js 16 (App Router) website integrated with DatoCMS as he
 ## Commands
 
 ```bash
-npm run dev              # Start dev server
-npm run build            # Production build
-npm run lint             # ESLint + Prettier check
-npm run format           # Auto-format with Prettier
-npm run generate-schema  # Regenerate GraphQL schema + introspection types from DatoCMS
+npm run dev                # Start dev server
+npm run build              # Production build
+npm run lint               # ESLint + Prettier check
+npm run format             # Auto-format with Prettier
+npm run generate-schema    # Regenerate GraphQL schema + introspection types from DatoCMS
 npm run generate-cma-types # Regenerate CMA types (requires DATOCMS_CMA_TOKEN)
+npm run export-translations # Export DatoCMS Translation records to src/messages/*.json
 ```
 
 Pre-commit hook runs `npm run format` automatically via simple-git-hooks.
@@ -54,6 +55,19 @@ Two type generation systems work together:
 **HTML content from DatoCMS**: Legacy text fields (description, abstract, claim) are queried with `markdown: true` and rendered via the `<HtmlContent>` component (`dangerouslySetInnerHTML`). This will be replaced with a Structured Text renderer when DatoCMS schema migrates.
 
 **Fragment separation for client components**: When a GraphQL fragment is defined in a `'use client'` file but needs to be imported in server components, extract it to a separate `.ts` file (e.g., `ImageGallery/fragment.ts`). Importing from `'use client'` files in server components causes gql.tada build errors ("j.definitions is not iterable").
+
+**UI Translations (next-intl)**: All user-facing UI strings are managed via the DatoCMS `Translation` model and consumed at runtime through `next-intl`. **No hardcoded strings** — every label, button text, section heading, or CTA must use a translation key.
+
+- **Source of truth**: DatoCMS `Translation` model with fields `key` (string, unique, format `section.camelCaseKey`) and `value` (string, localized EN/IT).
+- **Build-time export**: `npm run export-translations` fetches all published Translation records via CDA and writes `src/messages/en.json` and `src/messages/it.json` (nested JSON from dot-notation keys). These files are **generated — do not edit manually**.
+- **Configuration**: `src/i18n/request.ts` configures next-intl; `next.config.mjs` wraps with `createNextIntlPlugin`. The locale layout (`src/app/[locale]/layout.tsx`) provides `NextIntlClientProvider` with all messages.
+- **Client components** (`'use client'`): use `useTranslations('section')` hook → `t('keyName')`.
+- **Server components** (async): use `const t = await getTranslations('section')` from `next-intl/server` → `t('keyName')`.
+- **ICU interpolation**: use `{placeholder}` in the value, call `t('key', { placeholder: value })`. Example: `listing.exploreDistrict` = `"Explore {name}"` → `t('exploreDistrict', { name })`.
+- **Key naming convention**: dot-notation `section.camelCaseKey`. Sections: `nav`, `footer`, `listing`, `districts`, `moods`, `district`, `apartment`, `gallery`. The `key` field on DatoCMS validates with `/^[a-zA-Z][a-zA-Z0-9_.]*$/`.
+- **Adding a new translated string**: (1) create a Translation record in DatoCMS with key + EN/IT values, (2) publish it, (3) run `npm run export-translations` to regenerate JSON, (4) use `t('section.key')` in the component.
+- **Files not using translations**: `not-found.tsx` and `error.tsx` keep bilingual inline strings (no locale context available).
+- **Visual editing note**: translation strings from static JSON have no stega encoding, so click-to-edit overlays don't work for them. Editors modify strings in the DatoCMS panel → webhook triggers rebuild.
 
 **Turbopack workaround**: Next.js 16 Turbopack has a bug where `useRouter()`, `usePathname()`, and other `next/navigation` hooks that subscribe to router state cause "Cannot read properties of undefined (reading 'unsubscribe')" errors. Use `window.history.replaceState` instead of `router.push`, `window.location.pathname` instead of `usePathname()`, and `window.location.assign()` for full navigation. `useSearchParams` works when wrapped in a Suspense boundary.
 
@@ -151,6 +165,6 @@ export async function generateMetadata({ params }): Promise<Metadata> {
 ## Formatting
 
 - Prettier: single quotes, trailing commas, 100 char print width
-- Generated files to never edit: `schema.graphql`, `src/lib/datocms/graphql-env.d.ts`, `src/lib/datocms/cma-types.ts`
+- Generated files to never edit: `schema.graphql`, `src/lib/datocms/graphql-env.d.ts`, `src/lib/datocms/cma-types.ts`, `src/messages/en.json`, `src/messages/it.json`
 - Route handlers use `.ts` extension (not `.tsx`) since they contain no JSX
 - Always use the `/frontend-design` skill when evaluating or implementing UI changes

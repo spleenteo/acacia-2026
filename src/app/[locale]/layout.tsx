@@ -8,6 +8,8 @@ import { type Locale, locales, isValidLocale } from '@/i18n/config';
 import { draftMode } from 'next/headers';
 import { notFound } from 'next/navigation';
 import { toNextMetadata } from 'react-datocms';
+import { NextIntlClientProvider } from 'next-intl';
+import { getMessages } from 'next-intl/server';
 import Script from 'next/script';
 import type { Metadata } from 'next';
 
@@ -48,9 +50,10 @@ export default async function LocaleLayout({
   }
 
   const { isEnabled: isDraftModeEnabled } = await draftMode();
+  const messages = await getMessages();
 
   return (
-    <>
+    <NextIntlClientProvider messages={messages}>
       {!isDraftModeEnabled && (
         <Script
           src="https://cdn.beddy.io/bol/prod/beddybar.js?release13052020_v0"
@@ -61,6 +64,6 @@ export default async function LocaleLayout({
       <SiteHeader locale={locale} isDraftModeEnabled={isDraftModeEnabled} />
       <main style={{ paddingTop: 'var(--header-height)' }}>{children}</main>
       <SiteFooter locale={locale} />
-    </>
+    </NextIntlClientProvider>
   );
 }

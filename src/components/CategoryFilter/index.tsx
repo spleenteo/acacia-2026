@@ -2,6 +2,7 @@
 
 import { Suspense, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 import { type FragmentOf } from '@/lib/datocms/graphql';
 import { ApartmentCardFragment } from '@/components/ApartmentCard';
 import ApartmentCard from '@/components/ApartmentCard';
@@ -24,7 +25,8 @@ type Props = {
   allLabel: string;
 };
 
-function CategoryFilterInner({ categories, apartments, locale, allLabel }: Props) {
+function CategoryFilterInner({ categories, apartments, locale }: Props) {
+  const t = useTranslations('listing');
   const searchParams = useSearchParams();
   const [activeCategory, setActiveCategory] = useState<string | null>(searchParams.get('category'));
 
@@ -59,7 +61,7 @@ function CategoryFilterInner({ categories, apartments, locale, allLabel }: Props
               : 'border-dark/20 text-dark hover:border-rust hover:text-rust'
           }`}
         >
-          {allLabel}
+          {t('allFilter')}
         </button>
         {categories.map((cat) => (
           <button
@@ -85,9 +87,7 @@ function CategoryFilterInner({ categories, apartments, locale, allLabel }: Props
 
       {filteredApartments.length === 0 && (
         <p className="text-center text-light font-heading italic text-body-lg py-12">
-          {locale === 'en'
-            ? 'No apartments in this category'
-            : 'Nessun alloggio in questa categoria'}
+          {t('noApartments')}
         </p>
       )}
     </>

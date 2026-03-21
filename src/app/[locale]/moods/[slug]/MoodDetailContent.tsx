@@ -1,6 +1,7 @@
 'use client';
 
 import { type Locale } from '@/i18n/config';
+import { useTranslations } from 'next-intl';
 import HtmlContent from '@/components/HtmlContent';
 import ResponsiveImage from '@/components/ResponsiveImage';
 import ApartmentCard from '@/components/ApartmentCard';
@@ -10,15 +11,12 @@ import type { query } from './page';
 export type MoodDetailProps = { locale: Locale };
 type MoodDetailData = ResultOf<typeof query>;
 
-const labels = {
-  en: { apartments: 'Apartments for this mood' },
-  it: { apartments: 'Alloggi per questo mood' },
-} as const;
-
 export default function MoodDetailContent({
   locale,
   data,
 }: MoodDetailProps & { data: MoodDetailData }) {
+  const tMoods = useTranslations('moods');
+  const tListing = useTranslations('listing');
   const { mood } = data;
   if (!mood) return null;
 
@@ -26,8 +24,6 @@ export default function MoodDetailContent({
   const apartments = mood.boxes.flatMap((box) =>
     box.object.filter((item) => item.__typename === 'ApartmentRecord'),
   );
-
-  const l = labels[locale];
 
   return (
     <>
@@ -80,10 +76,10 @@ export default function MoodDetailContent({
         <section className="py-20 lg:py-28 bg-surface-alt">
           <div className="mx-auto max-w-6xl px-8">
             <p className="font-body text-label uppercase tracking-[0.22em] text-rust font-medium text-center mb-3">
-              {locale === 'en' ? 'Where to stay' : 'Dove alloggiare'}
+              {tListing('whereToStay')}
             </p>
             <h2 className="font-heading font-normal text-h1 text-dark text-center tracking-[-0.02em] mb-12">
-              {l.apartments}
+              {tMoods('apartments')}
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-6">
               {apartments.map((apartment) => (

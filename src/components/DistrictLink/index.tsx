@@ -1,5 +1,8 @@
+'use client';
+
 import type { Locale } from '@/i18n/config';
 import { modelPath } from '@/i18n/paths';
+import { useTranslations } from 'next-intl';
 import type { FragmentOf } from '@/lib/datocms/graphql';
 import type { ResponsiveImageFragment } from '@/components/ResponsiveImage';
 import ResponsiveImage from '@/components/ResponsiveImage';
@@ -15,12 +18,8 @@ type Props = {
   image?: FragmentOf<typeof ResponsiveImageFragment> | null;
 };
 
-const labels = {
-  en: 'Discover the area',
-  it: 'Scopri la zona',
-} as const;
-
 export default function DistrictLink({ name, slug, locale, abstract, description, image }: Props) {
+  const t = useTranslations('listing');
   const href = modelPath('district', slug, locale)!;
 
   return (
@@ -28,7 +27,7 @@ export default function DistrictLink({ name, slug, locale, abstract, description
       <div className="mx-auto max-w-7xl px-5 md:px-8">
         {/* Label + Title */}
         <p className="font-body text-label uppercase tracking-[0.22em] text-rust font-medium mb-2">
-          {labels[locale]}
+          {t('discoverArea')}
         </p>
         <Link
           href={href}
@@ -65,7 +64,7 @@ export default function DistrictLink({ name, slug, locale, abstract, description
                   href={href}
                   className="inline-block mt-6 font-body text-caption font-medium text-rust uppercase tracking-wider hover:text-rust-hover transition-colors"
                 >
-                  Explore {name} &rarr;
+                  {t('exploreDistrict', { name })} &rarr;
                 </Link>
               </div>
             )}

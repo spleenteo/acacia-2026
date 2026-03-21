@@ -1,6 +1,7 @@
 'use client';
 
 import { type Locale } from '@/i18n/config';
+import { useTranslations } from 'next-intl';
 import ResponsiveImage from '@/components/ResponsiveImage';
 import BeddyBar from '@/components/BeddyBar';
 import HtmlContent from '@/components/HtmlContent';
@@ -15,6 +16,7 @@ export default function AccommodationsContent({
   locale,
   data,
 }: AccommodationsProps & { data: AccommodationsData }) {
+  const t = useTranslations('listing');
   const { indexApartment, allApartmentCategories, allApartments, homePage } = data;
 
   const categories = allApartmentCategories.map((cat) => ({
@@ -77,7 +79,7 @@ export default function AccommodationsContent({
             categories={categories}
             apartments={apartments}
             locale={locale}
-            allLabel={locale === 'en' ? 'All' : 'Tutti'}
+            allLabel={t('allFilter')}
           />
         </div>
       </section>
@@ -86,9 +88,7 @@ export default function AccommodationsContent({
       {homePage?.beddyId && (
         <section className="py-16 bg-surface-alt">
           <div className="mx-auto max-w-3xl px-8 text-center">
-            <p className="font-body text-body-lg text-dark mb-8">
-              {locale === 'en' ? 'Search availability' : 'Cerca disponibilità'}
-            </p>
+            <p className="font-body text-body-lg text-dark mb-8">{t('searchAvailability')}</p>
             <BeddyBar locale={locale} widgetCode={homePage.beddyId} />
           </div>
         </section>

@@ -1,6 +1,7 @@
 'use client';
 
 import { useRef, useState } from 'react';
+import { useTranslations } from 'next-intl';
 import { useInView } from '@/hooks/useInView';
 import { type FragmentOf, type ResultOf, readFragment } from '@/lib/datocms/graphql';
 import ResponsiveImage from '@/components/ResponsiveImage';
@@ -28,6 +29,7 @@ export default function WhatWeLove({
   acaciaReward,
   lightboxItems,
 }: Props) {
+  const tGallery = useTranslations('gallery');
   const headingRef = useInView<HTMLDivElement>();
   const photos = data.map((d) => readFragment(GalleryImageFragment, d));
   const [activeCaptionIndex, setActiveCaptionIndex] = useState(0);
@@ -121,7 +123,7 @@ export default function WhatWeLove({
           </div>
           {lightboxItems && lightboxItems.length > 0 && (
             <div className="mt-4">
-              <PhotoLightbox items={lightboxItems} label="View gallery" variant="light" />
+              <PhotoLightbox items={lightboxItems} label={tGallery('viewAll')} variant="light" />
             </div>
           )}
         </>

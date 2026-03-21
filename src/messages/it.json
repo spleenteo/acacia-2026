@@ -1,0 +1,71 @@
+{
+  "gallery": {
+    "viewAll": "View gallery"
+  },
+  "apartment": {
+    "moodsTitle": "Mood correlati",
+    "moodsLabel": "Esplora",
+    "similarTitle": "Appartamenti simili",
+    "similarLabel": "Potrebbe piacerti anche",
+    "reviewsTitle": "I nostri ospiti raccontano",
+    "reviewsLabel": "Recensioni",
+    "ctaBookText": "Scopri disponibilità e prezzi in tempo reale per questo appartamento.",
+    "ctaBookTitle": "Verifica disponibilità",
+    "ctaBookLabel": "Ti piace l'idea?",
+    "ctaContactButton": "Chatta su WhatsApp",
+    "ctaContactText": "Chatta con il crew di Acacia® su WhatsApp per un consiglio personalizzato sul tuo soggiorno.",
+    "ctaContactTitle": "Hai una domanda?",
+    "ctaContactLabel": "Parla con noi",
+    "truthsTitle": "Per una grande esperienza",
+    "truthsLabel": "Da sapere",
+    "wwlTitle": "Cosa ci piace",
+    "wwlLabel": "Acacia® crew",
+    "allPhotos": "View gallery",
+    "amenitiesTitle": "La casa include",
+    "amenitiesLabel": "Amenities",
+    "book": "Verifica disponibilità",
+    "info": "Dettagli",
+    "comforts": "Comforts",
+    "essentials": "Acacia® Essentials",
+    "sleeps": "Ospiti",
+    "bathrooms": "Bagni",
+    "bedrooms": "Camere"
+  },
+  "listing": {
+    "whereToStay": "Dove alloggiare",
+    "exploreDistrict": "Esplora {name}",
+    "discoverArea": "Scopri la zona",
+    "noApartments": "Nessun alloggio in questa categoria",
+    "searchAvailability": "Cerca disponibilità",
+    "allFilter": "Tutti",
+    "florence": "Firenze"
+  },
+  "footer": {
+    "brandDescription": "Appartamenti selezionati nel cuore di Firenze, per chi cerca bellezza in ogni dettaglio.",
+    "getInTouch": "Contattaci",
+    "privacyPolicy": "Privacy Policy",
+    "aboutUs": "Chi siamo",
+    "address": "Indirizzo",
+    "faq": "FAQ",
+    "info": "Info",
+    "explore": "Esplora"
+  },
+  "district": {
+    "apartments": "Alloggi a"
+  },
+  "moods": {
+    "apartments": "Alloggi per questo mood",
+    "title": "Scopri i nostri mood",
+    "label": "Viaggia per ispirazione"
+  },
+  "districts": {
+    "title": "Esplora la città",
+    "label": "Quartieri di Firenze"
+  },
+  "nav": {
+    "book": "Prenota",
+    "moods": "Moods",
+    "districts": "Quartieri",
+    "accommodations": "Alloggi"
+  }
+}

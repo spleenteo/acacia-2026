@@ -1,24 +1,28 @@
 import type { Locale } from '@/i18n/config';
 import { localizedPath } from '@/i18n/paths';
+import { getTranslations } from 'next-intl/server';
 import Link from 'next/link';
 
 type Props = {
   locale: Locale;
 };
 
-const exploreNav = [
-  { href: '/florence/accommodations', label: { en: 'Accommodations', it: 'Alloggi' } },
-  { href: '/florence/districts', label: { en: 'Districts', it: 'Quartieri' } },
-  { href: '/moods', label: { en: 'Moods', it: 'Moods' } },
-];
+const exploreNavItems = [
+  { href: '/florence/accommodations', key: 'accommodations' },
+  { href: '/florence/districts', key: 'districts' },
+  { href: '/moods', key: 'moods' },
+] as const;
 
-const infoNav = [
-  { href: '#', label: { en: 'About us', it: 'Chi siamo' } },
-  { href: '#', label: { en: 'Privacy Policy', it: 'Privacy Policy' } },
-  { href: '#', label: { en: 'FAQ', it: 'FAQ' } },
-];
+const infoNavItems = [
+  { href: '#', key: 'aboutUs' },
+  { href: '#', key: 'privacyPolicy' },
+  { href: '#', key: 'faq' },
+] as const;
 
-export default function SiteFooter({ locale }: Props) {
+export default async function SiteFooter({ locale }: Props) {
+  const tNav = await getTranslations('nav');
+  const tFooter = await getTranslations('footer');
+
   return (
     <footer>
       {/* Band 1 — Light navigation */}
@@ -26,16 +30,16 @@ export default function SiteFooter({ locale }: Props) {
         <div className="mx-auto max-w-6xl px-8 grid grid-cols-1 md:grid-cols-3 gap-12">
           <div>
             <h4 className="font-body text-label uppercase tracking-[0.22em] text-rust font-medium mb-5">
-              {locale === 'en' ? 'Explore' : 'Esplora'}
+              {tFooter('explore')}
             </h4>
             <nav className="flex flex-col gap-3">
-              {exploreNav.map((item) => (
+              {exploreNavItems.map((item) => (
                 <Link
                   key={item.href}
                   href={`/${locale}${localizedPath(locale, item.href)}`}
                   className="font-body text-body text-body hover:text-rust transition-colors duration-300"
                 >
-                  {item.label[locale]}
+                  {tNav(item.key)}
                 </Link>
               ))}
             </nav>
@@ -43,16 +47,16 @@ export default function SiteFooter({ locale }: Props) {
 
           <div>
             <h4 className="font-body text-label uppercase tracking-[0.22em] text-rust font-medium mb-5">
-              Info
+              {tFooter('info')}
             </h4>
             <nav className="flex flex-col gap-3">
-              {infoNav.map((item) => (
+              {infoNavItems.map((item) => (
                 <Link
-                  key={`${item.href}-${item.label[locale]}`}
+                  key={`${item.href}-${item.key}`}
                   href={item.href}
                   className="font-body text-body text-body hover:text-rust transition-colors duration-300"
                 >
-                  {item.label[locale]}
+                  {tFooter(item.key)}
                 </Link>
               ))}
             </nav>
@@ -60,7 +64,7 @@ export default function SiteFooter({ locale }: Props) {
 
           <div>
             <h4 className="font-body text-label uppercase tracking-[0.22em] text-rust font-medium mb-5">
-              {locale === 'en' ? 'Get in touch' : 'Contattaci'}
+              {tFooter('getInTouch')}
             </h4>
             <div className="flex flex-col gap-3">
               <a
@@ -88,15 +92,13 @@ export default function SiteFooter({ locale }: Props) {
               Acacia Firenze
             </span>
             <p className="font-body text-body text-white/80 leading-relaxed max-w-md">
-              {locale === 'en'
-                ? 'Curated apartments in the heart of Florence, crafted for those who seek beauty in every detail.'
-                : 'Appartamenti selezionati nel cuore di Firenze, per chi cerca bellezza in ogni dettaglio.'}
+              {tFooter('brandDescription')}
             </p>
           </div>
 
           <div>
             <h4 className="font-body text-label uppercase tracking-[0.22em] text-rust/70 font-medium mb-5">
-              {locale === 'en' ? 'Address' : 'Indirizzo'}
+              {tFooter('address')}
             </h4>
             <address className="font-body text-body text-white/85 not-italic space-y-1.5">
               <p>Acacia Firenze</p>

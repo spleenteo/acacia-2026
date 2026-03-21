@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { useTranslations } from 'next-intl';
 
 type Props = {
   bedrooms?: number | null;
@@ -9,12 +10,6 @@ type Props = {
   price?: string | null;
   highlight?: string | null;
   acaciaReward?: boolean | null;
-  labels: {
-    bedrooms: string;
-    bathrooms: string;
-    sleeps: string;
-    book: string;
-  };
 };
 
 export default function BookingSidebar({
@@ -24,8 +19,8 @@ export default function BookingSidebar({
   price,
   highlight,
   acaciaReward,
-  labels,
 }: Props) {
+  const t = useTranslations('apartment');
   const [isBottomBarVisible, setIsBottomBarVisible] = useState(false);
 
   useEffect(() => {
@@ -46,9 +41,9 @@ export default function BookingSidebar({
   };
 
   const stats = [
-    { value: bedrooms, label: labels.bedrooms },
-    { value: bathrooms, label: labels.bathrooms },
-    { value: sleeps, label: labels.sleeps },
+    { value: bedrooms, label: t('bedrooms') },
+    { value: bathrooms, label: t('bathrooms') },
+    { value: sleeps, label: t('sleeps') },
   ].filter((s) => s.value);
 
   return (
@@ -97,7 +92,7 @@ export default function BookingSidebar({
             onClick={scrollToBooking}
             className="w-full bg-rust hover:bg-rust-hover text-white font-body font-medium text-body tracking-wide py-3.5 rounded-pill transition-colors duration-300 cursor-pointer"
           >
-            {labels.book}
+            {t('book')}
           </button>
         </div>
       </div>
@@ -124,7 +119,7 @@ export default function BookingSidebar({
             onClick={scrollToBooking}
             className="shrink-0 bg-rust hover:bg-rust-hover text-white font-body font-medium text-body-sm tracking-wide px-6 py-2.5 rounded-pill transition-colors duration-300 cursor-pointer"
           >
-            {labels.book}
+            {t('book')}
           </button>
         </div>
       </div>

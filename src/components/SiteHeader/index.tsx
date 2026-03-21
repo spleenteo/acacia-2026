@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useTranslations } from 'next-intl';
 import DraftModeToggler from '@/components/DraftModeToggler';
 import type { Locale } from '@/i18n/config';
 import { localizedPath } from '@/i18n/paths';
@@ -11,15 +12,14 @@ type Props = {
   isDraftModeEnabled: boolean;
 };
 
-const nav = [
-  { href: '/florence/accommodations', label: { en: 'Accommodations', it: 'Alloggi' } },
-  { href: '/florence/districts', label: { en: 'Districts', it: 'Quartieri' } },
-  { href: '/moods', label: { en: 'Moods', it: 'Moods' } },
-];
-
-const bookLabel = { en: 'Book', it: 'Prenota' };
+const navItems = [
+  { href: '/florence/accommodations', key: 'accommodations' },
+  { href: '/florence/districts', key: 'districts' },
+  { href: '/moods', key: 'moods' },
+] as const;
 
 export default function SiteHeader({ locale, isDraftModeEnabled }: Props) {
+  const t = useTranslations('nav');
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const otherLocale = locale === 'en' ? 'it' : 'en';
@@ -64,7 +64,7 @@ export default function SiteHeader({ locale, isDraftModeEnabled }: Props) {
 
           {/* Desktop nav */}
           <nav className="hidden md:flex items-center gap-8">
-            {nav.map((item) => (
+            {navItems.map((item) => (
               <Link
                 key={item.href}
                 href={`/${locale}${localizedPath(locale, item.href)}`}
@@ -73,7 +73,7 @@ export default function SiteHeader({ locale, isDraftModeEnabled }: Props) {
                   scrolled ? 'text-muted hover:text-rust' : 'text-white/80 hover:text-white',
                 ].join(' ')}
               >
-                {item.label[locale]}
+                {t(item.key)}
               </Link>
             ))}
             <span
@@ -97,7 +97,7 @@ export default function SiteHeader({ locale, isDraftModeEnabled }: Props) {
               href={`/${locale}${localizedPath(locale, '/florence/accommodations')}`}
               className="font-body text-caption font-medium tracking-[0.06em] text-white bg-rust hover:bg-rust-hover px-5 py-2.5 rounded-pill transition-colors duration-300"
             >
-              {bookLabel[locale]}
+              {t('book')}
             </Link>
             {isDraftModeEnabled && <DraftModeToggler draftModeEnabled={isDraftModeEnabled} />}
           </nav>
@@ -143,7 +143,7 @@ export default function SiteHeader({ locale, isDraftModeEnabled }: Props) {
       >
         {/* Mega links */}
         <nav className="flex flex-col gap-2 mt-10 flex-1">
-          {nav.map((item, i) => (
+          {navItems.map((item, i) => (
             <Link
               key={item.href}
               href={`/${locale}${localizedPath(locale, item.href)}`}
@@ -157,7 +157,7 @@ export default function SiteHeader({ locale, isDraftModeEnabled }: Props) {
                 transition: `color 200ms, opacity 300ms ${i * 50}ms, transform 300ms ${i * 50}ms`,
               }}
             >
-              {item.label[locale]}
+              {t(item.key)}
             </Link>
           ))}
         </nav>
@@ -179,7 +179,7 @@ export default function SiteHeader({ locale, isDraftModeEnabled }: Props) {
             onClick={() => setMenuOpen(false)}
             className="font-body text-caption font-medium tracking-[0.06em] text-white bg-rust hover:bg-rust-hover px-6 py-2.5 rounded-pill transition-colors duration-300"
           >
-            {bookLabel[locale]}
+            {t('book')}
           </Link>
         </div>
       </div>

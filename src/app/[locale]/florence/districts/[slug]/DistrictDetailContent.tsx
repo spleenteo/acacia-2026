@@ -1,6 +1,7 @@
 'use client';
 
 import { type Locale } from '@/i18n/config';
+import { useTranslations } from 'next-intl';
 import HtmlContent from '@/components/HtmlContent';
 import { GalleryImageFragment } from '@/components/ImageGallery/fragment';
 import ImageGallery from '@/components/ImageGallery';
@@ -15,21 +16,17 @@ export type DistrictDetailProps = {
 };
 type DistrictDetailData = ResultOf<typeof districtDetailQuery>;
 
-const labels = {
-  en: { apartments: 'Apartments in' },
-  it: { apartments: 'Alloggi a' },
-} as const;
-
 export default function DistrictDetailContent({
   locale,
   apartmentsData,
   data,
 }: DistrictDetailProps & { data: DistrictDetailData }) {
+  const tListing = useTranslations('listing');
+  const tDistrict = useTranslations('district');
   const { district } = data;
   if (!district) return null;
 
   const { allApartments } = apartmentsData;
-  const l = labels[locale];
 
   return (
     <>
@@ -41,7 +38,7 @@ export default function DistrictDetailContent({
         <div className="w-full px-8 pb-14 pt-32">
           <div className="mx-auto max-w-6xl">
             <p className="font-body font-medium text-label text-white/50 uppercase tracking-[0.15em] mb-3">
-              {locale === 'en' ? 'Florence' : 'Firenze'}
+              {tListing('florence')}
             </p>
             <h1 className="font-heading font-normal text-hero leading-tight text-white">
               {district.name}
@@ -96,10 +93,10 @@ export default function DistrictDetailContent({
         <section className="py-20 lg:py-28 bg-surface">
           <div className="mx-auto max-w-6xl px-8">
             <p className="font-body text-label uppercase tracking-[0.22em] text-rust font-medium text-center mb-3">
-              {locale === 'en' ? 'Where to stay' : 'Dove alloggiare'}
+              {tListing('whereToStay')}
             </p>
             <h2 className="font-heading font-normal text-h1 text-dark text-center tracking-[-0.02em] mb-12">
-              {l.apartments} {district.name}
+              {tDistrict('apartments')} {district.name}
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-6">
               {allApartments.map((apartment) => (

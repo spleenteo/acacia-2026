@@ -1,5 +1,8 @@
+'use client';
+
 import type { FragmentOf } from '@/lib/datocms/graphql';
 import type { Locale } from '@/i18n/config';
+import { useTranslations } from 'next-intl';
 import InViewSection from '@/components/InViewSection';
 import ApartmentCard, { type ApartmentCardFragment } from '@/components/ApartmentCard';
 import MoodCard, { type MoodCardFragment } from '@/components/MoodCard';
@@ -8,15 +11,11 @@ type Props = {
   apartments: FragmentOf<typeof ApartmentCardFragment>[];
   moods: FragmentOf<typeof MoodCardFragment>[];
   locale: Locale;
-  labels: {
-    similarLabel: string;
-    similarTitle: string;
-    moodsLabel: string;
-    moodsTitle: string;
-  };
 };
 
-export default function RelatedContent({ apartments, moods, locale, labels }: Props) {
+export default function RelatedContent({ apartments, moods, locale }: Props) {
+  const t = useTranslations('apartment');
+
   if (apartments.length === 0 && moods.length === 0) return null;
 
   return (
@@ -27,10 +26,10 @@ export default function RelatedContent({ apartments, moods, locale, labels }: Pr
           <div className={moods.length > 0 ? 'mb-20' : ''}>
             <InViewSection className="mb-10">
               <p className="font-body text-label uppercase tracking-[0.22em] text-rust font-medium mb-2">
-                {labels.similarLabel}
+                {t('similarLabel')}
               </p>
               <h2 className="font-heading text-h2 text-dark">
-                <em>{labels.similarTitle}</em>
+                <em>{t('similarTitle')}</em>
               </h2>
             </InViewSection>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -46,10 +45,10 @@ export default function RelatedContent({ apartments, moods, locale, labels }: Pr
           <div>
             <InViewSection className="mb-10">
               <p className="font-body text-label uppercase tracking-[0.22em] text-rust font-medium mb-2">
-                {labels.moodsLabel}
+                {t('moodsLabel')}
               </p>
               <h2 className="font-heading text-h2 text-dark">
-                <em>{labels.moodsTitle}</em>
+                <em>{t('moodsTitle')}</em>
               </h2>
             </InViewSection>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
