@@ -22,6 +22,7 @@ export default function HomeContent({ locale, data }: HomeProps & { data: HomeDa
         title={homePage?.title ?? ''}
         subtitle={homePage?.claim}
         buttons={homePage?.buttons}
+        locale={locale}
         priority
       >
         {homePage?.beddyId && <BeddyBar locale={locale} widgetCode={homePage.beddyId} />}

@@ -49,7 +49,7 @@ export const query = graphql(
   `
     query HomeQuery($locale: SiteLocale!) {
       homePage(locale: $locale) {
-        title(locale: $locale)
+        title(locale: $locale, markdown: true)
         subtitle(locale: $locale, markdown: true)
         claim(locale: $locale)
         beddyId

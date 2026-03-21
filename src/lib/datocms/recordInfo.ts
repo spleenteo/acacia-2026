@@ -60,3 +60,19 @@ export async function recordToSlug(
 ): Promise<string | null> {
   return getSlug(item, locale);
 }
+
+const modelApiKeyToPathPrefix: Record<string, string> = {
+  apartment: 'florence/accommodations',
+  district: 'florence/districts',
+  mood: 'moods',
+};
+
+/**
+ * Resolves a DatoCMS record slug to a full frontend path using the model's API key.
+ * Used by the Button component to reconstruct URLs from the better-linking plugin.
+ */
+export function recordSlugToPath(modelApiKey: string, slug: string, locale: string): string | null {
+  const prefix = modelApiKeyToPathPrefix[modelApiKey];
+  if (!prefix) return null;
+  return `/${locale}/${prefix}/${slug}`;
+}

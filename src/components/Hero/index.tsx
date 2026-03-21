@@ -11,22 +11,40 @@ type Props = {
   /** Slot for extra content at the bottom (e.g. BeddyBar booking widget) */
   children?: React.ReactNode;
   priority?: boolean;
+  /** Current locale, passed through to Button for record link resolution */
+  locale?: string;
 };
 
 export { ButtonBlockFragment };
+
+function unwrapParagraph(html: string): string {
+  return html.replace(/^<p>([\s\S]*)<\/p>\n?$/, '$1');
+}
 
 /**
  * Full-viewport hero component. Sits flush against the top of the page,
  * sliding under the fixed SiteHeader via negative margin-top.
  *
- * Double gradient overlay:
- * - Top: subtle dark veil to keep nav links readable regardless of photo content
- * - Bottom: heavier warm gradient to make title/CTA legible
+ * When no background image is provided, renders a transparent hero
+ * that blends with the page background.
  */
-export default function Hero({ title, subtitle, buttons, image, children, priority }: Props) {
+export default function Hero({
+  title,
+  subtitle,
+  buttons,
+  image,
+  children,
+  priority,
+  locale,
+}: Props) {
+  const hasImage = !!image;
+
   return (
     <section
-      className="relative flex items-end min-h-[88svh] overflow-hidden bg-dark"
+      className={[
+        'relative flex items-center justify-center min-h-[88svh] overflow-hidden',
+        hasImage ? 'bg-dark' : 'bg-surface',
+      ].join(' ')}
       style={{ marginTop: 'calc(var(--header-height) * -1)' }}
     >
       {/* Background image */}
@@ -41,45 +59,56 @@ export default function Hero({ title, subtitle, buttons, image, children, priori
         </div>
       )}
 
-      {/* Double gradient overlay */}
-      <div
-        className="absolute inset-0 pointer-events-none"
-        style={{
-          background: [
-            'linear-gradient(to bottom, rgba(20,15,10,0.38) 0%, transparent 22%)',
-            'linear-gradient(to top, rgba(46,40,34,0.82) 0%, rgba(46,40,34,0.12) 52%, transparent 100%)',
-          ].join(', '),
-        }}
-      />
+      {/* Gradient overlay — only when image is present */}
+      {hasImage && (
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            background: [
+              'linear-gradient(to bottom, rgba(20,15,10,0.38) 0%, transparent 22%)',
+              'linear-gradient(to top, rgba(46,40,34,0.82) 0%, rgba(46,40,34,0.12) 52%, transparent 100%)',
+            ].join(', '),
+          }}
+        />
+      )}
 
-      {/* Content — bottom-left, mobile safe area */}
+      {/* Content — centered */}
       <div
-        className="relative z-10 w-full px-6 md:px-14 pb-12"
+        className="relative z-10 w-full px-6 md:px-14 py-20"
         style={{ paddingBottom: 'max(3rem, env(safe-area-inset-bottom))' }}
       >
-        <div className="max-w-6xl mx-auto">
+        <div className="max-w-5xl mx-auto text-center">
           <h1
-            className="font-heading font-normal text-white leading-[1.08] mb-5
-              text-[2.25rem] md:text-hero lg:text-[4.5rem]"
-            dangerouslySetInnerHTML={{ __html: title }}
+            className={[
+              'section-title font-heading font-normal leading-[1.06] mb-6',
+              'text-[2.75rem] md:text-[4.5rem] lg:text-[5.5rem]',
+              hasImage ? 'text-white' : 'text-dark',
+            ].join(' ')}
+            dangerouslySetInnerHTML={{ __html: unwrapParagraph(title) }}
           />
 
           {subtitle && (
-            <p className="font-body font-normal text-white/90 text-[1.125rem] md:text-[1.375rem] max-w-xl mb-8 leading-relaxed">
+            <p
+              className={[
+                'font-body font-normal max-w-2xl mx-auto mb-10 leading-relaxed',
+                'text-[1.25rem] md:text-[1.5rem]',
+                hasImage ? 'text-white/90' : 'text-muted',
+              ].join(' ')}
+            >
               {subtitle}
             </p>
           )}
 
           {buttons && buttons.length > 0 && (
-            <div className="flex flex-wrap gap-3">
+            <div className="flex flex-wrap justify-center gap-4">
               {buttons.map((button) => {
                 const { id } = readFragment(ButtonBlockFragment, button);
-                return <Button key={id} data={button} />;
+                return <Button key={id} data={button} dark={!hasImage} locale={locale} />;
               })}
             </div>
           )}
 
-          {children && <div className="mt-8">{children}</div>}
+          {children && <div className="mt-10">{children}</div>}
         </div>
       </div>
     </section>

@@ -778,12 +778,10 @@ type ButtonBlockRecord implements RecordInterface {
   _status: ItemStatus!
   _unpublishingScheduledAt: DateTime
   _updatedAt: DateTime!
+  button: JsonField
   createdAt: DateTime!
   id: ItemId!
-  label: String!
-  style: String!
   updatedAt: DateTime!
-  url: JsonField
 }
 
 input CallToActionModelFilter {
@@ -2234,7 +2232,7 @@ input HomePageModelFilter {
   updatedAt: UpdatedAtFilter
   _isValid: BooleanFilter
   stayText: TextFilter
-  title: StringFilter
+  title: TextFilter
   subtitle: TextFilter
   moodsTitle: StringFilter
   beddyId: StringFilter
@@ -2270,8 +2268,6 @@ enum HomePageModelOrderBy {
   updatedAt_DESC
   _isValid_ASC
   _isValid_DESC
-  title_ASC
-  title_DESC
   moodsTitle_ASC
   moodsTitle_DESC
   beddyId_ASC
@@ -2340,6 +2336,9 @@ type HomePageRecord implements RecordInterface {
     fallbackLocales: [SiteLocale!]
   ): [StringMultiLocaleField!]
   _allTitleLocales(
+    """Process content as markdown"""
+    markdown: Boolean
+
     """
     If you want to fallback to a default translation when a translation has not been found
     """
@@ -2451,6 +2450,9 @@ type HomePageRecord implements RecordInterface {
     fallbackLocales: [SiteLocale!]
   ): String
   title(
+    """Process content as markdown"""
+    markdown: Boolean
+
     """The locale to use to fetch the field's content"""
     locale: SiteLocale
 
