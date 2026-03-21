@@ -547,6 +547,127 @@ type ApartmentRecord implements RecordInterface {
   updatedAt: DateTime!
 }
 
+type AppModelFooterTextField {
+  blocks: [String!]!
+  inlineBlocks: [String!]!
+  links: [String!]!
+  value: JsonField!
+}
+
+type AppModelLegalTextField {
+  blocks: [String!]!
+  inlineBlocks: [String!]!
+  links: [String!]!
+  value: JsonField!
+}
+
+type AppModelLegalTextFieldNonNullMultiLocaleField {
+  locale: SiteLocale
+  value: AppModelLegalTextField!
+}
+
+union AppModelNavItemsField = MenuDropdownRecord | MenuExternalItemRecord | MenuItemRecord
+
+type AppModelNavItemsFieldListListNonNullMultiLocaleField {
+  locale: SiteLocale
+  value: [AppModelNavItemsField!]!
+}
+
+"""Record of type ⚙️ App (app)"""
+type AppRecord implements RecordInterface {
+  _allCalloutTextLocales(
+    """Process content as markdown"""
+    markdown: Boolean
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): [StringMultiLocaleField!]
+  _allFooterLinksLocales(
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): [FooterMenuBlockRecordListListNonNullMultiLocaleField!]
+  _allLegalTextLocales(
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): [AppModelLegalTextFieldNonNullMultiLocaleField!]
+  _allNavItemsLocales(
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): [AppModelNavItemsFieldListListNonNullMultiLocaleField!]
+  _createdAt: DateTime!
+
+  """Editing URL"""
+  _editingUrl: String
+  _firstPublishedAt: DateTime!
+  _isValid: BooleanType!
+  _locales: [SiteLocale!]!
+  _modelApiKey: String!
+  _publicationScheduledAt: DateTime
+  _publishedAt: DateTime!
+
+  """Generates SEO and Social card meta tags to be used in your frontend"""
+  _seoMetaTags(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+  ): [Tag!]!
+  _status: ItemStatus!
+  _unpublishingScheduledAt: DateTime
+  _updatedAt: DateTime!
+  calloutBackground: ColorField!
+  calloutText(
+    """Process content as markdown"""
+    markdown: Boolean
+
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): String
+  createdAt: DateTime!
+  footerLinks(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): [FooterMenuBlockRecord!]!
+  footerText: AppModelFooterTextField
+  id: ItemId!
+  legalText(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): AppModelLegalTextField!
+  navItems(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): [AppModelNavItemsField!]!
+  socialLinks: [SocialLinkRecord!]!
+  updatedAt: DateTime!
+}
+
 input BlogCategoryModelFilter {
   _createdAt: CreatedAtFilter
   createdAt: CreatedAtFilter
@@ -635,6 +756,34 @@ scalar BooleanType
 type BooleanTypeNonNullMultiLocaleField {
   locale: SiteLocale
   value: BooleanType!
+}
+
+"""Block of type 🎯 Button (button_block)"""
+type ButtonBlockRecord implements RecordInterface {
+  _createdAt: DateTime!
+
+  """Editing URL"""
+  _editingUrl: String
+  _firstPublishedAt: DateTime!
+  _isValid: BooleanType!
+  _modelApiKey: String!
+  _publicationScheduledAt: DateTime
+  _publishedAt: DateTime!
+
+  """Generates SEO and Social card meta tags to be used in your frontend"""
+  _seoMetaTags(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+  ): [Tag!]!
+  _status: ItemStatus!
+  _unpublishingScheduledAt: DateTime
+  _updatedAt: DateTime!
+  createdAt: DateTime!
+  id: ItemId!
+  label: String!
+  style: String!
+  updatedAt: DateTime!
+  url: JsonField
 }
 
 input CallToActionModelFilter {
@@ -1349,7 +1498,7 @@ enum FaqModelOrderBy {
   question_DESC
 }
 
-"""Record of type Faq (faq)"""
+"""Record of type ⁉️ Faq (faq)"""
 type FaqRecord implements RecordInterface {
   _allAnswerLocales(
     """Process content as markdown"""
@@ -1647,6 +1796,40 @@ Represents signed double-precision fractional values as specified by [IEEE 754](
 """
 scalar FloatType
 
+union FooterMenuBlockModelNavLinksField = MenuExternalItemRecord | MenuItemRecord
+
+"""Block of type 👣 Footer Menu Widget (footer_menu_block)"""
+type FooterMenuBlockRecord implements RecordInterface {
+  _createdAt: DateTime!
+
+  """Editing URL"""
+  _editingUrl: String
+  _firstPublishedAt: DateTime!
+  _isValid: BooleanType!
+  _modelApiKey: String!
+  _publicationScheduledAt: DateTime
+  _publishedAt: DateTime!
+
+  """Generates SEO and Social card meta tags to be used in your frontend"""
+  _seoMetaTags(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+  ): [Tag!]!
+  _status: ItemStatus!
+  _unpublishingScheduledAt: DateTime
+  _updatedAt: DateTime!
+  createdAt: DateTime!
+  id: ItemId!
+  navLinks: [FooterMenuBlockModelNavLinksField!]!
+  updatedAt: DateTime!
+  widgetLabel: String!
+}
+
+type FooterMenuBlockRecordListListNonNullMultiLocaleField {
+  locale: SiteLocale
+  value: [FooterMenuBlockRecord!]!
+}
+
 """Specifies how to filter Multiple files/images field"""
 input GalleryFilter {
   """
@@ -1916,7 +2099,7 @@ enum GuestbookModelOrderBy {
   channel_DESC
 }
 
-"""Record of type Guestbooks (guestbook)"""
+"""Record of type 💬 Guestbooks (guestbook)"""
 type GuestbookRecord implements RecordInterface {
   _createdAt: DateTime!
 
@@ -1952,6 +2135,117 @@ type GuestbookRecord implements RecordInterface {
   updatedAt: DateTime!
 }
 
+"""Block of type 🚀 Hero section (hero_block)"""
+type HeroBlockRecord implements RecordInterface {
+  _createdAt: DateTime!
+
+  """Editing URL"""
+  _editingUrl: String
+  _firstPublishedAt: DateTime!
+  _isValid: BooleanType!
+  _modelApiKey: String!
+  _publicationScheduledAt: DateTime
+  _publishedAt: DateTime!
+
+  """Generates SEO and Social card meta tags to be used in your frontend"""
+  _seoMetaTags(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+  ): [Tag!]!
+  _status: ItemStatus!
+  _unpublishingScheduledAt: DateTime
+  _updatedAt: DateTime!
+  buttons: [ButtonBlockRecord!]!
+  createdAt: DateTime!
+  heroHeader: SectionHeaderRecord!
+  heroImage: FileField
+  id: ItemId!
+  updatedAt: DateTime!
+}
+
+type HeroBlockRecordListListNonNullMultiLocaleField {
+  locale: SiteLocale
+  value: [HeroBlockRecord!]!
+}
+
+"""Record of type 🏡 Home page (Import) (home_page_import)"""
+type HomePageImportRecord implements RecordInterface {
+  _allSeoLocales(
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): [SeoFieldMultiLocaleField!]
+  _allSubtitleLocales(
+    """Process content as markdown"""
+    markdown: Boolean
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): [StringMultiLocaleField!]
+  _allTitleLocales(
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): [StringNonNullMultiLocaleField!]
+  _createdAt: DateTime!
+
+  """Editing URL"""
+  _editingUrl: String
+  _firstPublishedAt: DateTime!
+  _isValid: BooleanType!
+  _locales: [SiteLocale!]!
+  _modelApiKey: String!
+  _publicationScheduledAt: DateTime
+  _publishedAt: DateTime!
+
+  """Generates SEO and Social card meta tags to be used in your frontend"""
+  _seoMetaTags(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+  ): [Tag!]!
+  _status: ItemStatus!
+  _unpublishingScheduledAt: DateTime
+  _updatedAt: DateTime!
+  createdAt: DateTime!
+  id: ItemId!
+  sections: [HeroBlockRecord!]!
+  seo(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): SeoField
+  subtitle(
+    """Process content as markdown"""
+    markdown: Boolean
+
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): String
+  title(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): String!
+  updatedAt: DateTime!
+}
+
 union HomePageModelCtaLinkField = DistrictRecord | MoodRecord | OfferRecord | PostRecord | ServiceRecord
 
 """Linking fields"""
@@ -1976,10 +2270,12 @@ input HomePageModelFilter {
   _updatedAt: UpdatedAtFilter
   updatedAt: UpdatedAtFilter
   _isValid: BooleanFilter
+  stayText: TextFilter
+  title: StringFilter
+  subtitle: TextFilter
   moodsTitle: StringFilter
   beddyId: StringFilter
   doText: TextFilter
-  stayText: TextFilter
   highlightedApartments: LinksFilter
   claim: StringFilter
   moods: LinksFilter
@@ -1988,7 +2284,6 @@ input HomePageModelFilter {
   ctaImage: FileFilter
   ctaLabel: StringFilter
   seo: SeoFilter
-  title: StringFilter
   OR: [HomePageModelFilter]
   AND: [HomePageModelFilter]
 }
@@ -2016,6 +2311,8 @@ enum HomePageModelOrderBy {
   updatedAt_DESC
   _isValid_ASC
   _isValid_DESC
+  title_ASC
+  title_DESC
   moodsTitle_ASC
   moodsTitle_DESC
   beddyId_ASC
@@ -2024,8 +2321,6 @@ enum HomePageModelOrderBy {
   claim_DESC
   ctaLabel_ASC
   ctaLabel_DESC
-  title_ASC
-  title_DESC
 }
 
 """Record of type 🏡 Home page (home_page)"""
@@ -2093,6 +2388,15 @@ type HomePageRecord implements RecordInterface {
     """
     fallbackLocales: [SiteLocale!]
   ): [StringMultiLocaleField!]
+  _allSubtitleLocales(
+    """Process content as markdown"""
+    markdown: Boolean
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): [StringMultiLocaleField!]
   _allTitleLocales(
     """
     If you want to fallback to a default translation when a translation has not been found
@@ -2118,6 +2422,7 @@ type HomePageRecord implements RecordInterface {
   _unpublishingScheduledAt: DateTime
   _updatedAt: DateTime!
   beddyId: String
+  buttons: [ButtonBlockRecord!]!
   claim(
     """The locale to use to fetch the field's content"""
     locale: SiteLocale
@@ -2203,6 +2508,18 @@ type HomePageRecord implements RecordInterface {
     fallbackLocales: [SiteLocale!]
   ): SeoField
   stayText(
+    """Process content as markdown"""
+    markdown: Boolean
+
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): String
+  subtitle(
     """Process content as markdown"""
     markdown: Boolean
 
@@ -2337,6 +2654,157 @@ type HouseBadgeRecord implements RecordInterface {
     """
     fallbackLocales: [SiteLocale!]
   ): String!
+  updatedAt: DateTime!
+}
+
+"""Block of type 🌅 Image (image_block)"""
+type ImageBlockRecord implements RecordInterface {
+  _createdAt: DateTime!
+
+  """Editing URL"""
+  _editingUrl: String
+  _firstPublishedAt: DateTime!
+  _isValid: BooleanType!
+  _modelApiKey: String!
+  _publicationScheduledAt: DateTime
+  _publishedAt: DateTime!
+
+  """Generates SEO and Social card meta tags to be used in your frontend"""
+  _seoMetaTags(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+  ): [Tag!]!
+  _status: ItemStatus!
+  _unpublishingScheduledAt: DateTime
+  _updatedAt: DateTime!
+  asset: ImageFileField!
+  createdAt: DateTime!
+  id: ItemId!
+  updatedAt: DateTime!
+}
+
+type ImageFileField implements FileFieldInterface {
+  _createdAt: DateTime!
+
+  """
+  The DatoCMS URL where you can edit this entity. To use this field, you need to set a X-Base-Editing-Url header in the request
+  """
+  _editingUrl: String
+  _updatedAt: DateTime!
+  alt(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): String
+  author: String
+  basename: String!
+  blurUpThumb(
+    """
+    Controls the "punch" value (~contrast) of the blurhash decoding algorithm (defaults to 1.0)
+    """
+    punch: Float! = 1
+
+    """Maximum image dimension (defaults to 24px)"""
+    size: Int! = 24
+
+    """Image quality (defaults to 70%)"""
+    quality: Int! = 70
+
+    """Imgix transformations to apply to the image"""
+    imgixParams: ImgixParams
+  ): String
+  blurhash: String
+  colors: [ColorField!]!
+  copyright: String
+  customData(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): CustomData!
+  exifInfo: CustomData!
+  filename: String!
+  focalPoint(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): focalPoint!
+  format: String!
+  height: IntType!
+  id: UploadId!
+  md5: String!
+  mimeType: String!
+  notes: String
+  responsiveImage(
+    """Imgix transformations to apply to the image"""
+    imgixParams: ImgixParams
+
+    """Specify a custom `sizes` attribute for the image"""
+    sizes: String
+
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): ResponsiveImage!
+  size: IntType!
+  smartTags: [String!]!
+  tags: [String!]!
+  thumbhash: String
+  title(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): String
+  url(
+    """Imgix transformations to apply to the image"""
+    imgixParams: ImgixParams
+  ): String!
+  video: UploadVideoField
+  width: IntType!
+}
+
+"""Block of type 🎠 Image Gallery (image_gallery_block)"""
+type ImageGalleryBlockRecord implements RecordInterface {
+  _createdAt: DateTime!
+
+  """Editing URL"""
+  _editingUrl: String
+  _firstPublishedAt: DateTime!
+  _isValid: BooleanType!
+  _modelApiKey: String!
+  _publicationScheduledAt: DateTime
+  _publishedAt: DateTime!
+
+  """Generates SEO and Social card meta tags to be used in your frontend"""
+  _seoMetaTags(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+  ): [Tag!]!
+  _status: ItemStatus!
+  _unpublishingScheduledAt: DateTime
+  _updatedAt: DateTime!
+  assets: [ImageFileField!]!
+  createdAt: DateTime!
+  id: ItemId!
   updatedAt: DateTime!
 }
 
@@ -4420,6 +4888,106 @@ input InUseFilter {
   eq: BooleanType
 }
 
+"""Record of type Index Apartments (index_apartment)"""
+type IndexApartmentRecord implements RecordInterface {
+  _allIntroLocales(
+    """Process content as markdown"""
+    markdown: Boolean
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): [StringMultiLocaleField!]
+  _allSeoLocales(
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): [SeoFieldMultiLocaleField!]
+  _allSubtitleLocales(
+    """Process content as markdown"""
+    markdown: Boolean
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): [StringMultiLocaleField!]
+  _allTitleLocales(
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): [StringNonNullMultiLocaleField!]
+  _createdAt: DateTime!
+
+  """Editing URL"""
+  _editingUrl: String
+  _firstPublishedAt: DateTime!
+  _isValid: BooleanType!
+  _modelApiKey: String!
+  _publicationScheduledAt: DateTime
+  _publishedAt: DateTime!
+
+  """Generates SEO and Social card meta tags to be used in your frontend"""
+  _seoMetaTags(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+  ): [Tag!]!
+  _status: ItemStatus!
+  _unpublishingScheduledAt: DateTime
+  _updatedAt: DateTime!
+  createdAt: DateTime!
+  featuredImage: FileField!
+  id: ItemId!
+  intro(
+    """Process content as markdown"""
+    markdown: Boolean
+
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): String
+  sections: [HeroBlockRecord!]!
+  seo(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): SeoField
+  slug: String!
+  subtitle(
+    """Process content as markdown"""
+    markdown: Boolean
+
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): String
+  title(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): String!
+  updatedAt: DateTime!
+}
+
 """Block of type Info address (info_address)"""
 type InfoAddressRecord implements RecordInterface {
   _createdAt: DateTime!
@@ -4896,6 +5464,87 @@ input LocalesFilter {
   notIn: [SiteLocale!]
 }
 
+"""Block of type 🔽 Menu Dropdown (menu_dropdown)"""
+type MenuDropdownRecord implements RecordInterface {
+  _createdAt: DateTime!
+
+  """Editing URL"""
+  _editingUrl: String
+  _firstPublishedAt: DateTime!
+  _isValid: BooleanType!
+  _modelApiKey: String!
+  _publicationScheduledAt: DateTime
+  _publishedAt: DateTime!
+
+  """Generates SEO and Social card meta tags to be used in your frontend"""
+  _seoMetaTags(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+  ): [Tag!]!
+  _status: ItemStatus!
+  _unpublishingScheduledAt: DateTime
+  _updatedAt: DateTime!
+  createdAt: DateTime!
+  id: ItemId!
+  pages: [MenuItemRecord!]!
+  staticLabel: String!
+  updatedAt: DateTime!
+}
+
+"""Block of type 🌐 Menu External Item (menu_external_item)"""
+type MenuExternalItemRecord implements RecordInterface {
+  _createdAt: DateTime!
+
+  """Editing URL"""
+  _editingUrl: String
+  _firstPublishedAt: DateTime!
+  _isValid: BooleanType!
+  _modelApiKey: String!
+  _publicationScheduledAt: DateTime
+  _publishedAt: DateTime!
+
+  """Generates SEO and Social card meta tags to be used in your frontend"""
+  _seoMetaTags(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+  ): [Tag!]!
+  _status: ItemStatus!
+  _unpublishingScheduledAt: DateTime
+  _updatedAt: DateTime!
+  createdAt: DateTime!
+  id: ItemId!
+  label: String!
+  updatedAt: DateTime!
+  url: String!
+}
+
+"""Block of type 🔗 Menu Item (menu_item)"""
+type MenuItemRecord implements RecordInterface {
+  _createdAt: DateTime!
+
+  """Editing URL"""
+  _editingUrl: String
+  _firstPublishedAt: DateTime!
+  _isValid: BooleanType!
+  _modelApiKey: String!
+  _publicationScheduledAt: DateTime
+  _publishedAt: DateTime!
+
+  """Generates SEO and Social card meta tags to be used in your frontend"""
+  _seoMetaTags(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+  ): [Tag!]!
+  _status: ItemStatus!
+  _unpublishingScheduledAt: DateTime
+  _updatedAt: DateTime!
+  createdAt: DateTime!
+  id: ItemId!
+  label: String
+  page: String!
+  updatedAt: DateTime!
+}
+
 scalar MetaTagAttributes
 
 """Linking fields"""
@@ -5099,7 +5748,7 @@ enum MoodModelOrderBy {
   name_DESC
 }
 
-"""Record of type Moods (mood)"""
+"""Record of type 😊 Moods (mood)"""
 type MoodRecord implements RecordInterface {
   _allClaimLocales(
     """
@@ -5474,98 +6123,6 @@ type PageAcacialifeRecord implements RecordInterface {
   ): String
   featuredImage: FileField
   id: ItemId!
-  seo(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
-    """
-    If you want to fallback to a default translation when a translation has not been found
-    """
-    fallbackLocales: [SiteLocale!]
-  ): SeoField
-  subtitle(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
-    """
-    If you want to fallback to a default translation when a translation has not been found
-    """
-    fallbackLocales: [SiteLocale!]
-  ): String
-  title(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
-    """
-    If you want to fallback to a default translation when a translation has not been found
-    """
-    fallbackLocales: [SiteLocale!]
-  ): String!
-  updatedAt: DateTime!
-}
-
-"""Record of type Page Apartments (page_apartments)"""
-type PageApartmentsRecord implements RecordInterface {
-  _allIntroLocales(
-    """Process content as markdown"""
-    markdown: Boolean
-
-    """
-    If you want to fallback to a default translation when a translation has not been found
-    """
-    fallbackLocales: [SiteLocale!]
-  ): [StringMultiLocaleField!]
-  _allSeoLocales(
-    """
-    If you want to fallback to a default translation when a translation has not been found
-    """
-    fallbackLocales: [SiteLocale!]
-  ): [SeoFieldMultiLocaleField!]
-  _allSubtitleLocales(
-    """
-    If you want to fallback to a default translation when a translation has not been found
-    """
-    fallbackLocales: [SiteLocale!]
-  ): [StringMultiLocaleField!]
-  _allTitleLocales(
-    """
-    If you want to fallback to a default translation when a translation has not been found
-    """
-    fallbackLocales: [SiteLocale!]
-  ): [StringNonNullMultiLocaleField!]
-  _createdAt: DateTime!
-
-  """Editing URL"""
-  _editingUrl: String
-  _firstPublishedAt: DateTime!
-  _isValid: BooleanType!
-  _modelApiKey: String!
-  _publicationScheduledAt: DateTime
-  _publishedAt: DateTime!
-
-  """Generates SEO and Social card meta tags to be used in your frontend"""
-  _seoMetaTags(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-  ): [Tag!]!
-  _status: ItemStatus!
-  _unpublishingScheduledAt: DateTime
-  _updatedAt: DateTime!
-  createdAt: DateTime!
-  featuredImage: FileField!
-  id: ItemId!
-  intro(
-    """Process content as markdown"""
-    markdown: Boolean
-
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
-    """
-    If you want to fallback to a default translation when a translation has not been found
-    """
-    fallbackLocales: [SiteLocale!]
-  ): String
   seo(
     """The locale to use to fetch the field's content"""
     locale: SiteLocale
@@ -6055,6 +6612,68 @@ type PageGuestbookRecord implements RecordInterface {
   updatedAt: DateTime!
 }
 
+input PageModelFilter {
+  _createdAt: CreatedAtFilter
+  createdAt: CreatedAtFilter
+  id: ItemIdFilter
+  _firstPublishedAt: PublishedAtFilter
+  _publicationScheduledAt: PublishedAtFilter
+  _unpublishingScheduledAt: PublishedAtFilter
+  _publishedAt: PublishedAtFilter
+  _status: StatusFilter
+  _updatedAt: UpdatedAtFilter
+  updatedAt: UpdatedAtFilter
+  _isValid: BooleanFilter
+  _locales: LocalesFilter
+  title: StringFilter
+  slug: SlugFilter
+  seoSettingsSocial: SeoFilter
+  structuredText: StructuredTextFilter
+  OR: [PageModelFilter]
+  AND: [PageModelFilter]
+}
+
+enum PageModelOrderBy {
+  _createdAt_ASC
+  _createdAt_DESC
+  createdAt_ASC
+  createdAt_DESC
+  id_ASC
+  id_DESC
+  _firstPublishedAt_ASC
+  _firstPublishedAt_DESC
+  _publicationScheduledAt_ASC
+  _publicationScheduledAt_DESC
+  _unpublishingScheduledAt_ASC
+  _unpublishingScheduledAt_DESC
+  _publishedAt_ASC
+  _publishedAt_DESC
+  _status_ASC
+  _status_DESC
+  _updatedAt_ASC
+  _updatedAt_DESC
+  updatedAt_ASC
+  updatedAt_DESC
+  _isValid_ASC
+  _isValid_DESC
+  title_ASC
+  title_DESC
+}
+
+union PageModelStructuredTextBlocksField = ImageBlockRecord | ImageGalleryBlockRecord | VideoBlockRecord
+
+type PageModelStructuredTextField {
+  blocks: [PageModelStructuredTextBlocksField!]!
+  inlineBlocks: [String!]!
+  links: [HomePageImportRecord!]!
+  value: JsonField!
+}
+
+type PageModelStructuredTextFieldNonNullMultiLocaleField {
+  locale: SiteLocale
+  value: PageModelStructuredTextField!
+}
+
 """Record of type Page Moods (page_moods)"""
 type PageMoodsRecord implements RecordInterface {
   _allDescriptionLocales(
@@ -6226,6 +6845,107 @@ type PageOffersRecord implements RecordInterface {
     """
     fallbackLocales: [SiteLocale!]
   ): String
+  title(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): String!
+  updatedAt: DateTime!
+}
+
+"""Record of type 📝 Page (page)"""
+type PageRecord implements RecordInterface {
+  _allSectionsLocales(
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): [HeroBlockRecordListListNonNullMultiLocaleField!]
+  _allSeoSettingsSocialLocales(
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): [SeoFieldMultiLocaleField!]
+  _allSlugLocales(
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): [StringNonNullMultiLocaleField!]
+  _allStructuredTextLocales(
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): [PageModelStructuredTextFieldNonNullMultiLocaleField!]
+  _allTitleLocales(
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): [StringNonNullMultiLocaleField!]
+  _createdAt: DateTime!
+
+  """Editing URL"""
+  _editingUrl: String
+  _firstPublishedAt: DateTime!
+  _isValid: BooleanType!
+  _locales: [SiteLocale!]!
+  _modelApiKey: String!
+  _publicationScheduledAt: DateTime
+  _publishedAt: DateTime!
+
+  """Generates SEO and Social card meta tags to be used in your frontend"""
+  _seoMetaTags(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+  ): [Tag!]!
+  _status: ItemStatus!
+  _unpublishingScheduledAt: DateTime
+  _updatedAt: DateTime!
+  createdAt: DateTime!
+  id: ItemId!
+  sections(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): [HeroBlockRecord!]!
+  seoSettingsSocial(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): SeoField
+  slug(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): String!
+  structuredText(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): PageModelStructuredTextField!
   title(
     """The locale to use to fetch the field's content"""
     locale: SiteLocale
@@ -6722,6 +7442,13 @@ type Query {
   ): CollectionMetadata!
 
   """Returns meta information regarding a record collection"""
+  _allPagesMeta(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+    filter: PageModelFilter
+  ): CollectionMetadata!
+
+  """Returns meta information regarding a record collection"""
   _allParagraphsMeta(
     """The locale to use to fetch the field's content"""
     locale: SiteLocale
@@ -6761,6 +7488,13 @@ type Query {
     """The locale to use to fetch the field's content"""
     locale: SiteLocale
     filter: TipModelFilter
+  ): CollectionMetadata!
+
+  """Returns meta information regarding a record collection"""
+  _allTranslationsMeta(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+    filter: TranslationModelFilter
   ): CollectionMetadata!
 
   """Returns meta information regarding an assets collection"""
@@ -7124,6 +7858,25 @@ type Query {
   ): [OfferRecord!]!
 
   """Returns a collection of records"""
+  allPages(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+
+    """Skip the first results"""
+    skip: IntType
+
+    """Limit the number of results"""
+    first: IntType = 20
+    filter: PageModelFilter
+    orderBy: [PageModelOrderBy] = [_updatedAt_DESC]
+  ): [PageRecord!]!
+
+  """Returns a collection of records"""
   allParagraphs(
     """The locale to use to fetch the field's content"""
     locale: SiteLocale
@@ -7237,6 +7990,25 @@ type Query {
     orderBy: [TipModelOrderBy] = [_updatedAt_DESC]
   ): [TipRecord!]!
 
+  """Returns a collection of records"""
+  allTranslations(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+
+    """Skip the first results"""
+    skip: IntType
+
+    """Limit the number of results"""
+    first: IntType = 20
+    filter: TranslationModelFilter
+    orderBy: [TranslationModelOrderBy] = [_updatedAt_DESC]
+  ): [TranslationRecord!]!
+
   """Returns a collection of assets"""
   allUploads(
     """The locale to use to fetch the field's content"""
@@ -7294,6 +8066,17 @@ type Query {
     filter: ApartmentCategoryModelFilter
     orderBy: [ApartmentCategoryModelOrderBy] = [position_ASC]
   ): ApartmentCategoryRecord
+
+  """Returns the single instance record"""
+  app(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): AppRecord
 
   """Returns a specific record"""
   blogCategory(
@@ -7423,6 +8206,17 @@ type Query {
     fallbackLocales: [SiteLocale!]
   ): HomePageRecord
 
+  """Returns the single instance record"""
+  homePageImport(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): HomePageImportRecord
+
   """Returns a specific record"""
   houseBadge(
     """The locale to use to fetch the field's content"""
@@ -7448,6 +8242,17 @@ type Query {
     filter: ImageModelFilter
     orderBy: [ImageModelOrderBy] = [position_ASC]
   ): ImageRecord
+
+  """Returns the single instance record"""
+  indexApartment(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): IndexApartmentRecord
 
   """Returns a specific record"""
   infoLabel(
@@ -7501,6 +8306,19 @@ type Query {
     orderBy: [OfferModelOrderBy] = [position_ASC]
   ): OfferRecord
 
+  """Returns a specific record"""
+  page(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+    filter: PageModelFilter
+    orderBy: [PageModelOrderBy] = [_updatedAt_DESC]
+  ): PageRecord
+
   """Returns the single instance record"""
   pageAcacialife(
     """The locale to use to fetch the field's content"""
@@ -7511,17 +8329,6 @@ type Query {
     """
     fallbackLocales: [SiteLocale!]
   ): PageAcacialifeRecord
-
-  """Returns the single instance record"""
-  pageApartments(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
-    """
-    If you want to fallback to a default translation when a translation has not been found
-    """
-    fallbackLocales: [SiteLocale!]
-  ): PageApartmentsRecord
 
   """Returns the single instance record"""
   pageBlog(
@@ -7689,6 +8496,19 @@ type Query {
     orderBy: [TipModelOrderBy] = [_updatedAt_DESC]
   ): TipRecord
 
+  """Returns a specific record"""
+  translation(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+    filter: TranslationModelFilter
+    orderBy: [TranslationModelOrderBy] = [_updatedAt_DESC]
+  ): TranslationRecord
+
   """Returns a specific asset"""
   upload(
     """The locale to use to fetch the field's content"""
@@ -7775,7 +8595,7 @@ enum RedirectModelOrderBy {
   originalUrl_DESC
 }
 
-"""Record of type Redirects (redirect)"""
+"""Record of type 🔀 Redirects (redirect)"""
 type RedirectRecord implements RecordInterface {
   _createdAt: DateTime!
 
@@ -8243,6 +9063,34 @@ input SlugFilter {
   notIn: [String]
 }
 
+"""Block of type 🐦 Social Link (social_link)"""
+type SocialLinkRecord implements RecordInterface {
+  _createdAt: DateTime!
+
+  """Editing URL"""
+  _editingUrl: String
+  _firstPublishedAt: DateTime!
+  _isValid: BooleanType!
+  _modelApiKey: String!
+  _publicationScheduledAt: DateTime
+  _publishedAt: DateTime!
+
+  """Generates SEO and Social card meta tags to be used in your frontend"""
+  _seoMetaTags(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+  ): [Tag!]!
+  _status: ItemStatus!
+  _unpublishingScheduledAt: DateTime
+  _updatedAt: DateTime!
+  createdAt: DateTime!
+  iconName: String!
+  id: ItemId!
+  platform: String!
+  updatedAt: DateTime!
+  url: String!
+}
+
 """Specifies how to filter by status"""
 input StatusFilter {
   """Search the record with the specified status"""
@@ -8308,6 +9156,30 @@ type StringMultiLocaleField {
 type StringNonNullMultiLocaleField {
   locale: SiteLocale
   value: String!
+}
+
+"""Specifies how to filter Structured Text fields values"""
+input StructuredTextFilter {
+  """Filter records based on a regular expression"""
+  matches: StringMatchesFilter
+
+  """Exclude records based on a regular expression"""
+  notMatches: StringMatchesFilter
+
+  """
+  Filter records with the specified field set as blank (null or single empty paragraph)
+  """
+  isBlank: BooleanType
+
+  """
+  Filter records with the specified field present (neither null, nor empty string)
+  """
+  isPresent: BooleanType
+
+  """
+  Filter records with the specified field defined (i.e. with any value) or not [DEPRECATED]
+  """
+  exists: BooleanType
 }
 
 type Tag {
@@ -8486,6 +9358,94 @@ type TipRecord implements RecordInterface {
     """
     fallbackLocales: [SiteLocale!]
   ): String
+}
+
+input TranslationModelFilter {
+  _createdAt: CreatedAtFilter
+  createdAt: CreatedAtFilter
+  id: ItemIdFilter
+  _firstPublishedAt: PublishedAtFilter
+  _publicationScheduledAt: PublishedAtFilter
+  _unpublishingScheduledAt: PublishedAtFilter
+  _publishedAt: PublishedAtFilter
+  _status: StatusFilter
+  _updatedAt: UpdatedAtFilter
+  updatedAt: UpdatedAtFilter
+  _isValid: BooleanFilter
+  value: StringFilter
+  key: StringFilter
+  OR: [TranslationModelFilter]
+  AND: [TranslationModelFilter]
+}
+
+enum TranslationModelOrderBy {
+  _createdAt_ASC
+  _createdAt_DESC
+  createdAt_ASC
+  createdAt_DESC
+  id_ASC
+  id_DESC
+  _firstPublishedAt_ASC
+  _firstPublishedAt_DESC
+  _publicationScheduledAt_ASC
+  _publicationScheduledAt_DESC
+  _unpublishingScheduledAt_ASC
+  _unpublishingScheduledAt_DESC
+  _publishedAt_ASC
+  _publishedAt_DESC
+  _status_ASC
+  _status_DESC
+  _updatedAt_ASC
+  _updatedAt_DESC
+  updatedAt_ASC
+  updatedAt_DESC
+  _isValid_ASC
+  _isValid_DESC
+  value_ASC
+  value_DESC
+  key_ASC
+  key_DESC
+}
+
+"""Record of type 🌐 Translation (translation)"""
+type TranslationRecord implements RecordInterface {
+  _allValueLocales(
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): [StringNonNullMultiLocaleField!]
+  _createdAt: DateTime!
+
+  """Editing URL"""
+  _editingUrl: String
+  _firstPublishedAt: DateTime!
+  _isValid: BooleanType!
+  _modelApiKey: String!
+  _publicationScheduledAt: DateTime
+  _publishedAt: DateTime!
+
+  """Generates SEO and Social card meta tags to be used in your frontend"""
+  _seoMetaTags(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+  ): [Tag!]!
+  _status: ItemStatus!
+  _unpublishingScheduledAt: DateTime
+  _updatedAt: DateTime!
+  createdAt: DateTime!
+  id: ItemId!
+  key: String!
+  updatedAt: DateTime!
+  value(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): String!
 }
 
 """Block of type Truth (truth)"""
@@ -9046,6 +10006,131 @@ input UploadWidthFilter {
 
   """Search assets that do not have the specified width"""
   neq: IntType
+}
+
+"""Block of type 📺 Video (video_block)"""
+type VideoBlockRecord implements RecordInterface {
+  _createdAt: DateTime!
+
+  """Editing URL"""
+  _editingUrl: String
+  _firstPublishedAt: DateTime!
+  _isValid: BooleanType!
+  _modelApiKey: String!
+  _publicationScheduledAt: DateTime
+  _publishedAt: DateTime!
+
+  """Generates SEO and Social card meta tags to be used in your frontend"""
+  _seoMetaTags(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+  ): [Tag!]!
+  _status: ItemStatus!
+  _unpublishingScheduledAt: DateTime
+  _updatedAt: DateTime!
+  asset: VideoFileField!
+  createdAt: DateTime!
+  id: ItemId!
+  updatedAt: DateTime!
+}
+
+type VideoFileField implements FileFieldInterface {
+  _createdAt: DateTime!
+
+  """
+  The DatoCMS URL where you can edit this entity. To use this field, you need to set a X-Base-Editing-Url header in the request
+  """
+  _editingUrl: String
+  _updatedAt: DateTime!
+  alt(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): String
+  author: String
+  basename: String!
+  blurUpThumb(
+    """
+    Controls the "punch" value (~contrast) of the blurhash decoding algorithm (defaults to 1.0)
+    """
+    punch: Float! = 1
+
+    """Maximum image dimension (defaults to 24px)"""
+    size: Int! = 24
+
+    """Image quality (defaults to 70%)"""
+    quality: Int! = 70
+
+    """Imgix transformations to apply to the image"""
+    imgixParams: ImgixParams
+  ): String
+  blurhash: String
+  colors: [ColorField!]!
+  copyright: String
+  customData(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): CustomData!
+  exifInfo: CustomData!
+  filename: String!
+  focalPoint(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): focalPoint
+  format: String!
+  height: IntType!
+  id: UploadId!
+  md5: String!
+  mimeType: String!
+  notes: String
+  responsiveImage(
+    """Imgix transformations to apply to the image"""
+    imgixParams: ImgixParams
+
+    """Specify a custom `sizes` attribute for the image"""
+    sizes: String
+
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): ResponsiveImage
+  size: IntType!
+  smartTags: [String!]!
+  tags: [String!]!
+  thumbhash: String
+  title(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): String
+  url(
+    """Imgix transformations to apply to the image"""
+    imgixParams: ImgixParams
+  ): String!
+  video: UploadVideoField!
+  width: IntType!
 }
 
 enum VideoMp4Res {

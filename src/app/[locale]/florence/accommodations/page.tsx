@@ -13,7 +13,7 @@ import AccommodationsContent, { type AccommodationsProps } from './Accommodation
 const metaQuery = graphql(
   `
     query AccommodationsMetaQuery($locale: SiteLocale!) {
-      pageApartments(locale: $locale) {
+      indexApartment(locale: $locale) {
         _seoMetaTags(locale: $locale) {
           ...TagFragment
         }
@@ -35,7 +35,7 @@ export async function generateMetadata({
     includeDrafts: isEnabled,
   });
   return {
-    ...toNextMetadata(data.pageApartments?._seoMetaTags ?? []),
+    ...toNextMetadata(data.indexApartment?._seoMetaTags ?? []),
     alternates: {
       canonical: `/${locale}/florence/accommodations`,
       languages: { en: '/en/florence/accommodations', it: '/it/florence/accommodations' },
@@ -46,7 +46,7 @@ export async function generateMetadata({
 export const query = graphql(
   `
     query AccommodationsQuery($locale: SiteLocale!) {
-      pageApartments(locale: $locale) {
+      indexApartment(locale: $locale) {
         title(locale: $locale)
         subtitle(locale: $locale)
         intro(locale: $locale, markdown: true)

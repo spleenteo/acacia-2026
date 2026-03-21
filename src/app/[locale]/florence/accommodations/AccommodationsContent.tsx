@@ -15,7 +15,7 @@ export default function AccommodationsContent({
   locale,
   data,
 }: AccommodationsProps & { data: AccommodationsData }) {
-  const { pageApartments, allApartmentCategories, allApartments, homePage } = data;
+  const { indexApartment, allApartmentCategories, allApartments, homePage } = data;
 
   const categories = allApartmentCategories.map((cat) => ({
     id: cat.id,
@@ -36,10 +36,10 @@ export default function AccommodationsContent({
         className="relative min-h-[55vh] flex items-end bg-dark"
         style={{ marginTop: 'calc(var(--header-height) * -1)' }}
       >
-        {pageApartments?.featuredImage?.responsiveImage && (
+        {indexApartment?.featuredImage?.responsiveImage && (
           <div className="absolute inset-0">
             <ResponsiveImage
-              data={pageApartments.featuredImage.responsiveImage}
+              data={indexApartment.featuredImage.responsiveImage}
               className="w-full h-full object-cover opacity-45"
               priority
             />
@@ -49,11 +49,11 @@ export default function AccommodationsContent({
         <div className="relative z-10 w-full px-8 pb-14 pt-32">
           <div className="max-w-6xl mx-auto">
             <h1 className="font-heading font-normal text-hero text-white leading-[1.05] mb-3">
-              {pageApartments?.title}
+              {indexApartment?.title}
             </h1>
-            {pageApartments?.subtitle && (
+            {indexApartment?.subtitle && (
               <p className="font-body font-normal text-[1.125rem] md:text-[1.375rem] text-white/90 leading-relaxed">
-                {pageApartments.subtitle}
+                {indexApartment.subtitle}
               </p>
             )}
           </div>
@@ -61,10 +61,10 @@ export default function AccommodationsContent({
       </section>
 
       {/* Intro */}
-      {pageApartments?.intro && (
+      {indexApartment?.intro && (
         <section className="py-20 lg:py-28 bg-surface-alt">
           <div className="mx-auto max-w-3xl px-8 text-center">
-            <HtmlContent html={pageApartments.intro} className="font-body text-body-lg text-dark" />
+            <HtmlContent html={indexApartment.intro} className="font-body text-body-lg text-dark" />
             <div className="mx-auto mt-8 w-12 h-[3px] bg-rust rounded-sm" />
           </div>
         </section>
