@@ -70,9 +70,9 @@ Tailwind CSS v4 with `@theme` (NOT `@theme inline`) design tokens in `src/app/gl
 
 **Palette:** Warm rust accent `#D0512A`, cream surfaces (`surface` #FDFBF8 / `surface-alt` #F5F0E8 / `surface-warm` #ECE6DB), warm dark `#2E2822` (never pure black).
 
-**Typography:** Playfair Display (`font-heading`) for all headings, DM Sans (`font-body`) for body text. Font sizes: `text-hero` (56px), `text-h1` (42px), `text-h2` (36px), `text-h3` (24px), `text-h4` (18px), `text-body-lg` (17px), `text-body` (15px), `text-body-sm` (14px), `text-caption` (13px), `text-label` (12px), `text-tag` (10px), `text-fine` (11px).
+**Typography:** Cormorant Garamond (`font-heading`) for all headings, Lato (`font-body`) for body text. Font sizes: `text-hero` (56px), `text-h1` (42px), `text-h2` (36px), `text-h3` (24px), `text-h4` (18px), `text-body-lg` (17px), `text-body` (15px), `text-body-sm` (14px), `text-caption` (13px), `text-label` (12px), `text-tag` (10px), `text-fine` (11px).
 
-**Editorial pattern:** Section headings use `<em>` for italic emphasis on one key word (rendered at `font-weight: 500` via `@layer base` rule). Section labels: `text-label uppercase tracking-[0.22em] text-rust font-medium`.
+**Editorial pattern:** Section headings use `<em>` for italic emphasis on one key word with an animated marker highlight effect (`rust-pale` background, slight rotation, scroll-triggered via `.in-view` class). Use `InViewSection` wrapper (server components) or `useInView` hook (client components) to trigger the animation. Section labels: `text-label uppercase tracking-[0.22em] text-rust font-medium`.
 
 **Cards:** `rounded-card shadow-card hover:shadow-card-hover hover:-translate-y-1` with image zoom `scale-[1.04]` and rust tag pills. PostCSS configured in `postcss.config.mjs`.
 

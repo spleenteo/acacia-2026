@@ -1,6 +1,7 @@
 import { type FragmentOf, readFragment } from '@/lib/datocms/graphql';
 import ResponsiveImage, { ResponsiveImageFragment } from '@/components/ResponsiveImage';
 import Button, { ButtonBlockFragment } from '@/components/Button';
+import InViewSection from '@/components/InViewSection';
 
 type Props = {
   /** Title HTML — can contain inline <em> for italic emphasis */
@@ -40,7 +41,8 @@ export default function Hero({
   const hasImage = !!image;
 
   return (
-    <section
+    <InViewSection
+      as="section"
       className={[
         'relative flex items-center justify-center min-h-[88svh] overflow-hidden',
         hasImage ? 'bg-dark' : 'bg-surface',
@@ -80,7 +82,7 @@ export default function Hero({
         <div className="max-w-5xl mx-auto text-center">
           <h1
             className={[
-              'section-title font-heading font-normal leading-[1.06] mb-6',
+              'font-heading font-normal leading-[1.06] mb-6',
               'text-[2.75rem] md:text-[4.5rem] lg:text-[5.5rem]',
               hasImage ? 'text-white' : 'text-dark',
             ].join(' ')}
@@ -111,6 +113,6 @@ export default function Hero({
           {children && <div className="mt-10">{children}</div>}
         </div>
       </div>
-    </section>
+    </InViewSection>
   );
 }

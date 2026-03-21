@@ -1,6 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { useInView } from '@/hooks/useInView';
 import Modal from '@/components/Modal';
 
 type Review = {
@@ -31,6 +32,7 @@ function getChannelLogo(channel: string | null) {
 }
 
 export default function ReviewsList({ reviews, label, title }: Props) {
+  const headingRef = useInView<HTMLDivElement>();
   const scrollRef = useRef<HTMLDivElement>(null);
   const [activeIndex, setActiveIndex] = useState(0);
   const [selectedReview, setSelectedReview] = useState<Review | null>(null);
@@ -64,7 +66,7 @@ export default function ReviewsList({ reviews, label, title }: Props) {
     <>
       <section className="py-20 lg:py-28 bg-surface-alt overflow-hidden">
         <div className="mx-auto max-w-7xl px-5 md:px-8">
-          <div className="text-center mb-8">
+          <div ref={headingRef} className="text-center mb-8">
             <p className="font-body text-label uppercase tracking-[0.22em] text-rust font-medium mb-2">
               {label}
             </p>

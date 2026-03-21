@@ -1,6 +1,7 @@
 'use client';
 
 import { useRef, useState } from 'react';
+import { useInView } from '@/hooks/useInView';
 import { type FragmentOf, type ResultOf, readFragment } from '@/lib/datocms/graphql';
 import ResponsiveImage from '@/components/ResponsiveImage';
 import { GalleryImageFragment } from '@/components/ImageGallery/fragment';
@@ -27,6 +28,7 @@ export default function WhatWeLove({
   acaciaReward,
   lightboxItems,
 }: Props) {
+  const headingRef = useInView<HTMLDivElement>();
   const photos = data.map((d) => readFragment(GalleryImageFragment, d));
   const [activeCaptionIndex, setActiveCaptionIndex] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
@@ -49,7 +51,7 @@ export default function WhatWeLove({
 
   return (
     <div>
-      <div className="flex items-start justify-between gap-4 mb-6">
+      <div ref={headingRef} className="flex items-start justify-between gap-4 mb-6">
         <div>
           <p className="font-body text-label uppercase tracking-[0.22em] text-rust font-medium mb-2">
             {label}

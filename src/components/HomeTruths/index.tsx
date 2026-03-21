@@ -1,4 +1,5 @@
 import { type FragmentOf, graphql, readFragment } from '@/lib/datocms/graphql';
+import InViewSection from '@/components/InViewSection';
 
 export const TruthFragment = graphql(`
   fragment TruthFragment on TruthRecord {
@@ -20,12 +21,14 @@ export default function HomeTruths({ data, title, label }: Props) {
 
   return (
     <div>
-      <p className="font-body text-label uppercase tracking-[0.22em] text-rust font-medium mb-2">
-        {label}
-      </p>
-      <h3 className="font-heading text-h3 text-dark mb-6">
-        <em>{title}</em>
-      </h3>
+      <InViewSection>
+        <p className="font-body text-label uppercase tracking-[0.22em] text-rust font-medium mb-2">
+          {label}
+        </p>
+        <h3 className="font-heading text-h3 text-dark mb-6">
+          <em>{title}</em>
+        </h3>
+      </InViewSection>
       <ul className="space-y-3">
         {truths.map((truth) => (
           <li key={truth.id} className="flex gap-3 items-start">

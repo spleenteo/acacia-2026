@@ -18,7 +18,7 @@ All design tokens are defined in CSS using `@theme`. This block lives in the mai
 ```css
 @import 'tailwindcss';
 
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400;1,500&family=Lato:ital,wght@0,300;0,400;0,700;1,300;1,400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,700&family=Lato:ital,wght@0,300;0,400;0,700;1,300;1,400&display=swap');
 
 @theme {
   /* ── COLORS ── */
@@ -47,7 +47,7 @@ All design tokens are defined in CSS using `@theme`. This block lives in the mai
 
   /* ── FONTS ── */
 
-  --font-heading: 'Playfair Display', 'Georgia', serif;
+  --font-heading: 'Cormorant Garamond', 'Garamond', serif;
   --font-body: 'Lato', 'Helvetica Neue', sans-serif;
 
   /* ── FONT SIZES ── */
@@ -112,10 +112,39 @@ All design tokens are defined in CSS using `@theme`. This block lives in the mai
     background-color: var(--color-rust);
     color: #fff;
   }
+  /* Marker highlight on heading <em> — animated via .in-view */
   h1 em,
   h2 em,
   h3 em {
     font-style: italic;
+    font-weight: 500;
+    position: relative;
+    isolation: isolate;
+  }
+  h1 em::before,
+  h2 em::before,
+  h3 em::before {
+    content: '';
+    position: absolute;
+    left: -6px;
+    right: -6px;
+    top: 2px;
+    bottom: 2px;
+    background: var(--color-rust-pale);
+    border-radius: 4px;
+    transform: scaleX(0.3) rotate(-1deg);
+    transform-origin: left;
+    opacity: 0;
+    z-index: -1;
+    transition:
+      opacity 0.6s cubic-bezier(0.19, 1, 0.22, 1),
+      transform 0.6s cubic-bezier(0.19, 1, 0.22, 1);
+  }
+  .in-view h1 em::before,
+  .in-view h2 em::before,
+  .in-view h3 em::before {
+    opacity: 1;
+    transform: scaleX(1) rotate(-1deg);
   }
 }
 ```
@@ -126,9 +155,9 @@ All design tokens are defined in CSS using `@theme`. This block lives in the mai
 
 ### Headlines: Regular Serif + Italic Emphasis
 
-Every section title MUST use Playfair Display (`font-heading`) at **regular weight (400)** with **one keyword in `<em>` italic**. This is the signature editorial pattern. Never skip it.
+Every section title MUST use Cormorant Garamond (`font-heading`) at **regular weight (400)** with **one keyword in `<em>` italic**. This is the signature editorial pattern. Never skip it.
 
-Playfair Display is ALWAYS `font-normal` — never bold, never semibold. The elegance comes from the regular-weight serif with italic contrast, not from weight.
+Cormorant Garamond is ALWAYS `font-normal` — never bold, never semibold. The elegance comes from the regular-weight serif with italic contrast, not from weight.
 
 ```html
 <!-- ✅ CORRECT — regular weight, one italic emphasis word -->
@@ -145,14 +174,16 @@ Playfair Display is ALWAYS `font-normal` — never bold, never semibold. The ele
 <!-- ❌ WRONG — no italic emphasis, feels flat -->
 <h2 class="font-heading text-h1 font-normal text-dark">I nostri appartamenti</h2>
 
-<!-- ❌ WRONG — bold weight on Playfair Display -->
+<!-- ❌ WRONG — bold weight on Cormorant Garamond -->
 <h2 class="font-heading text-h1 font-bold text-dark">...</h2>
 
 <!-- ❌ WRONG — too many italics -->
 <h2>"<em>Ogni</em> <em>casa</em> una <em>storia</em>"</h2>
 ```
 
-The `<em>` is italic at the same weight (400), creating contrast purely through letterform — no weight change needed.
+The `<em>` is italic at weight 500, creating contrast through letterform and a subtle marker highlight effect — a soft `rust-pale` (#FADDD2) background rectangle that appears behind the word with a slight rotation, like a hand-drawn highlighter mark. The highlight animates in when the heading scrolls into view (via `.in-view` class added by `InViewSection` or `useInView` hook).
+
+**Marker highlight pattern**: CSS-only via `::before` pseudo-element on `h1 em`, `h2 em`, `h3 em`. No React component needed — works with both JSX `<em>` and `dangerouslySetInnerHTML` HTML from CMS. Wrap the heading's parent with `<InViewSection>` (server components) or use `useInView()` hook (client components) to trigger the animation.
 
 ### Section Labels
 

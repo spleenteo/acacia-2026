@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400;1,500&family=Lato:ital,wght@0,300;0,400;0,700;1,300;1,400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,700&family=Lato:ital,wght@0,300;0,400;0,700;1,300;1,400&display=swap');
 @import 'tailwindcss';
 
 @theme {
@@ -42,7 +42,7 @@
      FONTS
      ══════════════════════════════════════ */
 
-  --font-heading: 'Playfair Display', Georgia, serif;
+  --font-heading: 'Cormorant Garamond', 'Garamond', serif;
   --font-body: 'Lato', 'Helvetica Neue', sans-serif;
 
   /* ══════════════════════════════════════
@@ -124,21 +124,46 @@
     color: #fff;
   }
 
-  /* Italic emphasis pattern for headlines */
+  /* Marker highlight emphasis on heading <em> keywords */
   h1 em,
   h2 em,
   h3 em {
     font-style: italic;
+    font-weight: 500;
+    position: relative;
+    display: inline;
+    isolation: isolate;
   }
 
-  /* Editorial em emphasis in section titles */
-  .section-title em {
-    color: var(--color-rust);
-    font-style: italic;
-    text-decoration: underline;
-    text-decoration-color: color-mix(in srgb, var(--color-rust) 40%, transparent);
-    text-decoration-thickness: 1.5px;
-    text-underline-offset: 6px;
+  h1 em::before,
+  h2 em::before,
+  h3 em::before {
+    content: '';
+    position: absolute;
+    left: -6px;
+    right: -6px;
+    top: 2px;
+    bottom: 2px;
+    background: var(--color-rust-pale);
+    border-radius: 4px;
+    transform: scaleX(0.3) rotate(-1deg);
+    transform-origin: left;
+    opacity: 0;
+    z-index: -1;
+    transition:
+      opacity 0.7s cubic-bezier(0.19, 1, 0.22, 1) 0.3s,
+      transform 0.7s cubic-bezier(0.19, 1, 0.22, 1) 0.3s;
+  }
+
+  /* Animate in when parent has .in-view */
+  .in-view h1 em::before,
+  .in-view h2 em::before,
+  .in-view h3 em::before,
+  h1.in-view em::before,
+  h2.in-view em::before,
+  h3.in-view em::before {
+    opacity: 1;
+    transform: scaleX(1) rotate(-1deg);
   }
 
   body {
