@@ -1,4 +1,5 @@
 import type { Locale } from '@/i18n/config';
+import { modelPath } from '@/i18n/paths';
 import type { FragmentOf } from '@/lib/datocms/graphql';
 import type { ResponsiveImageFragment } from '@/components/ResponsiveImage';
 import ResponsiveImage from '@/components/ResponsiveImage';
@@ -20,7 +21,7 @@ const labels = {
 } as const;
 
 export default function DistrictLink({ name, slug, locale, abstract, description, image }: Props) {
-  const href = `/${locale}/florence/districts/${slug}`;
+  const href = modelPath('district', slug, locale)!;
 
   return (
     <div className="py-20 lg:py-28 bg-surface-alt">

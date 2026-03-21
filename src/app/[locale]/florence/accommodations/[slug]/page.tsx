@@ -1,6 +1,7 @@
 import { executeQuery } from '@/lib/datocms/executeQuery';
 import { graphql } from '@/lib/datocms/graphql';
 import { type Locale, locales } from '@/i18n/config';
+import { localizedPath } from '@/i18n/paths';
 import { draftMode } from 'next/headers';
 import { notFound } from 'next/navigation';
 import { TagFragment } from '@/lib/datocms/commonFragments';
@@ -44,15 +45,14 @@ export async function generateMetadata({
     variables: { locale: locale as Locale, slug },
     includeDrafts: isEnabled,
   });
-  const path = `/${locale}/florence/accommodations/${slug}`;
+  const loc = locale as Locale;
   return {
     ...toNextMetadata(data.apartment?._seoMetaTags ?? []),
     alternates: {
-      canonical: path,
-      languages: {
-        en: `/en/florence/accommodations/${slug}`,
-        it: `/it/florence/accommodations/${slug}`,
-      },
+      canonical: `/${locale}${localizedPath(loc, `/florence/accommodations/${slug}`)}`,
+      languages: Object.fromEntries(
+        locales.map((l) => [l, `/${l}${localizedPath(l, `/florence/accommodations/${slug}`)}`]),
+      ),
     },
   };
 }

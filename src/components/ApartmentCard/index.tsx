@@ -2,6 +2,7 @@ import { type FragmentOf, graphql, readFragment } from '@/lib/datocms/graphql';
 import { ResponsiveImageFragment } from '@/components/ResponsiveImage';
 import ResponsiveImage from '@/components/ResponsiveImage';
 import type { Locale } from '@/i18n/config';
+import { modelPath } from '@/i18n/paths';
 import Link from 'next/link';
 
 export const ApartmentCardFragment = graphql(
@@ -35,7 +36,7 @@ export default function ApartmentCard({ data, locale }: Props) {
   const apartment = readFragment(ApartmentCardFragment, data);
 
   return (
-    <Link href={`/${locale}/florence/accommodations/${apartment.slug}`} className="group block">
+    <Link href={modelPath('apartment', apartment.slug, locale)!} className="group block">
       <article>
         {/* Image — portrait 3:4, overflow-hidden scoped here only */}
         <div

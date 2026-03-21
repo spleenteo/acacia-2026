@@ -1,4 +1,6 @@
 import { type FragmentOf, graphql, readFragment } from '@/lib/datocms/graphql';
+import { modelPath } from '@/i18n/paths';
+import type { Locale } from '@/i18n/config';
 import Link from 'next/link';
 
 export const InfoTextFragment = graphql(`
@@ -96,7 +98,7 @@ export default function InfoDetail({ data, title, locale, district }: Props) {
                     <>
                       {' ('}
                       <Link
-                        href={`/${locale}/florence/districts/${district.slug}`}
+                        href={modelPath('district', district.slug, locale as Locale)!}
                         className="text-rust hover:text-rust-hover transition-colors"
                       >
                         {district.name}

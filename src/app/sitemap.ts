@@ -2,6 +2,7 @@ import { type MetadataRoute } from 'next';
 import { executeQuery } from '@/lib/datocms/executeQuery';
 import { graphql } from '@/lib/datocms/graphql';
 import { locales } from '@/i18n/config';
+import { localizedPath } from '@/i18n/paths';
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000';
 
@@ -26,7 +27,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   const staticEntries: MetadataRoute.Sitemap = locales.flatMap((locale) =>
     staticPaths.map((path) => ({
-      url: `${siteUrl}/${locale}${path}`,
+      url: `${siteUrl}/${locale}${path ? localizedPath(locale, path) : ''}`,
       changeFrequency: 'weekly' as const,
       priority: path === '' ? 1.0 : 0.8,
     })),
@@ -34,7 +35,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   const apartmentEntries: MetadataRoute.Sitemap = locales.flatMap((locale) =>
     data.allApartments.map((apt) => ({
-      url: `${siteUrl}/${locale}/florence/accommodations/${apt.slug}`,
+      url: `${siteUrl}/${locale}${localizedPath(locale, `/florence/accommodations/${apt.slug}`)}`,
       changeFrequency: 'weekly' as const,
       priority: 0.7,
     })),
@@ -42,7 +43,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   const districtEntries: MetadataRoute.Sitemap = locales.flatMap((locale) =>
     data.allDistricts.map((d) => ({
-      url: `${siteUrl}/${locale}/florence/districts/${d.slug}`,
+      url: `${siteUrl}/${locale}${localizedPath(locale, `/florence/districts/${d.slug}`)}`,
       changeFrequency: 'weekly' as const,
       priority: 0.6,
     })),
@@ -50,7 +51,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   const moodEntries: MetadataRoute.Sitemap = locales.flatMap((locale) =>
     data.allMoods.map((m) => ({
-      url: `${siteUrl}/${locale}/moods/${m.slug}`,
+      url: `${siteUrl}/${locale}${localizedPath(locale, `/moods/${m.slug}`)}`,
       changeFrequency: 'monthly' as const,
       priority: 0.6,
     })),

@@ -2,6 +2,7 @@ import { type FragmentOf, graphql, readFragment } from '@/lib/datocms/graphql';
 import { ResponsiveImageFragment } from '@/components/ResponsiveImage';
 import ResponsiveImage from '@/components/ResponsiveImage';
 import type { Locale } from '@/i18n/config';
+import { modelPath } from '@/i18n/paths';
 import Link from 'next/link';
 
 export const MoodCardFragment = graphql(
@@ -30,7 +31,7 @@ export default function MoodCard({ data, locale }: Props) {
   const mood = readFragment(MoodCardFragment, data);
 
   return (
-    <Link href={`/${locale}/moods/${mood.slug}`} className="group block">
+    <Link href={modelPath('mood', mood.slug, locale)!} className="group block">
       <article>
         {/* Image — portrait 3:4, overflow-hidden scoped here only */}
         <div

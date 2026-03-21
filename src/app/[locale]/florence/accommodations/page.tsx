@@ -1,6 +1,7 @@
 import { executeQuery } from '@/lib/datocms/executeQuery';
 import { graphql } from '@/lib/datocms/graphql';
-import { type Locale } from '@/i18n/config';
+import { type Locale, locales } from '@/i18n/config';
+import { localizedPath } from '@/i18n/paths';
 import { draftMode } from 'next/headers';
 import { TagFragment } from '@/lib/datocms/commonFragments';
 import { toNextMetadata } from 'react-datocms';
@@ -37,8 +38,10 @@ export async function generateMetadata({
   return {
     ...toNextMetadata(data.indexApartment?._seoMetaTags ?? []),
     alternates: {
-      canonical: `/${locale}/florence/accommodations`,
-      languages: { en: '/en/florence/accommodations', it: '/it/florence/accommodations' },
+      canonical: `/${locale}${localizedPath(locale as Locale, '/florence/accommodations')}`,
+      languages: Object.fromEntries(
+        locales.map((l) => [l, `/${l}${localizedPath(l, '/florence/accommodations')}`]),
+      ),
     },
   };
 }

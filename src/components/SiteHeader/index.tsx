@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import DraftModeToggler from '@/components/DraftModeToggler';
 import type { Locale } from '@/i18n/config';
+import { localizedPath } from '@/i18n/paths';
 import Link from 'next/link';
 
 type Props = {
@@ -66,7 +67,7 @@ export default function SiteHeader({ locale, isDraftModeEnabled }: Props) {
             {nav.map((item) => (
               <Link
                 key={item.href}
-                href={`/${locale}${item.href}`}
+                href={`/${locale}${localizedPath(locale, item.href)}`}
                 className={[
                   'font-body text-body-sm font-normal transition-colors duration-300 tracking-wide',
                   scrolled ? 'text-muted hover:text-rust' : 'text-white/80 hover:text-white',
@@ -93,7 +94,7 @@ export default function SiteHeader({ locale, isDraftModeEnabled }: Props) {
               </Link>
             </span>
             <Link
-              href={`/${locale}/florence/accommodations`}
+              href={`/${locale}${localizedPath(locale, '/florence/accommodations')}`}
               className="font-body text-caption font-medium tracking-[0.06em] text-white bg-rust hover:bg-rust-hover px-5 py-2.5 rounded-pill transition-colors duration-300"
             >
               {bookLabel[locale]}
@@ -145,7 +146,7 @@ export default function SiteHeader({ locale, isDraftModeEnabled }: Props) {
           {nav.map((item, i) => (
             <Link
               key={item.href}
-              href={`/${locale}${item.href}`}
+              href={`/${locale}${localizedPath(locale, item.href)}`}
               onClick={() => setMenuOpen(false)}
               className="font-heading font-normal text-white hover:text-rust transition-colors duration-200 leading-tight"
               style={{
@@ -174,7 +175,7 @@ export default function SiteHeader({ locale, isDraftModeEnabled }: Props) {
             </Link>
           </span>
           <Link
-            href={`/${locale}/florence/accommodations`}
+            href={`/${locale}${localizedPath(locale, '/florence/accommodations')}`}
             onClick={() => setMenuOpen(false)}
             className="font-body text-caption font-medium tracking-[0.06em] text-white bg-rust hover:bg-rust-hover px-6 py-2.5 rounded-pill transition-colors duration-300"
           >

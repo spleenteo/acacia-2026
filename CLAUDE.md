@@ -43,9 +43,11 @@ Two type generation systems work together:
 
 **Draft mode**: Next.js Draft Mode is toggled via `/api/draft-mode/enable` and `/api/draft-mode/disable`. When active, pages use the draft CDA token and enable content-link click-to-edit overlays.
 
-**Record routing**: `src/lib/datocms/recordInfo.ts` maps DatoCMS item types to frontend URLs. Used by Web Previews and SEO Analysis plugins. Maps Apartment (ID `2726`) → `/[locale]/florence/accommodations/[slug]`, Districts (ID `2735`) → `/[locale]/florence/districts/[slug]`, Mood (ID `2738`) → `/[locale]/moods/[slug]`. Handles both plain and localized slug fields.
+**Record routing**: `src/lib/datocms/recordInfo.ts` maps DatoCMS item types to frontend URLs via `modelPath()` from `src/i18n/paths.ts`. Used by Web Previews and SEO Analysis plugins. Handles both detail records (with slug) and singleton index models (fixed path, slug ignored).
 
-**Locale routing**: App Router uses a `[locale]` dynamic segment (`src/app/[locale]/`). Supported locales are `en` and `it`, configured in `src/i18n/config.ts`. The root layout (`src/app/layout.tsx`) provides `<html lang>` dynamically from params; the locale layout adds header, footer, Beddy script, and draft mode controls. `middleware.ts` redirects paths without locale prefix to `/en`.
+**Locale routing**: App Router uses a `[locale]` dynamic segment (`src/app/[locale]/`). Supported locales are `en` and `it`, configured in `src/i18n/config.ts`. The root layout (`src/app/layout.tsx`) provides `<html lang>` dynamically from params; the locale layout adds header, footer, Beddy script, and draft mode controls. `middleware.ts` redirects paths without locale prefix to `/en` and rewrites translated path segments to canonical filesystem paths.
+
+**Localized path segments**: URL path segments are translated per locale (`florence` → `firenze`, `accommodations` → `appartamenti`, `districts` → `quartieri`). The translation map and utilities live in `src/i18n/paths.ts`. The middleware rewrites incoming translated paths to canonical (English) filesystem routes. All components use `modelPath()` or `localizedPath()` to generate locale-aware hrefs. To add a new translated section: add the segment to `pathSegments`, then add the model to `modelPrefixes` (detail) or `indexPaths` (singleton) in `paths.ts`.
 
 **Mood apartments (union type)**: Moods link to apartments via `boxes` → `MoodItemsRecord[]` → `object` (union: `ApartmentRecord | PostRecord | ServiceRecord | TipRecord`). Apartments are extracted inline with `__typename === 'ApartmentRecord'` filtering.
 

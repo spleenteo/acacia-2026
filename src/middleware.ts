@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import { locales, defaultLocale } from '@/i18n/config';
+import type { Locale } from '@/i18n/config';
+import { canonicalPath } from '@/i18n/paths';
 
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
@@ -20,14 +22,27 @@ export function middleware(request: NextRequest) {
     (locale) => pathname.startsWith(`/${locale}/`) || pathname === `/${locale}`,
   );
 
-  if (pathnameHasLocale) {
-    return NextResponse.next();
+  if (!pathnameHasLocale) {
+    // Redirect to default locale
+    const url = request.nextUrl.clone();
+    url.pathname = `/${defaultLocale}${pathname}`;
+    return NextResponse.redirect(url);
   }
 
-  // Redirect to default locale
-  const url = request.nextUrl.clone();
-  url.pathname = `/${defaultLocale}${pathname}`;
-  return NextResponse.redirect(url);
+  // Extract locale and rest of path, then rewrite translated segments to canonical
+  const locale = pathname.split('/')[1] as Locale;
+  const restOfPath = pathname.slice(locale.length + 1); // includes leading /
+
+  if (restOfPath && restOfPath !== '/') {
+    const canonical = canonicalPath(locale, restOfPath);
+    if (canonical !== restOfPath) {
+      const url = request.nextUrl.clone();
+      url.pathname = `/${locale}${canonical}`;
+      return NextResponse.rewrite(url);
+    }
+  }
+
+  return NextResponse.next();
 }
 
 export const config = {

@@ -69,7 +69,8 @@ acacia-next/
 │   │   │   └── fragment.ts
 │   │   └── UpsList/index.tsx
 │   ├── i18n/
-│   │   └── config.ts                          # Locale config (en, it)
+│   │   ├── config.ts                          # Locale config (en, it)
+│   │   └── paths.ts                           # Localized path segments + modelPath()
 │   └── lib/
 │       └── datocms/
 │           ├── executeQuery.ts                 # Central CDA fetch wrapper (cache/no-store)
@@ -97,7 +98,7 @@ acacia-next/
 ├── pitches/
 │   ├── apartment-detail-redesign.md           # Apartment detail page pitch
 │   └── web-previews-visual-editing.md         # Web Previews & Visual Editing pitch
-├── middleware.ts                               # Locale redirect (/ → /en)
+├── middleware.ts                               # Locale redirect + translated path rewrite
 ├── schema.graphql                             # Auto-generated DatoCMS schema
 ├── tsconfig.json                              # TypeScript strict + gql.tada plugin
 ├── postcss.config.mjs                         # PostCSS with Tailwind
@@ -106,7 +107,7 @@ acacia-next/
 ├── public/
 │   ├── logo--main.svg                         # Full wordmark SVG (ratio ~3.6:1)
 │   └── acacia-isologo.svg                     # Isologo (copyright: not for standalone use)
-└── package.json                               # v0.5.1
+└── package.json                               # v0.6.0
 ```
 
 ## Tech Stack

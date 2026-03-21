@@ -1,5 +1,28 @@
 # Changelog
 
+## v0.6.0 — 2026-03-21 — Localized URL path segments per locale
+
+Translated URL path segments so Italian users see native paths (`/it/firenze/appartamenti/abaco`) while English paths remain unchanged (`/en/florence/accommodations/abaco`). The filesystem route structure stays in English — middleware rewrites handle the translation transparently.
+
+- **Path translation module**: New `src/i18n/paths.ts` — bidirectional segment map (`florence` ↔ `firenze`, `accommodations` ↔ `appartamenti`, `districts` ↔ `quartieri`). Exports `localizedPath()`, `canonicalPath()`, and `modelPath()`.
+- **Middleware rewrite**: Updated `src/middleware.ts` to intercept translated paths (e.g. `/it/firenze/appartamenti/abaco`) and rewrite them internally to canonical filesystem paths (`/it/florence/accommodations/abaco`). Browser URL stays translated.
+- **Singleton index models**: `modelPath()` supports singleton CMS models (`index_apartment`, `page_districts`, `page_moods`) with hardcoded canonical paths — the better-linking plugin requires a slug to link records, but these slugs are ignored in URL generation.
+- **Component links**: All components generating record links (`ApartmentCard`, `DistrictCard`, `MoodCard`, `DistrictLink`, `Button`, `SiteHeader`, `SiteFooter`, `InfoDetail`) now use `modelPath()` or `localizedPath()` instead of hardcoded English segments.
+- **SEO metadata**: All page `generateMetadata()` functions produce locale-aware `canonical` and `alternates.languages` URLs with translated segments.
+- **Sitemap**: `src/app/sitemap.ts` generates URLs with translated path segments per locale.
+- **recordInfo.ts**: Refactored `recordToWebsiteRoute()` to use `modelPath()`. Removed `recordSlugToPath()` (replaced by `modelPath`).
+- **Button tertiary style**: Improved vertical alignment (`py-3.5`) and visibility (`text-dark/70`, `decoration-dark/30`) for dark-mode tertiary buttons.
+
+### Adding a new translated section
+
+To add a new section with translated paths:
+
+1. Add the segment translation to `pathSegments` in `src/i18n/paths.ts`
+2. Add the model prefix to `modelPrefixes` (for detail records) or `indexPaths` (for singleton index pages)
+3. Components and metadata will automatically pick up the translation via `modelPath()` / `localizedPath()`
+
+---
+
 ## v0.5.1 — 2026-03-20 — Beddy widget default dates
 
 Pre-populate the Beddy booking widget with arrival = today+3 and departure = today+5 to reflect the minimum booking lead time.

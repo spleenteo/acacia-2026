@@ -1,6 +1,7 @@
 import { executeQuery } from '@/lib/datocms/executeQuery';
 import { graphql } from '@/lib/datocms/graphql';
 import { type Locale, locales } from '@/i18n/config';
+import { localizedPath } from '@/i18n/paths';
 import { draftMode } from 'next/headers';
 import { notFound } from 'next/navigation';
 import { TagFragment } from '@/lib/datocms/commonFragments';
@@ -39,8 +40,10 @@ export async function generateMetadata({
   return {
     ...toNextMetadata(data.mood?._seoMetaTags ?? []),
     alternates: {
-      canonical: `/${locale}/moods/${slug}`,
-      languages: { en: `/en/moods/${slug}`, it: `/it/moods/${slug}` },
+      canonical: `/${locale}${localizedPath(locale as Locale, `/moods/${slug}`)}`,
+      languages: Object.fromEntries(
+        locales.map((l) => [l, `/${l}${localizedPath(l, `/moods/${slug}`)}`]),
+      ),
     },
   };
 }

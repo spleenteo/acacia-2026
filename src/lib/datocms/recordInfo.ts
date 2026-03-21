@@ -9,6 +9,8 @@
  */
 import type { RawApiTypes } from '@datocms/cma-client';
 import type { AnyModel } from './cma-types';
+import { modelPath } from '@/i18n/paths';
+import type { Locale } from '@/i18n/config';
 
 /*
  * Both the "Web Previews" and "SEO/Readability Analysis" plugins from DatoCMS
@@ -34,24 +36,21 @@ function getSlug(item: RawApiTypes.Item<AnyModel>, locale: string): string | nul
   return null;
 }
 
+const itemTypeToModel: Record<string, string> = {
+  '2726': 'apartment',
+  '2735': 'district',
+  '2738': 'mood',
+};
+
 export async function recordToWebsiteRoute(
   item: RawApiTypes.Item<AnyModel>,
   locale: string,
 ): Promise<string | null> {
   const slug = getSlug(item, locale);
-  switch (item.__itemTypeId) {
-    // Apartment model (ID 2726) — non-localized slug
-    case '2726':
-      return slug ? `/${locale}/florence/accommodations/${slug}` : null;
-    // District model (ID 2735) — localized slug
-    case '2735':
-      return slug ? `/${locale}/florence/districts/${slug}` : null;
-    // Mood model (ID 2738) — localized slug
-    case '2738':
-      return slug ? `/${locale}/moods/${slug}` : null;
-    default:
-      return null;
-  }
+  if (!slug) return null;
+  const model = itemTypeToModel[item.__itemTypeId as string];
+  if (!model) return null;
+  return modelPath(model, slug, locale as Locale);
 }
 
 export async function recordToSlug(
@@ -59,20 +58,4 @@ export async function recordToSlug(
   locale: string,
 ): Promise<string | null> {
   return getSlug(item, locale);
-}
-
-const modelApiKeyToPathPrefix: Record<string, string> = {
-  apartment: 'florence/accommodations',
-  district: 'florence/districts',
-  mood: 'moods',
-};
-
-/**
- * Resolves a DatoCMS record slug to a full frontend path using the model's API key.
- * Used by the Button component to reconstruct URLs from the better-linking plugin.
- */
-export function recordSlugToPath(modelApiKey: string, slug: string, locale: string): string | null {
-  const prefix = modelApiKeyToPathPrefix[modelApiKey];
-  if (!prefix) return null;
-  return `/${locale}/${prefix}/${slug}`;
 }

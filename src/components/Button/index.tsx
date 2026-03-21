@@ -1,5 +1,6 @@
 import { type FragmentOf, graphql, readFragment } from '@/lib/datocms/graphql';
-import { recordSlugToPath } from '@/lib/datocms/recordInfo';
+import { modelPath } from '@/i18n/paths';
+import type { Locale } from '@/i18n/config';
 import Link from 'next/link';
 
 export const ButtonBlockFragment = graphql(`
@@ -61,9 +62,9 @@ const darkStyles: Record<string, string> = {
     text-dark border border-dark/30 hover:border-dark/60
     px-8 py-3.5 rounded-pill transition-colors duration-300`,
   tertiary: `font-body text-caption font-medium tracking-[0.06em]
-    text-muted hover:text-dark underline underline-offset-4
-    decoration-muted/30 hover:decoration-dark/60
-    transition-colors duration-300`,
+    text-dark/70 hover:text-dark underline underline-offset-4
+    decoration-dark/30 hover:decoration-dark/60
+    py-3.5 transition-colors duration-300`,
 };
 
 export default function Button({ data, dark = false, locale }: Props) {
@@ -80,7 +81,7 @@ export default function Button({ data, dark = false, locale }: Props) {
   if (isInternal) {
     const href =
       locale && formatted.modelApiKey
-        ? (recordSlugToPath(formatted.modelApiKey, formatted.url!, locale) ?? formatted.url!)
+        ? (modelPath(formatted.modelApiKey, formatted.url!, locale as Locale) ?? formatted.url!)
         : formatted.url!;
     return (
       <Link href={href} className={className} aria-label={formatted.ariaLabel}>

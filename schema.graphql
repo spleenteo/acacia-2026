@@ -4826,6 +4826,12 @@ type IndexApartmentRecord implements RecordInterface {
     """
     fallbackLocales: [SiteLocale!]
   ): [SeoFieldMultiLocaleField!]
+  _allSlugLocales(
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): [StringNonNullMultiLocaleField!]
   _allSubtitleLocales(
     """Process content as markdown"""
     markdown: Boolean
@@ -4884,7 +4890,15 @@ type IndexApartmentRecord implements RecordInterface {
     """
     fallbackLocales: [SiteLocale!]
   ): SeoField
-  slug: String!
+  slug(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): String!
   subtitle(
     """Process content as markdown"""
     markdown: Boolean

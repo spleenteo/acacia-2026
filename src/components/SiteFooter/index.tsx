@@ -1,4 +1,5 @@
 import type { Locale } from '@/i18n/config';
+import { localizedPath } from '@/i18n/paths';
 import Link from 'next/link';
 
 type Props = {
@@ -31,7 +32,7 @@ export default function SiteFooter({ locale }: Props) {
               {exploreNav.map((item) => (
                 <Link
                   key={item.href}
-                  href={`/${locale}${item.href}`}
+                  href={`/${locale}${localizedPath(locale, item.href)}`}
                   className="font-body text-body text-body hover:text-rust transition-colors duration-300"
                 >
                   {item.label[locale]}

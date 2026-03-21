@@ -53,15 +53,48 @@ AI-optimized compact reference for Acacia Firenze project behavior and patterns.
 
 ## Routing
 
+### Filesystem routes (canonical)
+
 | Route                                      | Model          | Locale |
 | ------------------------------------------ | -------------- | ------ |
 | `/[locale]`                                | HomePage       | en, it |
-| `/[locale]/florence/accommodations`        | PageApartments | en, it |
+| `/[locale]/florence/accommodations`        | IndexApartment | en, it |
 | `/[locale]/florence/accommodations/[slug]` | Apartment      | en, it |
 | `/[locale]/florence/districts`             | PageDistricts  | en, it |
 | `/[locale]/florence/districts/[slug]`      | District       | en, it |
 | `/[locale]/moods`                          | PageMoods      | en, it |
 | `/[locale]/moods/[slug]`                   | Mood           | en, it |
+
+### Localized paths (user-facing URLs)
+
+Middleware rewrites translated segments to canonical filesystem paths. Browser URL shows the translated version.
+
+| Canonical segment | EN               | IT             |
+| ----------------- | ---------------- | -------------- |
+| `florence`        | `florence`       | `firenze`      |
+| `accommodations`  | `accommodations` | `appartamenti` |
+| `districts`       | `districts`      | `quartieri`    |
+| `moods`           | `moods`          | `moods`        |
+
+**Examples**: `/it/firenze/appartamenti/abaco` → rewrite to `/it/florence/accommodations/abaco`
+
+### Path generation
+
+| Function                            | Purpose                                              | Location            |
+| ----------------------------------- | ---------------------------------------------------- | ------------------- |
+| `localizedPath(locale, canonical)`  | Translate canonical path to locale-specific segments | `src/i18n/paths.ts` |
+| `canonicalPath(locale, localized)`  | Reverse: localized → canonical (used by middleware)  | `src/i18n/paths.ts` |
+| `modelPath(modelKey, slug, locale)` | Full localized path for a CMS model record           | `src/i18n/paths.ts` |
+
+### Singleton index models
+
+Models without detail slug (`index_apartment`, `page_districts`, `page_moods`) map to fixed paths via `indexPaths`. The better-linking plugin requires a slug field but the slug is ignored — only the hardcoded canonical path is used.
+
+### Adding a new section
+
+1. Add segment to `pathSegments` in `src/i18n/paths.ts`
+2. Add model to `modelPrefixes` (detail) or `indexPaths` (singleton)
+3. All components using `modelPath()`/`localizedPath()` pick it up automatically
 
 ---
 

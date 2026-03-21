@@ -1,6 +1,7 @@
 import { executeQuery } from '@/lib/datocms/executeQuery';
 import { graphql } from '@/lib/datocms/graphql';
 import { type Locale, locales } from '@/i18n/config';
+import { localizedPath } from '@/i18n/paths';
 import { draftMode } from 'next/headers';
 import { notFound } from 'next/navigation';
 import { TagFragment } from '@/lib/datocms/commonFragments';
@@ -39,11 +40,10 @@ export async function generateMetadata({
   return {
     ...toNextMetadata(data.district?._seoMetaTags ?? []),
     alternates: {
-      canonical: `/${locale}/florence/districts/${slug}`,
-      languages: {
-        en: `/en/florence/districts/${slug}`,
-        it: `/it/florence/districts/${slug}`,
-      },
+      canonical: `/${locale}${localizedPath(locale as Locale, `/florence/districts/${slug}`)}`,
+      languages: Object.fromEntries(
+        locales.map((l) => [l, `/${l}${localizedPath(l, `/florence/districts/${slug}`)}`]),
+      ),
     },
   };
 }
