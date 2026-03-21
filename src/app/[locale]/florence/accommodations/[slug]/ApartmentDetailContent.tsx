@@ -172,10 +172,10 @@ export default function ApartmentDetailContent({
           {/* ── Main content ── */}
           <div className="min-w-0">
             {/* What We Love + Description */}
-            {(apartment.gallery.length >= 2 || apartment.description) && (
+            {(apartment.wwlGallery.length >= 2 || apartment.description) && (
               <section className="mb-16 lg:mb-20">
                 <WhatWeLove
-                  data={apartment.gallery}
+                  data={apartment.wwlGallery}
                   label={l.whatWeLoveLabel}
                   title={l.whatWeLoveTitle}
                   description={apartment.description}

@@ -220,27 +220,27 @@ input ApartmentModelFilter {
   _updatedAt: UpdatedAtFilter
   updatedAt: UpdatedAtFilter
   _isValid: BooleanFilter
+  featuredImage: FileFilter
+  wwlGallery: LinksFilter
+  category: LinkFilter
+  slug: SlugFilter
+  amenities: LinksFilter
   houseBadge: LinkFilter
-  gallery: LinksFilter
   sleeps: IntegerFilter
+  district: LinkFilter
   seo: SeoFilter
   ape: StringFilter
   featuredSlideshow: GalleryFilter
   acaciaReward: BooleanFilter
   name: StringFilter
-  district: LinkFilter
   claim: StringFilter
   cin: StringFilter
-  featuredImage: FileFilter
-  category: LinkFilter
   propertyId: StringFilter
   bedrooms: IntegerFilter
   bathrooms: IntegerFilter
   notes: JsonFilter
   price: StringFilter
   beddyId: StringFilter
-  slug: SlugFilter
-  amenities: LinksFilter
   comforts: LinksFilter
   description: TextFilter
   OR: [ApartmentModelFilter]
@@ -508,7 +508,6 @@ type ApartmentRecord implements RecordInterface {
   district: DistrictRecord
   featuredImage: FileField!
   featuredSlideshow: [FileField!]!
-  gallery: [GalleryImageRecord!]!
   homeTruth(
     """The locale to use to fetch the field's content"""
     locale: SiteLocale
@@ -545,6 +544,7 @@ type ApartmentRecord implements RecordInterface {
   sleeps: IntType
   slug: String!
   updatedAt: DateTime!
+  wwlGallery: [GalleryImageRecord!]!
 }
 
 type AppModelFooterTextField {

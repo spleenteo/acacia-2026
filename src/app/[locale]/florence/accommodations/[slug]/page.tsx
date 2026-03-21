@@ -105,7 +105,7 @@ export const query = graphql(
             }
           }
         }
-        gallery {
+        wwlGallery {
           ...GalleryImageFragment
         }
         amenities {
