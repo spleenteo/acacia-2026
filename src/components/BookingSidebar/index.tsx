@@ -42,8 +42,8 @@ export default function BookingSidebar({
 
   const stats = [
     { value: bedrooms, label: t('bedrooms') },
-    { value: bathrooms, label: t('bathrooms') },
     { value: sleeps, label: t('sleeps') },
+    { value: bathrooms, label: t('bathrooms') },
   ].filter((s) => s.value);
 
   return (

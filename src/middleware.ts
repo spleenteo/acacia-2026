@@ -38,11 +38,15 @@ export function middleware(request: NextRequest) {
     if (canonical !== restOfPath) {
       const url = request.nextUrl.clone();
       url.pathname = `/${locale}${canonical}`;
-      return NextResponse.rewrite(url);
+      const response = NextResponse.rewrite(url);
+      response.headers.set('x-next-intl-locale', locale);
+      return response;
     }
   }
 
-  return NextResponse.next();
+  const response = NextResponse.next();
+  response.headers.set('x-next-intl-locale', locale);
+  return response;
 }
 
 export const config = {
