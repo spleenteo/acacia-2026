@@ -8,7 +8,7 @@ import ResponsiveImage from '@/components/ResponsiveImage';
 import { GalleryImageFragment } from '@/components/ImageGallery/fragment';
 import HtmlContent from '@/components/HtmlContent';
 import PhotoLightbox from '@/components/PhotoLightbox';
-import type { GalleryItem } from '@/components/ImageGallery';
+import type { LightboxSlide } from '@/components/Lightbox';
 
 type Props = {
   data: FragmentOf<typeof GalleryImageFragment>[];
@@ -16,7 +16,7 @@ type Props = {
   label: string;
   description?: string | null;
   acaciaReward?: boolean | null;
-  lightboxItems?: GalleryItem[];
+  lightboxSlides?: LightboxSlide[];
 };
 
 type Photo = ResultOf<typeof GalleryImageFragment>;
@@ -27,7 +27,7 @@ export default function WhatWeLove({
   label,
   description,
   acaciaReward,
-  lightboxItems,
+  lightboxSlides,
 }: Props) {
   const tGallery = useTranslations('gallery');
   const headingRef = useInView<HTMLDivElement>();
@@ -121,9 +121,9 @@ export default function WhatWeLove({
               </div>
             )}
           </div>
-          {lightboxItems && lightboxItems.length > 0 && (
+          {lightboxSlides && lightboxSlides.length > 0 && (
             <div className="mt-4">
-              <PhotoLightbox items={lightboxItems} label={tGallery('viewAll')} variant="light" />
+              <PhotoLightbox slides={lightboxSlides} label={tGallery('viewAll')} variant="light" />
             </div>
           )}
         </>

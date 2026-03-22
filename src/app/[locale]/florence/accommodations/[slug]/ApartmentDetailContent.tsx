@@ -7,6 +7,7 @@ import ResponsiveImage from '@/components/ResponsiveImage';
 import HtmlContent from '@/components/HtmlContent';
 import BeddyBar from '@/components/BeddyBar';
 import PhotoLightbox from '@/components/PhotoLightbox';
+import { toSlide } from '@/components/Lightbox/toSlide';
 import EssentialsList, { type EssentialFragment } from '@/components/EssentialsList';
 import AmenitiesList from '@/components/AmenitiesList';
 import ComfortsList from '@/components/ComfortsList';
@@ -89,15 +90,10 @@ export default function ApartmentDetailContent({
             )}
             {apartment.featuredSlideshow.length > 0 && (
               <PhotoLightbox
-                items={apartment.featuredSlideshow
+                slides={apartment.featuredSlideshow
                   .map((f) => readFragment(FeaturedSlideshowFragment, f))
-                  .filter((img) => img.responsiveImage && img.full)
-                  .map((img) => ({
-                    id: img.id,
-                    thumb: img.responsiveImage!,
-                    full: img.full!,
-                    caption: img.title || img.alt,
-                  }))}
+                  .filter((img) => img.full)
+                  .map((img) => toSlide(img.full!, img.title || img.alt))}
                 label={t('allPhotos')}
               />
             )}
@@ -119,15 +115,10 @@ export default function ApartmentDetailContent({
                   title={t('wwlTitle')}
                   description={apartment.description}
                   acaciaReward={apartment.acaciaReward}
-                  lightboxItems={apartment.featuredSlideshow
+                  lightboxSlides={apartment.featuredSlideshow
                     .map((f) => readFragment(FeaturedSlideshowFragment, f))
-                    .filter((img) => img.responsiveImage && img.full)
-                    .map((img) => ({
-                      id: img.id,
-                      thumb: img.responsiveImage!,
-                      full: img.full!,
-                      caption: img.title || img.alt,
-                    }))}
+                    .filter((img) => img.full)
+                    .map((img) => toSlide(img.full!, img.title || img.alt))}
                 />
               </section>
             )}

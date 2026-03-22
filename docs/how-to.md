@@ -184,18 +184,20 @@ Web component `<beddy-bar>` loaded via CDN script in layout. **Disabled in draft
 
 ## Key Components
 
-| Component      | Client? | Fragment? | Notes                                              |
-| -------------- | ------- | --------- | -------------------------------------------------- |
-| Hero           | No      | No        | Full-viewport hero, double gradient, children slot |
-| SiteHeader     | Yes     | No        | Scroll-aware nav, mobile overlay, SVG logo         |
-| SiteFooter     | No      | No        | Two-band (cream + dark)                            |
-| ApartmentCard  | No      | Yes       | Colocated fragment                                 |
-| MoodCard       | No      | Yes       | Colocated fragment                                 |
-| DistrictCard   | No      | Yes       | Colocated fragment                                 |
-| CategoryFilter | Yes     | No        | Client-side apartment filtering                    |
-| ImageGallery   | Yes     | Yes       | Fragment in separate `fragment.ts`                 |
-| HtmlContent    | No      | No        | `dangerouslySetInnerHTML` wrapper                  |
-| CuddlesList    | No      | Yes       | Amenities                                          |
-| UpsList        | No      | Yes       | Lifestyle features pills                           |
-| InfoDetail     | No      | Yes       | Text + address blocks                              |
-| DistrictLink   | No      | No        | Editorial link to district                         |
+| Component      | Client? | Fragment? | Notes                                                |
+| -------------- | ------- | --------- | ---------------------------------------------------- |
+| Hero           | No      | No        | Full-viewport hero, double gradient, children slot   |
+| SiteHeader     | Yes     | No        | CMS-driven nav from App.navItems, scroll-aware       |
+| SiteFooter     | No      | No        | CMS-driven columns, social icons, legal text         |
+| ApartmentCard  | No      | Yes       | Colocated fragment                                   |
+| MoodCard       | No      | Yes       | Colocated fragment                                   |
+| DistrictCard   | No      | Yes       | Colocated fragment                                   |
+| CategoryFilter | Yes     | No        | Client-side apartment filtering                      |
+| Lightbox       | Yes     | No        | YARL-based modal, swipe, lazy load, dot indicators   |
+| ImageGallery   | Yes     | Yes       | Thumbnail grid + Lightbox, fragment in `fragment.ts` |
+| PhotoLightbox  | Yes     | No        | Button trigger + Lightbox for featured slideshows    |
+| HtmlContent    | No      | No        | `dangerouslySetInnerHTML` wrapper                    |
+| CuddlesList    | No      | Yes       | Amenities                                            |
+| UpsList        | No      | Yes       | Lifestyle features pills                             |
+| InfoDetail     | No      | Yes       | Text + address blocks                                |
+| DistrictLink   | No      | No        | Editorial link to district                           |

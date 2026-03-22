@@ -147,6 +147,7 @@ Adattare il frontend ai cambiamenti drastici dello schema DatoCMS: rinomina mode
 
 ## Prossimi passi
 
-1. **V1 subito** — fix meccanico, sblocca la build
-2. **V2** — risolvere i flag (⚠️ A2.3, A2.5) prima di implementare
-3. **V3** — risolvere i flag (⚠️ A3.3, A3.6) e fare design del dropdown prima di implementare
+1. ✅ **V1** — fix meccanico, sblocca la build
+2. ✅ **V2** — ButtonBlock + Hero CMS-driven
+3. ✅ **V3** — Nav e footer dal CMS (App singleton). MenuDropdownRecord skippato per ora. Callout banner posticipato.
+4. **Da fare**: MenuDropdown design (⚠️ A3.3) e callout banner (⚠️ A3.6) quando serviranno

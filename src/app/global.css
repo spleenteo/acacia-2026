@@ -238,6 +238,11 @@
   border-radius: 12px;
 }
 
+/* Hide Beddy floating widget when lightbox is open */
+body.lightbox-open beddy-bar {
+  display: none !important;
+}
+
 @layer components {
   /* ── PROSE ACACIA ──────────────────────────────────────────────
      Styles for HTML content from DatoCMS (markdown: true fields).

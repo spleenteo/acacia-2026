@@ -1,6 +1,6 @@
 {
   "name": "nextjs-starter-kit",
-  "version": "0.6.1",
+  "version": "0.7.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -28,7 +28,8 @@
     "react-datocms": "^7.2.14",
     "react-dom": "^19",
     "serialize-error": "^12.0.0",
-    "tailwindcss": "^4.2.1"
+    "tailwindcss": "^4.2.1",
+    "yet-another-react-lightbox": "^3.29.1"
   },
   "devDependencies": {
     "@datocms/cli": "^3.1.16",

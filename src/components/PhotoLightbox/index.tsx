@@ -1,55 +1,23 @@
 'use client';
 
-import { useCallback, useEffect, useRef, useState } from 'react';
-import ResponsiveImage from '@/components/ResponsiveImage';
-import type { GalleryItem } from '@/components/ImageGallery';
+import Lightbox, { useLightbox, type LightboxSlide } from '@/components/Lightbox';
 
 type Props = {
-  items: GalleryItem[];
+  slides: LightboxSlide[];
   label: string;
   variant?: 'dark' | 'light';
 };
 
-export default function PhotoLightbox({ items, label, variant = 'dark' }: Props) {
-  const [activeIndex, setActiveIndex] = useState(0);
-  const dialogRef = useRef<HTMLDialogElement>(null);
+export default function PhotoLightbox({ slides, label, variant = 'dark' }: Props) {
+  const lightbox = useLightbox();
 
-  const openLightbox = () => {
-    setActiveIndex(0);
-    dialogRef.current?.showModal();
-  };
-
-  const closeLightbox = useCallback(() => {
-    dialogRef.current?.close();
-  }, []);
-
-  const navigate = useCallback(
-    (direction: 1 | -1) => {
-      setActiveIndex((prev) => (prev + direction + items.length) % items.length);
-    },
-    [items.length],
-  );
-
-  useEffect(() => {
-    const handleKey = (e: KeyboardEvent) => {
-      if (!dialogRef.current?.open) return;
-      if (e.key === 'ArrowRight') navigate(1);
-      if (e.key === 'ArrowLeft') navigate(-1);
-      if (e.key === 'Escape') closeLightbox();
-    };
-    window.addEventListener('keydown', handleKey);
-    return () => window.removeEventListener('keydown', handleKey);
-  }, [navigate, closeLightbox]);
-
-  if (items.length === 0) return null;
-
-  const activeItem = items[activeIndex];
+  if (slides.length === 0) return null;
 
   return (
     <>
       <button
         type="button"
-        onClick={openLightbox}
+        onClick={() => lightbox.openAt(0)}
         className={`inline-flex items-center gap-2 font-body text-body-sm font-medium tracking-wide px-5 py-2.5 rounded-pill border transition-all duration-300 cursor-pointer mt-5 ${
           variant === 'light'
             ? 'bg-surface-alt hover:bg-surface-warm text-dark border-border-light'
@@ -76,64 +44,16 @@ export default function PhotoLightbox({ items, label, variant = 'dark' }: Props)
         <span
           className={`text-caption ml-0.5 ${variant === 'light' ? 'text-muted' : 'text-white/50'}`}
         >
-          {items.length}
+          {slides.length}
         </span>
       </button>
 
-      <dialog
-        ref={dialogRef}
-        className="fixed inset-0 z-50 m-0 h-full w-full max-h-full max-w-full bg-dark/95 backdrop:bg-transparent p-0"
-        onClick={(e) => {
-          if (e.target === dialogRef.current) closeLightbox();
-        }}
-      >
-        <div className="flex items-center justify-center h-full w-full p-4 sm:p-8">
-          <button
-            type="button"
-            onClick={closeLightbox}
-            className="absolute top-4 right-4 z-10 text-white/70 hover:text-white text-h2 transition-colors cursor-pointer"
-            aria-label="Close"
-          >
-            &times;
-          </button>
-
-          {items.length > 1 && (
-            <>
-              <button
-                type="button"
-                onClick={() => navigate(-1)}
-                className="absolute left-4 top-1/2 -translate-y-1/2 z-10 text-white/50 hover:text-white text-h1 transition-colors cursor-pointer"
-                aria-label="Previous"
-              >
-                &#8249;
-              </button>
-              <button
-                type="button"
-                onClick={() => navigate(1)}
-                className="absolute right-4 top-1/2 -translate-y-1/2 z-10 text-white/50 hover:text-white text-h1 transition-colors cursor-pointer"
-                aria-label="Next"
-              >
-                &#8250;
-              </button>
-            </>
-          )}
-
-          <div className="max-w-5xl max-h-[85vh] flex flex-col items-center">
-            <ResponsiveImage
-              data={activeItem.full}
-              className="max-h-[75vh] w-auto object-contain"
-            />
-            {activeItem.caption && (
-              <p className="text-white/70 font-heading italic text-body-sm mt-4 text-center">
-                {activeItem.caption}
-              </p>
-            )}
-            <p className="text-white/40 text-caption mt-2">
-              {activeIndex + 1} / {items.length}
-            </p>
-          </div>
-        </div>
-      </dialog>
+      <Lightbox
+        slides={slides}
+        open={lightbox.open}
+        index={lightbox.index}
+        onClose={lightbox.close}
+      />
     </>
   );
 }

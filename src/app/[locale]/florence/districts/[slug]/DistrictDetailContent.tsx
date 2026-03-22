@@ -5,6 +5,7 @@ import { useTranslations } from 'next-intl';
 import HtmlContent from '@/components/HtmlContent';
 import { GalleryImageFragment } from '@/components/ImageGallery/fragment';
 import ImageGallery from '@/components/ImageGallery';
+import { toSlide } from '@/components/Lightbox/toSlide';
 import ApartmentCard from '@/components/ApartmentCard';
 import { readFragment } from '@/lib/datocms/graphql';
 import type { ResultOf } from 'gql.tada';
@@ -71,6 +72,10 @@ export default function DistrictDetailContent({
                   full: img.image!.full!,
                   caption: img.description,
                 }))}
+              slides={district.gallery
+                .map((g) => readFragment(GalleryImageFragment, g))
+                .filter((img) => img.image?.full)
+                .map((img) => toSlide(img.image!.full!, img.description))}
             />
           </div>
         </section>

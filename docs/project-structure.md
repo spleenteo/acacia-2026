@@ -58,6 +58,9 @@ acacia-next/
 │   │   ├── ImageGallery/
 │   │   │   ├── index.tsx
 │   │   │   └── fragment.ts
+│   │   ├── Lightbox/
+│   │   │   ├── index.tsx                       # YARL lightbox modal (swipe, lazy, dots)
+│   │   │   └── toSlide.ts                      # ResponsiveImage → LightboxSlide converter
 │   │   ├── InfoDetail/index.tsx
 │   │   ├── MoodCard/index.tsx
 │   │   ├── SectionHeader/index.tsx                 # Reusable label/title/subtitle header (SectionHeaderRecord)
@@ -109,7 +112,7 @@ acacia-next/
 ├── public/
 │   ├── logo--main.svg                         # Full wordmark SVG (ratio ~3.6:1)
 │   └── acacia-isologo.svg                     # Isologo (copyright: not for standalone use)
-└── package.json                               # v0.6.1
+└── package.json                               # v0.7.0
 ```
 
 ## Tech Stack

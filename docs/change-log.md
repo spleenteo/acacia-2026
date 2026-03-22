@@ -1,5 +1,16 @@
 # Changelog
 
+## v0.7.0 — 2026-03-22 — CMS-driven navigation, YARL lightbox, locale fix
+
+Three improvements: navigation from CMS, swipe-enabled photo lightbox, and localized UI translations that actually work in Italian.
+
+- **CMS-driven SiteHeader**: Nav items fetched from App singleton via `navItems` modular content (MenuItemRecord, MenuExternalItemRecord). URLs resolved server-side via `modelPath()`. Added `home_page` to `indexPaths` for HomePage links.
+- **CMS-driven SiteFooter**: Footer columns from `footerLinks` (FooterMenuBlockRecord with widgetLabel + navLinks), social icons from `socialLinks` (SocialLinkRecord with Lucide icons via `getAmenityIcon()`), legal text from `legalText` structured text field. Hardcoded arrays removed.
+- **YARL lightbox**: Replaced native `<dialog>` lightbox with `yet-another-react-lightbox` — swipe gestures on mobile, lazy loading (preload: 1), automatic scroll lock, dot indicators + counter. New shared `Lightbox` component + `useLightbox` hook + `toSlide()` helper. Beddy widget hidden when lightbox is open.
+- **Locale fix**: Middleware now sets `x-next-intl-locale` header so `requestLocale` resolves correctly. Previously all UI translations fell back to English regardless of URL locale.
+
+---
+
 ## v0.6.1 — 2026-03-22 — Runtime translations from CDA
 
 Moved UI translations from static build-time JSON files to runtime CDA queries, so editors can update translated strings in DatoCMS without triggering a full rebuild.
