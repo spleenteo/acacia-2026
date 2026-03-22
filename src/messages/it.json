@@ -1,11 +1,19 @@
 {
-  "gallery": {
-    "viewAll": "View gallery"
+  "footer": {
+    "followUs": "Seguici",
+    "brandDescription": "Appartamenti selezionati nel cuore di Firenze, per chi cerca bellezza in ogni dettaglio.",
+    "getInTouch": "Contattaci",
+    "privacyPolicy": "Privacy Policy",
+    "aboutUs": "Chi siamo",
+    "address": "Indirizzo",
+    "faq": "FAQ",
+    "info": "Info",
+    "explore": "Esplora"
   },
   "apartment": {
+    "similarTitle": "Appartamenti simili",
     "moodsTitle": "Mood correlati",
     "moodsLabel": "Esplora",
-    "similarTitle": "Appartamenti simili",
     "similarLabel": "Potrebbe piacerti anche",
     "reviewsTitle": "I nostri ospiti raccontano",
     "reviewsLabel": "Recensioni",
@@ -31,6 +39,9 @@
     "bathrooms": "Bagni",
     "bedrooms": "Camere"
   },
+  "gallery": {
+    "viewAll": "View gallery"
+  },
   "listing": {
     "whereToStay": "Dove alloggiare",
     "exploreDistrict": "Esplora {name}",
@@ -39,16 +50,6 @@
     "searchAvailability": "Cerca disponibilità",
     "allFilter": "Tutti",
     "florence": "Firenze"
-  },
-  "footer": {
-    "brandDescription": "Appartamenti selezionati nel cuore di Firenze, per chi cerca bellezza in ogni dettaglio.",
-    "getInTouch": "Contattaci",
-    "privacyPolicy": "Privacy Policy",
-    "aboutUs": "Chi siamo",
-    "address": "Indirizzo",
-    "faq": "FAQ",
-    "info": "Info",
-    "explore": "Esplora"
   },
   "district": {
     "apartments": "Alloggi a"

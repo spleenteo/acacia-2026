@@ -5,20 +5,16 @@ import { useTranslations } from 'next-intl';
 import DraftModeToggler from '@/components/DraftModeToggler';
 import type { Locale } from '@/i18n/config';
 import { localizedPath } from '@/i18n/paths';
+import type { NavItem } from '@/app/[locale]/layout';
 import Link from 'next/link';
 
 type Props = {
   locale: Locale;
   isDraftModeEnabled: boolean;
+  navItems: NavItem[];
 };
 
-const navItems = [
-  { href: '/florence/accommodations', key: 'accommodations' },
-  { href: '/florence/districts', key: 'districts' },
-  { href: '/moods', key: 'moods' },
-] as const;
-
-export default function SiteHeader({ locale, isDraftModeEnabled }: Props) {
+export default function SiteHeader({ locale, isDraftModeEnabled, navItems }: Props) {
   const t = useTranslations('nav');
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -64,18 +60,33 @@ export default function SiteHeader({ locale, isDraftModeEnabled }: Props) {
 
           {/* Desktop nav */}
           <nav className="hidden md:flex items-center gap-8">
-            {navItems.map((item) => (
-              <Link
-                key={item.href}
-                href={`/${locale}${localizedPath(locale, item.href)}`}
-                className={[
-                  'font-body text-body-sm font-normal transition-colors duration-300 tracking-wide',
-                  scrolled ? 'text-muted hover:text-rust' : 'text-white/80 hover:text-white',
-                ].join(' ')}
-              >
-                {t(item.key)}
-              </Link>
-            ))}
+            {navItems.map((item) =>
+              item.isExternal ? (
+                <a
+                  key={item.href}
+                  href={item.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={[
+                    'font-body text-body-sm font-normal transition-colors duration-300 tracking-wide',
+                    scrolled ? 'text-muted hover:text-rust' : 'text-white/80 hover:text-white',
+                  ].join(' ')}
+                >
+                  {item.label}
+                </a>
+              ) : (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className={[
+                    'font-body text-body-sm font-normal transition-colors duration-300 tracking-wide',
+                    scrolled ? 'text-muted hover:text-rust' : 'text-white/80 hover:text-white',
+                  ].join(' ')}
+                >
+                  {item.label}
+                </Link>
+              ),
+            )}
             <span
               className={[
                 'font-body text-caption font-normal transition-colors duration-300',
@@ -143,23 +154,43 @@ export default function SiteHeader({ locale, isDraftModeEnabled }: Props) {
       >
         {/* Mega links */}
         <nav className="flex flex-col gap-2 mt-10 flex-1">
-          {navItems.map((item, i) => (
-            <Link
-              key={item.href}
-              href={`/${locale}${localizedPath(locale, item.href)}`}
-              onClick={() => setMenuOpen(false)}
-              className="font-heading font-normal text-white hover:text-rust transition-colors duration-200 leading-tight"
-              style={{
-                fontSize: 'clamp(2.75rem, 11vw, 4rem)',
-                transitionDelay: menuOpen ? `${i * 50}ms` : '0ms',
-                transform: menuOpen ? 'translateY(0)' : 'translateY(16px)',
-                opacity: menuOpen ? 1 : 0,
-                transition: `color 200ms, opacity 300ms ${i * 50}ms, transform 300ms ${i * 50}ms`,
-              }}
-            >
-              {t(item.key)}
-            </Link>
-          ))}
+          {navItems.map((item, i) =>
+            item.isExternal ? (
+              <a
+                key={item.href}
+                href={item.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => setMenuOpen(false)}
+                className="font-heading font-normal text-white hover:text-rust transition-colors duration-200 leading-tight"
+                style={{
+                  fontSize: 'clamp(2.75rem, 11vw, 4rem)',
+                  transitionDelay: menuOpen ? `${i * 50}ms` : '0ms',
+                  transform: menuOpen ? 'translateY(0)' : 'translateY(16px)',
+                  opacity: menuOpen ? 1 : 0,
+                  transition: `color 200ms, opacity 300ms ${i * 50}ms, transform 300ms ${i * 50}ms`,
+                }}
+              >
+                {item.label}
+              </a>
+            ) : (
+              <Link
+                key={item.href}
+                href={item.href}
+                onClick={() => setMenuOpen(false)}
+                className="font-heading font-normal text-white hover:text-rust transition-colors duration-200 leading-tight"
+                style={{
+                  fontSize: 'clamp(2.75rem, 11vw, 4rem)',
+                  transitionDelay: menuOpen ? `${i * 50}ms` : '0ms',
+                  transform: menuOpen ? 'translateY(0)' : 'translateY(16px)',
+                  opacity: menuOpen ? 1 : 0,
+                  transition: `color 200ms, opacity 300ms ${i * 50}ms, transform 300ms ${i * 50}ms`,
+                }}
+              >
+                {item.label}
+              </Link>
+            ),
+          )}
         </nav>
 
         {/* Bottom bar: locale + CTA */}

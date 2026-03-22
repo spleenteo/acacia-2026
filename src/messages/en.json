@@ -1,11 +1,19 @@
 {
-  "gallery": {
-    "viewAll": "View gallery"
+  "footer": {
+    "followUs": "Follow us",
+    "brandDescription": "Curated apartments in the heart of Florence, crafted for those who seek beauty in every detail.",
+    "getInTouch": "Get in touch",
+    "privacyPolicy": "Privacy Policy",
+    "aboutUs": "About us",
+    "address": "Address",
+    "faq": "FAQ",
+    "info": "Info",
+    "explore": "Explore"
   },
   "apartment": {
+    "similarTitle": "You may also like",
     "moodsTitle": "Related Moods",
     "moodsLabel": "Explore",
-    "similarTitle": "Similar Apartments",
     "similarLabel": "You may also like",
     "reviewsTitle": "What Our Guests Say",
     "reviewsLabel": "Guest reviews",
@@ -31,6 +39,9 @@
     "bathrooms": "Bathrooms",
     "bedrooms": "Bedrooms"
   },
+  "gallery": {
+    "viewAll": "View gallery"
+  },
   "listing": {
     "whereToStay": "Where to stay",
     "exploreDistrict": "Explore {name}",
@@ -39,16 +50,6 @@
     "searchAvailability": "Search availability",
     "allFilter": "All",
     "florence": "Florence"
-  },
-  "footer": {
-    "brandDescription": "Curated apartments in the heart of Florence, crafted for those who seek beauty in every detail.",
-    "getInTouch": "Get in touch",
-    "privacyPolicy": "Privacy Policy",
-    "aboutUs": "About us",
-    "address": "Address",
-    "faq": "FAQ",
-    "info": "Info",
-    "explore": "Explore"
   },
   "district": {
     "apartments": "Apartments in"

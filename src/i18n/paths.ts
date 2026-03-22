@@ -48,6 +48,7 @@ const modelPrefixes: Record<string, string> = {
 
 /** Maps singleton/index model API keys to their canonical paths (no slug needed) */
 const indexPaths: Record<string, string> = {
+  home_page: '/',
   index_apartment: '/florence/accommodations',
   page_districts: '/florence/districts',
   page_moods: '/moods',
