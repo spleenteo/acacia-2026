@@ -6,18 +6,18 @@ AI-optimized compact reference for Acacia Firenze project behavior and patterns.
 
 ## Design System — Rinascimento Moderno
 
-| Token          | Value            | Use                     |
-| -------------- | ---------------- | ----------------------- |
-| `font-heading` | Playfair Display | All headings, hero text |
-| `font-body`    | Lato             | Body text, UI elements  |
-| `text-hero`    | 56px / 1.06      | Hero sections           |
-| `text-h1`      | 42px / 1.12      | Page titles             |
-| `text-h2`      | 36px / 1.15      | Section titles          |
-| `text-h3`      | 24px / 1.2       | Subsections             |
-| `text-h4`      | 18px / 1.3       | Card titles             |
-| `text-body`    | 15px / 1.7       | Default text            |
-| `text-body-sm` | 14px / 1.6       | Secondary text          |
-| `text-label`   | 12px / 1         | Section labels          |
+| Token          | Value              | Use                     |
+| -------------- | ------------------ | ----------------------- |
+| `font-heading` | Cormorant Garamond | All headings, hero text |
+| `font-body`    | Lato               | Body text, UI elements  |
+| `text-hero`    | 56px / 1.06        | Hero sections           |
+| `text-h1`      | 42px / 1.12        | Page titles             |
+| `text-h2`      | 36px / 1.15        | Section titles          |
+| `text-h3`      | 24px / 1.2         | Subsections             |
+| `text-h4`      | 18px / 1.3         | Card titles             |
+| `text-body`    | 15px / 1.7         | Default text            |
+| `text-body-sm` | 14px / 1.6         | Secondary text          |
+| `text-label`   | 12px / 1           | Section labels          |
 
 ### Color tokens
 
@@ -40,7 +40,7 @@ AI-optimized compact reference for Acacia Firenze project behavior and patterns.
 | Editorial emphasis | `<em>` in headings → italic (font-normal, no weight change)                                             |
 | Section title em   | `.section-title em` → rust color + italic + semi-transparent underline (1.5px, offset 6px)              |
 | SectionHeader      | Use `<SectionHeader data={...} />` + `SectionHeaderFragment` for all CMS-driven section headers         |
-| Heading weight     | Playfair Display always `font-normal` — never `font-bold` or `font-semibold`                            |
+| Heading weight     | Cormorant Garamond always `font-normal` — never `font-bold` or `font-semibold`                          |
 | Card image hover   | `overflow-hidden rounded-sm` on image wrapper + `group-hover:shadow-card-hover` + image `scale-[1.03]`  |
 | Card container     | No background, no default shadow, no `overflow-hidden` on article — text fuses with page background     |
 | Card radius        | `rounded-sm` (2px) on image wrapper only                                                                |
@@ -106,6 +106,19 @@ Models without detail slug (`index_apartment`, `page_districts`, `page_moods`) m
 - Invalidation: webhook → `/api/invalidate-cache`
 - Draft mode: `/api/draft-mode/enable` / `/api/draft-mode/disable`
 - Types: gql.tada (compile-time) + @datocms/cli (CMA types)
+
+### UI Translations (next-intl)
+
+| Aspect        | Detail                                                                                       |
+| ------------- | -------------------------------------------------------------------------------------------- |
+| Source        | DatoCMS `Translation` model (key + localized value)                                          |
+| Fetch         | `fetchTranslations(locale)` in `src/lib/datocms/fetchTranslations.ts` — CDA query at runtime |
+| Cache         | Same `datocms` tag as all content — invalidated by webhook, no rebuild needed                |
+| Config        | `src/i18n/request.ts` calls `fetchTranslations()` → next-intl `messages`                     |
+| Client        | `useTranslations('section')` → `t('key')`                                                    |
+| Server        | `await getTranslations('section')` → `t('key')`                                              |
+| Key format    | `section.camelCaseKey` (dot-notation, nested at runtime)                                     |
+| Legacy script | `npm run export-translations` — generates `src/messages/*.json` for reference only           |
 
 ### Real-Time Draft Preview
 

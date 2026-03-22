@@ -1,5 +1,16 @@
 # Changelog
 
+## v0.6.1 — 2026-03-22 — Runtime translations from CDA
+
+Moved UI translations from static build-time JSON files to runtime CDA queries, so editors can update translated strings in DatoCMS without triggering a full rebuild.
+
+- **Runtime fetch**: New `src/lib/datocms/fetchTranslations.ts` queries all Translation records from the CDA via `executeQuery`, converting dot-notation keys to nested objects for next-intl. Results are cached with the standard `datocms` cache tag.
+- **Automatic invalidation**: When an editor publishes a Translation record, the existing cache invalidation webhook (`/api/invalidate-cache`) refreshes translations along with all other content — no rebuild needed.
+- **request.ts rewrite**: `src/i18n/request.ts` now calls `fetchTranslations(locale)` instead of importing static `src/messages/*.json` files.
+- **Legacy script retained**: `npm run export-translations` still works for debugging or generating reference JSON, but is no longer in the critical path.
+
+---
+
 ## v0.6.0 — 2026-03-21 — Localized URL path segments per locale
 
 Translated URL path segments so Italian users see native paths (`/it/firenze/appartamenti/abaco`) while English paths remain unchanged (`/en/florence/accommodations/abaco`). The filesystem route structure stays in English — middleware rewrites handle the translation transparently.

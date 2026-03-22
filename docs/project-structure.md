@@ -70,10 +70,12 @@ acacia-next/
 │   │   └── UpsList/index.tsx
 │   ├── i18n/
 │   │   ├── config.ts                          # Locale config (en, it)
+│   │   ├── request.ts                         # next-intl config (runtime CDA translations)
 │   │   └── paths.ts                           # Localized path segments + modelPath()
 │   └── lib/
 │       └── datocms/
 │           ├── executeQuery.ts                 # Central CDA fetch wrapper (cache/no-store)
+│           ├── fetchTranslations.ts            # Runtime CDA fetch for next-intl translations
 │           ├── recordInfo.ts                   # Record type → URL mapping
 │           ├── cma-types.ts                    # Generated CMA types
 │           ├── graphql-env.d.ts                # Generated gql.tada types
@@ -107,7 +109,7 @@ acacia-next/
 ├── public/
 │   ├── logo--main.svg                         # Full wordmark SVG (ratio ~3.6:1)
 │   └── acacia-isologo.svg                     # Isologo (copyright: not for standalone use)
-└── package.json                               # v0.6.0
+└── package.json                               # v0.6.1
 ```
 
 ## Tech Stack

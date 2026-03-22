@@ -59,15 +59,15 @@ Two type generation systems work together:
 **UI Translations (next-intl)**: All user-facing UI strings are managed via the DatoCMS `Translation` model and consumed at runtime through `next-intl`. **No hardcoded strings** — every label, button text, section heading, or CTA must use a translation key.
 
 - **Source of truth**: DatoCMS `Translation` model with fields `key` (string, unique, format `section.camelCaseKey`) and `value` (string, localized EN/IT).
-- **Build-time export**: `npm run export-translations` fetches all published Translation records via CDA and writes `src/messages/en.json` and `src/messages/it.json` (nested JSON from dot-notation keys). These files are **generated — do not edit manually**.
-- **Configuration**: `src/i18n/request.ts` configures next-intl; `next.config.mjs` wraps with `createNextIntlPlugin`. The locale layout (`src/app/[locale]/layout.tsx`) provides `NextIntlClientProvider` with all messages.
+- **Runtime fetch**: `src/lib/datocms/fetchTranslations.ts` queries all Translation records from the CDA at runtime via `executeQuery`, benefiting from Next.js Data Cache (tagged `datocms`). When an editor modifies a translation in DatoCMS, the existing cache invalidation webhook automatically refreshes translations — no rebuild needed. The `src/messages/*.json` files are kept as a fallback/reference but are no longer imported at runtime.
+- **Configuration**: `src/i18n/request.ts` configures next-intl by calling `fetchTranslations(locale)`; `next.config.mjs` wraps with `createNextIntlPlugin`. The locale layout (`src/app/[locale]/layout.tsx`) provides `NextIntlClientProvider` with all messages.
 - **Client components** (`'use client'`): use `useTranslations('section')` hook → `t('keyName')`.
 - **Server components** (async): use `const t = await getTranslations('section')` from `next-intl/server` → `t('keyName')`.
 - **ICU interpolation**: use `{placeholder}` in the value, call `t('key', { placeholder: value })`. Example: `listing.exploreDistrict` = `"Explore {name}"` → `t('exploreDistrict', { name })`.
 - **Key naming convention**: dot-notation `section.camelCaseKey`. Sections: `nav`, `footer`, `listing`, `districts`, `moods`, `district`, `apartment`, `gallery`. The `key` field on DatoCMS validates with `/^[a-zA-Z][a-zA-Z0-9_.]*$/`.
-- **Adding a new translated string**: (1) create a Translation record in DatoCMS with key + EN/IT values, (2) publish it, (3) run `npm run export-translations` to regenerate JSON, (4) use `t('section.key')` in the component.
+- **Adding a new translated string**: (1) create a Translation record in DatoCMS with key + EN/IT values, (2) publish it, (3) the cache invalidation webhook will automatically refresh translations, (4) use `t('section.key')` in the component.
 - **Files not using translations**: `not-found.tsx` and `error.tsx` keep bilingual inline strings (no locale context available).
-- **Visual editing note**: translation strings from static JSON have no stega encoding, so click-to-edit overlays don't work for them. Editors modify strings in the DatoCMS panel → webhook triggers rebuild.
+- **Legacy export script**: `npm run export-translations` still exists for generating static JSON files (`src/messages/en.json`, `src/messages/it.json`) as reference or debugging aid, but these are no longer used at runtime.
 
 **Turbopack workaround**: Next.js 16 Turbopack has a bug where `useRouter()`, `usePathname()`, and other `next/navigation` hooks that subscribe to router state cause "Cannot read properties of undefined (reading 'unsubscribe')" errors. Use `window.history.replaceState` instead of `router.push`, `window.location.pathname` instead of `usePathname()`, and `window.location.assign()` for full navigation. `useSearchParams` works when wrapped in a Suspense boundary.
 
