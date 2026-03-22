@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback, useEffect, useRef } from 'react';
+import { useState, useCallback, useEffect, useRef, useMemo } from 'react';
 import YARLightbox from 'yet-another-react-lightbox';
 import 'yet-another-react-lightbox/styles.css';
 
@@ -97,13 +97,26 @@ export default function Lightbox({ slides, open, index = 0, onClose }: LightboxP
     return () => document.body.classList.remove('lightbox-open');
   }, [open]);
 
-  const yarlSlides = slides.map((s) => ({
-    src: s.src,
-    srcSet: s.srcSet ? parseSrcSet(s.srcSet, s.width, s.height) : undefined,
-    width: s.width,
-    height: s.height,
-    alt: s.alt || '',
-  }));
+  const onHandlers = useMemo(
+    () => ({
+      view: ({ index: i }: { index: number }) => {
+        setCurrentIndex(i);
+      },
+    }),
+    [],
+  );
+
+  const yarlSlides = useMemo(
+    () =>
+      slides.map((s) => ({
+        src: s.src,
+        srcSet: s.srcSet ? parseSrcSet(s.srcSet, s.width, s.height) : undefined,
+        width: s.width,
+        height: s.height,
+        alt: s.alt || '',
+      })),
+    [slides],
+  );
 
   return (
     <>
@@ -115,11 +128,7 @@ export default function Lightbox({ slides, open, index = 0, onClose }: LightboxP
         animation={{ fade: 250, swipe: 300 }}
         carousel={{ finite: false, preload: 1 }}
         controller={{ closeOnBackdropClick: true }}
-        on={{
-          view: ({ index: i }) => {
-            setCurrentIndex(i);
-          },
-        }}
+        on={onHandlers}
         render={{
           controls: () => (
             <div ref={overlayRef}>
@@ -134,8 +143,6 @@ export default function Lightbox({ slides, open, index = 0, onClose }: LightboxP
           Previous: 'Precedente',
           Next: 'Successiva',
           Close: 'Chiudi',
-          'Zoom in': 'Ingrandisci',
-          'Zoom out': 'Riduci',
         }}
       />
     </>
