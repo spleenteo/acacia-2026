@@ -12,8 +12,8 @@ input AmenityModelFilter {
   updatedAt: UpdatedAtFilter
   _isValid: BooleanFilter
   icon: StringFilter
-  url: StringFilter
   name: StringFilter
+  url: StringFilter
   OR: [AmenityModelFilter]
   AND: [AmenityModelFilter]
 }
@@ -45,10 +45,10 @@ enum AmenityModelOrderBy {
   _isValid_DESC
   icon_ASC
   icon_DESC
-  url_ASC
-  url_DESC
   name_ASC
   name_DESC
+  url_ASC
+  url_DESC
 }
 
 """Record of type 🚿 Amenities (amenity)"""
@@ -220,29 +220,29 @@ input ApartmentModelFilter {
   _updatedAt: UpdatedAtFilter
   updatedAt: UpdatedAtFilter
   _isValid: BooleanFilter
-  featuredImage: FileFilter
-  wwlGallery: LinksFilter
-  category: LinkFilter
-  slug: SlugFilter
-  amenities: LinksFilter
-  houseBadge: LinkFilter
-  sleeps: IntegerFilter
-  district: LinkFilter
-  seo: SeoFilter
-  ape: StringFilter
-  featuredSlideshow: GalleryFilter
   acaciaReward: BooleanFilter
-  name: StringFilter
-  claim: StringFilter
-  cin: StringFilter
-  propertyId: StringFilter
-  bedrooms: IntegerFilter
+  amenities: LinksFilter
+  ape: StringFilter
   bathrooms: IntegerFilter
-  notes: JsonFilter
-  price: StringFilter
   beddyId: StringFilter
+  bedrooms: IntegerFilter
+  category: LinkFilter
+  cin: StringFilter
+  claim: StringFilter
   comforts: LinksFilter
   description: TextFilter
+  district: LinkFilter
+  featuredImage: FileFilter
+  featuredSlideshow: GalleryFilter
+  houseBadge: LinkFilter
+  name: StringFilter
+  notes: JsonFilter
+  price: StringFilter
+  propertyId: StringFilter
+  seo: SeoFilter
+  sleeps: IntegerFilter
+  slug: SlugFilter
+  wwlGallery: LinksFilter
   OR: [ApartmentModelFilter]
   AND: [ApartmentModelFilter]
 }
@@ -277,28 +277,28 @@ enum ApartmentModelOrderBy {
   updatedAt_DESC
   _isValid_ASC
   _isValid_DESC
-  sleeps_ASC
-  sleeps_DESC
-  ape_ASC
-  ape_DESC
   acaciaReward_ASC
   acaciaReward_DESC
-  name_ASC
-  name_DESC
-  claim_ASC
-  claim_DESC
-  cin_ASC
-  cin_DESC
-  propertyId_ASC
-  propertyId_DESC
-  bedrooms_ASC
-  bedrooms_DESC
+  ape_ASC
+  ape_DESC
   bathrooms_ASC
   bathrooms_DESC
-  price_ASC
-  price_DESC
   beddyId_ASC
   beddyId_DESC
+  bedrooms_ASC
+  bedrooms_DESC
+  cin_ASC
+  cin_DESC
+  claim_ASC
+  claim_DESC
+  name_ASC
+  name_DESC
+  price_ASC
+  price_DESC
+  propertyId_ASC
+  propertyId_DESC
+  sleeps_ASC
+  sleeps_DESC
 }
 
 """Record of type 🏠 Apartments (apartment)"""
@@ -796,8 +796,8 @@ input CallToActionModelFilter {
   _updatedAt: UpdatedAtFilter
   updatedAt: UpdatedAtFilter
   _isValid: BooleanFilter
-  url: StringFilter
   label: StringFilter
+  url: StringFilter
   OR: [CallToActionModelFilter]
   AND: [CallToActionModelFilter]
 }
@@ -825,10 +825,10 @@ enum CallToActionModelOrderBy {
   updatedAt_DESC
   _isValid_ASC
   _isValid_DESC
-  url_ASC
-  url_DESC
   label_ASC
   label_DESC
+  url_ASC
+  url_DESC
 }
 
 """Record of type Call to action (call_to_action)"""
@@ -1120,11 +1120,11 @@ input DistrictModelFilter {
   _updatedAt: UpdatedAtFilter
   updatedAt: UpdatedAtFilter
   _isValid: BooleanFilter
-  seo: SeoFilter
-  gallery: LinksFilter
-  description: TextFilter
-  name: StringFilter
   abstract: TextFilter
+  description: TextFilter
+  gallery: LinksFilter
+  name: StringFilter
+  seo: SeoFilter
   slug: SlugFilter
   OR: [DistrictModelFilter]
   AND: [DistrictModelFilter]
@@ -1319,8 +1319,8 @@ input EssentialModelFilter {
   updatedAt: UpdatedAtFilter
   _isValid: BooleanFilter
   icon: StringFilter
-  url: StringFilter
   name: StringFilter
+  url: StringFilter
   OR: [EssentialModelFilter]
   AND: [EssentialModelFilter]
 }
@@ -1352,10 +1352,10 @@ enum EssentialModelOrderBy {
   _isValid_DESC
   icon_ASC
   icon_DESC
-  url_ASC
-  url_DESC
   name_ASC
   name_DESC
+  url_ASC
+  url_DESC
 }
 
 """Record of type 🧰 Essentials (essential)"""
@@ -1429,10 +1429,10 @@ input FaqModelFilter {
   updatedAt: UpdatedAtFilter
   _isValid: BooleanFilter
   _locales: LocalesFilter
-  posts: LinksFilter
-  services: LinksFilter
   answer: TextFilter
+  posts: LinksFilter
   question: StringFilter
+  services: LinksFilter
   OR: [FaqModelFilter]
   AND: [FaqModelFilter]
 }
@@ -1838,8 +1838,8 @@ input GalleryImageModelFilter {
   _updatedAt: UpdatedAtFilter
   updatedAt: UpdatedAtFilter
   _isValid: BooleanFilter
-  image: FileFilter
   description: TextFilter
+  image: FileFilter
   OR: [GalleryImageModelFilter]
   AND: [GalleryImageModelFilter]
 }
@@ -1936,8 +1936,8 @@ input GuestPostModelFilter {
   _updatedAt: UpdatedAtFilter
   updatedAt: UpdatedAtFilter
   _isValid: BooleanFilter
-  text: TextFilter
   guestName: StringFilter
+  text: TextFilter
   url: StringFilter
   OR: [GuestPostModelFilter]
   AND: [GuestPostModelFilter]
@@ -2020,14 +2020,14 @@ input GuestbookModelFilter {
   _updatedAt: UpdatedAtFilter
   updatedAt: UpdatedAtFilter
   _isValid: BooleanFilter
-  published: BooleanFilter
-  service: LinkFilter
   apartment: LinkFilter
-  name: StringFilter
-  quote: TextFilter
-  title: StringFilter
-  date: DateFilter
   channel: StringFilter
+  date: DateFilter
+  name: StringFilter
+  published: BooleanFilter
+  quote: TextFilter
+  service: LinkFilter
+  title: StringFilter
   OR: [GuestbookModelFilter]
   AND: [GuestbookModelFilter]
 }
@@ -2055,16 +2055,16 @@ enum GuestbookModelOrderBy {
   updatedAt_DESC
   _isValid_ASC
   _isValid_DESC
-  published_ASC
-  published_DESC
-  name_ASC
-  name_DESC
-  title_ASC
-  title_DESC
-  date_ASC
-  date_DESC
   channel_ASC
   channel_DESC
+  date_ASC
+  date_DESC
+  name_ASC
+  name_DESC
+  published_ASC
+  published_DESC
+  title_ASC
+  title_DESC
 }
 
 """Record of type 💬 Guestbooks (guestbook)"""
@@ -2153,16 +2153,16 @@ input HomePageModelFilter {
   _updatedAt: UpdatedAtFilter
   updatedAt: UpdatedAtFilter
   _isValid: BooleanFilter
-  stayText: TextFilter
-  title: TextFilter
-  subtitle: TextFilter
-  moodsTitle: StringFilter
   beddyId: StringFilter
+  claim: StringFilter
   doText: TextFilter
   highlightedApartments: LinksFilter
-  claim: StringFilter
   moods: LinksFilter
+  moodsTitle: StringFilter
   seo: SeoFilter
+  stayText: TextFilter
+  subtitle: TextFilter
+  title: TextFilter
   OR: [HomePageModelFilter]
   AND: [HomePageModelFilter]
 }
@@ -2190,12 +2190,12 @@ enum HomePageModelOrderBy {
   updatedAt_DESC
   _isValid_ASC
   _isValid_DESC
-  moodsTitle_ASC
-  moodsTitle_DESC
   beddyId_ASC
   beddyId_DESC
   claim_ASC
   claim_DESC
+  moodsTitle_ASC
+  moodsTitle_DESC
 }
 
 """Record of type 🏡 Home page (home_page)"""
@@ -2664,8 +2664,8 @@ input ImageModelFilter {
   _updatedAt: UpdatedAtFilter
   updatedAt: UpdatedAtFilter
   _isValid: BooleanFilter
-  image: FileFilter
   description: StringFilter
+  image: FileFilter
   url: StringFilter
   OR: [ImageModelFilter]
   AND: [ImageModelFilter]
@@ -5402,12 +5402,12 @@ input MoodItemsModelFilter {
   _updatedAt: UpdatedAtFilter
   updatedAt: UpdatedAtFilter
   _isValid: BooleanFilter
-  image: FileFilter
-  object: LinksFilter
-  name: StringFilter
-  url: StringFilter
   description: TextFilter
+  image: FileFilter
   label: StringFilter
+  name: StringFilter
+  object: LinksFilter
+  url: StringFilter
   OR: [MoodItemsModelFilter]
   AND: [MoodItemsModelFilter]
 }
@@ -5439,12 +5439,12 @@ enum MoodItemsModelOrderBy {
   updatedAt_DESC
   _isValid_ASC
   _isValid_DESC
+  label_ASC
+  label_DESC
   name_ASC
   name_DESC
   url_ASC
   url_DESC
-  label_ASC
-  label_DESC
 }
 
 """Record of type Mood Item (mood_items)"""
@@ -5540,13 +5540,13 @@ input MoodModelFilter {
   _updatedAt: UpdatedAtFilter
   updatedAt: UpdatedAtFilter
   _isValid: BooleanFilter
-  image: FileFilter
   boxes: LinksFilter
-  published: BooleanFilter
-  description: TextFilter
-  seo: SeoFilter
   claim: StringFilter
+  description: TextFilter
+  image: FileFilter
   name: StringFilter
+  published: BooleanFilter
+  seo: SeoFilter
   slug: SlugFilter
   OR: [MoodModelFilter]
   AND: [MoodModelFilter]
@@ -5577,12 +5577,12 @@ enum MoodModelOrderBy {
   updatedAt_DESC
   _isValid_ASC
   _isValid_DESC
-  published_ASC
-  published_DESC
   claim_ASC
   claim_DESC
   name_ASC
   name_DESC
+  published_ASC
+  published_DESC
 }
 
 """Record of type 😊 Moods (mood)"""
@@ -5714,13 +5714,13 @@ input OfferModelFilter {
   _updatedAt: UpdatedAtFilter
   updatedAt: UpdatedAtFilter
   _isValid: BooleanFilter
-  published: BooleanFilter
-  featuredImage: FileFilter
-  cta: LinkFilter
   abstract: TextFilter
+  cta: LinkFilter
+  featuredImage: FileFilter
+  published: BooleanFilter
   terms: TextFilter
-  validity: StringFilter
   title: StringFilter
+  validity: StringFilter
   OR: [OfferModelFilter]
   AND: [OfferModelFilter]
 }
@@ -5752,10 +5752,10 @@ enum OfferModelOrderBy {
   _isValid_DESC
   published_ASC
   published_DESC
-  validity_ASC
-  validity_DESC
   title_ASC
   title_DESC
+  validity_ASC
+  validity_DESC
 }
 
 """Record of type Offers (offer)"""
@@ -6462,10 +6462,10 @@ input PageModelFilter {
   updatedAt: UpdatedAtFilter
   _isValid: BooleanFilter
   _locales: LocalesFilter
-  title: StringFilter
-  slug: SlugFilter
   seoSettingsSocial: SeoFilter
+  slug: SlugFilter
   structuredText: StructuredTextFilter
+  title: StringFilter
   OR: [PageModelFilter]
   AND: [PageModelFilter]
 }
@@ -7013,22 +7013,22 @@ input PostModelFilter {
   _updatedAt: UpdatedAtFilter
   updatedAt: UpdatedAtFilter
   _isValid: BooleanFilter
-  publishedAt: DateFilter
-  sticky: BooleanFilter
-  relatedDistricts: LinksFilter
-  published: BooleanFilter
-  content: LinksFilter
-  featuredImage: FileFilter
-  relatedPosts: LinksFilter
+  abstract: TextFilter
   category: LinkFilter
-  relatedApartments: LinksFilter
+  content: LinksFilter
   cta: LinkFilter
+  featuredImage: FileFilter
+  language: StringFilter
+  published: BooleanFilter
+  publishedAt: DateFilter
+  relatedApartments: LinksFilter
+  relatedDistricts: LinksFilter
+  relatedPosts: LinksFilter
   relatedServices: LinksFilter
   seo: SeoFilter
-  title: StringFilter
-  language: StringFilter
-  abstract: TextFilter
   slug: SlugFilter
+  sticky: BooleanFilter
+  title: StringFilter
   OR: [PostModelFilter]
   AND: [PostModelFilter]
 }
@@ -7056,16 +7056,16 @@ enum PostModelOrderBy {
   updatedAt_DESC
   _isValid_ASC
   _isValid_DESC
+  language_ASC
+  language_DESC
+  published_ASC
+  published_DESC
   publishedAt_ASC
   publishedAt_DESC
   sticky_ASC
   sticky_DESC
-  published_ASC
-  published_DESC
   title_ASC
   title_DESC
-  language_ASC
-  language_DESC
 }
 
 """Record of type Posts (post)"""
@@ -8659,19 +8659,19 @@ input ServiceModelFilter {
   _updatedAt: UpdatedAtFilter
   updatedAt: UpdatedAtFilter
   _isValid: BooleanFilter
-  published: BooleanFilter
-  shopItem: BooleanFilter
-  category: LinkFilter
-  gallery: LinksFilter
-  description: TextFilter
-  seo: SeoFilter
-  featuredImage: FileFilter
-  name: StringFilter
-  trekksoftId: IntegerFilter
-  price: StringFilter
   abstract: TextFilter
+  category: LinkFilter
+  description: TextFilter
+  featuredImage: FileFilter
+  gallery: LinksFilter
   highlight: StringFilter
+  name: StringFilter
+  price: StringFilter
+  published: BooleanFilter
+  seo: SeoFilter
+  shopItem: BooleanFilter
   slug: SlugFilter
+  trekksoftId: IntegerFilter
   OR: [ServiceModelFilter]
   AND: [ServiceModelFilter]
 }
@@ -8701,18 +8701,18 @@ enum ServiceModelOrderBy {
   updatedAt_DESC
   _isValid_ASC
   _isValid_DESC
+  highlight_ASC
+  highlight_DESC
+  name_ASC
+  name_DESC
+  price_ASC
+  price_DESC
   published_ASC
   published_DESC
   shopItem_ASC
   shopItem_DESC
-  name_ASC
-  name_DESC
   trekksoftId_ASC
   trekksoftId_DESC
-  price_ASC
-  price_DESC
-  highlight_ASC
-  highlight_DESC
 }
 
 """Record of type Services (service)"""
@@ -9050,12 +9050,12 @@ input TipModelFilter {
   _updatedAt: UpdatedAtFilter
   updatedAt: UpdatedAtFilter
   _isValid: BooleanFilter
+  description: TextFilter
   expiryDate: DateFilter
   featuredImage: FileFilter
   published: BooleanFilter
-  url: StringFilter
-  description: TextFilter
   title: StringFilter
+  url: StringFilter
   OR: [TipModelFilter]
   AND: [TipModelFilter]
 }
@@ -9087,10 +9087,10 @@ enum TipModelOrderBy {
   expiryDate_DESC
   published_ASC
   published_DESC
-  url_ASC
-  url_DESC
   title_ASC
   title_DESC
+  url_ASC
+  url_DESC
 }
 
 """Record of type Tips (tip)"""
@@ -9198,8 +9198,8 @@ input TranslationModelFilter {
   _updatedAt: UpdatedAtFilter
   updatedAt: UpdatedAtFilter
   _isValid: BooleanFilter
-  value: StringFilter
   key: StringFilter
+  value: StringFilter
   OR: [TranslationModelFilter]
   AND: [TranslationModelFilter]
 }
@@ -9227,10 +9227,10 @@ enum TranslationModelOrderBy {
   updatedAt_DESC
   _isValid_ASC
   _isValid_DESC
-  value_ASC
-  value_DESC
   key_ASC
   key_DESC
+  value_ASC
+  value_DESC
 }
 
 """Record of type 🌐 Translation (translation)"""

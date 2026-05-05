@@ -6,21 +6,11 @@ export type Apartment = ItemTypeDefinition<
   EnvironmentSettings,
   '2726',
   {
-    beddy_id: {
-      type: 'string';
-    };
-    kigo_id: {
-      type: 'string';
-    };
-    featured_slideshow: {
-      type: 'gallery';
-    };
     published: {
       type: 'boolean';
     };
-    highlight: {
+    beddy_id: {
       type: 'string';
-      localized: true;
     };
     property_id: {
       type: 'string';
@@ -28,31 +18,44 @@ export type Apartment = ItemTypeDefinition<
     name: {
       type: 'string';
     };
+    kigo_id: {
+      type: 'string';
+    };
+    highlight: {
+      type: 'string';
+      localized: true;
+    };
     description: {
       type: 'text';
       localized: true;
     };
-    kigo_slug: {
-      type: 'string';
+    featured_slideshow: {
+      type: 'gallery';
     };
     ups: {
       type: 'links';
     };
-    category: {
-      type: 'link';
+    kigo_slug: {
+      type: 'string';
+    };
+    gallery: {
+      type: 'links';
     };
     box_image: {
       type: 'file';
+    };
+    category: {
+      type: 'link';
+    };
+    cin: {
+      type: 'string';
     };
     claim: {
       type: 'string';
       localized: true;
     };
-    gallery: {
+    cuddles: {
       type: 'links';
-    };
-    cin: {
-      type: 'string';
     };
     district: {
       type: 'link';
@@ -60,19 +63,16 @@ export type Apartment = ItemTypeDefinition<
     featured_image: {
       type: 'file';
     };
-    cuddles: {
-      type: 'links';
-    };
     home_truth: {
       type: 'rich_text';
       blocks: Truth;
       localized: true;
     };
-    acacia_reward: {
-      type: 'boolean';
-    };
     sleeps: {
       type: 'integer';
+    };
+    acacia_reward: {
+      type: 'boolean';
     };
     bedrooms: {
       type: 'integer';
@@ -120,18 +120,18 @@ export type Districts = ItemTypeDefinition<
   EnvironmentSettings,
   '2735',
   {
-    slug: {
-      type: 'slug';
-    };
     name: {
       type: 'string';
     };
-    seo: {
-      type: 'seo';
-      localized: true;
+    slug: {
+      type: 'slug';
     };
     abstract: {
       type: 'text';
+      localized: true;
+    };
+    seo: {
+      type: 'seo';
       localized: true;
     };
     description: {
@@ -428,13 +428,13 @@ export type HomePage = ItemTypeDefinition<
       type: 'string';
       localized: true;
     };
+    cta_label: {
+      type: 'string';
+      localized: true;
+    };
     promo: {
       type: 'rich_text';
       blocks: PromoApartment;
-      localized: true;
-    };
-    cta_label: {
-      type: 'string';
       localized: true;
     };
     cta_link: {
