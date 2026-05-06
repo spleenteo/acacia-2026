@@ -1,6 +1,36 @@
 {
   "version": 1,
   "skills": {
+    "datocms-cda": {
+      "source": "datocms/agent-skills",
+      "sourceType": "github",
+      "skillPath": "skills/datocms-cda/SKILL.md",
+      "computedHash": "5000e4b0171fc81ddd7765adf7d08abb82b63c69248180d39914d2bd046d406f"
+    },
+    "datocms-cli": {
+      "source": "datocms/agent-skills",
+      "sourceType": "github",
+      "skillPath": "skills/datocms-cli/SKILL.md",
+      "computedHash": "2aa954865fb4202c071067dd72dbcc60c66a8b5e5aa69a4dba3933f383b04b36"
+    },
+    "datocms-cma": {
+      "source": "datocms/agent-skills",
+      "sourceType": "github",
+      "skillPath": "skills/datocms-cma/SKILL.md",
+      "computedHash": "1cce7804f67bb2285ac2066dc4e0d53b93c260db5b30eb84df58d38d0ec56d0d"
+    },
+    "datocms-frontend-integrations": {
+      "source": "datocms/agent-skills",
+      "sourceType": "github",
+      "skillPath": "skills/datocms-frontend-integrations/SKILL.md",
+      "computedHash": "1d2bcaf98d622a0f269ee391e06b551c75cea0eb623f77b824fcd46ae83efbe5"
+    },
+    "datocms-setup": {
+      "source": "datocms/agent-skills",
+      "sourceType": "github",
+      "skillPath": "skills/datocms-setup/SKILL.md",
+      "computedHash": "95e6fc7d947a4cff8a0693334aa78e438144b1756f3f3406106632adb45a27d8"
+    },
     "web-design-reviewer": {
       "source": "github/awesome-copilot",
       "sourceType": "github",
