@@ -14,13 +14,11 @@ import { type EnabledQueryListenerOptions, useQuerySubscription } from 'react-da
  * site in the server component (page.tsx), where the query and variables are
  * already correctly typed by gql.tada.
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export default function RealtimeWrapper<ResolvedProps extends Record<string, unknown>, Result>({
   contentComponent: ContentComponent,
   resolvedProps,
   ...subscriptionOptions
-}: // eslint-disable-next-line @typescript-eslint/no-explicit-any
-EnabledQueryListenerOptions<Result, any> & {
+}: EnabledQueryListenerOptions<Result, any> & {
   contentComponent: ComponentType<ResolvedProps & { data: Result }>;
   resolvedProps: ResolvedProps;
 }) {

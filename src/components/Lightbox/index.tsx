@@ -78,14 +78,14 @@ function LightboxOverlay({
  */
 export default function Lightbox({ slides, open, index = 0, onClose }: LightboxProps) {
   const [currentIndex, setCurrentIndex] = useState(index);
+  const [prevOpen, setPrevOpen] = useState(open);
   const overlayRef = useRef<HTMLDivElement>(null);
 
-  // Sync initial index when lightbox opens
-  useEffect(() => {
-    if (open) {
-      setCurrentIndex(index);
-    }
-  }, [open, index]);
+  // Reset to prop `index` on closed→open transition without an effect (React 19).
+  if (open !== prevOpen) {
+    setPrevOpen(open);
+    if (open) setCurrentIndex(index);
+  }
 
   // Hide Beddy widget when lightbox is open
   useEffect(() => {

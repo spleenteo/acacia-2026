@@ -9,7 +9,6 @@ type Props = {
 };
 
 function applyDefaultDates(bar: Element): boolean {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const ref = (bar as any)?.ngElementStrategy?.componentRef;
   const form = ref?.instance?.beddyBarForm;
   if (!form) return false;

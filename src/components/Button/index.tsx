@@ -33,7 +33,6 @@ type BetterLinkFormatted = {
   class: string | null;
 };
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function getFormatted(button: any): BetterLinkFormatted | null {
   if (!button?.formatted) return null;
   const f = button.formatted as BetterLinkFormatted;

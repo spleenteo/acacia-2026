@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Acacia Firenze — Next.js 16 (App Router) website integrated with DatoCMS as headless CMS. Uses React 19, TypeScript (strict mode), Tailwind CSS v4, and deploys to Vercel. Node 22 required (see .nvmrc). Bilingual site (EN/IT) with locale-prefixed URLs (`/en/...`, `/it/...`).
+Acacia Firenze — Next.js 16 (App Router) website integrated with DatoCMS as headless CMS. Uses React 19, TypeScript (strict mode), Tailwind CSS v4, and deploys to Vercel. Node 25 required (see .nvmrc). Bilingual site (EN/IT) with locale-prefixed URLs (`/en/...`, `/it/...`).
 
 ## Commands
 
