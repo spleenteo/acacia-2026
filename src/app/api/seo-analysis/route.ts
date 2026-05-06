@@ -74,8 +74,9 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
      */
     const { data: item } = await client.items.rawFind<AnyModel>(itemId);
 
-    // We can use this info to generate the frontend URL, and the page slug
-    const websitePath = await recordToWebsiteRoute(item, locale);
+    // We can use this info to generate the frontend URL, and the page slug.
+    // Dispatch on the model's api_key (stable across environment forks).
+    const websitePath = await recordToWebsiteRoute(item, itemTypeApiKey, locale);
 
     const slug = await recordToSlug(item, locale);
 

@@ -8,6 +8,7 @@ import { toNextMetadata } from 'react-datocms';
 import type { Metadata } from 'next';
 import { DistrictCardFragment } from '@/components/DistrictCard';
 import RealtimeWrapper from '@/lib/datocms/realtime/RealtimeWrapper';
+import { getDraftRealtimeOptions } from '@/lib/datocms/realtime/getDraftRealtimeOptions';
 import DistrictsContent, { type DistrictsProps } from './DistrictsContent';
 
 const metaQuery = graphql(
@@ -79,15 +80,10 @@ export default async function DistrictsPage({ params }: { params: Promise<{ loca
       <RealtimeWrapper
         contentComponent={DistrictsContent}
         resolvedProps={resolvedProps}
-        token={process.env.DATOCMS_DRAFT_CONTENT_CDA_TOKEN!}
         query={query}
         variables={variables}
         initialData={data}
-        includeDrafts={isDraftModeEnabled}
-        excludeInvalid={true}
-        contentLink="v1"
-        baseEditingUrl={`${process.env.DATOCMS_BASE_EDITING_URL}${process.env.DATOCMS_ENVIRONMENT ? `/environments/${process.env.DATOCMS_ENVIRONMENT}` : ''}`}
-        environment={process.env.DATOCMS_ENVIRONMENT || undefined}
+        {...getDraftRealtimeOptions()}
       />
     );
   }

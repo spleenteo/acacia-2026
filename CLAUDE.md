@@ -54,6 +54,15 @@ Two type generation systems work together:
 
 **HTML content from DatoCMS**: Legacy text fields (description, abstract, claim) are queried with `markdown: true` and rendered via the `<HtmlContent>` component (`dangerouslySetInnerHTML`). This will be replaced with a Structured Text renderer when DatoCMS schema migrates.
 
+**Stega encoding & `stripStega`**: In draft mode, the CDA wrapper sets `contentLink: 'v1'`, which embeds invisible stega-encoded metadata into text fields (`title`, `description`, `abstract`, `claim`, `intro`, `subtitle`, `body`, structured-text values, asset `alt`, etc.). This is what powers Content Link click-to-edit overlays. Stega is **safe to render directly** (the encoding is zero-width Unicode that survives intact), but **NOT safe outside the render path**. Wrap any value crossing into non-render logic with `stripStega()` from `react-datocms`:
+
+- ✅ Safe as-is: `<h1>{title}</h1>`, `dangerouslySetInnerHTML={{ __html: description }}`, slug fields (slug type never carries stega), dates/JSON/numbers/booleans
+- ❌ Must `stripStega()`: string comparisons (`title === 'X'`, `.includes()`, `switch`), `.split`/`.replace`/regex, `JSON.stringify` to analytics or third-party APIs, `<meta>`/`<title>`/OG tags built from raw text fields, JSON-LD, cache keys, `length` checks, anything persisted
+
+Field types that **never** carry stega and don't need stripping: slug, JSON, boolean, integer, float, date/datetime, color, lat/lon, SEO, video, file, gallery, link, links, modular content, single block. SEO meta tags coming from `_seoMetaTags` are also clean.
+
+Debug stega-related bugs with `revealStega(value)` from `react-datocms` — `console.log` shows nothing (encoding is invisible), but `revealStega` rewrites it as visible `[STEGA:/editor/...]` markers, preserving object/array shape.
+
 **Fragment separation for client components**: When a GraphQL fragment is defined in a `'use client'` file but needs to be imported in server components, extract it to a separate `.ts` file (e.g., `ImageGallery/fragment.ts`). Importing from `'use client'` files in server components causes gql.tada build errors ("j.definitions is not iterable").
 
 **UI Translations (next-intl)**: All user-facing UI strings are managed via the DatoCMS `Translation` model and consumed at runtime through `next-intl`. **No hardcoded strings** — every label, button text, section heading, or CTA must use a translation key.

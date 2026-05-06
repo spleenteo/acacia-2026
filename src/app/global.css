@@ -124,6 +124,16 @@
     color: #fff;
   }
 
+  /*
+   * DatoCMS Content Link adds invisible stega-encoded characters to text fields
+   * in draft mode. They can cause unexpected letter-spacing on titles and other
+   * styled text. This rule neutralizes the kerning side-effect without removing
+   * the encoding (so click-to-edit overlays keep working).
+   */
+  [data-datocms-contains-stega] {
+    letter-spacing: 0 !important;
+  }
+
   /* Marker highlight emphasis on heading <em> keywords */
   h1 em,
   h2 em,

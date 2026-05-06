@@ -10,6 +10,7 @@ import type { Metadata } from 'next';
 import { GalleryImageFragment } from '@/components/ImageGallery/fragment';
 import { ApartmentCardFragment } from '@/components/ApartmentCard';
 import RealtimeWrapper from '@/lib/datocms/realtime/RealtimeWrapper';
+import { getDraftRealtimeOptions } from '@/lib/datocms/realtime/getDraftRealtimeOptions';
 import DistrictDetailContent, { type DistrictDetailProps } from './DistrictDetailContent';
 
 const metaQuery = graphql(
@@ -128,15 +129,10 @@ export default async function DistrictDetailPage({
       <RealtimeWrapper
         contentComponent={DistrictDetailContent}
         resolvedProps={resolvedProps}
-        token={process.env.DATOCMS_DRAFT_CONTENT_CDA_TOKEN!}
         query={query}
         variables={variables}
         initialData={data}
-        includeDrafts={isDraftModeEnabled}
-        excludeInvalid={true}
-        contentLink="v1"
-        baseEditingUrl={`${process.env.DATOCMS_BASE_EDITING_URL}${process.env.DATOCMS_ENVIRONMENT ? `/environments/${process.env.DATOCMS_ENVIRONMENT}` : ''}`}
-        environment={process.env.DATOCMS_ENVIRONMENT || undefined}
+        {...getDraftRealtimeOptions()}
       />
     );
   }

@@ -54,6 +54,11 @@ const indexPaths: Record<string, string> = {
   page_moods: '/moods',
 };
 
+/** Whether a model API key corresponds to a singleton/index page (no slug required) */
+export function isSingletonModelApiKey(modelApiKey: string): boolean {
+  return modelApiKey in indexPaths;
+}
+
 /**
  * Generates the full localized path for a DatoCMS model record.
  * Handles both detail records (with slug) and singleton/index pages (no slug).

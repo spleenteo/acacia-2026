@@ -18,6 +18,7 @@ import { ApartmentCardFragment } from '@/components/ApartmentCard';
 import { MoodCardFragment } from '@/components/MoodCard';
 import { EssentialFragment } from '@/components/EssentialsList';
 import RealtimeWrapper from '@/lib/datocms/realtime/RealtimeWrapper';
+import { getDraftRealtimeOptions } from '@/lib/datocms/realtime/getDraftRealtimeOptions';
 import ApartmentDetailContent, { type ApartmentDetailProps } from './ApartmentDetailContent';
 
 const metaQuery = graphql(
@@ -198,7 +199,7 @@ const essentialsQuery = graphql(
 
 const allSlugsQuery = graphql(`
   query AllApartmentSlugs {
-    allApartments(first: 100) {
+    allApartments {
       slug
     }
   }
@@ -280,15 +281,10 @@ export default async function ApartmentDetailPage({
       <RealtimeWrapper
         contentComponent={ApartmentDetailContent}
         resolvedProps={resolvedProps}
-        token={process.env.DATOCMS_DRAFT_CONTENT_CDA_TOKEN!}
         query={query}
         variables={variables}
         initialData={data}
-        includeDrafts={isDraftModeEnabled}
-        excludeInvalid={true}
-        contentLink="v1"
-        baseEditingUrl={`${process.env.DATOCMS_BASE_EDITING_URL}${process.env.DATOCMS_ENVIRONMENT ? `/environments/${process.env.DATOCMS_ENVIRONMENT}` : ''}`}
-        environment={process.env.DATOCMS_ENVIRONMENT || undefined}
+        {...getDraftRealtimeOptions()}
       />
     );
   }

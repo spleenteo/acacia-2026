@@ -1,20 +1,21 @@
 'use client';
 
+import { useTranslations } from 'next-intl';
+
 type Props = {
   draftModeEnabled: boolean;
 };
 
 export default function DraftModeToggler({ draftModeEnabled }: Props) {
+  const t = useTranslations('draftMode');
+
   async function handleClick() {
     let response: Response;
 
     if (draftModeEnabled) {
       response = await fetch('/api/draft-mode/disable');
     } else {
-      const token = prompt(
-        'To enter Draft Mode, you need to insert the SECRET_API_TOKEN:',
-        'secretTokenProtectingWebhookEndpointsFromBeingCalledByAnyone',
-      );
+      const token = prompt(t('tokenPrompt'));
       if (!token) {
         return;
       }
@@ -23,7 +24,7 @@ export default function DraftModeToggler({ draftModeEnabled }: Props) {
     }
 
     if (!response.ok) {
-      alert('Could not complete the operation!');
+      alert(t('error'));
       return;
     }
 
@@ -32,23 +33,15 @@ export default function DraftModeToggler({ draftModeEnabled }: Props) {
 
   if (draftModeEnabled) {
     return (
-      <button
-        type="button"
-        onClick={handleClick}
-        data-tooltip="Return to viewing published content"
-      >
-        Disable Draft Mode
+      <button type="button" onClick={handleClick} data-tooltip={t('tooltipDisable')}>
+        {t('disable')}
       </button>
     );
   }
 
   return (
-    <button
-      type="button"
-      onClick={handleClick}
-      data-tooltip="Preview unpublished changes from DatoCMS"
-    >
-      Enable Draft Mode
+    <button type="button" onClick={handleClick} data-tooltip={t('tooltipEnable')}>
+      {t('enable')}
     </button>
   );
 }

@@ -10,6 +10,7 @@ import { MoodCardFragment } from '@/components/MoodCard';
 import { SectionHeaderFragment } from '@/components/SectionHeader';
 import { ButtonBlockFragment } from '@/components/Button';
 import RealtimeWrapper from '@/lib/datocms/realtime/RealtimeWrapper';
+import { getDraftRealtimeOptions } from '@/lib/datocms/realtime/getDraftRealtimeOptions';
 import HomeContent, { type HomeProps } from './HomeContent';
 
 const metaQuery = graphql(
@@ -96,15 +97,10 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
       <RealtimeWrapper
         contentComponent={HomeContent}
         resolvedProps={resolvedProps}
-        token={process.env.DATOCMS_DRAFT_CONTENT_CDA_TOKEN!}
         query={query}
         variables={variables}
         initialData={data}
-        includeDrafts={isDraftModeEnabled}
-        excludeInvalid={true}
-        contentLink="v1"
-        baseEditingUrl={`${process.env.DATOCMS_BASE_EDITING_URL}${process.env.DATOCMS_ENVIRONMENT ? `/environments/${process.env.DATOCMS_ENVIRONMENT}` : ''}`}
-        environment={process.env.DATOCMS_ENVIRONMENT || undefined}
+        {...getDraftRealtimeOptions()}
       />
     );
   }

@@ -9,7 +9,7 @@
  */
 import type { RawApiTypes } from '@datocms/cma-client';
 import type { AnyModel } from './cma-types';
-import { modelPath } from '@/i18n/paths';
+import { isSingletonModelApiKey, modelPath } from '@/i18n/paths';
 import type { Locale } from '@/i18n/config';
 
 /*
@@ -19,8 +19,14 @@ import type { Locale } from '@/i18n/config';
  * information, and are utilized by the route handlers associated with the two
  * plugins:
  *
- * - src/app/api/seo-analysis/route.tsx
- * - src/app/api/preview-links/route.tsx
+ * - src/app/api/seo-analysis/route.ts
+ * - src/app/api/preview-links/route.ts
+ *
+ * We dispatch on the model's `api_key` (e.g. `apartment`, `home_page`) instead
+ * of the numeric `__itemTypeId`, because numeric IDs are not stable across
+ * environment forks: forking the primary environment generates a new set of
+ * IDs, which would silently break preview-links and SEO analysis on the forked
+ * environment. The `api_key` is invariant across environments.
  */
 
 function getSlug(item: RawApiTypes.Item<AnyModel>, locale: string): string | null {
@@ -36,21 +42,19 @@ function getSlug(item: RawApiTypes.Item<AnyModel>, locale: string): string | nul
   return null;
 }
 
-const itemTypeToModel: Record<string, string> = {
-  '2726': 'apartment',
-  '2735': 'district',
-  '2738': 'mood',
-};
-
 export async function recordToWebsiteRoute(
   item: RawApiTypes.Item<AnyModel>,
+  itemTypeApiKey: string,
   locale: string,
 ): Promise<string | null> {
+  // Singleton/index models map to a fixed path and do not require a slug
+  if (isSingletonModelApiKey(itemTypeApiKey)) {
+    return modelPath(itemTypeApiKey, '', locale as Locale);
+  }
+
   const slug = getSlug(item, locale);
   if (!slug) return null;
-  const model = itemTypeToModel[item.__itemTypeId as string];
-  if (!model) return null;
-  return modelPath(model, slug, locale as Locale);
+  return modelPath(itemTypeApiKey, slug, locale as Locale);
 }
 
 export async function recordToSlug(

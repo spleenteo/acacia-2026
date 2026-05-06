@@ -8,14 +8,17 @@ const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000';
 
 const slugsQuery = graphql(`
   query SitemapSlugsQuery {
-    allApartments(first: 100) {
+    allApartments {
       slug
+      _updatedAt
     }
     allDistricts {
       slug
+      _updatedAt
     }
     allMoods {
       slug
+      _updatedAt
     }
   }
 `);
@@ -36,6 +39,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const apartmentEntries: MetadataRoute.Sitemap = locales.flatMap((locale) =>
     data.allApartments.map((apt) => ({
       url: `${siteUrl}/${locale}${localizedPath(locale, `/florence/accommodations/${apt.slug}`)}`,
+      lastModified: new Date(apt._updatedAt),
       changeFrequency: 'weekly' as const,
       priority: 0.7,
     })),
@@ -44,6 +48,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const districtEntries: MetadataRoute.Sitemap = locales.flatMap((locale) =>
     data.allDistricts.map((d) => ({
       url: `${siteUrl}/${locale}${localizedPath(locale, `/florence/districts/${d.slug}`)}`,
+      lastModified: new Date(d._updatedAt),
       changeFrequency: 'weekly' as const,
       priority: 0.6,
     })),
@@ -52,6 +57,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const moodEntries: MetadataRoute.Sitemap = locales.flatMap((locale) =>
     data.allMoods.map((m) => ({
       url: `${siteUrl}/${locale}${localizedPath(locale, `/moods/${m.slug}`)}`,
+      lastModified: new Date(m._updatedAt),
       changeFrequency: 'monthly' as const,
       priority: 0.6,
     })),

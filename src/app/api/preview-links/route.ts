@@ -1,5 +1,4 @@
 import { recordToWebsiteRoute } from '@/lib/datocms/recordInfo';
-import { deserializeRawItem } from '@datocms/rest-client-utils';
 import { type NextRequest, NextResponse } from 'next/server';
 import { handleUnexpectedError, invalidRequestResponse, withCORS } from '../utils';
 
@@ -39,10 +38,11 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
      * along with information about which locale they are currently viewing in
      * the interface
      */
-    const { item, locale } = await request.json();
+    const { item, itemType, locale } = await request.json();
 
-    // We can use this info to generate the frontend URL associated
-    const url = await recordToWebsiteRoute(deserializeRawItem(item), locale);
+    // Dispatch on the model's api_key (stable across environment forks),
+    // not on the numeric __itemTypeId.
+    const url = await recordToWebsiteRoute(item, itemType.attributes.api_key, locale);
 
     const response: WebPreviewsResponse = { previewLinks: [] };
 

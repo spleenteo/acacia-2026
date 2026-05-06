@@ -9,6 +9,7 @@ import type { Metadata } from 'next';
 import { ResponsiveImageFragment } from '@/components/ResponsiveImage';
 import { ApartmentCardFragment } from '@/components/ApartmentCard';
 import RealtimeWrapper from '@/lib/datocms/realtime/RealtimeWrapper';
+import { getDraftRealtimeOptions } from '@/lib/datocms/realtime/getDraftRealtimeOptions';
 import AccommodationsContent, { type AccommodationsProps } from './AccommodationsContent';
 
 const metaQuery = graphql(
@@ -64,7 +65,7 @@ export const query = graphql(
         name(locale: $locale)
         slug
       }
-      allApartments(locale: $locale, first: 100, orderBy: [name_ASC]) {
+      allApartments(locale: $locale, orderBy: [name_ASC]) {
         id
         category {
           slug
@@ -100,15 +101,10 @@ export default async function AccommodationsPage({
       <RealtimeWrapper
         contentComponent={AccommodationsContent}
         resolvedProps={resolvedProps}
-        token={process.env.DATOCMS_DRAFT_CONTENT_CDA_TOKEN!}
         query={query}
         variables={variables}
         initialData={data}
-        includeDrafts={isDraftModeEnabled}
-        excludeInvalid={true}
-        contentLink="v1"
-        baseEditingUrl={`${process.env.DATOCMS_BASE_EDITING_URL}${process.env.DATOCMS_ENVIRONMENT ? `/environments/${process.env.DATOCMS_ENVIRONMENT}` : ''}`}
-        environment={process.env.DATOCMS_ENVIRONMENT || undefined}
+        {...getDraftRealtimeOptions()}
       />
     );
   }
