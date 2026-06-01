@@ -1,7 +1,10 @@
 'use client';
 
 import type { ComponentType } from 'react';
-import { type EnabledQueryListenerOptions, useQuerySubscription } from 'react-datocms';
+import {
+  type EnabledQueryListenerOptions,
+  useQuerySubscription,
+} from 'react-datocms/use-query-subscription';
 
 /**
  * Generic client component that subscribes to DatoCMS Real-time Updates API.

@@ -1,6 +1,6 @@
 'use client';
 
-import { ContentLink as DatoCMSContentLink } from 'react-datocms';
+import { ContentLink as DatoCMSContentLink } from 'react-datocms/content-link';
 import { useState, useEffect } from 'react';
 
 /**
