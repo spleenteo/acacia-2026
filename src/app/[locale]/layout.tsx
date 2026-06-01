@@ -42,6 +42,9 @@ const query = graphql(
               ... on PageMoodsRecord {
                 _modelApiKey
               }
+              ... on PageFaqRecord {
+                _modelApiKey
+              }
             }
           }
           ... on MenuExternalItemRecord {
@@ -71,6 +74,9 @@ const query = graphql(
                   _modelApiKey
                 }
                 ... on PageMoodsRecord {
+                  _modelApiKey
+                }
+                ... on PageFaqRecord {
                   _modelApiKey
                 }
               }
