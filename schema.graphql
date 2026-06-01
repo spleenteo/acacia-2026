@@ -1444,7 +1444,6 @@ input FaqModelFilter {
   updatedAt: UpdatedAtFilter
   _isValid: BooleanFilter
   _locales: LocalesFilter
-  answer: TextFilter
   answerStructured: StructuredTextFilter
   posts: LinksFilter
   question: StringFilter
@@ -1485,15 +1484,6 @@ enum FaqModelOrderBy {
 
 """Record of type ⁉️ Faq (faq)"""
 type FaqRecord implements RecordInterface {
-  _allAnswerLocales(
-    """Process content as markdown"""
-    markdown: Boolean
-
-    """
-    If you want to fallback to a default translation when a translation has not been found
-    """
-    fallbackLocales: [SiteLocale!]
-  ): [StringNonNullMultiLocaleField!]
   _allAnswerStructuredLocales(
     """
     If you want to fallback to a default translation when a translation has not been found
@@ -1531,18 +1521,6 @@ type FaqRecord implements RecordInterface {
   _status: ItemStatus!
   _unpublishingScheduledAt: DateTime
   _updatedAt: DateTime!
-  answer(
-    """Process content as markdown"""
-    markdown: Boolean
-
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
-    """
-    If you want to fallback to a default translation when a translation has not been found
-    """
-    fallbackLocales: [SiteLocale!]
-  ): String!
   answerStructured(
     """The locale to use to fetch the field's content"""
     locale: SiteLocale
@@ -5402,7 +5380,7 @@ type MenuExternalItemRecord implements RecordInterface {
   url: String!
 }
 
-union MenuItemModelPageField = HomePageRecord | IndexApartmentRecord | PageDistrictsRecord | PageMoodsRecord
+union MenuItemModelPageField = HomePageRecord | IndexApartmentRecord | PageDistrictsRecord | PageFaqRecord | PageMoodsRecord
 
 """Block of type 🔗 Menu Item (menu_item)"""
 type MenuItemRecord implements RecordInterface {
