@@ -9,6 +9,7 @@ const pathSegments: Record<string, Record<Locale, string>> = {
   accommodations: { en: 'accommodations', it: 'appartamenti' },
   districts: { en: 'districts', it: 'quartieri' },
   moods: { en: 'moods', it: 'moods' },
+  faq: { en: 'faq', it: 'faq' },
 };
 
 /** Reverse map: for each locale, maps translated segment → canonical segment */
@@ -37,6 +38,17 @@ export function canonicalPath(locale: Locale, localizedPath: string): string {
   const segments = localizedPath.split('/').filter(Boolean);
   const canonical = segments.map((seg) => reverseSegments[locale]?.[seg] ?? seg);
   return '/' + canonical.join('/');
+}
+
+/**
+ * Builds the localized URL for a FAQ tree node from its slug chain.
+ * The FAQ slugs are themselves localized (per-locale), so the chain is already
+ * in the right language; only the `/faq` segment goes through the segment map.
+ * e.g. faqPath('it', ['preparati-al-viaggio','come-arrivare']) → '/it/faq/preparati-al-viaggio/come-arrivare'
+ */
+export function faqPath(locale: Locale, slugs: string[]): string {
+  const base = `/${locale}${localizedPath(locale, '/faq')}`;
+  return slugs.length ? `${base}/${slugs.join('/')}` : base;
 }
 
 /** Maps model API keys (detail records) to their canonical path prefixes */
