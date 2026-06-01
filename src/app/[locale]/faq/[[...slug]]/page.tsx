@@ -151,6 +151,12 @@ export default async function FaqPage({ params }: { params: Promise<Params> }) {
 
   const childrenAllLeaves = children.length > 0 && children.every((c) => !hasChildren(tree, c.id));
 
+  // Map every faq node → its hierarchical URL, so inline links to FAQ records
+  // (which need ancestry) resolve correctly inside the Structured Text renderer.
+  const faqHrefById: Record<string, string> = Object.fromEntries(
+    tree.nodes.map((n) => [n.id, faqPath(loc, pathSlugsForNode(tree, n.id))]),
+  );
+
   return (
     <div className="mx-auto max-w-3xl px-5 py-12 md:py-16">
       <FaqBreadcrumb crumbs={crumbs} />
@@ -161,7 +167,7 @@ export default async function FaqPage({ params }: { params: Promise<Params> }) {
 
       {/* intro / answer of this node */}
       <div className="mt-5">
-        <FaqStructuredText data={content.answerStructured} />
+        <FaqStructuredText data={content.answerStructured} faqHrefById={faqHrefById} locale={loc} />
       </div>
 
       {/* children: accordion (leaves) or cards (branches) */}
@@ -169,6 +175,8 @@ export default async function FaqPage({ params }: { params: Promise<Params> }) {
         <div className="mt-10">
           {childrenAllLeaves ? (
             <FaqAccordion
+              faqHrefById={faqHrefById}
+              locale={loc}
               items={children.map((c) => ({
                 id: c.id,
                 question: childContentById.get(c.id)?.question ?? c.question,

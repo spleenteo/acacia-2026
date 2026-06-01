@@ -311,3 +311,22 @@ Schema, contenuto del ramo e tutto il rendering funzionano end-to-end (verificat
 7. Rigenerare anche **`gql.tada generate output`** (oltre a `generate-schema`/`generate-cma-types`), altrimenti i tipi delle query nuove sono `{}`/`never`.
 
 **Da rifinire (non bloccante):** slug lunghi (auto da question) — accorciabili in UI; voce di menu (V4); il ramo DURANTE ha sia FAQ dirette sia 2 sotto-temi vuoti (`getting-here`/`check-in`) → decidere struttura con Diana.
+
+---
+
+## V2 — Stato: implementato ✅ (2026-06-01)
+
+Link interni nelle risposte (Structured Text → record faq/post/page). Verificato: la FAQ "door numbers" mostra "See also: driving & parking" con href gerarchico corretto verso un'altra FAQ (cross-ramo).
+
+**Modifiche:**
+
+- `src/components/Faq/answerFragment.ts` — aggiunto `links { ... on FaqRecord/PostRecord/PageRecord }`
+- `src/components/Faq/FaqStructuredText.tsx` — `renderLinkToRecord` + `renderInlineRecord`; href via mappa `faqHrefById` (FAQ, ancestry-aware) e `modelPath` (post/page); nuove prop `faqHrefById`/`locale`
+- `FaqAccordion.tsx` + `page.tsx` — costruiscono e propagano `faqHrefById`
+- `scripts/faq/04-demo-link.mjs` — itemLink dimostrativo; `scripts/faq/05-publish.mjs` — publish
+
+**Gotcha aggiuntivi (V2):**
+
+8. **`faq.draft_mode_active: true`** — gli update CMA creano **bozze** non pubblicate; la CDA pubblicata (sito in non-draft) vede la versione vecchia. → gli script di migrazione devono **pubblicare** dopo le write (`scripts/faq/05-publish.mjs`). Vale per V3.
+9. **Localizzazione campi diversa per modello**: `Faq` e `Page` hanno `slug`/`title` localizzati (arg `locale`), `Post` **no**. Nel fragment dei link niente `locale` su `PostRecord`.
+10. **Next Data Cache** (`force-cache` + tag `datocms`) persiste su `.next/cache` tra i restart: dopo un publish/cambio CDA, in dev serve `rm -rf .next` o l'endpoint `/api/invalidate-cache` per vedere i nuovi contenuti.
