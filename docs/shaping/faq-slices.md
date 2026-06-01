@@ -330,3 +330,15 @@ Link interni nelle risposte (Structured Text → record faq/post/page). Verifica
 8. **`faq.draft_mode_active: true`** — gli update CMA creano **bozze** non pubblicate; la CDA pubblicata (sito in non-draft) vede la versione vecchia. → gli script di migrazione devono **pubblicare** dopo le write (`scripts/faq/05-publish.mjs`). Vale per V3.
 9. **Localizzazione campi diversa per modello**: `Faq` e `Page` hanno `slug`/`title` localizzati (arg `locale`), `Post` **no**. Nel fragment dei link niente `locale` su `PostRecord`.
 10. **Next Data Cache** (`force-cache` + tag `datocms`) persiste su `.next/cache` tra i restart: dopo un publish/cambio CDA, in dev serve `rm -rf .next` o l'endpoint `/api/invalidate-cache` per vedere i nuovi contenuti.
+
+---
+
+## V3 — Stato: contenuti completi ✅ (2026-06-01)
+
+Tutti e 3 i rami navigabili con contenuto reale. Operazione prevalentemente **dati** (il rendering gestiva già alberi arbitrari): nessun cambio frontend.
+
+- `scripts/faq/06-content-all.mjs` — per ogni faq senza `answer_structured`: imposta `slug` (en/it) + converte `answer` HTML→DAST (en/it), poi pubblica. **Salta** i record già fatti (preserva il link demo V2). Risultato: 20 convertiti, 11 saltati, tutti pubblicati (31 record).
+- Parent dell'albero: già impostati in UI da Matteo (tutti e 3 i rami).
+- Verificato: PRIMA (accordion 16), DOPO (accordion 4), leaf con risposta + nav fratelli, IT, link interno V2 intatto.
+
+**Rimanenti V3 (non bloccanti):** `U14` correlati (services/posts) non ancora reso; set-parent via API per record esistenti non risolto (oggi via UI) — entrambi rimandabili.
