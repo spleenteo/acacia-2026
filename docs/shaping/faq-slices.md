@@ -342,3 +342,15 @@ Tutti e 3 i rami navigabili con contenuto reale. Operazione prevalentemente **da
 - Verificato: PRIMA (accordion 16), DOPO (accordion 4), leaf con risposta + nav fratelli, IT, link interno V2 intatto.
 
 **Rimanenti V3 (non bloccanti):** `U14` correlati (services/posts) non ancora reso; set-parent via API per record esistenti non risolto (oggi via UI) — entrambi rimandabili.
+
+---
+
+## V4 — Stato: SEO + sitemap + aggancio menu ✅ (2026-06-01)
+
+- `page.tsx generateMetadata` — `_seoMetaTags` (toNextMetadata) per index e nodo + `alternates` canonical/**languages** con slug per-lingua corretti (es. `en/faq/before-booking` ↔ `it/faq/prima-di-prenotare`)
+- **JSON-LD `FAQPage`** sulle pagine accordion (Question/Answer da `dastToText`, `src/lib/faq/dastText.ts` strip zero-width)
+- `src/app/sitemap.ts` — entry FAQ gerarchiche per locale
+- `src/lib/datocms/recordInfo.ts` — ramo `faq`: URL gerarchico via `fetchFaqTree`+`pathForNode` (Web Previews / SEO plugin)
+- `src/i18n/paths.ts` — `page_faq` → `/faq` in `indexPaths`
+
+**Editoriale (non codice):** la **voce di menu** è guidata da DatoCMS (`app.navItems`) → aggiungere in CMS un MenuItem che punta alla pagina `page_faq`.

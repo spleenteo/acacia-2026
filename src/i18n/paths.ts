@@ -66,6 +66,7 @@ const indexPaths: Record<string, string> = {
   index_apartment: '/florence/accommodations',
   page_districts: '/florence/districts',
   page_moods: '/moods',
+  page_faq: '/faq',
 };
 
 /** Whether a model API key corresponds to a singleton/index page (no slug required) */

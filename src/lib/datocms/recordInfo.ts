@@ -9,8 +9,9 @@
  */
 import type { RawApiTypes } from '@datocms/cma-client';
 import type { AnyModel } from './cma-types';
-import { isSingletonModelApiKey, modelPath } from '@/i18n/paths';
+import { isSingletonModelApiKey, modelPath, faqPath } from '@/i18n/paths';
 import type { Locale } from '@/i18n/config';
+import { fetchFaqTree, pathSlugsForNode } from '@/lib/faq/faqTree';
 
 /*
  * Both the "Web Previews" and "SEO/Readability Analysis" plugins from DatoCMS
@@ -50,6 +51,14 @@ export async function recordToWebsiteRoute(
   // Singleton/index models map to a fixed path and do not require a slug
   if (isSingletonModelApiKey(itemTypeApiKey)) {
     return modelPath(itemTypeApiKey, '', locale as Locale);
+  }
+
+  // FAQ records live in a tree: their URL is the ancestry slug chain, so we
+  // resolve the path from the tree rather than from a single slug.
+  if (itemTypeApiKey === 'faq') {
+    const tree = await fetchFaqTree(locale as Locale, true);
+    const slugs = pathSlugsForNode(tree, item.id);
+    return slugs.length ? faqPath(locale as Locale, slugs) : null;
   }
 
   const slug = getSlug(item, locale);

@@ -1,11 +1,14 @@
 import { executeQuery } from '@/lib/datocms/executeQuery';
-import { graphql } from '@/lib/datocms/graphql';
+import { graphql, readFragment } from '@/lib/datocms/graphql';
 import { type Locale, locales } from '@/i18n/config';
 import { faqPath } from '@/i18n/paths';
 import { draftMode } from 'next/headers';
 import { notFound } from 'next/navigation';
+import { toNextMetadata } from 'react-datocms';
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import { TagFragment } from '@/lib/datocms/commonFragments';
+import { dastToText } from '@/lib/faq/dastText';
 import {
   fetchFaqTree,
   rootNodes,
@@ -24,15 +27,21 @@ import FaqCard from '@/components/Faq/FaqCard';
 
 type Params = { locale: string; slug?: string[] };
 
-const indexQuery = graphql(`
-  query FaqIndexQuery($locale: SiteLocale!) {
-    pageFaq(locale: $locale) {
-      title(locale: $locale)
-      subtitle(locale: $locale)
-      intro(locale: $locale)
+const indexQuery = graphql(
+  `
+    query FaqIndexQuery($locale: SiteLocale!) {
+      pageFaq(locale: $locale) {
+        title(locale: $locale)
+        subtitle(locale: $locale)
+        intro(locale: $locale)
+        _seoMetaTags(locale: $locale) {
+          ...TagFragment
+        }
+      }
     }
-  }
-`);
+  `,
+  [TagFragment],
+);
 
 const nodeQuery = graphql(
   `
@@ -42,6 +51,9 @@ const nodeQuery = graphql(
         question(locale: $locale)
         answerStructured {
           ...FaqAnswer
+        }
+        _seoMetaTags(locale: $locale) {
+          ...TagFragment
         }
         children {
           id
@@ -53,7 +65,7 @@ const nodeQuery = graphql(
       }
     }
   `,
-  [FaqAnswerFragment],
+  [FaqAnswerFragment, TagFragment],
 );
 
 export async function generateStaticParams() {
@@ -78,14 +90,35 @@ export async function generateMetadata({ params }: { params: Promise<Params> }):
       variables: { locale: loc },
       includeDrafts: isEnabled,
     });
-    const title = data.pageFaq?.title ?? 'FAQ';
-    return { title, alternates: { canonical: faqPath(loc, []) } };
+    return {
+      ...toNextMetadata(data.pageFaq?._seoMetaTags ?? []),
+      alternates: {
+        canonical: faqPath(loc, []),
+        languages: Object.fromEntries(locales.map((l) => [l, faqPath(l, [])])),
+      },
+    };
   }
 
   const tree = await fetchFaqTree(loc, isEnabled);
   const node = nodeForPath(tree, slug);
   if (!node) return {};
-  return { title: node.question, alternates: { canonical: faqPath(loc, slug) } };
+
+  const data = await executeQuery(nodeQuery, {
+    variables: { locale: loc, id: node.id },
+    includeDrafts: isEnabled,
+  });
+
+  // Same record exists across locales with different slug chains → per-locale URLs.
+  const languages: Record<string, string> = {};
+  for (const l of locales) {
+    const t = l === loc ? tree : await fetchFaqTree(l, isEnabled);
+    if (t.byId.has(node.id)) languages[l] = faqPath(l, pathSlugsForNode(t, node.id));
+  }
+
+  return {
+    ...toNextMetadata(data.faq?._seoMetaTags ?? []),
+    alternates: { canonical: faqPath(loc, slug), languages },
+  };
 }
 
 export default async function FaqPage({ params }: { params: Promise<Params> }) {
@@ -157,8 +190,38 @@ export default async function FaqPage({ params }: { params: Promise<Params> }) {
     tree.nodes.map((n) => [n.id, faqPath(loc, pathSlugsForNode(tree, n.id))]),
   );
 
+  // FAQPage JSON-LD: only when this node lists actual questions (accordion).
+  const faqJsonLd = childrenAllLeaves
+    ? {
+        '@context': 'https://schema.org',
+        '@type': 'FAQPage',
+        mainEntity: children
+          .map((c) => {
+            const cc = childContentById.get(c.id);
+            const answer = cc?.answerStructured
+              ? readFragment(FaqAnswerFragment, cc.answerStructured)
+              : null;
+            const text = dastToText(answer?.value);
+            return text
+              ? {
+                  '@type': 'Question',
+                  name: cc?.question ?? c.question,
+                  acceptedAnswer: { '@type': 'Answer', text },
+                }
+              : null;
+          })
+          .filter(Boolean),
+      }
+    : null;
+
   return (
     <div className="mx-auto max-w-3xl px-5 py-12 md:py-16">
+      {faqJsonLd && faqJsonLd.mainEntity.length > 0 && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
+        />
+      )}
       <FaqBreadcrumb crumbs={crumbs} />
 
       <h1 className="font-heading text-h1 font-normal text-dark leading-tight">

@@ -2,7 +2,8 @@ import { type MetadataRoute } from 'next';
 import { executeQuery } from '@/lib/datocms/executeQuery';
 import { graphql } from '@/lib/datocms/graphql';
 import { locales } from '@/i18n/config';
-import { localizedPath } from '@/i18n/paths';
+import { localizedPath, faqPath } from '@/i18n/paths';
+import { fetchFaqTree, pathSlugsForNode } from '@/lib/faq/faqTree';
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000';
 
@@ -26,7 +27,21 @@ const slugsQuery = graphql(`
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const data = await executeQuery(slugsQuery);
 
-  const staticPaths = ['', '/florence/accommodations', '/florence/districts', '/moods'];
+  const staticPaths = ['', '/florence/accommodations', '/florence/districts', '/moods', '/faq'];
+
+  // FAQ tree: every node has its own (localized) hierarchical URL.
+  const faqEntries: MetadataRoute.Sitemap = (
+    await Promise.all(
+      locales.map(async (locale) => {
+        const tree = await fetchFaqTree(locale, false);
+        return tree.nodes.map((n) => ({
+          url: `${siteUrl}${faqPath(locale, pathSlugsForNode(tree, n.id))}`,
+          changeFrequency: 'monthly' as const,
+          priority: 0.5,
+        }));
+      }),
+    )
+  ).flat();
 
   const staticEntries: MetadataRoute.Sitemap = locales.flatMap((locale) =>
     staticPaths.map((path) => ({
@@ -63,5 +78,5 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     })),
   );
 
-  return [...staticEntries, ...apartmentEntries, ...districtEntries, ...moodEntries];
+  return [...staticEntries, ...apartmentEntries, ...districtEntries, ...moodEntries, ...faqEntries];
 }
