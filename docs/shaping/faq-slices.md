@@ -354,3 +354,15 @@ Tutti e 3 i rami navigabili con contenuto reale. Operazione prevalentemente **da
 - `src/i18n/paths.ts` — `page_faq` → `/faq` in `indexPaths`
 
 **Editoriale (non codice):** la **voce di menu** è guidata da DatoCMS (`app.navItems`) → aggiungere in CMS un MenuItem che punta alla pagina `page_faq`.
+
+---
+
+## V5 — Stato: draft mode / realtime / visual editing ✅ (2026-06-01)
+
+Allinea le pagine FAQ al pattern realtime del resto del sito (come `districts/[slug]`).
+
+- Rendering estratto in due componenti client: `FaqIndexContent.tsx` (hero + card root) e `FaqNodeContent.tsx` (breadcrumb + Q&A + figli + fratelli + JSON-LD), che tipizzano `data` via `ResultOf<typeof indexQuery|nodeQuery>` importato dalla pagina.
+- `page.tsx`: in draft mode avvolge con `RealtimeWrapper` + `getDraftRealtimeOptions` (subscription live, token draft, `contentLink: 'v1'`); fuori draft rende il content component direttamente. Le prop derivate dall'albero (crumbs, childOrder, siblings, faqHrefById) passano come `resolvedProps`; il contenuto live (question/answer/children) arriva da `data`.
+- Verificato: non-draft invariato (regressione ok, JSON-LD presente); in draft la pagina rende con i marker **stega** zero-width dopo i testi → overlay click-to-edit attivi, nessun errore.
+
+**Slice complete: V1–V5 ✅.** Lato sviluppo la sezione FAQ è completa. Restano solo task editoriali/CMS (voce menu, contenuti IT di Diana, slug brevi) e i due nice-to-have non implementati (`U14` correlati services/posts; set-parent via API per V3).

@@ -1,14 +1,11 @@
 import { executeQuery } from '@/lib/datocms/executeQuery';
-import { graphql, readFragment } from '@/lib/datocms/graphql';
+import { graphql } from '@/lib/datocms/graphql';
 import { type Locale, locales } from '@/i18n/config';
 import { faqPath } from '@/i18n/paths';
 import { draftMode } from 'next/headers';
 import { notFound } from 'next/navigation';
 import { toNextMetadata } from 'react-datocms';
 import type { Metadata } from 'next';
-import Link from 'next/link';
-import { TagFragment } from '@/lib/datocms/commonFragments';
-import { dastToText } from '@/lib/faq/dastText';
 import {
   fetchFaqTree,
   rootNodes,
@@ -20,14 +17,16 @@ import {
   hasChildren,
 } from '@/lib/faq/faqTree';
 import { FaqAnswerFragment } from '@/components/Faq/answerFragment';
-import FaqStructuredText from '@/components/Faq/FaqStructuredText';
-import FaqAccordion from '@/components/Faq/FaqAccordion';
-import FaqBreadcrumb, { type Crumb } from '@/components/Faq/FaqBreadcrumb';
-import FaqCard from '@/components/Faq/FaqCard';
+import { TagFragment } from '@/lib/datocms/commonFragments';
+import { type Crumb } from '@/components/Faq/FaqBreadcrumb';
+import RealtimeWrapper from '@/lib/datocms/realtime/RealtimeWrapper';
+import { getDraftRealtimeOptions } from '@/lib/datocms/realtime/getDraftRealtimeOptions';
+import FaqIndexContent from './FaqIndexContent';
+import FaqNodeContent, { type ChildMeta } from './FaqNodeContent';
 
 type Params = { locale: string; slug?: string[] };
 
-const indexQuery = graphql(
+export const indexQuery = graphql(
   `
     query FaqIndexQuery($locale: SiteLocale!) {
       pageFaq(locale: $locale) {
@@ -43,7 +42,7 @@ const indexQuery = graphql(
   [TagFragment],
 );
 
-const nodeQuery = graphql(
+export const nodeQuery = graphql(
   `
     query FaqNodeQuery($locale: SiteLocale!, $id: ItemId!) {
       faq(locale: $locale, filter: { id: { eq: $id } }) {
@@ -132,32 +131,25 @@ export default async function FaqPage({ params }: { params: Promise<Params> }) {
       executeQuery(indexQuery, { variables: { locale: loc }, includeDrafts }),
       fetchFaqTree(loc, includeDrafts),
     ]);
-    const page = data.pageFaq;
-    const roots = rootNodes(tree);
+    const roots = rootNodes(tree).map((r) => ({
+      id: r.id,
+      question: r.question,
+      href: faqPath(loc, [r.slug]),
+    }));
 
-    return (
-      <div className="mx-auto max-w-4xl px-5 py-12 md:py-16">
-        <p className="font-body text-label uppercase tracking-[0.22em] text-rust font-medium">
-          FAQ
-        </p>
-        <h1 className="mt-3 font-heading text-h1 md:text-hero font-normal text-dark">
-          {page?.title ?? 'FAQ'}
-        </h1>
-        {page?.subtitle && (
-          <p className="mt-3 font-heading text-h3 font-normal text-muted italic">{page.subtitle}</p>
-        )}
-        {page?.intro && (
-          <p className="mt-5 font-body text-body-lg text-body leading-relaxed whitespace-pre-line">
-            {page.intro}
-          </p>
-        )}
-        <div className="mt-10 grid gap-5 sm:grid-cols-3">
-          {roots.map((r) => (
-            <FaqCard key={r.id} title={r.question} href={faqPath(loc, [r.slug])} />
-          ))}
-        </div>
-      </div>
-    );
+    if (includeDrafts) {
+      return (
+        <RealtimeWrapper
+          contentComponent={FaqIndexContent}
+          resolvedProps={{ roots }}
+          query={indexQuery}
+          variables={{ locale: loc }}
+          initialData={data}
+          {...getDraftRealtimeOptions()}
+        />
+      );
+    }
+    return <FaqIndexContent roots={roots} data={data} />;
   }
 
   // NODE (/faq/...)
@@ -165,24 +157,29 @@ export default async function FaqPage({ params }: { params: Promise<Params> }) {
   const node = nodeForPath(tree, slug);
   if (!node) notFound();
 
-  const nodeData = await executeQuery(nodeQuery, {
-    variables: { locale: loc, id: node.id },
-    includeDrafts,
-  });
-  const content = nodeData.faq;
-  if (!content) notFound();
+  const variables = { locale: loc, id: node.id };
+  const nodeData = await executeQuery(nodeQuery, { variables, includeDrafts });
+  if (!nodeData.faq) notFound();
 
   const children = childrenOfNode(tree, node.id);
-  const childContentById = new Map((content.children ?? []).map((c) => [c.id, c]));
-  const siblings = siblingsOf(tree, node.id);
+  const childOrder: ChildMeta[] = children.map((c) => ({
+    id: c.id,
+    isLeaf: !hasChildren(tree, c.id),
+    href: faqPath(loc, pathSlugsForNode(tree, c.id)),
+    question: c.question,
+  }));
+  const childrenAllLeaves = children.length > 0 && childOrder.every((c) => c.isLeaf);
 
-  // breadcrumb: FAQ index → ancestors → current
   const crumbs: Crumb[] = [{ label: 'FAQ', href: faqPath(loc, []) }];
   for (const a of ancestorsOf(tree, node.id)) {
     crumbs.push({ label: a.question, href: faqPath(loc, pathSlugsForNode(tree, a.id)) });
   }
 
-  const childrenAllLeaves = children.length > 0 && children.every((c) => !hasChildren(tree, c.id));
+  const siblings = siblingsOf(tree, node.id).map((s) => ({
+    id: s.id,
+    question: s.question,
+    href: faqPath(loc, pathSlugsForNode(tree, s.id)),
+  }));
 
   // Map every faq node → its hierarchical URL, so inline links to FAQ records
   // (which need ancestry) resolve correctly inside the Structured Text renderer.
@@ -190,96 +187,26 @@ export default async function FaqPage({ params }: { params: Promise<Params> }) {
     tree.nodes.map((n) => [n.id, faqPath(loc, pathSlugsForNode(tree, n.id))]),
   );
 
-  // FAQPage JSON-LD: only when this node lists actual questions (accordion).
-  const faqJsonLd = childrenAllLeaves
-    ? {
-        '@context': 'https://schema.org',
-        '@type': 'FAQPage',
-        mainEntity: children
-          .map((c) => {
-            const cc = childContentById.get(c.id);
-            const answer = cc?.answerStructured
-              ? readFragment(FaqAnswerFragment, cc.answerStructured)
-              : null;
-            const text = dastToText(answer?.value);
-            return text
-              ? {
-                  '@type': 'Question',
-                  name: cc?.question ?? c.question,
-                  acceptedAnswer: { '@type': 'Answer', text },
-                }
-              : null;
-          })
-          .filter(Boolean),
-      }
-    : null;
+  const resolvedProps = {
+    locale: loc,
+    crumbs,
+    childOrder,
+    childrenAllLeaves,
+    siblings,
+    faqHrefById,
+  };
 
-  return (
-    <div className="mx-auto max-w-3xl px-5 py-12 md:py-16">
-      {faqJsonLd && faqJsonLd.mainEntity.length > 0 && (
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
-        />
-      )}
-      <FaqBreadcrumb crumbs={crumbs} />
-
-      <h1 className="font-heading text-h1 font-normal text-dark leading-tight">
-        {content.question}
-      </h1>
-
-      {/* intro / answer of this node */}
-      <div className="mt-5">
-        <FaqStructuredText data={content.answerStructured} faqHrefById={faqHrefById} locale={loc} />
-      </div>
-
-      {/* children: accordion (leaves) or cards (branches) */}
-      {children.length > 0 && (
-        <div className="mt-10">
-          {childrenAllLeaves ? (
-            <FaqAccordion
-              faqHrefById={faqHrefById}
-              locale={loc}
-              items={children.map((c) => ({
-                id: c.id,
-                question: childContentById.get(c.id)?.question ?? c.question,
-                answer: childContentById.get(c.id)?.answerStructured ?? null,
-              }))}
-            />
-          ) : (
-            <div className="grid gap-5 sm:grid-cols-2">
-              {children.map((c) => (
-                <FaqCard
-                  key={c.id}
-                  title={childContentById.get(c.id)?.question ?? c.question}
-                  href={faqPath(loc, pathSlugsForNode(tree, c.id))}
-                />
-              ))}
-            </div>
-          )}
-        </div>
-      )}
-
-      {/* siblings: lateral navigation */}
-      {siblings.length > 0 && (
-        <div className="mt-14 border-t border-border pt-6">
-          <p className="font-body text-label uppercase tracking-[0.18em] text-light font-medium">
-            Vai a
-          </p>
-          <ul className="mt-3 flex flex-wrap gap-x-5 gap-y-2">
-            {siblings.map((s) => (
-              <li key={s.id}>
-                <Link
-                  href={faqPath(loc, pathSlugsForNode(tree, s.id))}
-                  className="font-body text-body-sm text-muted transition-colors hover:text-rust"
-                >
-                  {s.question}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
-    </div>
-  );
+  if (includeDrafts) {
+    return (
+      <RealtimeWrapper
+        contentComponent={FaqNodeContent}
+        resolvedProps={resolvedProps}
+        query={nodeQuery}
+        variables={variables}
+        initialData={nodeData}
+        {...getDraftRealtimeOptions()}
+      />
+    );
+  }
+  return <FaqNodeContent {...resolvedProps} data={nodeData} />;
 }
