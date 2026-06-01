@@ -11,11 +11,14 @@ import FaqStructuredText from '@/components/Faq/FaqStructuredText';
 import FaqAccordion from '@/components/Faq/FaqAccordion';
 import FaqBreadcrumb, { type Crumb } from '@/components/Faq/FaqBreadcrumb';
 import FaqCard from '@/components/Faq/FaqCard';
+import CopyLinkButton from '@/components/Faq/CopyLinkButton';
 
 export type ChildMeta = { id: string; isLeaf: boolean; href: string; question: string };
 
 export type FaqNodeProps = {
   locale: Locale;
+  /** This node's own page URL, for the share button. */
+  selfHref: string;
   crumbs: Crumb[];
   childOrder: ChildMeta[];
   childrenAllLeaves: boolean;
@@ -26,6 +29,7 @@ type FaqNodeData = ResultOf<typeof nodeQuery>;
 
 export default function FaqNodeContent({
   locale,
+  selfHref,
   crumbs,
   childOrder,
   childrenAllLeaves,
@@ -75,7 +79,10 @@ export default function FaqNodeContent({
 
       <FaqBreadcrumb crumbs={crumbs} />
 
-      <h1 className="font-heading text-h1 font-normal text-dark leading-tight">{faq.question}</h1>
+      <div className="flex items-start gap-3">
+        <h1 className="font-heading text-h1 font-normal text-dark leading-tight">{faq.question}</h1>
+        <CopyLinkButton href={selfHref} className="mt-2" />
+      </div>
 
       <div className="mt-5">
         <FaqStructuredText data={faq.answerStructured} faqHrefById={faqHrefById} locale={locale} />
@@ -91,6 +98,7 @@ export default function FaqNodeContent({
                 id: c.id,
                 question: childContentById.get(c.id)?.question ?? c.question,
                 answer: childContentById.get(c.id)?.answerStructured ?? null,
+                href: c.href,
               }))}
             />
           ) : (

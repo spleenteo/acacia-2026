@@ -189,6 +189,7 @@ export default async function FaqPage({ params }: { params: Promise<Params> }) {
 
   const resolvedProps = {
     locale: loc,
+    selfHref: faqPath(loc, slug),
     crumbs,
     childOrder,
     childrenAllLeaves,
