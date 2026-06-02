@@ -23,6 +23,7 @@ import ScrollToBooking from '@/components/ScrollToBooking';
 import { type ApartmentCardFragment } from '@/components/ApartmentCard';
 import { type MoodCardFragment } from '@/components/MoodCard';
 import { readFragment } from '@/lib/datocms/graphql';
+import { pickHeroColor, isLightColor, pickPillColors } from '@/lib/heroColor';
 import type { ResultOf } from 'gql.tada';
 import type { query as apartmentDetailQuery } from './page';
 
@@ -55,47 +56,119 @@ export default function ApartmentDetailContent({
   const { apartment } = data;
   if (!apartment) return null;
 
+  // Solid hero background drawn from the photo's palette, snapped toward the
+  // Japan Fish hues. With an image the title sits over a dark gradient → white;
+  // without one it sits on the solid colour, so adapt to its luminance.
+  const heroColor = pickHeroColor(apartment.featuredImage?.colors);
+  const heroOnImage = !!apartment.featuredImage?.responsiveImage;
+  const heroTextDark = !heroOnImage && isLightColor(heroColor);
+  // Two more palette colours (distinct from the hero) for the coloured fact pills.
+  const [pillA, pillB] = pickPillColors(apartment.featuredImage?.colors, heroColor);
+
   return (
     <>
-      {/* ── Hero (full width) ── */}
+      {/* ── Hero — photo from the top with overlaid copy, sitting on the solid
+          photo-derived colour. The coloured panel has a diagonal bottom edge. ── */}
       <section
-        className="relative min-h-[50vh] flex items-end bg-dark"
-        style={{ marginTop: 'calc(var(--header-height) * -1)' }}
+        className="relative mb-10 md:mb-14 pb-10 md:pb-16"
+        style={{
+          backgroundColor: heroColor,
+          marginTop: 'calc(var(--header-height) * -1)',
+          // Leftward-rising diagonal cut on the bottom edge of the coloured panel.
+          clipPath: 'polygon(0 0, 100% 0, 100% 100%, 0 calc(100% - 34px))',
+        }}
       >
-        {apartment.featuredImage?.responsiveImage && (
-          <div className="absolute inset-0">
-            <ResponsiveImage
-              data={apartment.featuredImage.responsiveImage}
-              pictureClassName="absolute inset-0 w-full h-full"
-              imgClassName="w-full h-full object-cover opacity-55"
-              imgStyle={{ maxWidth: 'none', height: '100%', aspectRatio: 'unset' }}
-              priority
-            />
-          </div>
-        )}
-        <div className="relative z-10 w-full px-5 md:px-8 pb-14 pt-32">
-          <div className="mx-auto max-w-7xl">
-            {apartment.category && (
-              <p className="inline-block bg-rust text-white font-body font-medium text-label uppercase tracking-[0.15em] px-3 py-1 rounded-sm mb-4">
-                {apartment.category.name}
-              </p>
-            )}
-            <h1 className="font-heading font-normal text-h1 md:text-hero leading-none text-white">
-              {apartment.name}
-            </h1>
-            {apartment.claim && (
-              <p className="font-heading italic text-h2 text-white/80 max-w-2xl leading-snug mt-1">
-                {apartment.claim}
-              </p>
-            )}
-            {apartment.featuredSlideshow.length > 0 && (
-              <PhotoLightbox
-                slides={apartment.featuredSlideshow
-                  .map((f) => readFragment(FeaturedSlideshowFragment, f))
-                  .filter((img) => img.full)
-                  .map((img) => toSlide(img.full!, img.title || img.alt))}
-                label={t('allPhotos')}
+        {/* Full-bleed on mobile; contained + rounded from md up. */}
+        <div className="md:mx-auto md:max-w-7xl md:px-8">
+          <div className="relative min-h-[58svh] md:min-h-[68svh] overflow-hidden md:rounded-card md:shadow-card-hover">
+            {apartment.featuredImage?.responsiveImage && (
+              <ResponsiveImage
+                data={apartment.featuredImage.responsiveImage}
+                pictureClassName="absolute inset-0 w-full h-full"
+                imgClassName="w-full h-full object-cover object-center"
+                imgStyle={{ maxWidth: 'none', height: '100%', aspectRatio: 'unset' }}
+                priority
               />
+            )}
+
+            {/* Legibility gradient (only meaningful when there's an image). */}
+            {heroOnImage && (
+              <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+            )}
+
+            {/* Overlaid copy — bottom-left. */}
+            <div className="absolute inset-x-0 bottom-0 z-10 p-6 md:p-10">
+              <h1
+                className={[
+                  'font-heading font-semibold text-h1 md:text-hero leading-none max-w-3xl',
+                  heroTextDark ? 'text-dark' : 'text-white',
+                ].join(' ')}
+              >
+                {apartment.name}
+              </h1>
+
+              {/* Key facts — two coloured pills (palette colours) + a stat line.
+                  NOTE: copy is inline/provisional. Move to DatoCMS `Translation`
+                  records once finalised. */}
+              {(() => {
+                const isIt = locale === 'it';
+                const beds = apartment.bedrooms ?? 0;
+                const baths = apartment.bathrooms ?? 0;
+                const bedLabel = isIt
+                  ? `${apartment.category?.name ?? ''} ${beds} ${beds === 1 ? 'camera' : 'camere'}`
+                  : `${beds} ${beds === 1 ? 'bedroom' : 'bedrooms'} ${apartment.category?.name ?? ''}`;
+                const pillClass =
+                  'inline-block font-body font-medium text-label uppercase tracking-[0.15em] text-white px-3 py-1.5 rounded-sm';
+                const gold = (v: React.ReactNode) => (
+                  <span className="text-gold font-medium">{v}</span>
+                );
+                return (
+                  <>
+                    <div className="mt-4 flex flex-wrap gap-2">
+                      <span className={pillClass} style={{ backgroundColor: pillA }}>
+                        {bedLabel.trim()}
+                      </span>
+                      {apartment.district && (
+                        <span className={pillClass} style={{ backgroundColor: pillB }}>
+                          {isIt ? 'in ' : 'in '}
+                          {apartment.district.name}
+                        </span>
+                      )}
+                    </div>
+                    <p
+                      className={[
+                        'mt-4 font-body text-body-lg leading-snug',
+                        heroTextDark ? 'text-dark/75' : 'text-white/85',
+                      ].join(' ')}
+                    >
+                      {apartment.houseBadge?.label && <>{apartment.houseBadge.label}, </>}
+                      {gold(apartment.sleeps)} {isIt ? 'posti letto' : 'sleeps'}
+                      {', '}
+                      {gold(baths)}{' '}
+                      {isIt
+                        ? baths === 1
+                          ? 'bagno'
+                          : 'bagni'
+                        : baths === 1
+                          ? 'bathroom'
+                          : 'bathrooms'}
+                    </p>
+                  </>
+                );
+              })()}
+            </div>
+
+            {/* View gallery — bottom-right of the photo. */}
+            {apartment.featuredSlideshow.length > 0 && (
+              <div className="absolute bottom-4 right-4 z-20">
+                <PhotoLightbox
+                  slides={apartment.featuredSlideshow
+                    .map((f) => readFragment(FeaturedSlideshowFragment, f))
+                    .filter((img) => img.full)
+                    .map((img) => toSlide(img.full!, img.title || img.alt))}
+                  label={t('allPhotos')}
+                />
+              </div>
             )}
           </div>
         </div>

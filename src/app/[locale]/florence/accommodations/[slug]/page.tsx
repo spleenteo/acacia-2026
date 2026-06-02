@@ -88,6 +88,12 @@ export const query = graphql(
           responsiveImage(imgixParams: { w: 1400, h: 600, fit: crop }) {
             ...ResponsiveImageFragment
           }
+          colors {
+            hex
+            red
+            green
+            blue
+          }
         }
         category {
           id
