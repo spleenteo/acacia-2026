@@ -5,13 +5,34 @@ import Lightbox, { useLightbox, type LightboxSlide } from '@/components/Lightbox
 type Props = {
   slides: LightboxSlide[];
   label: string;
-  variant?: 'dark' | 'light';
+  variant?: 'dark' | 'light' | 'plain';
 };
 
 export default function PhotoLightbox({ slides, label, variant = 'dark' }: Props) {
   const lightbox = useLightbox();
 
   if (slides.length === 0) return null;
+
+  // Plain: a bare underlined text link (no pill / icon), for placing freely.
+  if (variant === 'plain') {
+    return (
+      <>
+        <button
+          type="button"
+          onClick={() => lightbox.openAt(0)}
+          className="font-body text-body-sm font-medium uppercase tracking-[0.15em] text-white/90 underline decoration-white/40 underline-offset-4 transition-colors hover:text-white hover:decoration-white cursor-pointer"
+        >
+          {label} <span className="text-caption text-white/60">{slides.length}</span>
+        </button>
+        <Lightbox
+          slides={slides}
+          open={lightbox.open}
+          index={lightbox.index}
+          onClose={lightbox.close}
+        />
+      </>
+    );
+  }
 
   return (
     <>

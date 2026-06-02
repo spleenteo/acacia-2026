@@ -48,19 +48,7 @@ export default function BookingSidebar({
 
   return (
     <>
-      {/* ── Desktop Sidebar ── */}
-      <div className="hidden lg:block">
-        <div className="sticky top-[calc(var(--header-height)+2rem)]">
-          {/* CTA */}
-          <button
-            type="button"
-            onClick={scrollToBooking}
-            className="w-full bg-primary hover:bg-primary-hover text-white font-body font-medium text-body tracking-wide py-3.5 rounded-pill transition-colors duration-300 cursor-pointer"
-          >
-            {t('book')}
-          </button>
-        </div>
-      </div>
+      {/* Desktop CTA now lives inside the (sticky) hero — see ApartmentDetailContent. */}
 
       {/* ── Mobile Bottom Bar ── */}
       <div
