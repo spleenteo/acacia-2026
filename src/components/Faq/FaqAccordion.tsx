@@ -41,7 +41,7 @@ export default function FaqAccordion({ items, faqHrefById, locale }: Props) {
                 onClick={() => setOpenId(isOpen ? null : item.id)}
                 aria-expanded={isOpen}
                 className={`min-w-0 flex-1 text-left font-heading text-h4 transition-colors ${
-                  isOpen ? 'font-medium text-rust' : 'font-normal text-dark'
+                  isOpen ? 'font-medium text-primary' : 'font-normal text-dark'
                 }`}
               >
                 {item.question}
@@ -52,7 +52,7 @@ export default function FaqAccordion({ items, faqHrefById, locale }: Props) {
                 onClick={() => setOpenId(isOpen ? null : item.id)}
                 aria-label={isOpen ? 'Chiudi' : 'Apri'}
                 aria-expanded={isOpen}
-                className={`shrink-0 text-h4 leading-none text-rust transition-transform duration-300 ${
+                className={`shrink-0 text-h4 leading-none text-primary transition-transform duration-300 ${
                   isOpen ? 'rotate-45' : ''
                 }`}
               >

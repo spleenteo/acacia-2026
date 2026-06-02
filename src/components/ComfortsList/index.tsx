@@ -22,7 +22,7 @@ export default function ComfortsList({ data, title }: Props) {
 
   return (
     <div>
-      <p className="font-body text-label uppercase tracking-[0.18em] text-rust font-medium mb-4">
+      <p className="font-body text-label uppercase tracking-[0.18em] text-primary font-medium mb-4">
         {title}
       </p>
       <ul className="grid grid-cols-1 gap-y-0">
@@ -30,7 +30,7 @@ export default function ComfortsList({ data, title }: Props) {
           const Icon = getAmenityIcon(comfort.icon);
           const content = (
             <span className="flex items-start gap-3">
-              <Icon size={22} strokeWidth={1.5} className="shrink-0 text-rust/50 mt-0.5" />
+              <Icon size={22} strokeWidth={1.5} className="shrink-0 text-primary/50 mt-0.5" />
               <span>{comfort.name}</span>
             </span>
           );
@@ -42,7 +42,7 @@ export default function ComfortsList({ data, title }: Props) {
                   href={comfort.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="font-body text-body text-muted hover:text-rust transition-colors duration-300"
+                  className="font-body text-body text-muted hover:text-primary transition-colors duration-300"
                 >
                   {content}
                 </a>

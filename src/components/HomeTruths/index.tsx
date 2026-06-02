@@ -22,7 +22,7 @@ export default function HomeTruths({ data, title, label }: Props) {
   return (
     <div>
       <InViewSection>
-        <p className="font-body text-label uppercase tracking-[0.22em] text-rust font-medium mb-2">
+        <p className="font-body text-label uppercase tracking-[0.22em] text-primary font-medium mb-2">
           {label}
         </p>
         <h3 className="font-heading text-h3 text-dark mb-6">
@@ -32,7 +32,7 @@ export default function HomeTruths({ data, title, label }: Props) {
       <ul className="space-y-3">
         {truths.map((truth) => (
           <li key={truth.id} className="flex gap-3 items-start">
-            <span className="shrink-0 mt-0.5 text-rust/60">
+            <span className="shrink-0 mt-0.5 text-primary/60">
               <svg
                 width="18"
                 height="18"

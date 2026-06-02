@@ -128,7 +128,7 @@ export default function FaqNodeContent({
               <li key={s.id}>
                 <Link
                   href={s.href}
-                  className="font-body text-body-sm text-muted transition-colors hover:text-rust"
+                  className="font-body text-body-sm text-muted transition-colors hover:text-primary"
                 >
                   {s.question}
                 </Link>

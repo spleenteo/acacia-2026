@@ -53,7 +53,7 @@ export default function DistrictDetailContent({
         <section className="py-16 bg-surface-alt">
           <div className="mx-auto max-w-3xl px-8 text-center">
             <HtmlContent html={district.abstract} className="font-body text-body-lg text-dark" />
-            <div className="mx-auto mt-8 w-12 h-[3px] bg-rust rounded-sm" />
+            <div className="mx-auto mt-8 w-12 h-[3px] bg-primary rounded-sm" />
           </div>
         </section>
       )}
@@ -97,7 +97,7 @@ export default function DistrictDetailContent({
       {allApartments.length > 0 && (
         <section className="py-20 lg:py-28 bg-surface">
           <div className="mx-auto max-w-6xl px-8">
-            <p className="font-body text-label uppercase tracking-[0.22em] text-rust font-medium text-center mb-3">
+            <p className="font-body text-label uppercase tracking-[0.22em] text-primary font-medium text-center mb-3">
               {tListing('whereToStay')}
             </p>
             <h2 className="font-heading font-normal text-h1 text-dark text-center tracking-[-0.02em] mb-12">

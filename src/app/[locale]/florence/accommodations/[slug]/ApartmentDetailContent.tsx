@@ -200,7 +200,7 @@ export default function ApartmentDetailContent({
                 <WhatWeLove
                   data={apartment.wwlGallery}
                   label={t('wwlLabel')}
-                  title={t('wwlTitle')}
+                  title={apartment.claim ?? ''}
                   description={apartment.description}
                   acaciaReward={apartment.acaciaReward}
                   lightboxSlides={apartment.featuredSlideshow
@@ -298,7 +298,7 @@ export default function ApartmentDetailContent({
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16">
             {/* WhatsApp Contact */}
             <div className="flex flex-col items-center text-center lg:items-start lg:text-left">
-              <p className="font-body text-label uppercase tracking-[0.18em] text-rust font-medium mb-2">
+              <p className="font-body text-label uppercase tracking-[0.18em] text-primary font-medium mb-2">
                 {t('ctaContactLabel')}
               </p>
               <h3 className="font-heading italic text-h3 text-white mb-4">
@@ -322,12 +322,12 @@ export default function ApartmentDetailContent({
 
             {/* Booking CTA */}
             <div className="flex flex-col items-center text-center lg:items-start lg:text-left">
-              <p className="font-body text-label uppercase tracking-[0.18em] text-rust font-medium mb-2">
+              <p className="font-body text-label uppercase tracking-[0.18em] text-primary font-medium mb-2">
                 {t('ctaBookLabel')}
               </p>
               <h3 className="font-heading italic text-h3 text-white mb-4">{t('ctaBookTitle')}</h3>
               <p className="font-body text-body text-white/60 mb-6 max-w-md">{t('ctaBookText')}</p>
-              <ScrollToBooking className="w-full sm:w-auto bg-rust hover:bg-rust-hover text-white font-body font-medium text-body tracking-wide px-8 py-3.5 rounded-pill transition-colors duration-300 cursor-pointer text-center">
+              <ScrollToBooking className="w-full sm:w-auto bg-primary hover:bg-primary-hover text-white font-body font-medium text-body tracking-wide px-8 py-3.5 rounded-pill transition-colors duration-300 cursor-pointer text-center">
                 {t('book')}
               </ScrollToBooking>
             </div>

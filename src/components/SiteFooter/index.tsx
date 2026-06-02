@@ -27,7 +27,7 @@ export default async function SiteFooter({ locale, footerColumns, socialLinks, l
           >
             {footerColumns.map((column) => (
               <div key={column.widgetLabel} className="max-md:first:pt-0">
-                <h4 className="font-body text-label uppercase tracking-[0.22em] text-rust font-medium mb-5">
+                <h4 className="font-body text-label uppercase tracking-[0.22em] text-primary font-medium mb-5">
                   {column.widgetLabel}
                 </h4>
                 <nav className="flex flex-col gap-3">
@@ -38,7 +38,7 @@ export default async function SiteFooter({ locale, footerColumns, socialLinks, l
                         href={link.href}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="font-body text-body hover:text-rust transition-colors duration-300"
+                        className="font-body text-body hover:text-primary transition-colors duration-300"
                       >
                         {link.label}
                       </a>
@@ -46,7 +46,7 @@ export default async function SiteFooter({ locale, footerColumns, socialLinks, l
                       <Link
                         key={link.href}
                         href={link.href}
-                        className="font-body text-body hover:text-rust transition-colors duration-300"
+                        className="font-body text-body hover:text-primary transition-colors duration-300"
                       >
                         {link.label}
                       </Link>
@@ -73,7 +73,7 @@ export default async function SiteFooter({ locale, footerColumns, socialLinks, l
 
           {socialLinks.length > 0 && (
             <div>
-              <h4 className="font-body text-label uppercase tracking-[0.22em] text-rust/70 font-medium mb-5">
+              <h4 className="font-body text-label uppercase tracking-[0.22em] text-primary/70 font-medium mb-5">
                 {tFooter('followUs')}
               </h4>
               <div className="flex items-center gap-4">
@@ -86,7 +86,7 @@ export default async function SiteFooter({ locale, footerColumns, socialLinks, l
                       target="_blank"
                       rel="noopener noreferrer"
                       aria-label={social.platform}
-                      className="text-white/70 hover:text-rust transition-colors duration-300"
+                      className="text-white/70 hover:text-primary transition-colors duration-300"
                     >
                       <Icon size={20} strokeWidth={1.5} />
                     </a>

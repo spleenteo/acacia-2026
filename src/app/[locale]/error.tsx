@@ -11,7 +11,7 @@ export default function Error({
   return (
     <div className="min-h-screen bg-dark flex items-center justify-center px-5">
       <div className="text-center text-white max-w-lg">
-        <p className="font-heading font-light text-rust tracking-[0.3em] text-body-sm uppercase mb-8">
+        <p className="font-heading font-light text-primary tracking-[0.3em] text-body-sm uppercase mb-8">
           Acacia Firenze
         </p>
 
@@ -37,7 +37,7 @@ export default function Error({
           <button
             type="button"
             onClick={reset}
-            className="border border-rust/60 text-rust text-body-sm uppercase tracking-widest px-8 py-3 hover:bg-rust/10 hover:border-rust transition-all duration-300"
+            className="border border-primary/60 text-primary text-body-sm uppercase tracking-widest px-8 py-3 hover:bg-primary/10 hover:border-primary transition-all duration-300"
           >
             Riprova &nbsp;/&nbsp; Try again
           </button>

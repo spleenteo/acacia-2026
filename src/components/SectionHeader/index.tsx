@@ -24,7 +24,7 @@ export default function SectionHeader({ data }: Props) {
   return (
     <InViewSection className="text-center mb-12">
       {label && (
-        <p className="font-body text-label uppercase tracking-[0.22em] text-rust font-medium mb-3">
+        <p className="font-body text-label uppercase tracking-[0.22em] text-primary font-medium mb-3">
           {label}
         </p>
       )}

@@ -55,7 +55,7 @@ export default function WhatWeLove({
     <div>
       <div ref={headingRef} className="flex items-start justify-between gap-4 mb-6">
         <div>
-          <p className="font-body text-label uppercase tracking-[0.22em] text-rust font-medium mb-2">
+          <p className="font-body text-label uppercase tracking-[0.22em] text-primary font-medium mb-2">
             {label}
           </p>
           <h2 className="font-heading text-h2 text-dark">

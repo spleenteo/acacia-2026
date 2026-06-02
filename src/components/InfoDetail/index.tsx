@@ -54,7 +54,7 @@ export default function InfoDetail({ data, title, locale, district }: Props) {
 
   return (
     <div>
-      <p className="font-body text-label uppercase tracking-[0.18em] text-rust font-medium mb-4">
+      <p className="font-body text-label uppercase tracking-[0.18em] text-primary font-medium mb-4">
         {title}
       </p>
       <dl className="divide-y divide-dotted divide-border">
@@ -87,7 +87,7 @@ export default function InfoDetail({ data, title, locale, district }: Props) {
                       href={mapsUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="hover:text-rust transition-colors"
+                      className="hover:text-primary transition-colors"
                     >
                       {info.addressText}
                     </a>
@@ -99,7 +99,7 @@ export default function InfoDetail({ data, title, locale, district }: Props) {
                       {' ('}
                       <Link
                         href={modelPath('district', district.slug, locale as Locale)!}
-                        className="text-rust hover:text-rust-hover transition-colors"
+                        className="text-primary hover:text-primary-hover transition-colors"
                       >
                         {district.name}
                       </Link>
@@ -126,7 +126,7 @@ export default function InfoDetail({ data, title, locale, district }: Props) {
                         href={mapsUrl!}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-block border border-border text-muted hover:text-rust hover:border-rust font-body text-caption uppercase tracking-wider font-medium px-4 py-1.5 rounded-pill transition-all duration-300"
+                        className="inline-block border border-border text-muted hover:text-primary hover:border-primary font-body text-caption uppercase tracking-wider font-medium px-4 py-1.5 rounded-pill transition-all duration-300"
                       >
                         Google Maps &rarr;
                       </a>

@@ -28,7 +28,14 @@
   --color-muted: #4c5168;
   --color-light: #6b7088;
 
-  /* Rust — THE identity accent color (CTAs, links, focus) */
+  /* Primary — "blackberry", THE action colour (CTAs, links, focus) */
+  --color-primary: #48182f;
+  --color-primary-hover: #381325;
+  --color-primary-soft: #6e2d4e;
+  --color-primary-pale: #efe2e9;
+  --color-primary-deep: #2e0f1e;
+
+  /* Rust — warm accent, kept in the palette for specific touches */
   --color-rust: #d53302;
   --color-rust-hover: #b32a02;
   --color-rust-soft: #e6553a;
@@ -184,7 +191,7 @@
   h3 em {
     font-style: italic;
     font-weight: 400;
-    color: var(--color-rust);
+    color: var(--color-primary);
     position: relative;
     display: inline;
   }
@@ -320,12 +327,12 @@ body.lightbox-open beddy-bar {
     font-style: italic;
   }
   .prose-acacia a {
-    color: var(--color-rust);
+    color: var(--color-primary);
     text-decoration: underline;
     text-underline-offset: 2px;
   }
   .prose-acacia a:hover {
-    color: var(--color-rust-hover);
+    color: var(--color-primary-hover);
   }
   .prose-acacia ul,
   .prose-acacia ol {

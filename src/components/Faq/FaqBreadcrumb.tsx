@@ -15,7 +15,7 @@ export default function FaqBreadcrumb({ crumbs }: { crumbs: Crumb[] }) {
               {isLast ? (
                 <span className="text-muted">{c.label}</span>
               ) : (
-                <Link href={c.href} className="transition-colors hover:text-rust">
+                <Link href={c.href} className="transition-colors hover:text-primary">
                   {c.label}
                 </Link>
               )}

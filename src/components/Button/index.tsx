@@ -42,7 +42,7 @@ function getFormatted(button: any): BetterLinkFormatted | null {
 
 const lightStyles: Record<string, string> = {
   primary: `font-body text-caption font-medium tracking-[0.06em]
-    text-white bg-rust hover:bg-rust-hover
+    text-white bg-primary hover:bg-primary-hover
     px-8 py-3.5 rounded-pill transition-colors duration-300`,
   secondary: `font-body text-caption font-medium tracking-[0.06em]
     text-white border border-white/40 hover:border-white/70
@@ -55,7 +55,7 @@ const lightStyles: Record<string, string> = {
 
 const darkStyles: Record<string, string> = {
   primary: `font-body text-caption font-medium tracking-[0.06em]
-    text-white bg-rust hover:bg-rust-hover
+    text-white bg-primary hover:bg-primary-hover
     px-8 py-3.5 rounded-pill transition-colors duration-300`,
   secondary: `font-body text-caption font-medium tracking-[0.06em]
     text-dark border border-dark/30 hover:border-dark/60

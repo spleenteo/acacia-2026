@@ -69,7 +69,7 @@ export default function SiteHeader({ locale, isDraftModeEnabled, navItems }: Pro
                   rel="noopener noreferrer"
                   className={[
                     'font-body text-body-sm font-normal transition-colors duration-300 tracking-wide',
-                    scrolled ? 'text-muted hover:text-rust' : 'text-white/80 hover:text-white',
+                    scrolled ? 'text-muted hover:text-primary' : 'text-white/80 hover:text-white',
                   ].join(' ')}
                 >
                   {item.label}
@@ -80,7 +80,7 @@ export default function SiteHeader({ locale, isDraftModeEnabled, navItems }: Pro
                   href={item.href}
                   className={[
                     'font-body text-body-sm font-normal transition-colors duration-300 tracking-wide',
-                    scrolled ? 'text-muted hover:text-rust' : 'text-white/80 hover:text-white',
+                    scrolled ? 'text-muted hover:text-primary' : 'text-white/80 hover:text-white',
                   ].join(' ')}
                 >
                   {item.label}
@@ -106,7 +106,7 @@ export default function SiteHeader({ locale, isDraftModeEnabled, navItems }: Pro
             </span>
             <Link
               href={`/${locale}${localizedPath(locale, '/florence/accommodations')}`}
-              className="font-body text-caption font-medium tracking-[0.06em] text-white bg-rust hover:bg-rust-hover px-5 py-2.5 rounded-pill transition-colors duration-300"
+              className="font-body text-caption font-medium tracking-[0.06em] text-white bg-primary hover:bg-primary-hover px-5 py-2.5 rounded-pill transition-colors duration-300"
             >
               {t('book')}
             </Link>
@@ -162,7 +162,7 @@ export default function SiteHeader({ locale, isDraftModeEnabled, navItems }: Pro
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={() => setMenuOpen(false)}
-                className="font-heading font-normal text-white hover:text-rust transition-colors duration-200 leading-tight"
+                className="font-heading font-normal text-white hover:text-primary transition-colors duration-200 leading-tight"
                 style={{
                   fontSize: 'clamp(2.75rem, 11vw, 4rem)',
                   transitionDelay: menuOpen ? `${i * 50}ms` : '0ms',
@@ -178,7 +178,7 @@ export default function SiteHeader({ locale, isDraftModeEnabled, navItems }: Pro
                 key={item.href}
                 href={item.href}
                 onClick={() => setMenuOpen(false)}
-                className="font-heading font-normal text-white hover:text-rust transition-colors duration-200 leading-tight"
+                className="font-heading font-normal text-white hover:text-primary transition-colors duration-200 leading-tight"
                 style={{
                   fontSize: 'clamp(2.75rem, 11vw, 4rem)',
                   transitionDelay: menuOpen ? `${i * 50}ms` : '0ms',
@@ -208,7 +208,7 @@ export default function SiteHeader({ locale, isDraftModeEnabled, navItems }: Pro
           <Link
             href={`/${locale}${localizedPath(locale, '/florence/accommodations')}`}
             onClick={() => setMenuOpen(false)}
-            className="font-body text-caption font-medium tracking-[0.06em] text-white bg-rust hover:bg-rust-hover px-6 py-2.5 rounded-pill transition-colors duration-300"
+            className="font-body text-caption font-medium tracking-[0.06em] text-white bg-primary hover:bg-primary-hover px-6 py-2.5 rounded-pill transition-colors duration-300"
           >
             {t('book')}
           </Link>

@@ -50,7 +50,7 @@ export default function MoodCard({ data, locale }: Props) {
 
         {/* Content — no background, blends with page */}
         <div className="pt-4">
-          <h3 className="font-heading text-h3 font-normal text-dark leading-snug transition-colors duration-300 group-hover:text-rust">
+          <h3 className="font-heading text-h3 font-normal text-dark leading-snug transition-colors duration-300 group-hover:text-primary">
             {mood.name}
           </h3>
           {mood.claim && (

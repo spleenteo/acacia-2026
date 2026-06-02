@@ -48,7 +48,7 @@ export default function FaqStructuredText({ data, faqHrefById = {}, locale }: Pr
   if (!answer?.value) return null;
 
   return (
-    <div className="font-body text-body-lg text-body leading-relaxed [&_p]:mb-4 [&_ul]:my-4 [&_ul]:list-disc [&_ul]:pl-5 [&_li]:mb-1 [&_a]:text-rust [&_a]:underline [&_a]:underline-offset-2 hover:[&_a]:text-rust-hover">
+    <div className="font-body text-body-lg text-body leading-relaxed [&_p]:mb-4 [&_ul]:my-4 [&_ul]:list-disc [&_ul]:pl-5 [&_li]:mb-1 [&_a]:text-primary [&_a]:underline [&_a]:underline-offset-2 hover:[&_a]:text-primary-hover">
       <StructuredText
         data={answer}
         renderLinkToRecord={({ record, children, transformedMeta }) => (

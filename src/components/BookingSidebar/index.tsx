@@ -54,7 +54,7 @@ export default function BookingSidebar({
           {/* Highlight badge */}
           {highlight && (
             <div className="mb-5">
-              <span className="inline-block bg-rust/10 text-rust font-body text-tag uppercase font-medium tracking-wider px-2.5 py-1 rounded-pill border border-rust/20">
+              <span className="inline-block bg-primary/10 text-primary font-body text-tag uppercase font-medium tracking-wider px-2.5 py-1 rounded-pill border border-primary/20">
                 {highlight}
               </span>
             </div>
@@ -90,7 +90,7 @@ export default function BookingSidebar({
           <button
             type="button"
             onClick={scrollToBooking}
-            className="w-full bg-rust hover:bg-rust-hover text-white font-body font-medium text-body tracking-wide py-3.5 rounded-pill transition-colors duration-300 cursor-pointer"
+            className="w-full bg-primary hover:bg-primary-hover text-white font-body font-medium text-body tracking-wide py-3.5 rounded-pill transition-colors duration-300 cursor-pointer"
           >
             {t('book')}
           </button>
@@ -117,7 +117,7 @@ export default function BookingSidebar({
           <button
             type="button"
             onClick={scrollToBooking}
-            className="shrink-0 bg-rust hover:bg-rust-hover text-white font-body font-medium text-body-sm tracking-wide px-6 py-2.5 rounded-pill transition-colors duration-300 cursor-pointer"
+            className="shrink-0 bg-primary hover:bg-primary-hover text-white font-body font-medium text-body-sm tracking-wide px-6 py-2.5 rounded-pill transition-colors duration-300 cursor-pointer"
           >
             {t('book')}
           </button>

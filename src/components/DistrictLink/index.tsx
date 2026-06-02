@@ -26,12 +26,12 @@ export default function DistrictLink({ name, slug, locale, abstract, description
     <div className="py-20 lg:py-28 bg-surface-alt">
       <div className="mx-auto max-w-7xl px-5 md:px-8">
         {/* Label + Title */}
-        <p className="font-body text-label uppercase tracking-[0.22em] text-rust font-medium mb-2">
+        <p className="font-body text-label uppercase tracking-[0.22em] text-primary font-medium mb-2">
           {t('discoverArea')}
         </p>
         <Link
           href={href}
-          className="font-heading text-h2 font-normal text-dark hover:text-rust transition-colors duration-300"
+          className="font-heading text-h2 font-normal text-dark hover:text-primary transition-colors duration-300"
         >
           <em>{name}</em>
         </Link>
@@ -62,7 +62,7 @@ export default function DistrictLink({ name, slug, locale, abstract, description
                 />
                 <Link
                   href={href}
-                  className="inline-block mt-6 font-body text-caption font-medium text-rust uppercase tracking-wider hover:text-rust-hover transition-colors"
+                  className="inline-block mt-6 font-body text-caption font-medium text-primary uppercase tracking-wider hover:text-primary-hover transition-colors"
                 >
                   {t('exploreDistrict', { name })} &rarr;
                 </Link>

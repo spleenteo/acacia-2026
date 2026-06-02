@@ -23,7 +23,7 @@ export default function AmenitiesList({ data, label, title }: Props) {
 
   return (
     <div>
-      <p className="font-body text-label uppercase tracking-[0.18em] text-rust font-medium mb-2">
+      <p className="font-body text-label uppercase tracking-[0.18em] text-primary font-medium mb-2">
         {label}
       </p>
       <h3 className="font-heading italic text-h3 text-dark mb-6">{title}</h3>
@@ -44,7 +44,7 @@ export default function AmenitiesList({ data, label, title }: Props) {
                   href={amenity.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-block border border-rust/30 text-rust font-body text-body px-3 py-1.5 rounded-pill hover:bg-rust hover:text-white hover:border-rust transition-all duration-300"
+                  className="inline-block border border-primary/30 text-primary font-body text-body px-3 py-1.5 rounded-pill hover:bg-primary hover:text-white hover:border-primary transition-all duration-300"
                 >
                   {content}
                 </a>

@@ -67,7 +67,7 @@ export default function ReviewsList({ reviews, label, title }: Props) {
       <section className="py-20 lg:py-28 bg-surface-alt overflow-hidden">
         <div className="mx-auto max-w-7xl px-5 md:px-8">
           <div ref={headingRef} className="text-center mb-8">
-            <p className="font-body text-label uppercase tracking-[0.22em] text-rust font-medium mb-2">
+            <p className="font-body text-label uppercase tracking-[0.22em] text-primary font-medium mb-2">
               {label}
             </p>
             <h2 className="font-heading text-h2 text-dark">
@@ -112,7 +112,7 @@ export default function ReviewsList({ reviews, label, title }: Props) {
               >
                 {/* Channel logo + opening quote */}
                 <div className="flex justify-between items-start mb-3">
-                  <span className="font-heading text-h1 text-rust/20 leading-none select-none">
+                  <span className="font-heading text-h1 text-primary/20 leading-none select-none">
                     &ldquo;
                   </span>
                   {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -153,7 +153,7 @@ export default function ReviewsList({ reviews, label, title }: Props) {
                 type="button"
                 onClick={() => scrollToIndex(i)}
                 className={`w-2 h-2 rounded-full transition-all duration-300 cursor-pointer ${
-                  i === activeIndex ? 'bg-rust w-5' : 'bg-border'
+                  i === activeIndex ? 'bg-primary w-5' : 'bg-border'
                 }`}
                 aria-label={`Go to review ${i + 1}`}
               />
@@ -167,7 +167,7 @@ export default function ReviewsList({ reviews, label, title }: Props) {
         {selectedReview && (
           <div>
             <div className="flex justify-between items-start mb-4">
-              <span className="font-heading text-hero text-rust/20 leading-none select-none">
+              <span className="font-heading text-hero text-primary/20 leading-none select-none">
                 &ldquo;
               </span>
               {/* eslint-disable-next-line @next/next/no-img-element */}

@@ -25,7 +25,7 @@ export default function RelatedContent({ apartments, moods, locale }: Props) {
         {apartments.length > 0 && (
           <div className={moods.length > 0 ? 'mb-20' : ''}>
             <InViewSection className="mb-10">
-              <p className="font-body text-label uppercase tracking-[0.22em] text-rust font-medium mb-2">
+              <p className="font-body text-label uppercase tracking-[0.22em] text-primary font-medium mb-2">
                 {t('similarLabel')}
               </p>
               <h2 className="font-heading text-h2 text-dark">
@@ -44,7 +44,7 @@ export default function RelatedContent({ apartments, moods, locale }: Props) {
         {moods.length > 0 && (
           <div>
             <InViewSection className="mb-10">
-              <p className="font-body text-label uppercase tracking-[0.22em] text-rust font-medium mb-2">
+              <p className="font-body text-label uppercase tracking-[0.22em] text-primary font-medium mb-2">
                 {t('moodsLabel')}
               </p>
               <h2 className="font-heading text-h2 text-dark">

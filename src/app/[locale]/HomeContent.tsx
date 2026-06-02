@@ -33,7 +33,7 @@ export default function HomeContent({ locale, data }: HomeProps & { data: HomeDa
         <section className="py-20 lg:py-28 bg-surface-alt">
           <div className="mx-auto max-w-3xl px-8 text-center">
             <HtmlContent html={homePage.stayText} className="font-body text-body-lg text-dark" />
-            <div className="mx-auto mt-8 w-12 h-[3px] bg-rust rounded-sm" />
+            <div className="mx-auto mt-8 w-12 h-[3px] bg-primary rounded-sm" />
           </div>
         </section>
       )}
@@ -71,7 +71,7 @@ export default function HomeContent({ locale, data }: HomeProps & { data: HomeDa
         <section className="py-20 lg:py-28 bg-surface">
           <div className="mx-auto max-w-3xl px-8 text-center">
             <HtmlContent html={homePage.doText} className="font-body text-body-lg text-dark" />
-            <div className="mx-auto mt-8 w-12 h-[3px] bg-rust rounded-sm" />
+            <div className="mx-auto mt-8 w-12 h-[3px] bg-primary rounded-sm" />
           </div>
         </section>
       )}

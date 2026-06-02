@@ -44,7 +44,7 @@ export default function MoodsContent({ locale, data }: MoodsProps & { data: Mood
               html={pageMoods.description}
               className="font-body text-body-lg text-dark"
             />
-            <div className="mx-auto mt-8 w-12 h-[3px] bg-rust rounded-sm" />
+            <div className="mx-auto mt-8 w-12 h-[3px] bg-primary rounded-sm" />
           </div>
         </section>
       )}
@@ -52,7 +52,7 @@ export default function MoodsContent({ locale, data }: MoodsProps & { data: Mood
       {/* Moods Grid */}
       <section className="py-20 lg:py-28 bg-surface">
         <div className="mx-auto max-w-6xl px-8">
-          <p className="font-body text-label uppercase tracking-[0.22em] text-rust font-medium text-center mb-3">
+          <p className="font-body text-label uppercase tracking-[0.22em] text-primary font-medium text-center mb-3">
             {t('label')}
           </p>
           <h2 className="font-heading font-normal text-h1 text-dark text-center tracking-[-0.02em] mb-12">

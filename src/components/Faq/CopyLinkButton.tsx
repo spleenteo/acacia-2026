@@ -29,7 +29,7 @@ export default function CopyLinkButton({ href, className }: { href: string; clas
       onClick={copy}
       aria-label={copied ? 'Link copiato' : 'Copia link'}
       title={copied ? 'Link copiato!' : 'Copia link'}
-      className={`shrink-0 rounded-full p-1.5 text-light transition-colors hover:text-rust hover:bg-rust-pale/60 ${className ?? ''}`}
+      className={`shrink-0 rounded-full p-1.5 text-light transition-colors hover:text-primary hover:bg-primary-pale/60 ${className ?? ''}`}
     >
       {copied ? (
         <svg

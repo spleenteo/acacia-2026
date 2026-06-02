@@ -13,7 +13,9 @@ export default function FaqIndexContent({ roots, data }: FaqIndexProps & { data:
   const page = data.pageFaq;
   return (
     <div className="mx-auto max-w-4xl px-5 py-12 md:py-16">
-      <p className="font-body text-label uppercase tracking-[0.22em] text-rust font-medium">FAQ</p>
+      <p className="font-body text-label uppercase tracking-[0.22em] text-primary font-medium">
+        FAQ
+      </p>
       <h1 className="mt-3 font-heading text-h1 md:text-hero font-normal text-dark">
         {page?.title ?? 'FAQ'}
       </h1>

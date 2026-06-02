@@ -57,8 +57,8 @@ function CategoryFilterInner({ categories, apartments, locale }: Props) {
           onClick={() => setCategory(null)}
           className={`px-4 py-2 text-body-sm font-bold uppercase tracking-wider border transition-colors duration-300 cursor-pointer ${
             !activeCategory
-              ? 'bg-rust text-white border-rust'
-              : 'border-dark/20 text-dark hover:border-rust hover:text-rust'
+              ? 'bg-primary text-white border-primary'
+              : 'border-dark/20 text-dark hover:border-primary hover:text-primary'
           }`}
         >
           {t('allFilter')}
@@ -70,8 +70,8 @@ function CategoryFilterInner({ categories, apartments, locale }: Props) {
             onClick={() => setCategory(cat.slug)}
             className={`px-4 py-2 text-body-sm font-bold uppercase tracking-wider border transition-colors duration-300 cursor-pointer ${
               activeCategory === cat.slug
-                ? 'bg-rust text-white border-rust'
-                : 'border-dark/20 text-dark hover:border-rust hover:text-rust'
+                ? 'bg-primary text-white border-primary'
+                : 'border-dark/20 text-dark hover:border-primary hover:text-primary'
             }`}
           >
             {cat.name}
