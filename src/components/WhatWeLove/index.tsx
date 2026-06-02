@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { useInView } from '@/hooks/useInView';
 import { type FragmentOf, type ResultOf, readFragment } from '@/lib/datocms/graphql';
@@ -8,6 +8,7 @@ import ResponsiveImage from '@/components/ResponsiveImage';
 import { GalleryImageFragment } from '@/components/ImageGallery/fragment';
 import HtmlContent from '@/components/HtmlContent';
 import PhotoLightbox from '@/components/PhotoLightbox';
+import { isLightColor } from '@/lib/heroColor';
 import type { LightboxSlide } from '@/components/Lightbox';
 
 type Props = {
@@ -32,24 +33,6 @@ export default function WhatWeLove({
   const tGallery = useTranslations('gallery');
   const headingRef = useInView<HTMLDivElement>();
   const photos = data.map((d) => readFragment(GalleryImageFragment, d));
-  const [activeCaptionIndex, setActiveCaptionIndex] = useState(0);
-  const [isTransitioning, setIsTransitioning] = useState(false);
-  const [showCaption, setShowCaption] = useState(false);
-  const timeoutRef = useRef<ReturnType<typeof setTimeout>>(null);
-
-  const hasPhotos = photos.length >= 2;
-
-  const activeCaption = photos[activeCaptionIndex]?.description;
-
-  const handleHover = (index: number) => {
-    if (index === activeCaptionIndex) return;
-    if (timeoutRef.current) clearTimeout(timeoutRef.current);
-    setIsTransitioning(true);
-    timeoutRef.current = setTimeout(() => {
-      setActiveCaptionIndex(index);
-      setIsTransitioning(false);
-    }, 250);
-  };
 
   return (
     <div>
@@ -74,7 +57,7 @@ export default function WhatWeLove({
       </div>
 
       {description && (
-        <div className="mb-10">
+        <div className="mb-12">
           <HtmlContent
             html={description}
             className="font-body text-body-lg text-dark leading-relaxed prose-acacia"
@@ -82,173 +65,105 @@ export default function WhatWeLove({
         </div>
       )}
 
-      {hasPhotos && (
-        <>
-          <div className="relative" onMouseLeave={() => setShowCaption(false)}>
-            {photos.length === 2 && (
-              <TwoUp photos={photos} onHover={handleHover} onEnter={() => setShowCaption(true)} />
-            )}
-            {photos.length === 3 && (
-              <ThreeUp photos={photos} onHover={handleHover} onEnter={() => setShowCaption(true)} />
-            )}
-            {photos.length === 4 && (
-              <FourUp photos={photos} onHover={handleHover} onEnter={() => setShowCaption(true)} />
-            )}
-            {photos.length === 5 && (
-              <FiveUp photos={photos} onHover={handleHover} onEnter={() => setShowCaption(true)} />
-            )}
-            {photos.length >= 6 && (
-              <SixUp photos={photos} onHover={handleHover} onEnter={() => setShowCaption(true)} />
-            )}
+      {/* Vertical, alternating photo flow — every wwl_gallery image, left/right */}
+      {photos.length > 0 && (
+        <div className="space-y-10 md:space-y-20">
+          {photos.map((photo, i) => (
+            <ZigZagItem key={photo.id} photo={photo} isRight={i % 2 === 1} index={i} />
+          ))}
+        </div>
+      )}
 
-            {/* Caption overlay — centered on the gallery */}
-            {activeCaption && (
-              <div
-                className={`absolute inset-0 flex items-center justify-center pointer-events-none transition-opacity duration-300 ${
-                  showCaption ? 'opacity-100' : 'opacity-0'
-                }`}
-                aria-live="polite"
-              >
-                <div
-                  className={`bg-dark/85 backdrop-blur-sm rounded-card px-8 py-4 max-w-md mx-4 transition-all duration-500 ease-out ${
-                    isTransitioning ? 'opacity-0 scale-95' : 'opacity-100 scale-100'
-                  }`}
-                >
-                  <p className="font-heading italic text-[1.25rem] leading-snug text-white text-center">
-                    {activeCaption}
-                  </p>
-                </div>
-              </div>
-            )}
-          </div>
-          {lightboxSlides && lightboxSlides.length > 0 && (
-            <div className="mt-4">
-              <PhotoLightbox slides={lightboxSlides} label={tGallery('viewAll')} variant="light" />
-            </div>
-          )}
-        </>
+      {lightboxSlides && lightboxSlides.length > 0 && (
+        <div className="mt-12">
+          <PhotoLightbox slides={lightboxSlides} label={tGallery('viewAll')} variant="light" />
+        </div>
       )}
     </div>
   );
 }
 
-type LayoutProps = {
-  photos: Photo[];
-  onHover: (index: number) => void;
-  onEnter: () => void;
-};
+/**
+ * A subtle, deterministic skew for the description box — 2–8px offsets on each
+ * corner derived from the item index (Math.sin so it's stable across SSR/CSR,
+ * no Math.random hydration mismatch), echoing the hero panel's diagonal cut.
+ */
+function wonkyClip(seed: number): string {
+  const rnd = (n: number) => {
+    const x = Math.sin(seed * 53.13 + n * 17.71) * 43758.5453;
+    return (2 + (x - Math.floor(x)) * 6).toFixed(1);
+  };
+  return `polygon(0 ${rnd(1)}px, calc(100% - ${rnd(2)}px) 0, 100% calc(100% - ${rnd(3)}px), ${rnd(4)}px 100%)`;
+}
 
-function PhotoCard({
-  photo,
-  index,
-  onHover,
-  onEnter,
-  aspect = 'aspect-[4/3]',
-}: {
-  photo: Photo;
-  index: number;
-  onHover: (index: number) => void;
-  onEnter?: () => void;
-  aspect?: string;
-}) {
+/**
+ * One photo in the alternating vertical flow. Even items sit left, odd items
+ * right. The optional description floats over the inner edge in a box whose
+ * background is the image's DatoCMS `bgColor` (text contrast adapts to it),
+ * with a serif face and a slightly skewed shape. It fades + slides + pops in
+ * (overshoot easing) only once the photo is essentially fully in view.
+ */
+function ZigZagItem({ photo, isRight, index }: { photo: Photo; isRight: boolean; index: number }) {
+  const imgRef = useRef<HTMLDivElement>(null);
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    const el = imgRef.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        // Reveal when the photo is essentially fully visible, or — for photos
+        // taller than the viewport — when it fills most of the screen.
+        if (
+          entry.intersectionRatio >= 0.98 ||
+          entry.intersectionRect.height >= window.innerHeight * 0.9
+        ) {
+          setVisible(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: [0, 0.25, 0.5, 0.75, 0.9, 0.98, 1] },
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
+  const full = photo.image?.full;
+  const bg = full?.bgColor ?? '#eaf2f1';
+  const textClass = isLightColor(bg) ? 'text-dark' : 'text-white';
+
   return (
-    <div
-      className="group"
-      onMouseEnter={() => {
-        onHover(index);
-        onEnter?.();
-      }}
-    >
-      <div className={`${aspect} relative overflow-hidden bg-surface-alt`}>
-        {photo.image?.responsiveImage && (
-          <div className="absolute inset-0 transition-transform duration-700 ease-out group-hover:scale-[1.04]">
-            <ResponsiveImage
-              data={photo.image.responsiveImage}
-              pictureClassName="absolute inset-0 w-full h-full"
-              imgClassName="w-full h-full object-cover"
-              imgStyle={{ maxWidth: 'none', height: '100%', aspectRatio: 'unset' }}
-            />
-          </div>
+    <div className={`relative md:w-[72%] ${isRight ? 'md:ml-auto' : 'md:mr-auto'}`}>
+      <div ref={imgRef}>
+        {full && (
+          <ResponsiveImage
+            data={full}
+            pictureClassName="block w-full"
+            imgClassName="w-full h-auto"
+          />
         )}
       </div>
-    </div>
-  );
-}
 
-/** Two equal columns */
-function TwoUp({ photos, onHover, onEnter }: LayoutProps) {
-  return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-      <PhotoCard photo={photos[0]} index={0} onHover={onHover} onEnter={onEnter} />
-      <PhotoCard photo={photos[1]} index={1} onHover={onHover} onEnter={onEnter} />
-    </div>
-  );
-}
-
-/** One large left + two stacked right */
-function ThreeUp({ photos, onHover, onEnter }: LayoutProps) {
-  return (
-    <div className="grid grid-cols-1 md:grid-cols-[1.2fr_1fr] gap-3">
-      <PhotoCard
-        photo={photos[0]}
-        index={0}
-        onHover={onHover}
-        onEnter={onEnter}
-        aspect="aspect-[3/4] md:aspect-auto md:h-full"
-      />
-      <div className="flex flex-col gap-3">
-        <PhotoCard photo={photos[1]} index={1} onHover={onHover} onEnter={onEnter} />
-        <PhotoCard photo={photos[2]} index={2} onHover={onHover} onEnter={onEnter} />
-      </div>
-    </div>
-  );
-}
-
-/** 2×2 grid */
-function FourUp({ photos, onHover, onEnter }: LayoutProps) {
-  return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-      {photos.map((photo, i) => (
-        <PhotoCard key={photo.id} photo={photo} index={i} onHover={onHover} onEnter={onEnter} />
-      ))}
-    </div>
-  );
-}
-
-/** One large spanning top + four smaller below */
-function FiveUp({ photos, onHover, onEnter }: LayoutProps) {
-  return (
-    <div className="space-y-3">
-      <PhotoCard
-        photo={photos[0]}
-        index={0}
-        onHover={onHover}
-        onEnter={onEnter}
-        aspect="aspect-[16/9]"
-      />
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-        {photos.slice(1, 5).map((photo, i) => (
-          <PhotoCard
-            key={photo.id}
-            photo={photo}
-            index={i + 1}
-            onHover={onHover}
-            onEnter={onEnter}
-            aspect="aspect-square"
-          />
-        ))}
-      </div>
-    </div>
-  );
-}
-
-/** 3×2 grid — two rows of three */
-function SixUp({ photos, onHover, onEnter }: LayoutProps) {
-  return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
-      {photos.slice(0, 6).map((photo, i) => (
-        <PhotoCard key={photo.id} photo={photo} index={i} onHover={onHover} onEnter={onEnter} />
-      ))}
+      {photo.description && (
+        <div
+          style={{
+            backgroundColor: bg,
+            clipPath: wonkyClip(index + 1),
+            transitionTimingFunction: 'cubic-bezier(0.34, 1.56, 0.64, 1)',
+          }}
+          className={[
+            'absolute bottom-6 z-10 max-w-[15rem] md:max-w-xs px-7 py-5',
+            isRight ? 'left-0 md:-left-10' : 'right-0 md:-right-10',
+            'transition-all duration-700',
+            textClass,
+            visible
+              ? 'opacity-100 translate-x-0 scale-100'
+              : `opacity-0 scale-95 ${isRight ? '-translate-x-6' : 'translate-x-6'}`,
+          ].join(' ')}
+        >
+          <p className="font-heading text-h4 leading-snug">{photo.description}</p>
+        </div>
+      )}
     </div>
   );
 }

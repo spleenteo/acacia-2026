@@ -12,6 +12,7 @@ export const GalleryImageFragment = graphql(
         }
         full: responsiveImage(imgixParams: { w: 1200, fit: max }) {
           ...ResponsiveImageFragment
+          bgColor
         }
       }
     }
