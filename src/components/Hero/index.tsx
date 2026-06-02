@@ -67,8 +67,8 @@ export default function Hero({
           className="absolute inset-0 pointer-events-none"
           style={{
             background: [
-              'linear-gradient(to bottom, rgba(20,15,10,0.38) 0%, transparent 22%)',
-              'linear-gradient(to top, rgba(46,40,34,0.82) 0%, rgba(46,40,34,0.12) 52%, transparent 100%)',
+              'linear-gradient(to bottom, rgba(0,1,42,0.34) 0%, transparent 22%)',
+              'linear-gradient(to top, rgba(0,1,42,0.84) 0%, rgba(0,1,42,0.14) 52%, transparent 100%)',
             ].join(', '),
           }}
         />
@@ -82,8 +82,9 @@ export default function Hero({
         <div className="max-w-5xl mx-auto text-center">
           <h1
             className={[
-              'font-heading font-normal leading-[1.06] mb-6',
-              'text-[2.75rem] md:text-[4.5rem] lg:text-[5.5rem]',
+              'font-heading font-semibold leading-[1.06] mb-6',
+              'text-[2.7rem] sm:text-[3.6rem] md:text-[var(--text-display)]',
+              // text-white when over an image, navy on the plain (imageless) hero
               hasImage ? 'text-white' : 'text-dark',
             ].join(' ')}
             dangerouslySetInnerHTML={{ __html: unwrapParagraph(title) }}

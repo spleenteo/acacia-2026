@@ -56,11 +56,11 @@ export default function ApartmentCard({ data, locale }: Props) {
         {/* Content — no background, blends with page */}
         <div className="pt-4">
           {apartment.category && (
-            <p className="font-body text-caption text-muted font-normal mb-1.5">
+            <p className="font-body text-label uppercase tracking-[0.18em] text-muted font-medium mb-2">
               {apartment.category.name}
             </p>
           )}
-          <h3 className="font-heading text-h3 font-normal text-dark leading-snug">
+          <h3 className="font-heading text-h3 font-normal text-dark leading-snug transition-colors duration-300 group-hover:text-rust">
             {apartment.name}
           </h3>
           {apartment.houseBadge?.label && (

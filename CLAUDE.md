@@ -83,7 +83,9 @@ Debug stega-related bugs with `revealStega(value)` from `react-datocms` — `con
 
 **Turbopack workaround**: Next.js 16 Turbopack has a bug where `useRouter()`, `usePathname()`, and other `next/navigation` hooks that subscribe to router state cause "Cannot read properties of undefined (reading 'unsubscribe')" errors. Use `window.history.replaceState` instead of `router.push`, `window.location.pathname` instead of `usePathname()`, and `window.location.assign()` for full navigation. `useSearchParams` works when wrapped in a Suspense boundary.
 
-### Styling — "Rinascimento Moderno" Design System
+### Styling — "Japan Fish" Editorial Design System
+
+> Re-skinned from the original "Rinascimento Moderno" (warm cream + Cormorant) to a light, editorial language: navy ground, warm-cool "Japan Fish" palette, Fraunces display serif. The token NAMES were kept and only their VALUES swapped, so every component re-themed automatically.
 
 Tailwind CSS v4 with `@theme` (NOT `@theme inline`) design tokens in `src/app/global.css`. Full design system reference: `pitches/demostyle.jsx`.
 
@@ -94,20 +96,20 @@ Tailwind CSS v4 with `@theme` (NOT `@theme inline`) design tokens in `src/app/gl
 - All base/reset CSS must be inside `@layer base` — unlayered CSS overrides `@layer utilities` regardless of specificity
 - Never set `color`, `font-family`, or `font-weight` on `h1–h6` in base styles — use Tailwind utility classes
 
-**Palette:** Warm rust accent `#D0512A`, cream surfaces (`surface` #FDFBF8 / `surface-alt` #F5F0E8 / `surface-warm` #ECE6DB), warm dark `#2E2822` (never pure black).
+**Palette ("Japan Fish"):** Rust accent `#D53302` (CTAs/links/focus), warm-cool support gold `#FFAA4D` (with `gold-soft` `#FFC680` hover) / sage `#A0CBAD` / slate `#8FB1BE`. Surfaces: white `surface` #FFFFFF / sage-tint `surface-alt` #EAF2F1 / warm sand `surface-warm` #FBF3E3. Deep **navy** ground `#00012A` (`dark`/`body`/dark sections, never pure black); muted text `#4C5168`. Hairline border `#DCE6E6`; crisp navy border via `border-strong`. Text selection is gold-on-navy.
 
-**Typography:** Cormorant Garamond (`font-heading`) for all headings, Lato (`font-body`) for body text. Font sizes: `text-hero` (56px), `text-h1` (42px), `text-h2` (36px), `text-h3` (24px), `text-h4` (18px), `text-body-lg` (17px), `text-body` (15px), `text-body-sm` (14px), `text-caption` (13px), `text-label` (12px), `text-tag` (10px), `text-fine` (11px).
+**Typography:** Fraunces (`font-heading`) for all headings — a free high-contrast "old style" serif (SIL OFL) standing in for Domaine Display, pinned to its sharp cut via `font-variation-settings: 'opsz' 144, 'SOFT' 0, 'WONK' 0` on h1–h6 + `.font-heading` (WONK 0 removes the playful quirks). Lato (`font-body`) for body/UI. **Fonts are loaded with `next/font/google` in `src/app/layout.tsx`** (self-hosted, exposing `--font-fraunces` / `--font-lato`), NOT a CSS `@import` — Turbopack strips external `@import url()` from the compiled stylesheet, so webfonts silently fell back to Georgia. Fraunces' `opsz`/`SOFT`/`WONK` axes are requested via next/font's `axes` so the variation-settings actually apply. Body scale is bumped up one step from the source demo: `text-hero` (56px), `text-h1` (42px), `text-h2` (36px), `text-h3` (24px), `text-h4` (18px), `text-body-lg` (19px), `text-body` (17px), `text-body-sm` (15px), `text-caption` (13.5px), `text-label` (12px), `text-tag` (10px), `text-fine` (11px).
 
-**Editorial pattern:** Section headings use `<em>` for italic emphasis on one key word with an animated marker highlight effect (`rust-pale` background, slight rotation, scroll-triggered via `.in-view` class). Use `InViewSection` wrapper (server components) or `useInView` hook (client components) to trigger the animation. Section labels: `text-label uppercase tracking-[0.22em] text-rust font-medium`.
+**Editorial pattern:** Section/hero headings use `<em>` for emphasis on one key word — rendered as the **italic Fraunces cut in rust** with a thin underline that wipes in on scroll (`em::after`, scaleX, triggered via `.in-view`). Use `InViewSection` wrapper (server components) or `useInView` hook (client components) to trigger it. Section labels / card kickers: `text-label uppercase tracking-[0.18em–0.22em] text-muted/text-rust font-medium`.
 
-**Cards:** `rounded-card shadow-card hover:shadow-card-hover hover:-translate-y-1` with image zoom `scale-[1.04]` and rust tag pills. PostCSS configured in `postcss.config.mjs`.
+**Cards:** crisp `radius-card` 4px, portrait 3:4 image (`overflow-hidden rounded-sm`), uppercase kicker + serif title that shifts to rust on `group-hover`, image zoom `scale-[1.03]`, restrained navy-tinted `shadow-card-hover`. PostCSS configured in `postcss.config.mjs`.
 
 ### Components
 
 | Component          | Path                               | Purpose                                                       |
 | ------------------ | ---------------------------------- | ------------------------------------------------------------- |
 | `SiteHeader`       | `src/components/SiteHeader/`       | Navigation with locale switcher, primary bg                   |
-| `SiteFooter`       | `src/components/SiteFooter/`       | Two-band footer (cream + dark)                                |
+| `SiteFooter`       | `src/components/SiteFooter/`       | Two-band footer (sage `surface-alt` + navy)                   |
 | `BeddyBar`         | `src/components/BeddyBar/`         | Wrapper for `<beddy-bar>` web component (booking widget)      |
 | `HtmlContent`      | `src/components/HtmlContent/`      | Renders legacy HTML from DatoCMS text fields                  |
 | `ApartmentCard`    | `src/components/ApartmentCard/`    | Apartment card with colocated GraphQL fragment                |

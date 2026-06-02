@@ -1,71 +1,95 @@
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,700&family=Lato:ital,wght@0,300;0,400;0,700;1,300;1,400&display=swap');
+/* Fonts (Fraunces display serif + Lato body) are loaded via `next/font/google`
+   in `src/app/layout.tsx` — NOT a CSS @import, which Turbopack strips from the
+   compiled stylesheet. The token values below point at the next/font CSS vars
+   (`--font-fraunces`, `--font-lato`). Fraunces is pinned to its sharp,
+   Domaine-like cut via font-variation-settings 'opsz' 144 / 'SOFT' 0 / 'WONK' 0
+   (see @layer base); italic <em> uses its refined cursive. */
 @import 'tailwindcss';
 
 @theme {
   /* ══════════════════════════════════════
-     COLORS
+     COLORS — "Japan Fish" editorial palette
+     warm rust & gold against cool sage, slate
+     and a deep navy ground. Re-skin keeps the
+     Acacia token NAMES, swaps the VALUES.
      ══════════════════════════════════════ */
 
-  /* Backgrounds — warm cream/ivory progression */
-  --color-surface: #fdfbf8;
-  --color-surface-alt: #f5f0e8;
-  --color-surface-warm: #ece6db;
+  /* Backgrounds — white → cool sage tint → warm sand */
+  --color-surface: #ffffff;
+  --color-surface-alt: #eaf2f1;
+  --color-surface-warm: #fbf3e3;
 
-  /* Dark tones — warm brown-black, NEVER pure #000 */
-  --color-dark: #2e2822;
-  --color-dark-soft: #3d352d;
+  /* Dark tones — deep navy ground, NEVER pure #000 */
+  --color-dark: #00012a;
+  --color-dark-soft: #14163a;
 
-  /* Text hierarchy */
-  --color-body: #2e2822;
-  --color-muted: #5e5549;
-  --color-light: #847a6f;
+  /* Text hierarchy — navy → desaturated navy */
+  --color-body: #00012a;
+  --color-muted: #4c5168;
+  --color-light: #6b7088;
 
-  /* Rust — THE identity accent color */
-  --color-rust: #d0512a;
-  --color-rust-hover: #b8441f;
-  --color-rust-soft: #e07a52;
-  --color-rust-pale: #faddd2;
-  --color-rust-deep: #9c3a1a;
+  /* Rust — THE identity accent color (CTAs, links, focus) */
+  --color-rust: #d53302;
+  --color-rust-hover: #b32a02;
+  --color-rust-soft: #e6553a;
+  --color-rust-pale: #fbe3da;
+  --color-rust-deep: #9c2602;
+
+  /* Japan Fish supporting hues */
+  --color-gold: #ffaa4d;
+  --color-gold-soft: #ffc680;
+  --color-sage: #a0cbad;
+  --color-sage-strong: #4e8a6a;
+  --color-slate: #8fb1be;
+  --color-navy: #00012a;
 
   /* Supporting */
-  --color-gold: #d4a94b;
   --color-card: #ffffff;
-  --color-alert: #b62c3b;
-  --color-notice: #e9604b;
+  --color-alert: #d53302;
+  --color-notice: #ffaa4d;
   --color-white: #fff;
 
-  /* Borders */
-  --color-border: #e5ddd2;
-  --color-border-light: #efeadf;
+  /* Borders — crisp navy hairlines + soft slate divider */
+  --color-border: #dce6e6;
+  --color-border-light: #eaf2f1;
+  --color-border-strong: #00012a;
 
   /* ══════════════════════════════════════
      FONTS
      ══════════════════════════════════════ */
 
-  --font-heading: 'Cormorant Garamond', 'Garamond', serif;
-  --font-body: 'Lato', 'Helvetica Neue', sans-serif;
+  --font-heading: var(--font-fraunces), 'Georgia', 'Times New Roman', serif;
+  --font-body: var(--font-lato), 'Helvetica Neue', sans-serif;
 
   /* ══════════════════════════════════════
      FONT SIZES (with paired line-heights)
      ══════════════════════════════════════ */
 
-  --text-hero: 3.5rem;
-  --text-hero--line-height: 1.06;
-  --text-h1: 2.625rem;
-  --text-h1--line-height: 1.12;
-  --text-h2: 2.25rem;
-  --text-h2--line-height: 1.15;
-  --text-h3: 1.5rem;
-  --text-h3--line-height: 1.2;
-  --text-h4: 1.125rem;
-  --text-h4--line-height: 1.3;
-  --text-body-lg: 1.0625rem;
+  /* Heading (Fraunces) scale — bumped +20% across the board for a more
+     editorial, display-forward feel. Line-heights are unitless ratios so they
+     scale automatically. */
+  --text-hero: 4.2rem; /* 67px */
+  --text-hero--line-height: 1.05;
+  --text-display: 4.2rem; /* 67px (was 56) */
+  --text-display--line-height: 1.08;
+  --text-h1: 3.15rem; /* 50px */
+  --text-h1--line-height: 1.1;
+  --text-h2: 2.7rem; /* 43px */
+  --text-h2--line-height: 1.12;
+  --text-h3: 1.8rem; /* 29px */
+  --text-h3--line-height: 1.18;
+  --text-h4: 1.35rem; /* 22px */
+  --text-h4--line-height: 1.28;
+  /* Body (Lato) scale — DEFAULT body is 19px, set on the <body> element so any
+     unclassed text inherits it. Scale steps up/down from there for hierarchy.
+     body-lg 21px / body 19px (default) / body-sm 17px / caption 15px. */
+  --text-body-lg: 1.3125rem;
   --text-body-lg--line-height: 1.55;
-  --text-body: 0.9375rem;
-  --text-body--line-height: 1.7;
-  --text-body-sm: 0.875rem;
+  --text-body: 1.1875rem;
+  --text-body--line-height: 1.65;
+  --text-body-sm: 1.0625rem;
   --text-body-sm--line-height: 1.6;
-  --text-caption: 0.8125rem;
+  --text-caption: 0.9375rem;
   --text-caption--line-height: 1.5;
   --text-label: 0.75rem;
   --text-label--line-height: 1;
@@ -83,20 +107,20 @@
   --spacing-section-y-lg: 5.5rem;
 
   /* ══════════════════════════════════════
-     BORDER RADIUS
+     BORDER RADIUS — crisp: 4px base
      ══════════════════════════════════════ */
 
-  --radius-card: 1rem;
-  --radius-card-lg: 1.125rem;
-  --radius-card-xl: 1.25rem;
+  --radius-card: 0.25rem;
+  --radius-card-lg: 0.375rem;
+  --radius-card-xl: 0.5rem;
   --radius-pill: 6.25rem;
 
   /* ══════════════════════════════════════
-     SHADOWS
+     SHADOWS — restrained, navy-tinted elevation
      ══════════════════════════════════════ */
 
-  --shadow-card: 0 2px 12px rgba(46, 40, 34, 0.04);
-  --shadow-card-hover: 0 16px 48px rgba(46, 40, 34, 0.1);
+  --shadow-card: 0 1px 0 0 rgba(0, 1, 42, 0.06);
+  --shadow-card-hover: 0 4px 6px -1px rgba(0, 1, 42, 0.1), 0 2px 4px -2px rgba(0, 1, 42, 0.1);
 
   /* ══════════════════════════════════════
      BREAKPOINTS
@@ -119,9 +143,20 @@
     background-color: var(--color-surface);
   }
 
+  /* Pin Fraunces to its sharp, Domaine-like display cut: max optical size,
+     no softness, no wonk. Applied to every heading and the .font-heading
+     utility so titles stay crisp and high-contrast at any size. */
+  :where(h1, h2, h3, h4, h5, h6),
+  .font-heading {
+    font-variation-settings:
+      'opsz' 144,
+      'SOFT' 0,
+      'WONK' 0;
+  }
+
   ::selection {
-    background-color: var(--color-rust);
-    color: #fff;
+    background-color: var(--color-gold);
+    color: var(--color-navy);
   }
 
   /*
@@ -134,51 +169,50 @@
     letter-spacing: 0 !important;
   }
 
-  /* Marker highlight emphasis on heading <em> keywords */
+  /* Editorial emphasis on heading <em> keywords — the italic display cut in
+     the accent rust, no highlight box. A thin underline
+     wipes in on scroll (.in-view) for a restrained reveal. */
   h1 em,
   h2 em,
   h3 em {
     font-style: italic;
-    font-weight: 500;
+    font-weight: 400;
+    color: var(--color-rust);
     position: relative;
     display: inline;
-    isolation: isolate;
   }
 
-  h1 em::before,
-  h2 em::before,
-  h3 em::before {
+  h1 em::after,
+  h2 em::after,
+  h3 em::after {
     content: '';
     position: absolute;
-    left: -6px;
-    right: -6px;
-    top: 2px;
-    bottom: 2px;
-    background: var(--color-rust-pale);
-    border-radius: 4px;
-    transform: scaleX(0.3) rotate(-1deg);
+    left: 0;
+    right: 0;
+    bottom: -0.04em;
+    height: 1px;
+    background: currentColor;
+    transform: scaleX(0);
     transform-origin: left;
-    opacity: 0;
-    z-index: -1;
-    transition:
-      opacity 0.7s cubic-bezier(0.19, 1, 0.22, 1) 0.3s,
-      transform 0.7s cubic-bezier(0.19, 1, 0.22, 1) 0.3s;
+    opacity: 0.45;
+    transition: transform 0.7s cubic-bezier(0.19, 1, 0.22, 1) 0.25s;
   }
 
-  /* Animate in when parent has .in-view */
-  .in-view h1 em::before,
-  .in-view h2 em::before,
-  .in-view h3 em::before,
-  h1.in-view em::before,
-  h2.in-view em::before,
-  h3.in-view em::before {
-    opacity: 1;
-    transform: scaleX(1) rotate(-1deg);
+  /* Wipe in when parent (or the heading itself) gains .in-view */
+  .in-view h1 em::after,
+  .in-view h2 em::after,
+  .in-view h3 em::after,
+  h1.in-view em::after,
+  h2.in-view em::after,
+  h3.in-view em::after {
+    transform: scaleX(1);
   }
 
   body {
     font-weight: 400;
-    line-height: 1.7;
+    /* Default text size for Lato body copy is 19px — unclassed text inherits this. */
+    font-size: var(--text-body);
+    line-height: 1.65;
     -webkit-text-size-adjust: 100%;
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
@@ -232,14 +266,14 @@
 @keyframes beddy-pulse {
   0%,
   100% {
-    box-shadow: 0 0 0 0 rgba(208, 81, 42, 0);
+    box-shadow: 0 0 0 0 rgba(213, 51, 2, 0);
   }
   25%,
   75% {
-    box-shadow: 0 0 0 8px rgba(208, 81, 42, 0.25);
+    box-shadow: 0 0 0 8px rgba(213, 51, 2, 0.25);
   }
   50% {
-    box-shadow: 0 0 0 12px rgba(208, 81, 42, 0.15);
+    box-shadow: 0 0 0 12px rgba(213, 51, 2, 0.15);
   }
 }
 
