@@ -141,6 +141,13 @@
     font-family: var(--font-body);
     color: var(--color-body);
     background-color: var(--color-surface);
+    scroll-behavior: smooth;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
   }
 
   /* Pin Fraunces to its sharp, Domaine-like display cut: max optical size,

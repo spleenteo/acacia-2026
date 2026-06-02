@@ -114,9 +114,11 @@ export default function ApartmentDetailContent({
                 const isIt = locale === 'it';
                 const beds = apartment.bedrooms ?? 0;
                 const baths = apartment.bathrooms ?? 0;
+                // Use the real `bedrooms` figure (the category label already
+                // embeds it, which caused "1 bedroom 1 bedroom apartment").
                 const bedLabel = isIt
-                  ? `${apartment.category?.name ?? ''} ${beds} ${beds === 1 ? 'camera' : 'camere'}`
-                  : `${beds} ${beds === 1 ? 'bedroom' : 'bedrooms'} ${apartment.category?.name ?? ''}`;
+                  ? `appartamento ${beds} ${beds === 1 ? 'camera' : 'camere'}`
+                  : `${beds} ${beds === 1 ? 'bedroom' : 'bedrooms'} apartment`;
                 const pillClass =
                   'inline-block font-body font-medium text-label uppercase tracking-[0.15em] text-white px-3 py-1.5 rounded-sm';
                 const gold = (v: React.ReactNode) => (
@@ -126,13 +128,26 @@ export default function ApartmentDetailContent({
                   <>
                     <div className="mt-4 flex flex-wrap gap-2">
                       <span className={pillClass} style={{ backgroundColor: pillA }}>
-                        {bedLabel.trim()}
+                        {bedLabel}
                       </span>
                       {apartment.district && (
-                        <span className={pillClass} style={{ backgroundColor: pillB }}>
+                        <a
+                          href="#district"
+                          onClick={(e) => {
+                            // Scroll in JS so we never touch the URL — a bare
+                            // "#district" href was resolving against the path
+                            // directory and dropping the apartment slug.
+                            e.preventDefault();
+                            document
+                              .getElementById('district')
+                              ?.scrollIntoView({ behavior: 'smooth' });
+                          }}
+                          className={`${pillClass} cursor-pointer transition-opacity hover:opacity-85`}
+                          style={{ backgroundColor: pillB }}
+                        >
                           {isIt ? 'in ' : 'in '}
                           {apartment.district.name}
-                        </span>
+                        </a>
                       )}
                     </div>
                     <p
@@ -320,16 +335,18 @@ export default function ApartmentDetailContent({
         </div>
       </section>
 
-      {/* District */}
+      {/* District — anchor target for the hero pill */}
       {apartment.district && (
-        <DistrictLink
-          name={apartment.district.name}
-          slug={apartment.district.slug}
-          locale={locale}
-          abstract={apartment.district.abstract}
-          description={apartment.district.description}
-          image={apartment.district.gallery[0]?.image?.responsiveImage}
-        />
+        <div id="district" className="scroll-mt-[var(--header-height)]">
+          <DistrictLink
+            name={apartment.district.name}
+            slug={apartment.district.slug}
+            locale={locale}
+            abstract={apartment.district.abstract}
+            description={apartment.district.description}
+            image={apartment.district.gallery[0]?.image?.responsiveImage}
+          />
+        </div>
       )}
 
       {/* Related Content */}
