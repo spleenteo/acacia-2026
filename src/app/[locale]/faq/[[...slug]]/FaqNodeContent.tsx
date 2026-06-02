@@ -3,6 +3,7 @@
 import type { ResultOf } from 'gql.tada';
 import Link from 'next/link';
 import { type Locale } from '@/i18n/config';
+import { stripStega } from 'react-datocms/use-content-link';
 import { readFragment } from '@/lib/datocms/graphql';
 import { dastToText } from '@/lib/faq/dastText';
 import type { nodeQuery } from './page';
@@ -54,7 +55,9 @@ export default function FaqNodeContent({
           return text
             ? {
                 '@type': 'Question',
-                name: cc?.question ?? c.question,
+                // Strip stega: in draft mode `question` carries invisible
+                // click-to-edit metadata that must not leak into JSON-LD.
+                name: stripStega(cc?.question ?? c.question),
                 acceptedAnswer: { '@type': 'Answer', text },
               }
             : null;
