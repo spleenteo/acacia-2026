@@ -2,7 +2,7 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-IMPORTANT: always use DatoCMA CLI plugin with SKILLS
+IMPORTANT: always use DatoCMS CLI plugin with SKILLS
 Dont use the DatoCMS MCP when developing.
 
 ## Project Overview
