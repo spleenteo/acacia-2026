@@ -1,7 +1,6 @@
 import { type FragmentOf, graphql, readFragment } from '@/lib/datocms/graphql';
-import { modelPath } from '@/i18n/paths';
-import type { Locale } from '@/i18n/config';
-import Link from 'next/link';
+import WidgetLabel from '@/components/WidgetLabel';
+import DistrictAnchor from '@/components/DistrictAnchor';
 
 export const InfoTextFragment = graphql(`
   fragment InfoTextFragment on InfoTextRecord {
@@ -49,13 +48,13 @@ type Props = {
   district?: District | null;
 };
 
-export default function InfoDetail({ data, title, locale, district }: Props) {
+export default function InfoDetail({ data, title, district }: Props) {
   if (data.length === 0) return null;
 
   return (
     <div>
-      <p className="font-body text-label uppercase tracking-[0.18em] text-primary font-medium mb-4">
-        {title}
+      <p className="mb-4">
+        <WidgetLabel tone="slate">{title}</WidgetLabel>
       </p>
       <dl className="divide-y divide-dotted divide-border">
         {data.map((item) => {
@@ -94,15 +93,13 @@ export default function InfoDetail({ data, title, locale, district }: Props) {
                   ) : (
                     info.addressText
                   )}
-                  {district && locale && (
+                  {district && (
                     <>
                       {' ('}
-                      <Link
-                        href={modelPath('district', district.slug, locale as Locale)!}
-                        className="text-primary hover:text-primary-hover transition-colors"
-                      >
-                        {district.name}
-                      </Link>
+                      <DistrictAnchor
+                        name={district.name}
+                        className="text-primary hover:text-primary-hover transition-colors cursor-pointer"
+                      />
                       {' area)'}
                     </>
                   )}

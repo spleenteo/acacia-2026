@@ -1,4 +1,5 @@
 import { type FragmentOf, graphql, readFragment } from '@/lib/datocms/graphql';
+import WidgetLabel from '@/components/WidgetLabel';
 import InViewSection from '@/components/InViewSection';
 
 export const TruthFragment = graphql(`
@@ -22,8 +23,8 @@ export default function HomeTruths({ data, title, label }: Props) {
   return (
     <div>
       <InViewSection>
-        <p className="font-body text-label uppercase tracking-[0.22em] text-primary font-medium mb-2">
-          {label}
+        <p className="mb-2">
+          <WidgetLabel tone="gold">{label}</WidgetLabel>
         </p>
         <h3 className="font-heading text-h3 text-dark mb-6">
           <em>{title}</em>

@@ -210,28 +210,6 @@ export default function ApartmentDetailContent({
                 />
               </section>
             )}
-
-            {/* Amenities */}
-            {apartment.amenities.length > 0 && (
-              <section className="mb-16 lg:mb-20">
-                <AmenitiesList
-                  data={apartment.amenities}
-                  label={t('amenitiesLabel')}
-                  title={t('amenitiesTitle')}
-                />
-              </section>
-            )}
-
-            {/* Home Truths */}
-            {apartment.homeTruth.length > 0 && (
-              <section className="mb-16 lg:mb-20">
-                <HomeTruths
-                  data={apartment.homeTruth}
-                  label={t('truthsLabel')}
-                  title={t('truthsTitle')}
-                />
-              </section>
-            )}
           </div>
 
           {/* ── Sidebar ── */}
@@ -254,6 +232,24 @@ export default function ApartmentDetailContent({
                   title={t('info')}
                   locale={locale}
                   district={apartment.district}
+                />
+              </div>
+            )}
+            {apartment.amenities.length > 0 && (
+              <div className="mt-8">
+                <AmenitiesList
+                  data={apartment.amenities}
+                  label={t('amenitiesLabel')}
+                  title={t('amenitiesTitle')}
+                />
+              </div>
+            )}
+            {apartment.homeTruth.length > 0 && (
+              <div className="mt-8">
+                <HomeTruths
+                  data={apartment.homeTruth}
+                  label={t('truthsLabel')}
+                  title={t('truthsTitle')}
                 />
               </div>
             )}

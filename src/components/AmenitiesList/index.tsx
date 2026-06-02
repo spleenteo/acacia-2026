@@ -1,4 +1,5 @@
 import { type FragmentOf, graphql, readFragment } from '@/lib/datocms/graphql';
+import WidgetLabel from '@/components/WidgetLabel';
 import { getAmenityIcon } from '@/lib/amenity-icons';
 
 export const AmenityFragment = graphql(`
@@ -23,8 +24,8 @@ export default function AmenitiesList({ data, label, title }: Props) {
 
   return (
     <div>
-      <p className="font-body text-label uppercase tracking-[0.18em] text-primary font-medium mb-2">
-        {label}
+      <p className="mb-2">
+        <WidgetLabel tone="sage">{label}</WidgetLabel>
       </p>
       <h3 className="font-heading italic text-h3 text-dark mb-6">{title}</h3>
       <div className="flex flex-wrap gap-2">
