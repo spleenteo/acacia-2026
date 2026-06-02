@@ -50,42 +50,7 @@ export default function BookingSidebar({
     <>
       {/* ── Desktop Sidebar ── */}
       <div className="hidden lg:block">
-        <div className="sticky top-[calc(var(--header-height)+2rem)] rounded-card bg-card border border-border-light shadow-card p-6">
-          {/* Highlight badge */}
-          {highlight && (
-            <div className="mb-5">
-              <span className="inline-block bg-primary/10 text-primary font-body text-tag uppercase font-medium tracking-wider px-2.5 py-1 rounded-pill border border-primary/20">
-                {highlight}
-              </span>
-            </div>
-          )}
-
-          {/* Stats */}
-          {stats.length > 0 && (
-            <div className="flex justify-between mb-6">
-              {stats.map((stat) => (
-                <div key={stat.label} className="text-center flex-1">
-                  <p className="font-heading font-normal text-h2 text-dark leading-none">
-                    {stat.value}
-                  </p>
-                  <p className="font-body text-tag uppercase tracking-[0.14em] text-muted mt-1.5">
-                    {stat.label}
-                  </p>
-                </div>
-              ))}
-            </div>
-          )}
-
-          {/* Divider */}
-          <div className="h-px bg-border-light mb-5" />
-
-          {/* Price */}
-          {price && (
-            <p className="font-body text-body text-muted mb-5">
-              <span className="text-body-lg font-medium text-dark">{price}</span>
-            </p>
-          )}
-
+        <div className="sticky top-[calc(var(--header-height)+2rem)]">
           {/* CTA */}
           <button
             type="button"
