@@ -4,7 +4,7 @@ import { type Locale, locales } from '@/i18n/config';
 import { faqPath } from '@/i18n/paths';
 import { draftMode } from 'next/headers';
 import { notFound } from 'next/navigation';
-import { toNextMetadata } from 'react-datocms';
+import { toNextMetadata } from 'react-datocms/seo';
 import type { Metadata } from 'next';
 import {
   fetchFaqTree,

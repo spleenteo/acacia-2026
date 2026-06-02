@@ -1,5 +1,6 @@
 import { type FragmentOf, graphql, readFragment } from '@/lib/datocms/graphql';
-import { type ImagePropTypes, SRCImage } from 'react-datocms';
+import { type ImagePropTypes } from 'react-datocms/image';
+import { SRCImage } from 'react-datocms/rsc-image';
 
 /**
  * Let's define the GraphQL fragment needed for the component to function.

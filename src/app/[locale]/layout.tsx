@@ -8,7 +8,7 @@ import { type Locale, locales, isValidLocale } from '@/i18n/config';
 import { modelPath } from '@/i18n/paths';
 import { draftMode } from 'next/headers';
 import { notFound } from 'next/navigation';
-import { toNextMetadata } from 'react-datocms';
+import { toNextMetadata } from 'react-datocms/seo';
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages } from 'next-intl/server';
 import Script from 'next/script';

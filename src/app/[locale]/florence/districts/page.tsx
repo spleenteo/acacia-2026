@@ -4,7 +4,7 @@ import { type Locale, locales } from '@/i18n/config';
 import { localizedPath } from '@/i18n/paths';
 import { draftMode } from 'next/headers';
 import { TagFragment } from '@/lib/datocms/commonFragments';
-import { toNextMetadata } from 'react-datocms';
+import { toNextMetadata } from 'react-datocms/seo';
 import type { Metadata } from 'next';
 import { DistrictCardFragment } from '@/components/DistrictCard';
 import RealtimeWrapper from '@/lib/datocms/realtime/RealtimeWrapper';

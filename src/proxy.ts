@@ -4,7 +4,7 @@ import { locales, defaultLocale } from '@/i18n/config';
 import type { Locale } from '@/i18n/config';
 import { canonicalPath } from '@/i18n/paths';
 
-export function middleware(request: NextRequest) {
+export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   // Skip API routes, static files, and Next.js internals

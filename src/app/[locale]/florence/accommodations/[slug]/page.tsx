@@ -5,7 +5,7 @@ import { localizedPath } from '@/i18n/paths';
 import { draftMode } from 'next/headers';
 import { notFound } from 'next/navigation';
 import { TagFragment } from '@/lib/datocms/commonFragments';
-import { toNextMetadata } from 'react-datocms';
+import { toNextMetadata } from 'react-datocms/seo';
 import type { Metadata } from 'next';
 import { ResponsiveImageFragment } from '@/components/ResponsiveImage';
 import { GalleryImageFragment } from '@/components/ImageGallery/fragment';

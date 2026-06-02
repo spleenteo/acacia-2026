@@ -29,11 +29,11 @@ import { useState, useEffect } from 'react';
  * with graceful fallback to opening edit URLs in a new tab when running standalone.
  *
  * For more complex UIs (e.g., a toolbar to toggle click-to-edit on/off), you can use
- * the `useContentLink` hook from `react-datocms`, which provides full programmatic
- * control over the content link controller:
+ * the `useContentLink` hook from `react-datocms/use-content-link`, which provides full
+ * programmatic control over the content link controller:
  *
  * ```tsx
- * import { useContentLink } from 'react-datocms';
+ * import { useContentLink } from 'react-datocms/use-content-link';
  *
  * function MyToolbar() {
  *   const { enableClickToEdit, disableClickToEdit, isClickToEditEnabled } = useContentLink({

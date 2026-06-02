@@ -3,7 +3,7 @@ import { graphql } from '@/lib/datocms/graphql';
 import { type Locale } from '@/i18n/config';
 import { draftMode } from 'next/headers';
 import { TagFragment } from '@/lib/datocms/commonFragments';
-import { toNextMetadata } from 'react-datocms';
+import { toNextMetadata } from 'react-datocms/seo';
 import type { Metadata } from 'next';
 import { ApartmentCardFragment } from '@/components/ApartmentCard';
 import { MoodCardFragment } from '@/components/MoodCard';
