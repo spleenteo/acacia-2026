@@ -125,7 +125,7 @@ export default function ApartmentDetailContent({
           photo-derived colour. The coloured panel has a diagonal bottom edge. ── */}
       <section
         ref={heroRef}
-        className={`relative mb-10 md:mb-14 pb-10 lg:sticky lg:top-[calc(330px-68svh)] lg:z-30 transition-[padding] duration-500 ${
+        className={`relative mb-4 lg:mb-14 pb-10 lg:sticky lg:top-[calc(330px-68svh)] lg:z-30 transition-[padding] duration-500 ${
           heroPinned ? 'md:pb-3.5' : 'md:pb-16'
         }`}
         style={{
@@ -255,9 +255,10 @@ export default function ApartmentDetailContent({
               </ScrollToBooking>
             </div>
 
-            {/* View gallery — plain text link at mid-height, right edge. */}
+            {/* View gallery — small pill top-right on mobile; plain text link at
+                mid-height right edge from md up. */}
             {apartment.featuredSlideshow.length > 0 && (
-              <div className="absolute right-5 top-1/2 z-20 -translate-y-1/2">
+              <div className="absolute right-4 top-[calc(var(--header-height)+12px)] z-20 md:right-5 md:top-1/2 md:-translate-y-1/2">
                 <PhotoLightbox
                   slides={apartment.featuredSlideshow
                     .map((f) => readFragment(FeaturedSlideshowFragment, f))
@@ -275,7 +276,7 @@ export default function ApartmentDetailContent({
       {/* Content scrolls BEHIND the sticky hero (desktop) — lower z-index. */}
       <div className="relative lg:z-0">
         {/* ── Two-column layout ── */}
-        <div className="mx-auto max-w-7xl px-5 md:px-8 py-16 lg:py-20">
+        <div className="mx-auto max-w-7xl px-5 md:px-8 pt-6 pb-16 lg:pt-10 lg:pb-20">
           <div className="lg:grid lg:grid-cols-[1fr_320px] lg:gap-16 xl:gap-20">
             {/* ── Main content ── */}
             <div className="min-w-0">
@@ -300,8 +301,11 @@ export default function ApartmentDetailContent({
             {/* ── Sidebar ── */}
             {/* top-[-40px] cancels the first widget's WidgetTitle top margin
                 (mt-10) so the sidebar's first label lines up with the content
-                column's "What We Love" label. */}
-            <div className="mt-12 lg:mt-0 lg:relative lg:top-[-40px]">
+                column's "What We Love" label. On tablet (md, no lg sidebar yet)
+                the widgets flow into two balanced columns (CSS multi-column, so
+                the tall map widget doesn't leave a gap beside a short list);
+                each widget stays intact and CIN/APE spans the full width below. */}
+            <div className="mt-12 md:columns-2 md:gap-8 lg:mt-0 lg:columns-1 lg:relative lg:top-[-40px]">
               <BookingSidebar
                 bedrooms={apartment.bedrooms}
                 bathrooms={apartment.bathrooms}
@@ -311,38 +315,48 @@ export default function ApartmentDetailContent({
                 acaciaReward={apartment.acaciaReward}
               />
               {apartment.infoDetail.length > 0 && (
-                <InfoDetail
-                  data={apartment.infoDetail.map((item) => ({
-                    __typename: item.__typename as 'InfoTextRecord' | 'InfoAddressRecord',
-                    fragment: item as never,
-                  }))}
-                  title={t('info')}
-                  locale={locale}
-                  district={apartment.district}
-                />
+                <div className="break-inside-avoid">
+                  <InfoDetail
+                    data={apartment.infoDetail.map((item) => ({
+                      __typename: item.__typename as 'InfoTextRecord' | 'InfoAddressRecord',
+                      fragment: item as never,
+                    }))}
+                    title={t('info')}
+                    locale={locale}
+                    district={apartment.district}
+                  />
+                </div>
               )}
               {apartment.amenities.length > 0 && (
-                <AmenitiesList
-                  data={apartment.amenities}
-                  label={t('amenitiesLabel')}
-                  title={t('amenitiesTitle')}
-                />
+                <div className="break-inside-avoid">
+                  <AmenitiesList
+                    data={apartment.amenities}
+                    label={t('amenitiesLabel')}
+                    title={t('amenitiesTitle')}
+                  />
+                </div>
               )}
               {apartment.homeTruth.length > 0 && (
-                <HomeTruths
-                  data={apartment.homeTruth}
-                  label={t('truthsLabel')}
-                  title={t('truthsTitle')}
-                />
+                <div className="break-inside-avoid">
+                  <HomeTruths
+                    data={apartment.homeTruth}
+                    label={t('truthsLabel')}
+                    title={t('truthsTitle')}
+                  />
+                </div>
               )}
               {essentials.length > 0 && (
-                <EssentialsList data={essentials} title={t('essentials')} />
+                <div className="break-inside-avoid">
+                  <EssentialsList data={essentials} title={t('essentials')} />
+                </div>
               )}
               {apartment.comforts.length > 0 && (
-                <ComfortsList data={apartment.comforts} title={t('comforts')} />
+                <div className="break-inside-avoid">
+                  <ComfortsList data={apartment.comforts} title={t('comforts')} />
+                </div>
               )}
               {(apartment.cin || apartment.ape) && (
-                <div className="mt-10 pt-6 border-t border-border/50 flex flex-wrap gap-x-6 gap-y-1">
+                <div className="mt-10 pt-6 border-t border-border/50 flex flex-wrap gap-x-6 gap-y-1 md:[column-span:all]">
                   {apartment.cin && (
                     <p className="font-body text-fine text-muted">
                       <span className="font-medium">CIN:</span> {apartment.cin}

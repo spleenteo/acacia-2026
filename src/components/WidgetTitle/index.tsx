@@ -17,10 +17,15 @@ type Props = {
  * serif title. The top margin is larger than the bottom one, so the spacing
  * separates one widget from the next without pushing the title away from its
  * own content. Presentational only → safe in server and client components.
+ *
+ * The top gap is a margin on mobile/desktop, but a padding inside the tablet
+ * (md) two-column layout: CSS multi-column truncates margins at the top of a
+ * column, so a margin would misalign the second column's first widget — padding
+ * is preserved and keeps both columns' first widgets aligned.
  */
 export default function WidgetTitle({ label, tone = 'sage', title }: Props) {
   return (
-    <div className="mt-10 mb-5">
+    <div className="mt-10 mb-5 md:mt-0 md:pt-10 lg:mt-10 lg:pt-0">
       <p className={title ? 'mb-2' : undefined}>
         <WidgetLabel tone={tone}>{label}</WidgetLabel>
       </p>

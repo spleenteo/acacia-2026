@@ -13,16 +13,18 @@ export default function PhotoLightbox({ slides, label, variant = 'dark' }: Props
 
   if (slides.length === 0) return null;
 
-  // Plain: a bare underlined text link (no pill / icon), for placing freely.
+  // Plain: on mobile a small pill with a translucent background; from md up a
+  // bare underlined text link (no pill / icon), for placing freely.
   if (variant === 'plain') {
     return (
       <>
         <button
           type="button"
           onClick={() => lightbox.openAt(0)}
-          className="font-body text-body-sm font-medium uppercase tracking-[0.15em] text-white/90 underline decoration-white/40 underline-offset-4 transition-colors hover:text-white hover:decoration-white cursor-pointer"
+          className="cursor-pointer font-body font-medium uppercase transition-colors text-label tracking-[0.12em] text-white rounded-pill bg-black/40 px-3 py-1.5 backdrop-blur-sm md:rounded-none md:bg-transparent md:px-0 md:py-0 md:backdrop-blur-none md:text-body-sm md:tracking-[0.15em] md:text-white/90 md:underline md:decoration-white/40 md:underline-offset-4 md:hover:text-white md:hover:decoration-white"
         >
-          {label} <span className="text-caption text-white/60">{slides.length}</span>
+          {label}{' '}
+          <span className="text-[0.65rem] text-white/70 md:text-caption">{slides.length}</span>
         </button>
         <Lightbox
           slides={slides}
