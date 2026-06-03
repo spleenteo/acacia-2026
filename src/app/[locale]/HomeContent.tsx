@@ -4,7 +4,6 @@ import { type Locale } from '@/i18n/config';
 import ApartmentCard from '@/components/ApartmentCard';
 import MoodCard from '@/components/MoodCard';
 import SectionHeader from '@/components/SectionHeader';
-import BeddyBar from '@/components/BeddyBar';
 import HtmlContent from '@/components/HtmlContent';
 import Hero from '@/components/Hero';
 import type { ResultOf } from 'gql.tada';
@@ -24,9 +23,7 @@ export default function HomeContent({ locale, data }: HomeProps & { data: HomeDa
         buttons={homePage?.buttons}
         locale={locale}
         priority
-      >
-        {homePage?.beddyId && <BeddyBar locale={locale} widgetCode={homePage.beddyId} />}
-      </Hero>
+      />
 
       {/* Stay Section */}
       {homePage?.stayText && (

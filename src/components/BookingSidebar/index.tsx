@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useTranslations } from 'next-intl';
+import { useBooking } from '@/components/BookingModal';
 
 type Props = {
   bedrooms?: number | null;
@@ -10,6 +11,8 @@ type Props = {
   price?: string | null;
   highlight?: string | null;
   acaciaReward?: boolean | null;
+  /** Apartment-specific Beddy widget code for the booking modal. */
+  beddyId?: string | null;
 };
 
 export default function BookingSidebar({
@@ -19,8 +22,10 @@ export default function BookingSidebar({
   price,
   highlight,
   acaciaReward,
+  beddyId,
 }: Props) {
   const t = useTranslations('apartment');
+  const { open } = useBooking();
   const [isBottomBarVisible, setIsBottomBarVisible] = useState(false);
 
   useEffect(() => {
@@ -31,14 +36,7 @@ export default function BookingSidebar({
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
-  const scrollToBooking = () => {
-    const el = document.getElementById('beddy-widget');
-    if (el) {
-      el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      el.classList.add('beddy-highlight');
-      setTimeout(() => el.classList.remove('beddy-highlight'), 2000);
-    }
-  };
+  const scrollToBooking = () => open({ widgetCode: beddyId });
 
   const stats = [
     { value: bedrooms, label: t('bedrooms') },

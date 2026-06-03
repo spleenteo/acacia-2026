@@ -3,11 +3,11 @@
 import { useState, useEffect } from 'react';
 import { useTranslations } from 'next-intl';
 import { useHeaderOverDark } from '@/components/HeaderTheme';
+import { useBooking } from '@/components/BookingModal';
 import DraftModeToggler from '@/components/DraftModeToggler';
 import { TONES } from '@/components/WidgetLabel';
 import { wonkyClip } from '@/lib/wonkyClip';
 import type { Locale } from '@/i18n/config';
-import { localizedPath } from '@/i18n/paths';
 import type { NavItem } from '@/app/[locale]/layout';
 import Link from 'next/link';
 
@@ -26,6 +26,7 @@ const WHATSAPP_URL = 'https://wa.me/393939070181';
 export default function SiteHeader({ locale, isDraftModeEnabled, navItems }: Props) {
   const t = useTranslations('nav');
   const overDark = useHeaderOverDark();
+  const { open: openBooking } = useBooking();
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const otherLocale = locale === 'en' ? 'it' : 'en';
@@ -47,7 +48,6 @@ export default function SiteHeader({ locale, isDraftModeEnabled, navItems }: Pro
   // Solid/light header everywhere by default; transparent white only while the
   // menu is closed, unscrolled, and sitting over a page that declared a dark hero.
   const onLight = !menuOpen && (scrolled || !overDark);
-  const bookHref = `/${locale}${localizedPath(locale, '/florence/accommodations')}`;
   // Hamburger lines: dark on the solid header, white over a dark hero / open menu.
   const barColor = onLight ? 'bg-dark' : 'bg-white';
   const navLinkClass = [
@@ -176,14 +176,17 @@ export default function SiteHeader({ locale, isDraftModeEnabled, navItems }: Pro
               {t('contact')}
             </a>
 
-            {/* Primary CTA — Book (always) */}
-            <Link
-              href={bookHref}
-              onClick={() => setMenuOpen(false)}
+            {/* Primary CTA — Book (always) → opens the site-wide booking modal */}
+            <button
+              type="button"
+              onClick={() => {
+                setMenuOpen(false);
+                openBooking();
+              }}
               className="inline-flex rounded-pill bg-primary px-4 py-2 font-body text-caption font-medium tracking-[0.06em] text-white transition-colors duration-300 hover:bg-primary-hover lg:px-5 lg:py-2.5"
             >
               {t('book')}
-            </Link>
+            </button>
 
             {/* Hamburger / X — mobile & tablet (up to lg) */}
             <button
@@ -253,13 +256,16 @@ export default function SiteHeader({ locale, isDraftModeEnabled, navItems }: Pro
             >
               {t('contact')}
             </a>
-            <Link
-              href={bookHref}
-              onClick={() => setMenuOpen(false)}
+            <button
+              type="button"
+              onClick={() => {
+                setMenuOpen(false);
+                openBooking();
+              }}
               className="flex-1 rounded-pill bg-primary px-6 py-3 text-center font-body text-body-sm font-medium tracking-wide text-white transition-colors duration-300 hover:bg-primary-hover"
             >
               {t('book')}
-            </Link>
+            </button>
           </div>
           <span className="font-body text-caption text-white/70">
             {locale.toUpperCase()} /{' '}

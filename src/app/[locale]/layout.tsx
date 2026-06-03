@@ -2,6 +2,7 @@ import ContentLink from '@/components/ContentLink';
 import SiteHeader from '@/components/SiteHeader';
 import SiteFooter from '@/components/SiteFooter';
 import { HeaderThemeProvider } from '@/components/HeaderTheme';
+import { BookingProvider } from '@/components/BookingModal';
 import { TagFragment } from '@/lib/datocms/commonFragments';
 import { executeQuery } from '@/lib/datocms/executeQuery';
 import { graphql, type ResultOf } from '@/lib/datocms/graphql';
@@ -99,6 +100,9 @@ const query = graphql(
         legalText(locale: $locale, fallbackLocales: [en]) {
           value
         }
+      }
+      homePage {
+        beddyId
       }
     }
   `,
@@ -224,16 +228,18 @@ export default async function LocaleLayout({
         />
       )}
       {isDraftModeEnabled && <ContentLink />}
-      <HeaderThemeProvider>
-        <SiteHeader locale={locale} isDraftModeEnabled={isDraftModeEnabled} navItems={navItems} />
-        <main style={{ paddingTop: 'var(--header-height)' }}>{children}</main>
-      </HeaderThemeProvider>
-      <SiteFooter
-        locale={locale}
-        footerColumns={footerColumns}
-        socialLinks={socialLinks}
-        legalText={legalText}
-      />
+      <BookingProvider locale={locale} defaultWidgetCode={data.homePage?.beddyId ?? null}>
+        <HeaderThemeProvider>
+          <SiteHeader locale={locale} isDraftModeEnabled={isDraftModeEnabled} navItems={navItems} />
+          <main style={{ paddingTop: 'var(--header-height)' }}>{children}</main>
+        </HeaderThemeProvider>
+        <SiteFooter
+          locale={locale}
+          footerColumns={footerColumns}
+          socialLinks={socialLinks}
+          legalText={legalText}
+        />
+      </BookingProvider>
     </NextIntlClientProvider>
   );
 }

@@ -1,23 +1,19 @@
 'use client';
 
+import { useBooking } from '@/components/BookingModal';
+
 type Props = {
   children: React.ReactNode;
   className?: string;
+  /** Apartment-specific Beddy widget code; falls back to the site-wide one. */
+  widgetCode?: string | null;
 };
 
-export default function ScrollToBooking({ children, className }: Props) {
-  const handleClick = (e: React.MouseEvent) => {
-    e.preventDefault();
-    const el = document.getElementById('beddy-widget');
-    if (el) {
-      el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      el.classList.add('beddy-highlight');
-      setTimeout(() => el.classList.remove('beddy-highlight'), 2000);
-    }
-  };
-
+/** "Book" trigger: opens the global booking modal with the given widget. */
+export default function ScrollToBooking({ children, className, widgetCode }: Props) {
+  const { open } = useBooking();
   return (
-    <button type="button" onClick={handleClick} className={className}>
+    <button type="button" onClick={() => open({ widgetCode })} className={className}>
       {children}
     </button>
   );

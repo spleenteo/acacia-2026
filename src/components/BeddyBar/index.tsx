@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import type { Locale } from '@/i18n/config';
 
 type Props = {
@@ -8,6 +8,10 @@ type Props = {
   widgetCode: string;
 };
 
+/**
+ * After the Angular element initialises, pre-set arrival = today+3,
+ * departure = today+5 via its internal form API (setValue + detectChanges).
+ */
 function applyDefaultDates(bar: Element): boolean {
   const ref = (bar as any)?.ngElementStrategy?.componentRef;
   const form = ref?.instance?.beddyBarForm;
@@ -25,59 +29,54 @@ function applyDefaultDates(bar: Element): boolean {
 }
 
 /**
- * Wrapper for the Beddy booking web component.
- * The <beddy-bar> custom element is registered by the CDN script loaded in the locale layout.
+ * Wrapper for the Beddy booking web component. The <beddy-bar> custom element
+ * is registered by the CDN script loaded in the locale layout.
  *
- * The element is mounted only AFTER React's StrictMode mount→unmount→remount probe has
- * settled (deferred via a double requestAnimationFrame). Mounting it directly in JSX makes
- * StrictMode insert and immediately destroy the Angular element mid-initialisation, which
- * throws "Cannot read properties of undefined (reading 'unsubscribe')" from its ngOnDestroy.
- * Deferring keeps the element out of the DOM during the probe, so it's only ever created once.
- * It's also client-only, so there's no SSR hydration mismatch.
- *
- * After mount, we poll for Angular initialization and then pre-set arrival = today+3,
- * departure = today+5 via the internal Angular form API (setValue + detectChanges).
+ * The element is created and removed IMPERATIVELY (not via JSX), so React's
+ * reconciliation never destroys/recreates it. Letting React manage it makes
+ * StrictMode (and modal open/close) tear the Angular element down mid-init,
+ * which throws "Cannot read properties of undefined (reading 'unsubscribe')"
+ * from its ngOnDestroy and corrupts Beddy's singleton state — so the next
+ * widget renders broken. Creation is deferred one frame so StrictMode's
+ * mount→unmount→remount probe cancels before any element is created, and the
+ * element is built exactly once per mount.
  */
 export default function BeddyBar({ locale, widgetCode }: Props) {
-  const wrapperRef = useRef<HTMLDivElement>(null);
-  const [mounted, setMounted] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
 
-  // Defer the custom element past StrictMode's mount→unmount→remount probe.
   useEffect(() => {
-    let raf2 = 0;
-    const raf1 = requestAnimationFrame(() => {
-      raf2 = requestAnimationFrame(() => setMounted(true));
+    const container = containerRef.current;
+    if (!container) return;
+
+    let cancelled = false;
+    let bar: HTMLElement | null = null;
+    let interval: ReturnType<typeof setInterval> | undefined;
+
+    const raf = requestAnimationFrame(() => {
+      if (cancelled || !container) return;
+      bar = document.createElement('beddy-bar');
+      bar.setAttribute('lang', locale);
+      bar.setAttribute('widgetcode', widgetCode);
+      container.appendChild(bar);
+
+      let attempts = 0;
+      interval = setInterval(() => {
+        attempts++;
+        if (bar && applyDefaultDates(bar)) {
+          clearInterval(interval);
+          return;
+        }
+        if (attempts >= 20) clearInterval(interval);
+      }, 500);
     });
+
     return () => {
-      cancelAnimationFrame(raf1);
-      cancelAnimationFrame(raf2);
+      cancelled = true;
+      cancelAnimationFrame(raf);
+      if (interval) clearInterval(interval);
+      bar?.parentNode?.removeChild(bar);
     };
-  }, []);
+  }, [locale, widgetCode]);
 
-  useEffect(() => {
-    if (!mounted) return;
-    let attempts = 0;
-    const interval = setInterval(() => {
-      attempts++;
-      const bar = wrapperRef.current?.querySelector('beddy-bar');
-      if (bar && applyDefaultDates(bar)) {
-        clearInterval(interval);
-        return;
-      }
-      if (attempts >= 20) clearInterval(interval);
-    }, 500);
-
-    return () => clearInterval(interval);
-  }, [mounted]);
-
-  return (
-    <div ref={wrapperRef} suppressHydrationWarning>
-      {mounted && (
-        <>
-          {/* @ts-expect-error — beddy-bar is a custom element not known to JSX */}
-          <beddy-bar lang={locale} widgetcode={widgetCode} />
-        </>
-      )}
-    </div>
-  );
+  return <div ref={containerRef} suppressHydrationWarning />;
 }

@@ -6,7 +6,6 @@ import { useTranslations } from 'next-intl';
 import type { FragmentOf } from '@/lib/datocms/graphql';
 import ResponsiveImage from '@/components/ResponsiveImage';
 import HtmlContent from '@/components/HtmlContent';
-import BeddyBar from '@/components/BeddyBar';
 import PhotoLightbox from '@/components/PhotoLightbox';
 import { toSlide } from '@/components/Lightbox/toSlide';
 import EssentialsList, { type EssentialFragment } from '@/components/EssentialsList';
@@ -254,7 +253,10 @@ export default function ApartmentDetailContent({
 
             {/* Check availability — at the photo's bottom-right, sticky with the hero (desktop). */}
             <div className="absolute bottom-4 right-4 z-20 hidden lg:block">
-              <ScrollToBooking className="cursor-pointer rounded-pill bg-primary px-8 py-3.5 font-body text-body font-medium tracking-wide text-white transition-colors duration-300 hover:bg-primary-hover">
+              <ScrollToBooking
+                widgetCode={apartment.beddyId}
+                className="cursor-pointer rounded-pill bg-primary px-8 py-3.5 font-body text-body font-medium tracking-wide text-white transition-colors duration-300 hover:bg-primary-hover"
+              >
                 {t('book')}
               </ScrollToBooking>
             </div>
@@ -317,6 +319,7 @@ export default function ApartmentDetailContent({
                 price={apartment.price}
                 highlight={apartment.houseBadge?.label}
                 acaciaReward={apartment.acaciaReward}
+                beddyId={apartment.beddyId}
               />
               {apartment.infoDetail.length > 0 && (
                 <div className="break-inside-avoid">
@@ -421,7 +424,10 @@ export default function ApartmentDetailContent({
                 <p className="font-body text-body text-white/60 mb-6 max-w-md">
                   {t('ctaBookText')}
                 </p>
-                <ScrollToBooking className="w-full sm:w-auto bg-primary hover:bg-primary-hover text-white font-body font-medium text-body tracking-wide px-8 py-3.5 rounded-pill transition-colors duration-300 cursor-pointer text-center">
+                <ScrollToBooking
+                  widgetCode={apartment.beddyId}
+                  className="w-full sm:w-auto bg-primary hover:bg-primary-hover text-white font-body font-medium text-body tracking-wide px-8 py-3.5 rounded-pill transition-colors duration-300 cursor-pointer text-center"
+                >
                   {t('book')}
                 </ScrollToBooking>
               </div>
@@ -448,15 +454,6 @@ export default function ApartmentDetailContent({
         {/* Related Content */}
         {(similarApartments.length > 0 || relatedMoods.length > 0) && (
           <RelatedContent apartments={similarApartments} moods={relatedMoods} locale={locale} />
-        )}
-
-        {/* Beddy Booking Widget */}
-        {apartment.beddyId && (
-          <section id="beddy-widget" className="py-16 bg-dark">
-            <div className="mx-auto max-w-3xl px-8 text-center">
-              <BeddyBar locale={locale} widgetCode={apartment.beddyId} />
-            </div>
-          </section>
         )}
 
         {/* Bottom bar spacer on mobile */}
