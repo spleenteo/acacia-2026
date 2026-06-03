@@ -2,7 +2,7 @@
 
 import { type Locale } from '@/i18n/config';
 import { useTranslations } from 'next-intl';
-import { OverDarkHeader } from '@/components/HeaderTheme';
+import EditorialHero from '@/components/EditorialHero';
 import MoodCard from '@/components/MoodCard';
 import HtmlContent from '@/components/HtmlContent';
 import type { ResultOf } from 'gql.tada';
@@ -18,25 +18,13 @@ export default function MoodsContent({ locale, data }: MoodsProps & { data: Mood
   return (
     <>
       {/* Hero */}
-      <section
-        className="relative min-h-[55vh] flex items-end bg-dark"
-        style={{ marginTop: 'calc(var(--header-height) * -1)' }}
-      >
-        <OverDarkHeader />
-        <div className="absolute inset-0 bg-gradient-to-t from-dark/90 via-dark/40 to-dark/60" />
-        <div className="relative z-10 w-full px-8 pb-14 pt-32">
-          <div className="max-w-6xl mx-auto">
-            <h1 className="font-heading font-normal text-hero text-white leading-[1.05] mb-3">
-              {pageMoods?.title}
-            </h1>
-            {pageMoods?.subtitle && (
-              <p className="font-body font-normal text-[1.125rem] md:text-[1.375rem] text-white/90 leading-relaxed">
-                {pageMoods.subtitle}
-              </p>
-            )}
-          </div>
-        </div>
-      </section>
+      <EditorialHero
+        tone="gold"
+        label={t('label')}
+        title={pageMoods?.title ?? ''}
+        subtitle={pageMoods?.subtitle}
+        priority
+      />
 
       {/* Description */}
       {pageMoods?.description && (

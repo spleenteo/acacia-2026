@@ -301,6 +301,36 @@ body.lightbox-open beddy-bar {
   display: none !important;
 }
 
+/* Editorial hero entrance — the copy rises + fades on mount, in a light stagger.
+   Replays on every navigation since the hero remounts (index pages are separate
+   routes). CSS-only so it's safe without JS; disabled under reduced-motion. */
+@keyframes heroRise {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.hero-enter > * {
+  animation: heroRise 700ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.hero-enter > *:nth-child(2) {
+  animation-delay: 90ms;
+}
+.hero-enter > *:nth-child(3) {
+  animation-delay: 180ms;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-enter > * {
+    animation: none;
+  }
+}
+
 @layer components {
   /* ── PROSE ACACIA ──────────────────────────────────────────────
      Styles for HTML content from DatoCMS (markdown: true fields).
