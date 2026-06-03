@@ -107,10 +107,12 @@ export default function EditorialHero({
     <section
       ref={ref}
       className={[
-        'relative pb-10',
+        'relative pb-10 lg:sticky lg:z-30',
         hasImage
-          ? `mb-4 lg:mb-14 lg:sticky lg:z-30 ${isPinned ? 'md:pb-3.5' : 'md:pb-16'}`
-          : 'mb-8 lg:mb-14 md:pb-16',
+          ? `mb-4 lg:mb-14 ${isPinned ? 'md:pb-3.5' : 'md:pb-16'}`
+          : // No photo → compact panel that simply stays pinned where it loads
+            // (top), with the content scrolling behind it.
+            'mb-8 lg:mb-14 md:pb-16 lg:top-0',
       ].join(' ')}
       style={{
         backgroundColor: color,
