@@ -9,6 +9,7 @@ import { GalleryImageFragment } from '@/components/ImageGallery/fragment';
 import HtmlContent from '@/components/HtmlContent';
 import PhotoLightbox from '@/components/PhotoLightbox';
 import { isLightColor } from '@/lib/heroColor';
+import { wonkyClip } from '@/lib/wonkyClip';
 import type { LightboxSlide } from '@/components/Lightbox';
 
 type Props = {
@@ -81,29 +82,6 @@ export default function WhatWeLove({
       )}
     </div>
   );
-}
-
-/**
- * A subtle, deterministic skew for the description box — 2–8px offsets on each
- * corner derived from the item index (Math.sin so it's stable across SSR/CSR,
- * no Math.random hydration mismatch), echoing the hero panel's diagonal cut.
- */
-function wonkyClip(seed: number): string {
-  const rnd = (n: number) => {
-    const x = Math.sin(seed * 53.13 + n * 17.71) * 43758.5453;
-    return (2 + (x - Math.floor(x)) * 6).toFixed(1);
-  };
-  const a = rnd(1);
-  const b = rnd(2);
-  const c = rnd(3);
-  const d = rnd(4);
-  // Lean the skew left or right at random (deterministic per item) so it isn't
-  // always tilted the same way — same magnitudes, just mirrored horizontally.
-  const hash = Math.sin(seed * 12.9898) * 43758.5453;
-  const leanRight = hash - Math.floor(hash) > 0.5;
-  return leanRight
-    ? `polygon(${b}px 0, 100% ${a}px, calc(100% - ${d}px) 100%, 0 calc(100% - ${c}px))`
-    : `polygon(0 ${a}px, calc(100% - ${b}px) 0, 100% calc(100% - ${c}px), ${d}px 100%)`;
 }
 
 /**

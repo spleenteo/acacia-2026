@@ -4,10 +4,15 @@ import { useState, useEffect } from 'react';
 import { useTranslations } from 'next-intl';
 import { useHeaderOverDark } from '@/components/HeaderTheme';
 import DraftModeToggler from '@/components/DraftModeToggler';
+import { TONES } from '@/components/WidgetLabel';
+import { wonkyClip } from '@/lib/wonkyClip';
 import type { Locale } from '@/i18n/config';
 import { localizedPath } from '@/i18n/paths';
 import type { NavItem } from '@/app/[locale]/layout';
 import Link from 'next/link';
+
+/** Light Japan Fish tints, cycled across nav items for the hover highlight. */
+const NAV_TINTS = [TONES.sage.bg, TONES.gold.bg, TONES.slate.bg, TONES.rust.bg];
 
 type Props = {
   locale: Locale;
@@ -48,6 +53,48 @@ export default function SiteHeader({ locale, isDraftModeEnabled, navItems }: Pro
     onLight ? 'text-muted hover:text-primary' : 'text-white/80 hover:text-white',
   ].join(' ');
 
+  // Nav voce: on hover an irregular light-tinted highlight wipes in behind the
+  // label (same wonky clip as the apartment photo captions); the text turns
+  // dark to stay legible on the pale tint, over both header states.
+  const navTextClass = onLight ? 'text-muted' : 'text-white/80';
+  const renderNavItem = (item: NavItem, i: number) => {
+    const inner = (
+      <>
+        <span
+          aria-hidden
+          className="pointer-events-none absolute -inset-x-3 -inset-y-2 scale-90 opacity-0 transition-all duration-300 group-hover:scale-100 group-hover:opacity-100"
+          style={{
+            backgroundColor: NAV_TINTS[i % NAV_TINTS.length],
+            clipPath: wonkyClip(i + 1),
+            transitionTimingFunction: 'cubic-bezier(0.34, 1.56, 0.64, 1)',
+          }}
+        />
+        <span
+          className={`relative transition-colors duration-300 group-hover:text-dark ${navTextClass}`}
+        >
+          {item.label}
+        </span>
+      </>
+    );
+    const className =
+      'group relative inline-flex items-center font-body text-body-sm font-normal tracking-wide';
+    return item.isExternal ? (
+      <a
+        key={item.href}
+        href={item.href}
+        target="_blank"
+        rel="noopener noreferrer"
+        className={className}
+      >
+        {inner}
+      </a>
+    ) : (
+      <Link key={item.href} href={item.href} className={className}>
+        {inner}
+      </Link>
+    );
+  };
+
   return (
     <>
       <header
@@ -74,23 +121,7 @@ export default function SiteHeader({ locale, isDraftModeEnabled, navItems }: Pro
 
           {/* Center nav (CMS, single level) */}
           <nav className="hidden items-center justify-center gap-7 md:flex md:justify-self-center">
-            {navItems.map((item) =>
-              item.isExternal ? (
-                <a
-                  key={item.href}
-                  href={item.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className={navLinkClass}
-                >
-                  {item.label}
-                </a>
-              ) : (
-                <Link key={item.href} href={item.href} className={navLinkClass}>
-                  {item.label}
-                </Link>
-              ),
-            )}
+            {navItems.map((item, i) => renderNavItem(item, i))}
           </nav>
 
           {/* Right: secondary + primary CTA (desktop) / hamburger (mobile) */}
