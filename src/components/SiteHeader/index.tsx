@@ -48,6 +48,8 @@ export default function SiteHeader({ locale, isDraftModeEnabled, navItems }: Pro
   // menu is closed, unscrolled, and sitting over a page that declared a dark hero.
   const onLight = !menuOpen && (scrolled || !overDark);
   const bookHref = `/${locale}${localizedPath(locale, '/florence/accommodations')}`;
+  // Hamburger lines: dark on the solid header, white over a dark hero / open menu.
+  const barColor = onLight ? 'bg-dark' : 'bg-white';
   const navLinkClass = [
     'font-body text-body-sm font-normal tracking-wide transition-colors duration-300',
     onLight ? 'text-muted hover:text-primary' : 'text-white/80 hover:text-white',
@@ -95,6 +97,42 @@ export default function SiteHeader({ locale, isDraftModeEnabled, navItems }: Pro
     );
   };
 
+  // Mobile overlay voce: large serif link that slides in from the left with a
+  // staggered, slightly overshooting cascade (and animates back out on close).
+  const renderMobileItem = (item: NavItem, i: number) => {
+    const className =
+      'font-heading font-normal leading-[1.05] text-white transition-colors duration-200 hover:text-primary';
+    const style = {
+      fontSize: 'clamp(2.75rem, 11vw, 4rem)',
+      transform: menuOpen ? 'translateX(0)' : 'translateX(-32px)',
+      opacity: menuOpen ? 1 : 0,
+      transition: `color 200ms, opacity 400ms ${i * 60}ms, transform 500ms cubic-bezier(0.34, 1.56, 0.64, 1) ${i * 60}ms`,
+    };
+    return item.isExternal ? (
+      <a
+        key={item.href}
+        href={item.href}
+        target="_blank"
+        rel="noopener noreferrer"
+        onClick={() => setMenuOpen(false)}
+        className={className}
+        style={style}
+      >
+        {item.label}
+      </a>
+    ) : (
+      <Link
+        key={item.href}
+        href={item.href}
+        onClick={() => setMenuOpen(false)}
+        className={className}
+        style={style}
+      >
+        {item.label}
+      </Link>
+    );
+  };
+
   return (
     <>
       <header
@@ -105,13 +143,13 @@ export default function SiteHeader({ locale, isDraftModeEnabled, navItems }: Pro
             : 'bg-dark/20 backdrop-blur-sm border-b border-white/10',
         ].join(' ')}
       >
-        <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-2.5 md:grid md:grid-cols-[1fr_auto_1fr] md:px-8">
+        <div className="mx-auto flex max-w-6xl items-center justify-between px-5 py-2.5 lg:grid lg:grid-cols-[1fr_auto_1fr] lg:px-8">
           {/* Wordmark — two lines, replaces the logo */}
           <Link
             href={`/${locale}`}
             onClick={() => setMenuOpen(false)}
             className={[
-              'font-heading leading-[1.02] tracking-wide transition-colors duration-300 md:justify-self-start',
+              'font-heading leading-[1.02] tracking-wide transition-colors duration-300 lg:justify-self-start',
               onLight ? 'text-dark' : 'text-white',
             ].join(' ')}
           >
@@ -119,55 +157,59 @@ export default function SiteHeader({ locale, isDraftModeEnabled, navItems }: Pro
             <span className="block text-[1.1rem]">Firenze</span>
           </Link>
 
-          {/* Center nav (CMS, single level) */}
-          <nav className="hidden items-center justify-center gap-7 md:flex md:justify-self-center">
+          {/* Center nav (CMS, single level) — desktop only */}
+          <nav className="hidden items-center justify-center gap-7 lg:flex lg:justify-self-center">
             {navItems.map((item, i) => renderNavItem(item, i))}
           </nav>
 
-          {/* Right: secondary + primary CTA (desktop) / hamburger (mobile) */}
-          <div className="flex items-center justify-end gap-4 md:justify-self-end md:gap-5">
+          {/* Right: Contact (desktop) + Book + hamburger (mobile/tablet) */}
+          <div className="flex items-center justify-end gap-3 lg:justify-self-end lg:gap-5">
             {isDraftModeEnabled && <DraftModeToggler draftModeEnabled={isDraftModeEnabled} />}
 
-            {/* Secondary CTA — Contact */}
+            {/* Secondary CTA — Contact (desktop) */}
             <a
               href={WHATSAPP_URL}
               target="_blank"
               rel="noopener noreferrer"
-              className={`hidden md:inline-flex ${navLinkClass}`}
+              className={`hidden lg:inline-flex ${navLinkClass}`}
             >
               {t('contact')}
             </a>
 
-            {/* Primary CTA — Book */}
+            {/* Primary CTA — Book (always) */}
             <Link
               href={bookHref}
-              className="hidden rounded-pill bg-primary px-5 py-2.5 font-body text-caption font-medium tracking-[0.06em] text-white transition-colors duration-300 hover:bg-primary-hover md:inline-flex"
+              onClick={() => setMenuOpen(false)}
+              className="inline-flex rounded-pill bg-primary px-4 py-2 font-body text-caption font-medium tracking-[0.06em] text-white transition-colors duration-300 hover:bg-primary-hover lg:px-5 lg:py-2.5"
             >
               {t('book')}
             </Link>
 
-            {/* Mobile hamburger */}
+            {/* Hamburger / X — mobile & tablet (up to lg) */}
             <button
               onClick={() => setMenuOpen((o) => !o)}
-              className="flex h-8 w-8 flex-col items-center justify-center gap-[5px] md:hidden"
+              className="flex h-8 w-8 flex-col items-center justify-center gap-[6px] lg:hidden"
               aria-label={menuOpen ? 'Chiudi menu' : 'Apri menu'}
             >
               <span
                 className={[
-                  'block h-px w-6 origin-center bg-white transition-all duration-300',
-                  menuOpen ? 'translate-y-[6px] rotate-45' : '',
+                  'block h-[1.5px] w-6 origin-center rounded-full transition-all duration-300',
+                  barColor,
+                  menuOpen ? 'translate-y-[7.5px] rotate-45' : '',
                 ].join(' ')}
               />
               <span
                 className={[
-                  'block h-px w-6 bg-white transition-all duration-300',
-                  menuOpen ? 'opacity-0' : '',
+                  'block h-[1.5px] w-6 rounded-full transition-all duration-300',
+                  barColor,
+                  menuOpen ? 'scale-x-0 opacity-0' : '',
                 ].join(' ')}
               />
               <span
                 className={[
-                  'block h-px w-6 origin-center bg-white transition-all duration-300',
-                  menuOpen ? '-translate-y-[6px] -rotate-45' : '',
+                  'block h-[1.5px] w-6 origin-center rounded-full transition-all duration-300',
+                  barColor,
+                  menuOpen ? '-translate-y-[7.5px] -rotate-45' : '',
                 ].join(' ')}
               />
             </button>
@@ -179,51 +221,28 @@ export default function SiteHeader({ locale, isDraftModeEnabled, navItems }: Pro
       <div
         className={[
           'fixed inset-0 z-40 flex flex-col bg-dark px-6 pb-10 pt-[var(--header-height)]',
-          'transition-opacity duration-300 md:hidden',
-          menuOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none',
+          'origin-top-right transition-[opacity,transform] duration-300 ease-out lg:hidden',
+          menuOpen
+            ? 'opacity-100 scale-100 pointer-events-auto'
+            : 'opacity-0 scale-[0.97] pointer-events-none',
         ].join(' ')}
       >
         {/* Mega links */}
         <nav className="mt-10 flex flex-1 flex-col gap-2">
-          {navItems.map((item, i) =>
-            item.isExternal ? (
-              <a
-                key={item.href}
-                href={item.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={() => setMenuOpen(false)}
-                className="font-heading font-normal leading-tight text-white transition-colors duration-200 hover:text-primary"
-                style={{
-                  fontSize: 'clamp(2.75rem, 11vw, 4rem)',
-                  transform: menuOpen ? 'translateY(0)' : 'translateY(16px)',
-                  opacity: menuOpen ? 1 : 0,
-                  transition: `color 200ms, opacity 300ms ${i * 50}ms, transform 300ms ${i * 50}ms`,
-                }}
-              >
-                {item.label}
-              </a>
-            ) : (
-              <Link
-                key={item.href}
-                href={item.href}
-                onClick={() => setMenuOpen(false)}
-                className="font-heading font-normal leading-tight text-white transition-colors duration-200 hover:text-primary"
-                style={{
-                  fontSize: 'clamp(2.75rem, 11vw, 4rem)',
-                  transform: menuOpen ? 'translateY(0)' : 'translateY(16px)',
-                  opacity: menuOpen ? 1 : 0,
-                  transition: `color 200ms, opacity 300ms ${i * 50}ms, transform 300ms ${i * 50}ms`,
-                }}
-              >
-                {item.label}
-              </Link>
-            ),
-          )}
+          {navItems.map((item, i) => renderMobileItem(item, i))}
         </nav>
 
-        {/* CTAs + locale */}
-        <div className="flex flex-col gap-4 border-t border-white/10 pt-8">
+        {/* CTAs + locale — fade up after the links have cascaded in */}
+        <div
+          className="flex flex-col gap-4 border-t border-white/10 pt-8"
+          style={{
+            transform: menuOpen ? 'translateY(0)' : 'translateY(16px)',
+            opacity: menuOpen ? 1 : 0,
+            transition: `opacity 400ms ${navItems.length * 60 + 80}ms, transform 400ms ${
+              navItems.length * 60 + 80
+            }ms`,
+          }}
+        >
           <div className="flex items-center gap-4">
             <a
               href={WHATSAPP_URL}
