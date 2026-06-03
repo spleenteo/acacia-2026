@@ -69,7 +69,8 @@ export default function ApartmentDetailContent({
   const heroRef = useRef<HTMLElement>(null);
   const [heroPinned, setHeroPinned] = useState(false);
   useEffect(() => {
-    const onScroll = () => {
+    let raf = 0;
+    const evaluate = () => {
       if (window.innerWidth < 1024) {
         setHeroPinned(false);
         return;
@@ -79,12 +80,27 @@ export default function ApartmentDetailContent({
       // sticky top: calc(330px - 68svh) — compensates the 68svh inner height so
       // the pinned copy lands at a fixed px position regardless of viewport height.
       const stickyTop = 330 - 0.68 * window.innerHeight;
-      setHeroPinned(el.getBoundingClientRect().top <= stickyTop + 1);
+      const top = el.getBoundingClientRect().top;
+      // Hysteresis: pinning shrinks the section's bottom padding by 50px, which
+      // (the section being partly above the fold) makes the browser's scroll
+      // anchoring nudge scrollY back ~50px — flipping the boolean and oscillating
+      // in a tight pixel band. Pin with a small slack (covers svh/innerHeight
+      // sub-pixel rounding so it latches at all) and only un-pin 64px later, so
+      // the 56px dead-zone is wider than that ~50px anchoring nudge.
+      setHeroPinned((prev) => (prev ? top <= stickyTop + 64 : top <= stickyTop + 8));
     };
-    onScroll();
+    const onScroll = () => {
+      if (raf) return;
+      raf = requestAnimationFrame(() => {
+        raf = 0;
+        evaluate();
+      });
+    };
+    evaluate();
     window.addEventListener('scroll', onScroll, { passive: true });
     window.addEventListener('resize', onScroll);
     return () => {
+      if (raf) cancelAnimationFrame(raf);
       window.removeEventListener('scroll', onScroll);
       window.removeEventListener('resize', onScroll);
     };
