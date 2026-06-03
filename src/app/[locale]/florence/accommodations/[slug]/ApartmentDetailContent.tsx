@@ -402,9 +402,11 @@ export default function ApartmentDetailContent({
           </div>
         </section>
 
-        {/* District — anchor target for the hero pill */}
+        {/* District — anchor target for the hero pill. On desktop the hero is
+            pinned (~294px tall, diagonal cut topping out at 260px), so the scroll
+            target is offset to tuck this section under that diagonal, not behind it. */}
         {apartment.district && (
-          <div id="district" className="scroll-mt-[var(--header-height)]">
+          <div id="district" className="scroll-mt-[var(--header-height)] lg:scroll-mt-[260px]">
             <DistrictLink
               name={apartment.district.name}
               slug={apartment.district.slug}
