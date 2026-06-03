@@ -25,6 +25,7 @@ import { type ApartmentCardFragment } from '@/components/ApartmentCard';
 import { type MoodCardFragment } from '@/components/MoodCard';
 import { readFragment } from '@/lib/datocms/graphql';
 import { pickHeroColor, isLightColor, pickPillColors } from '@/lib/heroColor';
+import { useHeroDiagonal } from '@/lib/useHeroDiagonal';
 import type { ResultOf } from 'gql.tada';
 import type { query as apartmentDetailQuery } from './page';
 
@@ -106,6 +107,10 @@ export default function ApartmentDetailContent({
     };
   }, []);
 
+  // Animated diagonal bottom edge — direction seeded per apartment, depth grows
+  // past 1600px, and it wipes in on mount / on navigation to another apartment.
+  const heroClip = useHeroDiagonal(apartment?.id ?? '');
+
   if (!apartment) return null;
 
   // Solid hero background drawn from the photo's palette, snapped toward the
@@ -125,14 +130,19 @@ export default function ApartmentDetailContent({
           photo-derived colour. The coloured panel has a diagonal bottom edge. ── */}
       <section
         ref={heroRef}
-        className={`relative mb-4 lg:mb-14 pb-10 lg:sticky lg:top-[calc(330px-68svh)] lg:z-30 transition-[padding] duration-500 ${
+        className={`relative mb-4 lg:mb-14 pb-10 lg:sticky lg:top-[calc(330px-68svh)] lg:z-30 ${
           heroPinned ? 'md:pb-3.5' : 'md:pb-16'
         }`}
         style={{
           backgroundColor: heroColor,
           marginTop: 'calc(var(--header-height) * -1)',
-          // Leftward-rising diagonal cut on the bottom edge of the coloured panel.
-          clipPath: 'polygon(0 0, 100% 0, 100% 100%, 0 calc(100% - 34px))',
+          // Diagonal cut on the bottom edge of the coloured panel: direction is
+          // seeded per apartment, depth grows past 1600px, and it wipes in on
+          // mount/navigation (see useHeroDiagonal). The clip-path transition is
+          // declared here alongside the padding transition (an inline `transition`
+          // would otherwise override the Tailwind padding one).
+          clipPath: heroClip,
+          transition: 'clip-path 700ms cubic-bezier(0.22, 1, 0.36, 1), padding 500ms ease',
         }}
       >
         {/* Dark photo / colour hero → transparent white header until scrolled. */}
