@@ -46,7 +46,7 @@ export default function SiteHeader({ locale, isDraftModeEnabled, navItems }: Pro
             : 'bg-dark/20 backdrop-blur-sm border-b border-white/10',
         ].join(' ')}
       >
-        <div className="mx-auto max-w-6xl flex items-center justify-between px-6 md:px-8 py-5">
+        <div className="mx-auto max-w-6xl flex items-center justify-between px-6 md:px-8 py-3">
           {/* Logo */}
           <Link href={`/${locale}`} className="block" onClick={() => setMenuOpen(false)}>
             {/* eslint-disable-next-line @next/next/no-img-element */}

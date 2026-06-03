@@ -140,7 +140,7 @@
 }
 
 :root {
-  --header-height: 68px;
+  --header-height: 50px;
 }
 
 @layer base {

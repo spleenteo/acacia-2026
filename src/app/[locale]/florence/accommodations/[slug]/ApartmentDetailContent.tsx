@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { type Locale } from '@/i18n/config';
 import { useTranslations } from 'next-intl';
 import type { FragmentOf } from '@/lib/datocms/graphql';
@@ -63,6 +63,33 @@ export default function ApartmentDetailContent({
     window.scrollTo(0, 0);
   }, [apartment?.id]);
 
+  // Fade the hero photo out the moment the hero pins (desktop sticky). It's not
+  // visible once collapsed, so rather than clip it we cross-fade to the solid
+  // colour. The pin point mirrors the sticky `top` value used on the section.
+  const heroRef = useRef<HTMLElement>(null);
+  const [heroPinned, setHeroPinned] = useState(false);
+  useEffect(() => {
+    const onScroll = () => {
+      if (window.innerWidth < 1024) {
+        setHeroPinned(false);
+        return;
+      }
+      const el = heroRef.current;
+      if (!el) return;
+      // sticky top: calc(330px - 68svh) — compensates the 68svh inner height so
+      // the pinned copy lands at a fixed px position regardless of viewport height.
+      const stickyTop = 330 - 0.68 * window.innerHeight;
+      setHeroPinned(el.getBoundingClientRect().top <= stickyTop + 1);
+    };
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll);
+    return () => {
+      window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('resize', onScroll);
+    };
+  }, []);
+
   if (!apartment) return null;
 
   // Solid hero background drawn from the photo's palette, snapped toward the
@@ -70,7 +97,9 @@ export default function ApartmentDetailContent({
   // without one it sits on the solid colour, so adapt to its luminance.
   const heroColor = pickHeroColor(apartment.featuredImage?.colors);
   const heroOnImage = !!apartment.featuredImage?.responsiveImage;
-  const heroTextDark = !heroOnImage && isLightColor(heroColor);
+  // Once the photo has faded out (no image, or pinned on desktop) the copy sits
+  // directly on the solid colour, so flip to dark text when that colour is light.
+  const heroTextDark = (!heroOnImage || heroPinned) && isLightColor(heroColor);
   // Two more palette colours (distinct from the hero) for the coloured fact pills.
   const [pillA, pillB] = pickPillColors(apartment.featuredImage?.colors, heroColor);
 
@@ -79,7 +108,10 @@ export default function ApartmentDetailContent({
       {/* ── Hero — photo from the top with overlaid copy, sitting on the solid
           photo-derived colour. The coloured panel has a diagonal bottom edge. ── */}
       <section
-        className="relative mb-10 md:mb-14 pb-10 md:pb-16 lg:sticky lg:top-[calc(80px-30svh-150px)] lg:z-30"
+        ref={heroRef}
+        className={`relative mb-10 md:mb-14 pb-10 lg:sticky lg:top-[calc(330px-68svh)] lg:z-30 transition-[padding] duration-500 ${
+          heroPinned ? 'md:pb-3.5' : 'md:pb-16'
+        }`}
         style={{
           backgroundColor: heroColor,
           marginTop: 'calc(var(--header-height) * -1)',
@@ -89,27 +121,38 @@ export default function ApartmentDetailContent({
       >
         {/* Full-bleed on mobile; contained + rounded from md up. */}
         <div className="md:mx-auto md:max-w-7xl md:px-8">
-          <div className="relative min-h-[58svh] md:min-h-[68svh] overflow-hidden md:rounded-card md:shadow-card-hover">
+          <div
+            className={`relative min-h-[calc(58svh-50px)] md:min-h-[calc(68svh-50px)] overflow-hidden md:rounded-card transition-shadow duration-500 ${
+              heroPinned ? 'md:shadow-none' : 'md:shadow-card-hover'
+            }`}
+          >
             {apartment.featuredImage?.responsiveImage && (
               <ResponsiveImage
                 data={apartment.featuredImage.responsiveImage}
-                pictureClassName="absolute inset-0 w-full h-full"
+                pictureClassName={`absolute inset-0 w-full h-full transition-opacity duration-500 ${
+                  heroPinned ? 'opacity-0' : 'opacity-100'
+                }`}
                 imgClassName="w-full h-full object-cover object-center"
                 imgStyle={{ maxWidth: 'none', height: '100%', aspectRatio: 'unset' }}
                 priority
               />
             )}
 
-            {/* Legibility gradient (only meaningful when there's an image). */}
+            {/* Legibility gradient (only meaningful when there's an image), fades
+                out together with the photo when the hero pins. */}
             {heroOnImage && (
-              <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+              <div
+                className={`absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent transition-opacity duration-500 ${
+                  heroPinned ? 'opacity-0' : 'opacity-100'
+                }`}
+              />
             )}
 
             {/* Overlaid copy — bottom-left. */}
             <div className="absolute inset-x-0 bottom-0 z-10 p-6 md:p-10">
               <h1
                 className={[
-                  'font-heading font-semibold text-h1 md:text-hero leading-none max-w-3xl',
+                  'font-heading font-semibold text-h1 md:text-hero leading-none max-w-3xl transition-colors duration-500',
                   heroTextDark ? 'text-dark' : 'text-white',
                 ].join(' ')}
               >
@@ -131,7 +174,14 @@ export default function ApartmentDetailContent({
                 const pillClass =
                   'inline-block font-body font-medium text-label uppercase tracking-[0.15em] text-white px-3 py-1.5 rounded-sm';
                 const gold = (v: React.ReactNode) => (
-                  <span className="text-gold font-medium">{v}</span>
+                  <span
+                    className={[
+                      'font-medium transition-colors duration-500',
+                      heroPinned ? (heroTextDark ? 'text-dark' : 'text-white') : 'text-gold',
+                    ].join(' ')}
+                  >
+                    {v}
+                  </span>
                 );
                 return (
                   <>
@@ -161,7 +211,7 @@ export default function ApartmentDetailContent({
                     </div>
                     <p
                       className={[
-                        'mt-4 font-body text-body-lg leading-snug',
+                        'mt-4 font-body text-body-lg leading-snug transition-colors duration-500',
                         heroTextDark ? 'text-dark/75' : 'text-white/85',
                       ].join(' ')}
                     >
