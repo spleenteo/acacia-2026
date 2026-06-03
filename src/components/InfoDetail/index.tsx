@@ -1,5 +1,6 @@
+import { ExternalLink } from 'lucide-react';
 import { type FragmentOf, graphql, readFragment } from '@/lib/datocms/graphql';
-import WidgetLabel from '@/components/WidgetLabel';
+import WidgetTitle from '@/components/WidgetTitle';
 import DistrictAnchor from '@/components/DistrictAnchor';
 
 export const InfoTextFragment = graphql(`
@@ -53,19 +54,20 @@ export default function InfoDetail({ data, title, district }: Props) {
 
   return (
     <div>
-      <p className="pt-4">
-        <WidgetLabel tone="slate">{title}</WidgetLabel>
-      </p>
+      <WidgetTitle tone="slate" label={title} />
       <dl>
         {data.map((item) => {
           if (item.__typename === 'InfoTextRecord') {
             const info = readFragment(InfoTextFragment, item.fragment);
             return (
-              <div key={info.id} className="flex gap-4 py-2.5">
-                <dt className="shrink-0 w-24 font-medium text-caption text-dark uppercase tracking-wider pt-0.5">
+              <div
+                key={info.id}
+                className="flex gap-4 py-1.5 border-b border-border-light last:border-b-0"
+              >
+                <dt className="shrink-0 w-24 font-medium text-[0.9rem] text-dark uppercase tracking-wider">
                   {info.detailsLabel.name}
                 </dt>
-                <dd className="text-muted text-body-sm">{info.text}</dd>
+                <dd className="text-muted text-[0.9rem] leading-snug">{info.text}</dd>
               </div>
             );
           }
@@ -76,55 +78,45 @@ export default function InfoDetail({ data, title, district }: Props) {
               ? `https://www.google.com/maps?q=${info.addressMap.latitude},${info.addressMap.longitude}`
               : null;
             return (
-              <div key={info.id} className="pt-4 mt-2 pb-6 space-y-3">
-                <p className="text-muted text-body-sm">
-                  {info.addressText && mapsUrl ? (
+              <div key={info.id} className="py-1.5 border-b border-border-light last:border-b-0">
+                <div className="flex items-center gap-3">
+                  <p className="flex-1 text-muted text-[0.9rem] leading-snug">
+                    {info.addressText}
+                    {district && (
+                      <>
+                        {' ('}
+                        <DistrictAnchor
+                          name={district.name}
+                          className="text-primary hover:text-primary-hover transition-colors cursor-pointer"
+                        />
+                        {' area)'}
+                      </>
+                    )}
+                  </p>
+                  {mapsUrl && (
                     <a
                       href={mapsUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="hover:text-primary transition-colors"
+                      aria-label="Open in Google Maps (opens in a new tab)"
+                      className="shrink-0 text-muted/50 hover:text-primary transition-colors duration-300"
                     >
-                      {info.addressText}
+                      <ExternalLink size={16} strokeWidth={1.5} />
                     </a>
-                  ) : (
-                    info.addressText
                   )}
-                  {district && (
-                    <>
-                      {' ('}
-                      <DistrictAnchor
-                        name={district.name}
-                        className="text-primary hover:text-primary-hover transition-colors cursor-pointer"
-                      />
-                      {' area)'}
-                    </>
-                  )}
-                </p>
+                </div>
                 {info.addressMap && (
-                  <div>
-                    <div className="overflow-hidden rounded-card">
-                      <iframe
-                        src={`https://maps.google.com/maps?q=${info.addressMap.latitude},${info.addressMap.longitude}&z=15&layer=transit&output=embed`}
-                        width="100%"
-                        height="260"
-                        style={{ border: 0 }}
-                        allowFullScreen
-                        loading="lazy"
-                        referrerPolicy="no-referrer-when-downgrade"
-                        title="Map"
-                      />
-                    </div>
-                    <div className="text-center text-body-sm mt-3">
-                      <a
-                        href={mapsUrl!}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-block text-muted hover:text-primary hover:border-primary font-body text-caption uppercase tracking-wider text-body-sm font-medium px-4 py-1.5 rounded-pill transition-all duration-300"
-                      >
-                        Google Maps &rarr;
-                      </a>
-                    </div>
+                  <div className="mt-2 overflow-hidden rounded-card">
+                    <iframe
+                      src={`https://maps.google.com/maps?q=${info.addressMap.latitude},${info.addressMap.longitude}&z=15&layer=transit&output=embed`}
+                      width="100%"
+                      height="220"
+                      style={{ border: 0 }}
+                      allowFullScreen
+                      loading="lazy"
+                      referrerPolicy="no-referrer-when-downgrade"
+                      title="Map"
+                    />
                   </div>
                 )}
               </div>

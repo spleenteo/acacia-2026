@@ -1,9 +1,9 @@
 import type { ReactNode } from 'react';
 
-type Tone = 'rust' | 'gold' | 'sage' | 'slate';
+export type Tone = 'rust' | 'gold' | 'sage' | 'slate';
 
 /** Soft Japan Fish chips: a tinted background with the deep hue for the text. */
-const TONES: Record<Tone, { bg: string; fg: string }> = {
+export const TONES: Record<Tone, { bg: string; fg: string }> = {
   rust: { bg: '#fbe3da', fg: '#9c2602' },
   gold: { bg: '#ffeccb', fg: '#9a6e18' },
   sage: { bg: '#dcebe0', fg: '#3f7757' },

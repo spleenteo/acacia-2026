@@ -298,7 +298,10 @@ export default function ApartmentDetailContent({
             </div>
 
             {/* ── Sidebar ── */}
-            <div className="mt-12 lg:mt-0 lg:relative lg:top-[-180px]">
+            {/* top-[-40px] cancels the first widget's WidgetTitle top margin
+                (mt-10) so the sidebar's first label lines up with the content
+                column's "What We Love" label. */}
+            <div className="mt-12 lg:mt-0 lg:relative lg:top-[-40px]">
               <BookingSidebar
                 bedrooms={apartment.bedrooms}
                 bathrooms={apartment.bathrooms}
@@ -308,45 +311,35 @@ export default function ApartmentDetailContent({
                 acaciaReward={apartment.acaciaReward}
               />
               {apartment.infoDetail.length > 0 && (
-                <div className="mt-8">
-                  <InfoDetail
-                    data={apartment.infoDetail.map((item) => ({
-                      __typename: item.__typename as 'InfoTextRecord' | 'InfoAddressRecord',
-                      fragment: item as never,
-                    }))}
-                    title={t('info')}
-                    locale={locale}
-                    district={apartment.district}
-                  />
-                </div>
+                <InfoDetail
+                  data={apartment.infoDetail.map((item) => ({
+                    __typename: item.__typename as 'InfoTextRecord' | 'InfoAddressRecord',
+                    fragment: item as never,
+                  }))}
+                  title={t('info')}
+                  locale={locale}
+                  district={apartment.district}
+                />
               )}
               {apartment.amenities.length > 0 && (
-                <div className="mt-8">
-                  <AmenitiesList
-                    data={apartment.amenities}
-                    label={t('amenitiesLabel')}
-                    title={t('amenitiesTitle')}
-                  />
-                </div>
+                <AmenitiesList
+                  data={apartment.amenities}
+                  label={t('amenitiesLabel')}
+                  title={t('amenitiesTitle')}
+                />
               )}
               {apartment.homeTruth.length > 0 && (
-                <div className="mt-8">
-                  <HomeTruths
-                    data={apartment.homeTruth}
-                    label={t('truthsLabel')}
-                    title={t('truthsTitle')}
-                  />
-                </div>
+                <HomeTruths
+                  data={apartment.homeTruth}
+                  label={t('truthsLabel')}
+                  title={t('truthsTitle')}
+                />
               )}
               {essentials.length > 0 && (
-                <div className="mt-8">
-                  <EssentialsList data={essentials} title={t('essentials')} />
-                </div>
+                <EssentialsList data={essentials} title={t('essentials')} />
               )}
               {apartment.comforts.length > 0 && (
-                <div className="mt-8">
-                  <ComfortsList data={apartment.comforts} title={t('comforts')} />
-                </div>
+                <ComfortsList data={apartment.comforts} title={t('comforts')} />
               )}
               {(apartment.cin || apartment.ape) && (
                 <div className="mt-10 pt-6 border-t border-border/50 flex flex-wrap gap-x-6 gap-y-1">

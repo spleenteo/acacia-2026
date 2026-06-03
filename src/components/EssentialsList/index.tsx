@@ -1,6 +1,6 @@
 import { type FragmentOf, graphql, readFragment } from '@/lib/datocms/graphql';
-import WidgetLabel from '@/components/WidgetLabel';
-import { getAmenityIcon } from '@/lib/amenity-icons';
+import WidgetTitle from '@/components/WidgetTitle';
+import WidgetItemList from '@/components/WidgetItemList';
 
 export const EssentialFragment = graphql(`
   fragment EssentialFragment on EssentialRecord {
@@ -23,37 +23,8 @@ export default function EssentialsList({ data, title }: Props) {
 
   return (
     <div>
-      <p className="mb-4">
-        <WidgetLabel tone="rust">{title}</WidgetLabel>
-      </p>
-      <ul className="grid grid-cols-1 gap-y-0">
-        {essentials.map((essential) => {
-          const Icon = getAmenityIcon(essential.icon);
-          const content = (
-            <span className="flex items-start gap-3">
-              <Icon size={22} strokeWidth={1.5} className="shrink-0 text-primary/50 mt-0.5" />
-              <span>{essential.name}</span>
-            </span>
-          );
-
-          return (
-            <li key={essential.id} className="border-b border-border-light py-3">
-              {essential.url ? (
-                <a
-                  href={essential.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="font-body text-body text-muted hover:text-primary transition-colors duration-300"
-                >
-                  {content}
-                </a>
-              ) : (
-                <span className="font-body text-body text-muted">{content}</span>
-              )}
-            </li>
-          );
-        })}
-      </ul>
+      <WidgetTitle tone="rust" label={title} />
+      <WidgetItemList items={essentials} tone="rust" />
     </div>
   );
 }

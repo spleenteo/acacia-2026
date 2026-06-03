@@ -1,6 +1,7 @@
+import { Info } from 'lucide-react';
 import { type FragmentOf, graphql, readFragment } from '@/lib/datocms/graphql';
-import WidgetLabel from '@/components/WidgetLabel';
-import InViewSection from '@/components/InViewSection';
+import WidgetTitle from '@/components/WidgetTitle';
+import { TONES } from '@/components/WidgetLabel';
 
 export const TruthFragment = graphql(`
   fragment TruthFragment on TruthRecord {
@@ -22,35 +23,21 @@ export default function HomeTruths({ data, title, label }: Props) {
 
   return (
     <div>
-      <InViewSection>
-        <p className="mb-2">
-          <WidgetLabel tone="gold">{label}</WidgetLabel>
-        </p>
-        <h3 className="font-heading text-h3 text-dark mb-6">
-          <em>{title}</em>
-        </h3>
-      </InViewSection>
-      <ul className="space-y-3">
+      <WidgetTitle tone="gold" label={label} title={title} />
+      <ul>
         {truths.map((truth) => (
-          <li key={truth.id} className="flex gap-3 items-start">
-            <span className="shrink-0 mt-0.5 text-primary/60">
-              <svg
-                width="18"
-                height="18"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <circle cx="12" cy="12" r="10" />
-                <line x1="12" y1="16" x2="12" y2="12" />
-                <line x1="12" y1="8" x2="12.01" y2="8" />
-              </svg>
-            </span>
+          <li
+            key={truth.id}
+            className="flex gap-3 items-start py-1.5 border-b border-border-light last:border-b-0"
+          >
+            <Info
+              size={24}
+              strokeWidth={1.5}
+              className="shrink-0 mt-0.5"
+              style={{ color: TONES.gold.fg }}
+            />
             <div
-              className="font-body text-body text-muted leading-relaxed prose-acacia"
+              className="font-body text-[0.9rem] text-muted leading-snug prose-acacia"
               dangerouslySetInnerHTML={{ __html: truth.body }}
             />
           </li>
