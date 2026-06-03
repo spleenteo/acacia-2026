@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect } from 'react';
 import { type Locale } from '@/i18n/config';
 import { useTranslations } from 'next-intl';
 import type { FragmentOf } from '@/lib/datocms/graphql';
@@ -26,6 +26,7 @@ import { type MoodCardFragment } from '@/components/MoodCard';
 import { readFragment } from '@/lib/datocms/graphql';
 import { pickHeroColor, isLightColor, pickPillColors } from '@/lib/heroColor';
 import { useHeroDiagonal } from '@/lib/useHeroDiagonal';
+import { useHeroPin, HERO_STICKY_TOP } from '@/lib/useHeroPin';
 import type { ResultOf } from 'gql.tada';
 import type { query as apartmentDetailQuery } from './page';
 
@@ -66,46 +67,8 @@ export default function ApartmentDetailContent({
 
   // Fade the hero photo out the moment the hero pins (desktop sticky). It's not
   // visible once collapsed, so rather than clip it we cross-fade to the solid
-  // colour. The pin point mirrors the sticky `top` value used on the section.
-  const heroRef = useRef<HTMLElement>(null);
-  const [heroPinned, setHeroPinned] = useState(false);
-  useEffect(() => {
-    let raf = 0;
-    const evaluate = () => {
-      if (window.innerWidth < 1024) {
-        setHeroPinned(false);
-        return;
-      }
-      const el = heroRef.current;
-      if (!el) return;
-      // sticky top: calc(330px - 68svh) — compensates the 68svh inner height so
-      // the pinned copy lands at a fixed px position regardless of viewport height.
-      const stickyTop = 330 - 0.68 * window.innerHeight;
-      const top = el.getBoundingClientRect().top;
-      // Hysteresis: pinning shrinks the section's bottom padding by 50px, which
-      // (the section being partly above the fold) makes the browser's scroll
-      // anchoring nudge scrollY back ~50px — flipping the boolean and oscillating
-      // in a tight pixel band. Pin with a small slack (covers svh/innerHeight
-      // sub-pixel rounding so it latches at all) and only un-pin 64px later, so
-      // the 56px dead-zone is wider than that ~50px anchoring nudge.
-      setHeroPinned((prev) => (prev ? top <= stickyTop + 64 : top <= stickyTop + 8));
-    };
-    const onScroll = () => {
-      if (raf) return;
-      raf = requestAnimationFrame(() => {
-        raf = 0;
-        evaluate();
-      });
-    };
-    evaluate();
-    window.addEventListener('scroll', onScroll, { passive: true });
-    window.addEventListener('resize', onScroll);
-    return () => {
-      if (raf) cancelAnimationFrame(raf);
-      window.removeEventListener('scroll', onScroll);
-      window.removeEventListener('resize', onScroll);
-    };
-  }, []);
+  // colour. The pin tracking + sticky `top` value live in useHeroPin.
+  const { ref: heroRef, pinned: heroPinned } = useHeroPin<HTMLElement>();
 
   // Animated diagonal bottom edge — direction seeded per apartment, depth grows
   // past 1600px, and it wipes in on mount / on navigation to another apartment.
@@ -130,12 +93,14 @@ export default function ApartmentDetailContent({
           photo-derived colour. The coloured panel has a diagonal bottom edge. ── */}
       <section
         ref={heroRef}
-        className={`relative mb-4 lg:mb-14 pb-10 lg:sticky lg:top-[calc(330px-68svh)] lg:z-30 ${
+        className={`relative mb-4 lg:mb-14 pb-10 lg:sticky lg:z-30 ${
           heroPinned ? 'md:pb-3.5' : 'md:pb-16'
         }`}
         style={{
           backgroundColor: heroColor,
           marginTop: 'calc(var(--header-height) * -1)',
+          // Sticky pin offset (shared with useHeroPin); ignored until lg:sticky.
+          top: HERO_STICKY_TOP,
           // Diagonal cut on the bottom edge of the coloured panel: direction is
           // seeded per apartment, depth grows past 1600px, and it wipes in on
           // mount/navigation (see useHeroDiagonal). The clip-path transition is
@@ -446,10 +411,10 @@ export default function ApartmentDetailContent({
         </section>
 
         {/* District — anchor target for the hero pill. On desktop the hero is
-            pinned (~294px tall, diagonal cut topping out at 260px), so the scroll
+            pinned (~348px tall, diagonal cut topping out ~314px), so the scroll
             target is offset to tuck this section under that diagonal, not behind it. */}
         {apartment.district && (
-          <div id="district" className="scroll-mt-[var(--header-height)] lg:scroll-mt-[260px]">
+          <div id="district" className="scroll-mt-[var(--header-height)] lg:scroll-mt-[314px]">
             <DistrictLink
               name={apartment.district.name}
               slug={apartment.district.slug}
