@@ -53,10 +53,10 @@ export default function InfoDetail({ data, title, district }: Props) {
 
   return (
     <div>
-      <p className="mb-4">
+      <p className="pt-4">
         <WidgetLabel tone="slate">{title}</WidgetLabel>
       </p>
-      <dl className="divide-y divide-dotted divide-border">
+      <dl>
         {data.map((item) => {
           if (item.__typename === 'InfoTextRecord') {
             const info = readFragment(InfoTextFragment, item.fragment);
@@ -76,10 +76,7 @@ export default function InfoDetail({ data, title, district }: Props) {
               ? `https://www.google.com/maps?q=${info.addressMap.latitude},${info.addressMap.longitude}`
               : null;
             return (
-              <div
-                key={info.id}
-                className="border-t border-dotted border-border pt-4 mt-2 pb-6 space-y-3"
-              >
+              <div key={info.id} className="pt-4 mt-2 pb-6 space-y-3">
                 <p className="text-muted text-body-sm">
                   {info.addressText && mapsUrl ? (
                     <a
@@ -118,12 +115,12 @@ export default function InfoDetail({ data, title, district }: Props) {
                         title="Map"
                       />
                     </div>
-                    <div className="text-center mt-3">
+                    <div className="text-center text-body-sm mt-3">
                       <a
                         href={mapsUrl!}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-block border border-border text-muted hover:text-primary hover:border-primary font-body text-caption uppercase tracking-wider font-medium px-4 py-1.5 rounded-pill transition-all duration-300"
+                        className="inline-block text-muted hover:text-primary hover:border-primary font-body text-caption uppercase tracking-wider text-body-sm font-medium px-4 py-1.5 rounded-pill transition-all duration-300"
                       >
                         Google Maps &rarr;
                       </a>

@@ -93,7 +93,17 @@ function wonkyClip(seed: number): string {
     const x = Math.sin(seed * 53.13 + n * 17.71) * 43758.5453;
     return (2 + (x - Math.floor(x)) * 6).toFixed(1);
   };
-  return `polygon(0 ${rnd(1)}px, calc(100% - ${rnd(2)}px) 0, 100% calc(100% - ${rnd(3)}px), ${rnd(4)}px 100%)`;
+  const a = rnd(1);
+  const b = rnd(2);
+  const c = rnd(3);
+  const d = rnd(4);
+  // Lean the skew left or right at random (deterministic per item) so it isn't
+  // always tilted the same way — same magnitudes, just mirrored horizontally.
+  const hash = Math.sin(seed * 12.9898) * 43758.5453;
+  const leanRight = hash - Math.floor(hash) > 0.5;
+  return leanRight
+    ? `polygon(${b}px 0, 100% ${a}px, calc(100% - ${d}px) 100%, 0 calc(100% - ${c}px))`
+    : `polygon(0 ${a}px, calc(100% - ${b}px) 0, 100% calc(100% - ${c}px), ${d}px 100%)`;
 }
 
 /**
@@ -113,13 +123,16 @@ function ZigZagItem({ photo, isRight, index }: { photo: Photo; isRight: boolean;
     const observer = new IntersectionObserver(
       ([entry]) => {
         // Reveal when the photo is essentially fully visible, or — for photos
-        // taller than the viewport — when it fills most of the screen.
+        // taller than the viewport — when it fills most of the screen. Reset
+        // once it has fully scrolled out of view (e.g. scrolling back to the
+        // top), so the reveal replays the next time it scrolls into view.
         if (
           entry.intersectionRatio >= 0.98 ||
           entry.intersectionRect.height >= window.innerHeight * 0.9
         ) {
           setVisible(true);
-          observer.disconnect();
+        } else if (!entry.isIntersecting) {
+          setVisible(false);
         }
       },
       { threshold: [0, 0.25, 0.5, 0.75, 0.9, 0.98, 1] },
@@ -152,7 +165,7 @@ function ZigZagItem({ photo, isRight, index }: { photo: Photo; isRight: boolean;
             transitionTimingFunction: 'cubic-bezier(0.34, 1.56, 0.64, 1)',
           }}
           className={[
-            'absolute bottom-6 z-10 max-w-[15rem] md:max-w-xs px-7 py-5',
+            'absolute top-6 z-10 max-w-[15rem] md:max-w-xs px-7 py-5',
             isRight ? 'left-0 md:-left-10' : 'right-0 md:-right-10',
             'transition-all duration-700',
             textClass,
