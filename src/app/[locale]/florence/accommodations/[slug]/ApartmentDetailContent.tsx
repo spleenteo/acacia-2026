@@ -21,6 +21,7 @@ import HomeTruths from '@/components/HomeTruths';
 import ReviewsList from '@/components/ReviewsList';
 import RelatedContent from '@/components/RelatedContent';
 import ScrollToBooking from '@/components/ScrollToBooking';
+import { OverDarkHeader } from '@/components/HeaderTheme';
 import { type ApartmentCardFragment } from '@/components/ApartmentCard';
 import { type MoodCardFragment } from '@/components/MoodCard';
 import { readFragment } from '@/lib/datocms/graphql';
@@ -135,6 +136,9 @@ export default function ApartmentDetailContent({
           clipPath: 'polygon(0 0, 100% 0, 100% 100%, 0 calc(100% - 34px))',
         }}
       >
+        {/* Dark photo / colour hero → transparent white header until scrolled. */}
+        {(heroOnImage || !isLightColor(heroColor)) && <OverDarkHeader />}
+
         {/* Full-bleed on mobile; contained + rounded from md up. */}
         <div className="md:mx-auto md:max-w-7xl md:px-8">
           <div

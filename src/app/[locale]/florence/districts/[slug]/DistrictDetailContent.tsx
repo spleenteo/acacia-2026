@@ -2,6 +2,7 @@
 
 import { type Locale } from '@/i18n/config';
 import { useTranslations } from 'next-intl';
+import { OverDarkHeader } from '@/components/HeaderTheme';
 import HtmlContent from '@/components/HtmlContent';
 import { GalleryImageFragment } from '@/components/ImageGallery/fragment';
 import ImageGallery from '@/components/ImageGallery';
@@ -36,6 +37,7 @@ export default function DistrictDetailContent({
         className="min-h-[55vh] flex items-end bg-dark"
         style={{ marginTop: 'calc(var(--header-height) * -1)' }}
       >
+        <OverDarkHeader />
         <div className="w-full px-8 pb-14 pt-32">
           <div className="mx-auto max-w-6xl">
             <p className="font-body font-medium text-label text-white/50 uppercase tracking-[0.15em] mb-3">

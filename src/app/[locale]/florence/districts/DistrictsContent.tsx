@@ -2,6 +2,7 @@
 
 import { type Locale } from '@/i18n/config';
 import { useTranslations } from 'next-intl';
+import { OverDarkHeader } from '@/components/HeaderTheme';
 import DistrictCard from '@/components/DistrictCard';
 import HtmlContent from '@/components/HtmlContent';
 import type { ResultOf } from 'gql.tada';
@@ -24,6 +25,7 @@ export default function DistrictsContent({
         className="relative min-h-[55vh] flex items-end bg-dark"
         style={{ marginTop: 'calc(var(--header-height) * -1)' }}
       >
+        <OverDarkHeader />
         <div className="absolute inset-0 bg-gradient-to-t from-dark/90 via-dark/40 to-dark/60" />
         <div className="relative z-10 w-full px-8 pb-14 pt-32">
           <div className="max-w-6xl mx-auto">

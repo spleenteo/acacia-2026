@@ -2,6 +2,7 @@
 
 import { type Locale } from '@/i18n/config';
 import { useTranslations } from 'next-intl';
+import { OverDarkHeader } from '@/components/HeaderTheme';
 import HtmlContent from '@/components/HtmlContent';
 import ResponsiveImage from '@/components/ResponsiveImage';
 import ApartmentCard from '@/components/ApartmentCard';
@@ -32,6 +33,7 @@ export default function MoodDetailContent({
         className="relative min-h-[55vh] flex items-end bg-dark overflow-hidden"
         style={{ marginTop: 'calc(var(--header-height) * -1)' }}
       >
+        <OverDarkHeader />
         {mood.image?.responsiveImage && (
           <div className="absolute inset-0">
             <ResponsiveImage

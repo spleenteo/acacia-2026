@@ -2,6 +2,7 @@ import { type FragmentOf, readFragment } from '@/lib/datocms/graphql';
 import ResponsiveImage, { ResponsiveImageFragment } from '@/components/ResponsiveImage';
 import Button, { ButtonBlockFragment } from '@/components/Button';
 import InViewSection from '@/components/InViewSection';
+import { OverDarkHeader } from '@/components/HeaderTheme';
 
 type Props = {
   /** Title HTML — can contain inline <em> for italic emphasis */
@@ -49,6 +50,9 @@ export default function Hero({
       ].join(' ')}
       style={{ marginTop: 'calc(var(--header-height) * -1)' }}
     >
+      {/* Dark image hero → header goes transparent/white until scrolled. */}
+      {hasImage && <OverDarkHeader />}
+
       {/* Background image */}
       {image && (
         <div className="absolute inset-0">

@@ -2,6 +2,7 @@
 
 import { type Locale } from '@/i18n/config';
 import { useTranslations } from 'next-intl';
+import { OverDarkHeader } from '@/components/HeaderTheme';
 import ResponsiveImage from '@/components/ResponsiveImage';
 import BeddyBar from '@/components/BeddyBar';
 import HtmlContent from '@/components/HtmlContent';
@@ -38,6 +39,7 @@ export default function AccommodationsContent({
         className="relative min-h-[55vh] flex items-end bg-dark"
         style={{ marginTop: 'calc(var(--header-height) * -1)' }}
       >
+        <OverDarkHeader />
         {indexApartment?.featuredImage?.responsiveImage && (
           <div className="absolute inset-0">
             <ResponsiveImage
