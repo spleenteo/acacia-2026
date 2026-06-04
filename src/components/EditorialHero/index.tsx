@@ -65,7 +65,7 @@ export default function EditorialHero({
   const hasImage = !!image;
   // Seed the diagonal from the stega-stripped title so its direction is stable
   // across draft/published and consistent per page, but differs page to page.
-  const heroClip = useHeroDiagonal(stripStega(title) || tone);
+  const { clipPath: heroClip } = useHeroDiagonal(stripStega(title) || tone);
   // Pin tracking (desktop) — only meaningful with a photo, which fades on pin.
   const { ref, pinned } = useHeroPin<HTMLElement>();
   const isPinned = hasImage && pinned;

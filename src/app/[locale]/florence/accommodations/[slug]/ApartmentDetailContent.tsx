@@ -72,7 +72,7 @@ export default function ApartmentDetailContent({
 
   // Animated diagonal bottom edge — direction seeded per apartment, depth grows
   // past 1600px, and it wipes in on mount / on navigation to another apartment.
-  const heroClip = useHeroDiagonal(apartment?.id ?? '');
+  const { clipPath: heroClip, cut: heroCut } = useHeroDiagonal(apartment?.id ?? '');
 
   if (!apartment) return null;
 
@@ -93,28 +93,35 @@ export default function ApartmentDetailContent({
           photo-derived colour. The coloured panel has a diagonal bottom edge. ── */}
       <section
         ref={heroRef}
-        className={`relative mb-4 lg:mb-14 pb-10 lg:sticky lg:z-30 ${
+        className={`pointer-events-none relative mb-4 lg:mb-14 pb-10 lg:sticky lg:z-30 ${
           heroPinned ? 'md:pb-3.5' : 'md:pb-16'
         }`}
         style={{
-          backgroundColor: heroColor,
           marginTop: 'calc(var(--header-height) * -1)',
           // Sticky pin offset (shared with useHeroPin); ignored until lg:sticky.
           top: HERO_STICKY_TOP,
-          // Diagonal cut on the bottom edge of the coloured panel: direction is
-          // seeded per apartment, depth grows past 1600px, and it wipes in on
-          // mount/navigation (see useHeroDiagonal). The clip-path transition is
-          // declared here alongside the padding transition (an inline `transition`
-          // would otherwise override the Tailwind padding one).
-          clipPath: heroClip,
-          transition: 'clip-path 700ms cubic-bezier(0.22, 1, 0.36, 1), padding 500ms ease',
+          transition: 'padding 500ms ease',
         }}
       >
+        {/* Coloured panel with the diagonal bottom edge — its own clipped layer
+            (not the section) so the Acacia Reward badge can straddle the diagonal
+            without being clipped. Direction seeded per apartment, depth grows past
+            1600px, wipes in on mount/navigation (see useHeroDiagonal). */}
+        <div
+          aria-hidden
+          className="absolute inset-0"
+          style={{
+            backgroundColor: heroColor,
+            clipPath: heroClip,
+            transition: 'clip-path 700ms cubic-bezier(0.22, 1, 0.36, 1)',
+          }}
+        />
+
         {/* Dark photo / colour hero → transparent white header until scrolled. */}
         {(heroOnImage || !isLightColor(heroColor)) && <OverDarkHeader />}
 
         {/* Full-bleed on mobile; contained + rounded from md up. */}
-        <div className="md:mx-auto md:max-w-7xl md:px-8">
+        <div className="pointer-events-auto relative md:mx-auto md:max-w-7xl md:px-8">
           <div
             className={`relative min-h-[calc(58svh-50px)] md:min-h-[calc(68svh-50px)] overflow-hidden md:rounded-card transition-shadow duration-500 ${
               heroPinned ? 'md:shadow-none' : 'md:shadow-card-hover'
@@ -123,7 +130,7 @@ export default function ApartmentDetailContent({
             {apartment.featuredImage?.responsiveImage && (
               <ResponsiveImage
                 data={apartment.featuredImage.responsiveImage}
-                pictureClassName={`absolute inset-0 w-full h-full transition-opacity duration-500 ${
+                pictureClassName={`absolute inset-0 w-full h-full transition-opacity duration-[350ms] ${
                   heroPinned ? 'opacity-0' : 'opacity-100'
                 }`}
                 imgClassName="w-full h-full object-cover object-center"
@@ -136,7 +143,7 @@ export default function ApartmentDetailContent({
                 out together with the photo when the hero pins. */}
             {heroOnImage && (
               <div
-                className={`absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent transition-opacity duration-500 ${
+                className={`absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent transition-opacity duration-[350ms] ${
                   heroPinned ? 'opacity-0' : 'opacity-100'
                 }`}
               />
@@ -254,6 +261,33 @@ export default function ApartmentDetailContent({
             )}
           </div>
         </div>
+
+        {/* Acacia Reward badge — centred on the background's diagonal, body-white
+            and borderless so it reads as the white body punching up through the
+            coloured panel. Part of the sticky hero, so it fades out on pin like
+            the photo. translate-y centres the pill on the diagonal edge. */}
+        {apartment.acaciaReward && (
+          <div
+            className={`pointer-events-none absolute inset-x-0 z-20 flex justify-center ${
+              heroPinned ? 'opacity-0' : 'opacity-100'
+            }`}
+            // Bottom sits at cut/2 so the pill's centre (translate-y-1/2) lands
+            // exactly on the diagonal at the page centre; transition it in sync
+            // with the clip-path so the badge rides the diagonal as it wipes in.
+            style={{
+              bottom: heroCut / 2,
+              transition: 'bottom 700ms cubic-bezier(0.22, 1, 0.36, 1), opacity 350ms ease',
+            }}
+          >
+            <div className="flex translate-y-1/2 items-center gap-2 rounded-pill bg-surface px-5 py-2.5">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src="/acacia-isologo.svg" alt="" className="h-6 w-6" />
+              <span className="font-body text-caption font-medium tracking-wide text-dark">
+                Acacia Reward
+              </span>
+            </div>
+          </div>
+        )}
       </section>
 
       {/* Content scrolls BEHIND the sticky hero (desktop) — lower z-index. */}
@@ -271,7 +305,6 @@ export default function ApartmentDetailContent({
                     label={t('wwlLabel')}
                     title={apartment.claim ?? ''}
                     description={apartment.description}
-                    acaciaReward={apartment.acaciaReward}
                     lightboxSlides={apartment.featuredSlideshow
                       .map((f) => readFragment(FeaturedSlideshowFragment, f))
                       .filter((img) => img.full)

@@ -42,8 +42,15 @@ type Options = {
  *
  * Both server and first client render produce a flat cut (cut = 0), so there's
  * no hydration mismatch; the wipe-in is purely a post-mount effect.
+ *
+ * Returns the `clipPath` string plus the current `cut` depth in px (handy for
+ * positioning something exactly on the diagonal — at the panel's horizontal
+ * centre the edge sits `cut / 2` above the box bottom).
  */
-export function useHeroDiagonal(seed: string, { base = 34, wide = 72 }: Options = {}): string {
+export function useHeroDiagonal(
+  seed: string,
+  { base = 34, wide = 72 }: Options = {},
+): { clipPath: string; cut: number } {
   const direction = useMemo(() => diagonalDirection(seed), [seed]);
   const [cut, setCut] = useState(0);
 
@@ -70,5 +77,5 @@ export function useHeroDiagonal(seed: string, { base = 34, wide = 72 }: Options 
     };
   }, [seed, base, wide]);
 
-  return clipFor(direction, cut);
+  return { clipPath: clipFor(direction, cut), cut };
 }
