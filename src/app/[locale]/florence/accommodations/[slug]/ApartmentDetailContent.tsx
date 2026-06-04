@@ -203,37 +203,39 @@ export default function ApartmentDetailContent({
                         </a>
                       )}
                     </div>
-                    <p
-                      className={[
-                        'mt-4 font-body text-body-lg leading-snug transition-colors duration-500',
-                        heroTextDark ? 'text-dark/75' : 'text-white/85',
-                      ].join(' ')}
-                    >
-                      {apartment.houseBadge?.label && <>{apartment.houseBadge.label}, </>}
-                      {gold(apartment.sleeps)} {isIt ? 'posti letto' : 'sleeps'}
-                      {', '}
-                      {gold(baths)}{' '}
-                      {isIt
-                        ? baths === 1
-                          ? 'bagno'
-                          : 'bagni'
-                        : baths === 1
-                          ? 'bathroom'
-                          : 'bathrooms'}
-                    </p>
+                    {/* Stat line + Check availability share a row, bottom-aligned
+                        so the CTA sits on the same baseline as the stat copy. */}
+                    <div className="mt-4 flex items-end justify-between gap-4">
+                      <p
+                        className={[
+                          'font-body text-body-lg leading-snug transition-colors duration-500',
+                          heroTextDark ? 'text-dark/75' : 'text-white/85',
+                        ].join(' ')}
+                      >
+                        {apartment.houseBadge?.label && <>{apartment.houseBadge.label}, </>}
+                        {gold(apartment.sleeps)} {isIt ? 'posti letto' : 'sleeps'}
+                        {', '}
+                        {gold(baths)}{' '}
+                        {isIt
+                          ? baths === 1
+                            ? 'bagno'
+                            : 'bagni'
+                          : baths === 1
+                            ? 'bathroom'
+                            : 'bathrooms'}
+                      </p>
+                      <div className="hidden shrink-0 lg:block">
+                        <ScrollToBooking
+                          widgetCode={apartment.beddyId}
+                          className="cursor-pointer rounded-pill bg-primary px-8 py-3.5 font-body text-body font-medium tracking-wide text-white transition-colors duration-300 hover:bg-primary-hover"
+                        >
+                          {t('book')}
+                        </ScrollToBooking>
+                      </div>
+                    </div>
                   </>
                 );
               })()}
-            </div>
-
-            {/* Check availability — at the photo's bottom-right, sticky with the hero (desktop). */}
-            <div className="absolute bottom-4 right-4 z-20 hidden lg:block">
-              <ScrollToBooking
-                widgetCode={apartment.beddyId}
-                className="cursor-pointer rounded-pill bg-primary px-8 py-3.5 font-body text-body font-medium tracking-wide text-white transition-colors duration-300 hover:bg-primary-hover"
-              >
-                {t('book')}
-              </ScrollToBooking>
             </div>
 
             {/* View gallery — small pill top-right on mobile; plain text link at
