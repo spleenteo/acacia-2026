@@ -12,7 +12,7 @@ import { stripStega } from 'react-datocms/use-content-link';
  * Panel tones — the saturated Japan Fish hues that work as a panel background
  * (not the pale chip tints used by WidgetLabel).
  */
-export type HeroTone = 'rust' | 'gold' | 'sage' | 'slate' | 'navy';
+export type HeroTone = 'rust' | 'gold' | 'sage' | 'slate' | 'navy' | 'primary';
 
 const TONE_HEX: Record<HeroTone, string> = {
   rust: '#d53302',
@@ -20,6 +20,8 @@ const TONE_HEX: Record<HeroTone, string> = {
   sage: '#a0cbad',
   slate: '#8fb1be',
   navy: '#00012a',
+  // Blackberry — the primary brand purple (--color-primary).
+  primary: '#48182f',
 };
 
 type Props = {

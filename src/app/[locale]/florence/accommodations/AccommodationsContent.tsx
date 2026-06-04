@@ -35,7 +35,7 @@ export default function AccommodationsContent({
     <>
       {/* Hero Section */}
       <EditorialHero
-        tone="navy"
+        tone="primary"
         title={indexApartment?.title ?? ''}
         subtitle={indexApartment?.subtitle}
         image={indexApartment?.featuredImage?.responsiveImage}
