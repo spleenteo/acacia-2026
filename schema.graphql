@@ -420,6 +420,36 @@ type ApartmentRecord implements RecordInterface {
     locale: SiteLocale
     filter: MoodItemsModelFilter
   ): CollectionMetadata!
+  _allReferencingMoods(
+    """Specifies how to filter linking records"""
+    through: InverseRelationshipFilterBetweenMoodAndApartment
+
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+
+    """Skip the first results"""
+    skip: IntType
+
+    """Limit the number of results"""
+    first: IntType = 20
+    filter: MoodModelFilter
+    orderBy: [MoodModelOrderBy] = [position_ASC]
+  ): [MoodRecord!]!
+
+  """Returns meta information regarding a record collection"""
+  _allReferencingMoodsMeta(
+    """Specifies how to filter linking records"""
+    through: InverseRelationshipFilterBetweenMoodAndApartment
+
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+    filter: MoodModelFilter
+  ): CollectionMetadata!
   _allReferencingPosts(
     """Specifies how to filter linking records"""
     through: InverseRelationshipFilterBetweenPostAndApartment
@@ -1107,6 +1137,44 @@ input DateFilter {
 """A ISO 8601 compliant datetime value"""
 scalar DateTime
 
+"""Specifies how to filter DateTime fields"""
+input DateTimeFilter {
+  """
+  Filter records with a value that's strictly greater than the one specified. Seconds and milliseconds are truncated from the argument.
+  """
+  gt: DateTime
+
+  """
+  Filter records with a value that's less than the one specified. Seconds and milliseconds are truncated from the argument.
+  """
+  lt: DateTime
+
+  """
+  Filter records with a value that's greater than or equal to than the one specified. Seconds and milliseconds are truncated from the argument.
+  """
+  gte: DateTime
+
+  """
+  Filter records with a value that's less or equal than the one specified. Seconds and milliseconds are truncated from the argument.
+  """
+  lte: DateTime
+
+  """
+  Filter records with a value that's within the specified minute range. Seconds and milliseconds are truncated from the argument.
+  """
+  eq: DateTime
+
+  """
+  Filter records with a value that's outside the specified minute range. Seconds and milliseconds are truncated from the argument.
+  """
+  neq: DateTime
+
+  """
+  Filter records with the specified field defined (i.e. with any value) or not
+  """
+  exists: BooleanType
+}
+
 input DistrictModelFilter {
   _createdAt: CreatedAtFilter
   createdAt: CreatedAtFilter
@@ -1208,6 +1276,36 @@ type DistrictRecord implements RecordInterface {
     """The locale to use to fetch the field's content"""
     locale: SiteLocale
     filter: ApartmentModelFilter
+  ): CollectionMetadata!
+  _allReferencingMoods(
+    """Specifies how to filter linking records"""
+    through: InverseRelationshipFilterBetweenMoodAndDistrict
+
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+
+    """Skip the first results"""
+    skip: IntType
+
+    """Limit the number of results"""
+    first: IntType = 20
+    filter: MoodModelFilter
+    orderBy: [MoodModelOrderBy] = [position_ASC]
+  ): [MoodRecord!]!
+
+  """Returns meta information regarding a record collection"""
+  _allReferencingMoodsMeta(
+    """Specifies how to filter linking records"""
+    through: InverseRelationshipFilterBetweenMoodAndDistrict
+
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+    filter: MoodModelFilter
   ): CollectionMetadata!
   _allReferencingPosts(
     """Specifies how to filter linking records"""
@@ -2166,6 +2264,11 @@ type HeroBlockRecordListListNonNullMultiLocaleField {
 """Linking fields"""
 enum HomePageModelFieldsReferencingApartmentModel {
   homePage_highlightedApartments
+}
+
+"""Linking fields"""
+enum HomePageModelFieldsReferencingMoodModel {
+  homePage_moods
 }
 
 input HomePageModelFilter {
@@ -5101,6 +5204,45 @@ input InverseRelationshipFieldFilterBetweenHomePageAndApartment {
 }
 
 """Specifies how to filter by linking fields"""
+input InverseRelationshipFieldFilterBetweenHomePageAndMood {
+  """
+  Filter linking records that reference current record in at least one of the specified fields
+  """
+  anyIn: [HomePageModelFieldsReferencingMoodModel!]
+
+  """
+  Filter linking records that do not reference current record in any of the specified fields
+  """
+  notIn: [HomePageModelFieldsReferencingMoodModel!]
+}
+
+"""Specifies how to filter by linking fields"""
+input InverseRelationshipFieldFilterBetweenMoodAndApartment {
+  """
+  Filter linking records that reference current record in at least one of the specified fields
+  """
+  anyIn: [MoodModelFieldsReferencingApartmentModel!]
+
+  """
+  Filter linking records that do not reference current record in any of the specified fields
+  """
+  notIn: [MoodModelFieldsReferencingApartmentModel!]
+}
+
+"""Specifies how to filter by linking fields"""
+input InverseRelationshipFieldFilterBetweenMoodAndDistrict {
+  """
+  Filter linking records that reference current record in at least one of the specified fields
+  """
+  anyIn: [MoodModelFieldsReferencingDistrictModel!]
+
+  """
+  Filter linking records that do not reference current record in any of the specified fields
+  """
+  notIn: [MoodModelFieldsReferencingDistrictModel!]
+}
+
+"""Specifies how to filter by linking fields"""
 input InverseRelationshipFieldFilterBetweenMoodItemsAndApartment {
   """
   Filter linking records that reference current record in at least one of the specified fields
@@ -5170,6 +5312,33 @@ input InverseRelationshipFilterBetweenGuestbookAndApartment {
 input InverseRelationshipFilterBetweenHomePageAndApartment {
   """Specifies how to filter by linking fields"""
   fields: InverseRelationshipFieldFilterBetweenHomePageAndApartment
+
+  """Specifies how to filter by linking locales"""
+  locales: LinkingLocalesFilter
+}
+
+"""Specifies how to filter linking records"""
+input InverseRelationshipFilterBetweenHomePageAndMood {
+  """Specifies how to filter by linking fields"""
+  fields: InverseRelationshipFieldFilterBetweenHomePageAndMood
+
+  """Specifies how to filter by linking locales"""
+  locales: LinkingLocalesFilter
+}
+
+"""Specifies how to filter linking records"""
+input InverseRelationshipFilterBetweenMoodAndApartment {
+  """Specifies how to filter by linking fields"""
+  fields: InverseRelationshipFieldFilterBetweenMoodAndApartment
+
+  """Specifies how to filter by linking locales"""
+  locales: LinkingLocalesFilter
+}
+
+"""Specifies how to filter linking records"""
+input InverseRelationshipFilterBetweenMoodAndDistrict {
+  """Specifies how to filter by linking fields"""
+  fields: InverseRelationshipFieldFilterBetweenMoodAndDistrict
 
   """Specifies how to filter by linking locales"""
   locales: LinkingLocalesFilter
@@ -5554,6 +5723,31 @@ type MoodItemsRecord implements RecordInterface {
   ): String
 }
 
+type MoodModelDescriptionField {
+  blocks: [String!]!
+  inlineBlocks: [String!]!
+  links: [MoodModelDescriptionLinksField!]!
+  value: JsonField!
+}
+
+type MoodModelDescriptionFieldMultiLocaleField {
+  locale: SiteLocale
+  value: MoodModelDescriptionField
+}
+
+union MoodModelDescriptionLinksField = DistrictRecord | PageRecord | PostRecord
+
+"""Linking fields"""
+enum MoodModelFieldsReferencingApartmentModel {
+  mood_relatedContent
+}
+
+"""Linking fields"""
+enum MoodModelFieldsReferencingDistrictModel {
+  mood_description
+  mood_relatedContent
+}
+
 input MoodModelFilter {
   _createdAt: CreatedAtFilter
   createdAt: CreatedAtFilter
@@ -5567,12 +5761,14 @@ input MoodModelFilter {
   _updatedAt: UpdatedAtFilter
   updatedAt: UpdatedAtFilter
   _isValid: BooleanFilter
+  _locales: LocalesFilter
   boxes: LinksFilter
   claim: StringFilter
-  description: TextFilter
+  description: StructuredTextFilter
+  descriptionOld: TextFilter
   image: FileFilter
   name: StringFilter
-  published: BooleanFilter
+  relatedContent: LinksFilter
   seo: SeoFilter
   slug: SlugFilter
   OR: [MoodModelFilter]
@@ -5608,9 +5804,9 @@ enum MoodModelOrderBy {
   claim_DESC
   name_ASC
   name_DESC
-  published_ASC
-  published_DESC
 }
+
+union MoodModelRelatedContentField = ApartmentRecord | DistrictRecord | PostRecord
 
 """Record of type 😊 Moods (mood)"""
 type MoodRecord implements RecordInterface {
@@ -5621,6 +5817,12 @@ type MoodRecord implements RecordInterface {
     fallbackLocales: [SiteLocale!]
   ): [StringMultiLocaleField!]
   _allDescriptionLocales(
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): [MoodModelDescriptionFieldMultiLocaleField!]
+  _allDescriptionOldLocales(
     """Process content as markdown"""
     markdown: Boolean
 
@@ -5635,6 +5837,36 @@ type MoodRecord implements RecordInterface {
     """
     fallbackLocales: [SiteLocale!]
   ): [StringNonNullMultiLocaleField!]
+  _allReferencingHomePages(
+    """Specifies how to filter linking records"""
+    through: InverseRelationshipFilterBetweenHomePageAndMood
+
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+
+    """Skip the first results"""
+    skip: IntType
+
+    """Limit the number of results"""
+    first: IntType = 20
+    filter: HomePageModelFilter
+    orderBy: [HomePageModelOrderBy] = [_updatedAt_DESC]
+  ): [HomePageRecord!]!
+
+  """Returns meta information regarding a record collection"""
+  _allReferencingHomePagesMeta(
+    """Specifies how to filter linking records"""
+    through: InverseRelationshipFilterBetweenHomePageAndMood
+
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+    filter: HomePageModelFilter
+  ): CollectionMetadata!
   _allSeoLocales(
     """
     If you want to fallback to a default translation when a translation has not been found
@@ -5653,6 +5885,7 @@ type MoodRecord implements RecordInterface {
   _editingUrl: String
   _firstPublishedAt: DateTime!
   _isValid: BooleanType!
+  _locales: [SiteLocale!]!
   _modelApiKey: String!
   _publicationScheduledAt: DateTime
   _publishedAt: DateTime!
@@ -5677,6 +5910,15 @@ type MoodRecord implements RecordInterface {
   ): String
   createdAt: DateTime!
   description(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): MoodModelDescriptionField
+  descriptionOld(
     """Process content as markdown"""
     markdown: Boolean
 
@@ -5700,7 +5942,7 @@ type MoodRecord implements RecordInterface {
     fallbackLocales: [SiteLocale!]
   ): String!
   position: IntType
-  published: BooleanType!
+  relatedContent: [MoodModelRelatedContentField!]!
   seo(
     """The locale to use to fetch the field's content"""
     locale: SiteLocale
@@ -7338,6 +7580,13 @@ type Query {
   ): CollectionMetadata!
 
   """Returns meta information regarding a record collection"""
+  _allRecordBinsMeta(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+    filter: RecordBinModelFilter
+  ): CollectionMetadata!
+
+  """Returns meta information regarding a record collection"""
   _allRedirectsMeta(
     """The locale to use to fetch the field's content"""
     locale: SiteLocale
@@ -7788,6 +8037,25 @@ type Query {
     filter: PostModelFilter
     orderBy: [PostModelOrderBy] = [_updatedAt_DESC]
   ): [PostRecord!]!
+
+  """Returns a collection of records"""
+  allRecordBins(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+
+    """Skip the first results"""
+    skip: IntType
+
+    """Limit the number of results"""
+    first: IntType = 20
+    filter: RecordBinModelFilter
+    orderBy: [RecordBinModelOrderBy] = [_updatedAt_DESC]
+  ): [RecordBinRecord!]!
 
   """Returns a collection of records"""
   allRedirects(
@@ -8309,6 +8577,19 @@ type Query {
   ): PostRecord
 
   """Returns a specific record"""
+  recordBin(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+    filter: RecordBinModelFilter
+    orderBy: [RecordBinModelOrderBy] = [_updatedAt_DESC]
+  ): RecordBinRecord
+
+  """Returns a specific record"""
   redirect(
     """The locale to use to fetch the field's content"""
     locale: SiteLocale
@@ -8385,6 +8666,86 @@ type Query {
     filter: UploadFilter
     orderBy: [UploadOrderBy] = [_createdAt_DESC]
   ): FileField
+}
+
+input RecordBinModelFilter {
+  _createdAt: CreatedAtFilter
+  createdAt: CreatedAtFilter
+  id: ItemIdFilter
+  _firstPublishedAt: PublishedAtFilter
+  _publicationScheduledAt: PublishedAtFilter
+  _unpublishingScheduledAt: PublishedAtFilter
+  _publishedAt: PublishedAtFilter
+  _status: StatusFilter
+  _updatedAt: UpdatedAtFilter
+  updatedAt: UpdatedAtFilter
+  _isValid: BooleanFilter
+  dateOfDeletion: DateTimeFilter
+  label: StringFilter
+  model: StringFilter
+  recordBody: JsonFilter
+  OR: [RecordBinModelFilter]
+  AND: [RecordBinModelFilter]
+}
+
+enum RecordBinModelOrderBy {
+  _createdAt_ASC
+  _createdAt_DESC
+  createdAt_ASC
+  createdAt_DESC
+  id_ASC
+  id_DESC
+  _firstPublishedAt_ASC
+  _firstPublishedAt_DESC
+  _publicationScheduledAt_ASC
+  _publicationScheduledAt_DESC
+  _unpublishingScheduledAt_ASC
+  _unpublishingScheduledAt_DESC
+  _publishedAt_ASC
+  _publishedAt_DESC
+  _status_ASC
+  _status_DESC
+  _updatedAt_ASC
+  _updatedAt_DESC
+  updatedAt_ASC
+  updatedAt_DESC
+  _isValid_ASC
+  _isValid_DESC
+  dateOfDeletion_ASC
+  dateOfDeletion_DESC
+  label_ASC
+  label_DESC
+  model_ASC
+  model_DESC
+}
+
+"""Record of type 🗑 Record Bin (record_bin)"""
+type RecordBinRecord implements RecordInterface {
+  _createdAt: DateTime!
+
+  """Editing URL"""
+  _editingUrl: String
+  _firstPublishedAt: DateTime!
+  _isValid: BooleanType!
+  _modelApiKey: String!
+  _publicationScheduledAt: DateTime
+  _publishedAt: DateTime!
+
+  """Generates SEO and Social card meta tags to be used in your frontend"""
+  _seoMetaTags(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+  ): [Tag!]!
+  _status: ItemStatus!
+  _unpublishingScheduledAt: DateTime
+  _updatedAt: DateTime!
+  createdAt: DateTime!
+  dateOfDeletion: DateTime
+  id: ItemId!
+  label: String
+  model: String
+  recordBody: JsonField
+  updatedAt: DateTime!
 }
 
 interface RecordInterface {

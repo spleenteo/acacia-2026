@@ -57,20 +57,19 @@ export const query = graphql(
         name(locale: $locale)
         slug(locale: $locale)
         claim(locale: $locale)
-        description(locale: $locale, markdown: true)
+        description(locale: $locale) {
+          value
+        }
         image {
           responsiveImage(imgixParams: { w: 1200, h: 600, fit: crop }) {
             ...ResponsiveImageFragment
           }
         }
-        boxes {
-          id
-          object {
-            ... on ApartmentRecord {
-              __typename
-              id
-              ...ApartmentCardFragment
-            }
+        relatedContent {
+          ... on ApartmentRecord {
+            __typename
+            id
+            ...ApartmentCardFragment
           }
         }
       }

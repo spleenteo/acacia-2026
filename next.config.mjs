@@ -4,6 +4,9 @@ const withNextIntl = createNextIntlPlugin('./src/i18n/request.ts');
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // Allow accessing the dev server through a Cloudflare quick tunnel (remote
+  // preview from a phone). Dev-only; harmless in production.
+  allowedDevOrigins: ['*.trycloudflare.com', 'owners-quilt-dialog-being.trycloudflare.com'],
   async headers() {
     return [
       {

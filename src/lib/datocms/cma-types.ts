@@ -8,32 +8,32 @@ export type Apartment = ItemTypeDefinition<
   EnvironmentSettings,
   '2726',
   {
+    beddy_id: {
+      type: 'string';
+    };
     notes: {
       type: 'json';
     };
-    beddy_id: {
+    category: {
+      type: 'link';
+    };
+    cin: {
       type: 'string';
     };
     name: {
       type: 'string';
     };
-    featured_slideshow: {
-      type: 'gallery';
-    };
-    cin: {
-      type: 'string';
-    };
-    featured_image: {
-      type: 'file';
-    };
-    district: {
-      type: 'link';
-    };
     description: {
       type: 'text';
       localized: true;
     };
-    wwl_gallery: {
+    district: {
+      type: 'link';
+    };
+    featured_image: {
+      type: 'file';
+    };
+    amenities: {
       type: 'links';
     };
     sleeps: {
@@ -46,19 +46,13 @@ export type Apartment = ItemTypeDefinition<
       type: 'string';
       localized: true;
     };
-    category: {
-      type: 'link';
+    featured_slideshow: {
+      type: 'gallery';
     };
     house_badge: {
       type: 'link';
     };
-    bedrooms: {
-      type: 'integer';
-    };
-    ape: {
-      type: 'string';
-    };
-    amenities: {
+    wwl_gallery: {
       type: 'links';
     };
     home_truth: {
@@ -66,11 +60,17 @@ export type Apartment = ItemTypeDefinition<
       blocks: Truth;
       localized: true;
     };
-    bathrooms: {
+    bedrooms: {
       type: 'integer';
+    };
+    ape: {
+      type: 'string';
     };
     acacia_reward: {
       type: 'boolean';
+    };
+    bathrooms: {
+      type: 'integer';
     };
     price: {
       type: 'string';
@@ -235,33 +235,37 @@ export type Mood = ItemTypeDefinition<
   EnvironmentSettings,
   '2738',
   {
+    boxes: {
+      type: 'links';
+    };
     name: {
       type: 'string';
-      localized: true;
-    };
-    claim: {
-      type: 'string';
-      localized: true;
-    };
-    published: {
-      type: 'boolean';
-    };
-    image: {
-      type: 'file';
-    };
-    description: {
-      type: 'text';
       localized: true;
     };
     slug: {
       type: 'slug';
       localized: true;
     };
+    claim: {
+      type: 'string';
+      localized: true;
+    };
     seo: {
       type: 'seo';
       localized: true;
     };
-    boxes: {
+    image: {
+      type: 'file';
+    };
+    description_old: {
+      type: 'text';
+      localized: true;
+    };
+    description: {
+      type: 'structured_text';
+      localized: true;
+    };
+    related_content: {
       type: 'links';
     };
     position: {
@@ -1218,6 +1222,29 @@ export const MenuDropdown = {
   REF: { type: 'item_type', id: 'JQeKJz2cRJ6tXjeGw9dQTw' },
 } as const;
 
+export type RecordBin = ItemTypeDefinition<
+  EnvironmentSettings,
+  'PEvhd5OVRc6mRQtWfFt8JQ',
+  {
+    label: {
+      type: 'string';
+    };
+    model: {
+      type: 'string';
+    };
+    date_of_deletion: {
+      type: 'date_time';
+    };
+    record_body: {
+      type: 'json';
+    };
+  }
+>;
+export const RecordBin = {
+  ID: 'PEvhd5OVRc6mRQtWfFt8JQ',
+  REF: { type: 'item_type', id: 'PEvhd5OVRc6mRQtWfFt8JQ' },
+} as const;
+
 export type MenuItem = ItemTypeDefinition<
   EnvironmentSettings,
   'QvVizRpcSBioYs3t8o5vDQ',
@@ -1507,6 +1534,7 @@ export type AnyModel =
   | Essential
   | Amenity
   | InfoLabel
+  | RecordBin
   | Translation
   | Page
   | App

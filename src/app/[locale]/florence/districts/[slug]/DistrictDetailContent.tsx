@@ -2,8 +2,10 @@
 
 import { type Locale } from '@/i18n/config';
 import { useTranslations } from 'next-intl';
-import { OverDarkHeader } from '@/components/HeaderTheme';
+import EditorialHero from '@/components/EditorialHero';
+import EditorialListingLayout from '@/components/EditorialListingLayout';
 import HtmlContent from '@/components/HtmlContent';
+import ReadMore from '@/components/ReadMore';
 import { GalleryImageFragment } from '@/components/ImageGallery/fragment';
 import ImageGallery from '@/components/ImageGallery';
 import { toSlide } from '@/components/Lightbox/toSlide';
@@ -30,89 +32,68 @@ export default function DistrictDetailContent({
 
   const { allApartments } = apartmentsData;
 
+  const description = district.description ? (
+    <HtmlContent html={district.description} className="font-body text-body text-dark" />
+  ) : null;
+
+  const galleryItems = district.gallery
+    .map((g) => readFragment(GalleryImageFragment, g))
+    .filter((img) => img.image?.responsiveImage && img.image?.full);
+
   return (
     <>
-      {/* Hero */}
-      <section
-        className="min-h-[55vh] flex items-end bg-dark"
-        style={{ marginTop: 'calc(var(--header-height) * -1)' }}
-      >
-        <OverDarkHeader />
-        <div className="w-full px-8 pb-14 pt-32">
-          <div className="mx-auto max-w-6xl">
-            <p className="font-body font-medium text-label text-white/50 uppercase tracking-[0.15em] mb-3">
-              {tListing('florence')}
+      <EditorialHero
+        tone="slate"
+        label={tListing('florence')}
+        title={district.name ?? ''}
+        subtitle={district.abstract}
+        priority
+      />
+
+      {/* Tucks under the hero diagonal on mobile; desktop overlap via the layout. */}
+      <div className="relative z-0 -mt-8 lg:mt-0">
+        {allApartments.length > 0 ? (
+          <EditorialListingLayout body={description && <ReadMore>{description}</ReadMore>}>
+            <p className="mb-3 font-body text-label uppercase tracking-[0.22em] text-primary font-medium">
+              {tListing('whereToStay')}
             </p>
-            <h1 className="font-heading font-normal text-hero leading-tight text-white">
-              {district.name}
-            </h1>
-          </div>
-        </div>
-      </section>
+            <h2 className="mb-8 font-heading font-normal text-h2 text-dark tracking-[-0.02em]">
+              {tDistrict('apartments')} {district.name}
+            </h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-12 sm:gap-6">
+              {allApartments.map((apartment) => (
+                <ApartmentCard key={apartment.id} data={apartment} locale={locale} />
+              ))}
+            </div>
+          </EditorialListingLayout>
+        ) : (
+          description && (
+            <section className="pt-[68px] pb-20 lg:py-24">
+              <div className="mx-auto max-w-3xl px-8">{description}</div>
+            </section>
+          )
+        )}
 
-      {/* Abstract */}
-      {district.abstract && (
-        <section className="py-16 bg-surface-alt">
-          <div className="mx-auto max-w-3xl px-8 text-center">
-            <HtmlContent html={district.abstract} className="font-body text-body-lg text-dark" />
-            <div className="mx-auto mt-8 w-12 h-[3px] bg-primary rounded-sm" />
-          </div>
-        </section>
-      )}
-
-      {/* Gallery */}
-      {district.gallery.length > 0 && (
-        <section className="py-16 bg-surface">
-          <div className="mx-auto max-w-6xl px-8">
-            <ImageGallery
-              items={district.gallery
-                .map((g) => readFragment(GalleryImageFragment, g))
-                .filter((img) => img.image?.responsiveImage && img.image?.full)
-                .map((img) => ({
+        {/* Gallery — full-width below the two-column block */}
+        {galleryItems.length > 0 && (
+          <section className="py-16 lg:py-20 bg-surface-alt">
+            <div className="mx-auto max-w-6xl px-8">
+              <ImageGallery
+                items={galleryItems.map((img) => ({
                   id: img.id,
                   thumb: img.image!.responsiveImage!,
                   full: img.image!.full!,
                   caption: img.description,
                 }))}
-              slides={district.gallery
-                .map((g) => readFragment(GalleryImageFragment, g))
-                .filter((img) => img.image?.full)
-                .map((img) => toSlide(img.image!.full!, img.description))}
-            />
-          </div>
-        </section>
-      )}
-
-      {/* Description */}
-      {district.description && (
-        <section className="py-20 lg:py-28 bg-surface-alt">
-          <div className="mx-auto max-w-3xl px-8">
-            <HtmlContent
-              html={district.description}
-              className="font-body text-body-lg text-dark leading-relaxed"
-            />
-          </div>
-        </section>
-      )}
-
-      {/* Apartments in this district */}
-      {allApartments.length > 0 && (
-        <section className="py-20 lg:py-28 bg-surface">
-          <div className="mx-auto max-w-6xl px-8">
-            <p className="font-body text-label uppercase tracking-[0.22em] text-primary font-medium text-center mb-3">
-              {tListing('whereToStay')}
-            </p>
-            <h2 className="font-heading font-normal text-h1 text-dark text-center tracking-[-0.02em] mb-12">
-              {tDistrict('apartments')} {district.name}
-            </h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-6">
-              {allApartments.map((apartment) => (
-                <ApartmentCard key={apartment.id} data={apartment} locale={locale} />
-              ))}
+                slides={district.gallery
+                  .map((g) => readFragment(GalleryImageFragment, g))
+                  .filter((img) => img.image?.full)
+                  .map((img) => toSlide(img.image!.full!, img.description))}
+              />
             </div>
-          </div>
-        </section>
-      )}
+          </section>
+        )}
+      </div>
     </>
   );
 }
