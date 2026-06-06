@@ -115,11 +115,11 @@ export default function EditorialHero({
         // negative margin); lg:z-30 keeps the desktop sticky stacking.
         'relative z-10 pb-10 lg:sticky lg:z-30',
         hasImage
-          ? // lg:top-… is the sticky pin offset (= HERO_STICKY_TOP, 384 =
-            // HERO_PIN_TOP_PX). It MUST stay lg-only: on mobile the hero is
-            // position:relative, where a `top` would shift it up and leave an
-            // equal gap below — so it lives in a class, never inline.
-            `mb-0 lg:mb-14 lg:top-[calc(384px_-_68svh)] ${isPinned ? 'md:pb-3.5' : 'md:pb-16'}`
+          ? // `hero-pin-top` (global.css, lg-only) is the sticky pin offset.
+            // It's hand-written CSS, not an arbitrary Tailwind class, so it
+            // always ships in production; lg-only because on mobile the hero is
+            // position:relative, where a `top` would shift it up and leave a gap.
+            `mb-0 lg:mb-14 hero-pin-top ${isPinned ? 'md:pb-3.5' : 'md:pb-16'}`
           : // No photo → compact panel that simply stays pinned where it loads
             // (top), with the content scrolling behind it.
             'mb-8 lg:mb-14 md:pb-16 lg:top-0',

@@ -384,4 +384,18 @@ body.lightbox-open beddy-bar {
     margin-top: 1.5em;
     margin-bottom: 0.5em;
   }
+
+  /* ── HERO STICKY PIN ───────────────────────────────────────────
+     The pinned hero's sticky `top` offset. Hand-written (not an
+     arbitrary `lg:top-[calc(...)]` Tailwind class) so it always ships
+     in the production build, regardless of class scanning. Desktop
+     only: below lg the hero is position:relative, where a `top` would
+     shift it up and leave a gap under the diagonal. 384px =
+     HERO_PIN_TOP_PX — keep in sync with useHeroPin.ts.
+  ──────────────────────────────────────────────────────────────── */
+  @media (min-width: 1024px) {
+    .hero-pin-top {
+      top: calc(384px - 68svh);
+    }
+  }
 }
