@@ -54,7 +54,7 @@ export const query = graphql(
         subtitle(locale: $locale)
         description(locale: $locale, markdown: true)
       }
-      allDistricts(locale: $locale, orderBy: [position_ASC]) {
+      allDistricts(locale: $locale, orderBy: [position_ASC], first: 100) {
         id
         ...DistrictCardFragment
       }

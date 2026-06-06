@@ -26,7 +26,7 @@ import { type MoodCardFragment } from '@/components/MoodCard';
 import { readFragment } from '@/lib/datocms/graphql';
 import { pickHeroColor, isLightColor, pickPillColors } from '@/lib/heroColor';
 import { useHeroDiagonal } from '@/lib/useHeroDiagonal';
-import { useHeroPin, HERO_STICKY_TOP } from '@/lib/useHeroPin';
+import { useHeroPin } from '@/lib/useHeroPin';
 import type { ResultOf } from 'gql.tada';
 import type { query as apartmentDetailQuery } from './page';
 
@@ -93,13 +93,14 @@ export default function ApartmentDetailContent({
           photo-derived colour. The coloured panel has a diagonal bottom edge. ── */}
       <section
         ref={heroRef}
-        className={`pointer-events-none relative mb-4 lg:mb-14 pb-10 lg:sticky lg:z-30 ${
+        className={`pointer-events-none relative z-10 mb-0 lg:mb-14 pb-10 lg:sticky lg:z-30 lg:top-[calc(384px_-_68svh)] ${
           heroPinned ? 'md:pb-3.5' : 'md:pb-16'
         }`}
         style={{
           marginTop: 'calc(var(--header-height) * -1)',
-          // Sticky pin offset (shared with useHeroPin); ignored until lg:sticky.
-          top: HERO_STICKY_TOP,
+          // The sticky pin offset (= HERO_STICKY_TOP, 384 = HERO_PIN_TOP_PX) lives
+          // in a lg-only class above — NOT inline — because on mobile the hero is
+          // position:relative, where a `top` shifts it up and leaves a gap below.
           transition: 'padding 500ms ease',
         }}
       >
@@ -290,10 +291,11 @@ export default function ApartmentDetailContent({
         )}
       </section>
 
-      {/* Content scrolls BEHIND the sticky hero (desktop) — lower z-index. */}
-      <div className="relative lg:z-0">
+      {/* Content scrolls BEHIND the hero — on mobile it tucks up under the
+          hero's diagonal (negative margin) so there's no white band. */}
+      <div className="relative z-0 -mt-8 lg:mt-0">
         {/* ── Two-column layout ── */}
-        <div className="mx-auto max-w-7xl px-5 md:px-8 pt-6 pb-16 lg:pt-10 lg:pb-20">
+        <div className="mx-auto max-w-7xl px-5 md:px-8 pt-[68px] pb-16 lg:pt-10 lg:pb-20">
           <div className="lg:grid lg:grid-cols-[1fr_320px] lg:gap-16 xl:gap-20">
             {/* ── Main content ── */}
             <div className="min-w-0">

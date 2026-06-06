@@ -65,7 +65,7 @@ export const query = graphql(
         name(locale: $locale)
         slug
       }
-      allApartments(locale: $locale, orderBy: [name_ASC]) {
+      allApartments(locale: $locale, orderBy: [name_ASC], first: 100) {
         id
         category {
           slug

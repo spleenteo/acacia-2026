@@ -3,8 +3,8 @@
 import { type Locale } from '@/i18n/config';
 import { useTranslations } from 'next-intl';
 import EditorialHero from '@/components/EditorialHero';
+import EditorialListingLayout from '@/components/EditorialListingLayout';
 import BeddyBar from '@/components/BeddyBar';
-import HtmlContent from '@/components/HtmlContent';
 import CategoryFilter from '@/components/CategoryFilter';
 import type { ResultOf } from 'gql.tada';
 import type { query } from './page';
@@ -42,32 +42,19 @@ export default function AccommodationsContent({
         priority
       />
 
-      {/* Content scrolls BEHIND the sticky hero (desktop) — lower z-index. */}
-      <div className="relative lg:z-0">
-        {/* Intro */}
-        {indexApartment?.intro && (
-          <section className="py-20 lg:py-28 bg-surface-alt">
-            <div className="mx-auto max-w-3xl px-8 text-center">
-              <HtmlContent
-                html={indexApartment.intro}
-                className="font-body text-body-lg text-dark"
-              />
-              <div className="mx-auto mt-8 w-12 h-[3px] bg-primary rounded-sm" />
-            </div>
-          </section>
-        )}
-
-        {/* Apartments Grid with Filter */}
-        <section className="py-20 lg:py-28 bg-surface">
-          <div className="mx-auto max-w-6xl px-8">
-            <CategoryFilter
-              categories={categories}
-              apartments={apartments}
-              locale={locale}
-              allLabel={t('allFilter')}
-            />
-          </div>
-        </section>
+      {/* Content scrolls BEHIND the hero — lower z-index. On mobile it also
+          tucks up under the hero's diagonal (negative margin) so there's no
+          white band; on desktop the section's own -mt handles the overlap. */}
+      <div className="relative z-0 -mt-8 lg:mt-0">
+        {/* Editorial rail (intro) + filtered apartments grid */}
+        <EditorialListingLayout kicker={t('whereToStay')} intro={indexApartment?.intro}>
+          <CategoryFilter
+            categories={categories}
+            apartments={apartments}
+            locale={locale}
+            allLabel={t('allFilter')}
+          />
+        </EditorialListingLayout>
 
         {/* Beddy Booking Bar */}
         {homePage?.beddyId && (

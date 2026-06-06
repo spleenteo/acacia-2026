@@ -4,7 +4,7 @@ import type { FragmentOf } from '@/lib/datocms/graphql';
 import ResponsiveImage, { ResponsiveImageFragment } from '@/components/ResponsiveImage';
 import { OverDarkHeader } from '@/components/HeaderTheme';
 import { useHeroDiagonal } from '@/lib/useHeroDiagonal';
-import { useHeroPin, HERO_STICKY_TOP } from '@/lib/useHeroPin';
+import { useHeroPin } from '@/lib/useHeroPin';
 import { isLightColor } from '@/lib/heroColor';
 import { stripStega } from 'react-datocms/use-content-link';
 
@@ -108,10 +108,18 @@ export default function EditorialHero({
   return (
     <section
       ref={ref}
+      data-editorial-hero
       className={[
-        'relative pb-10 lg:sticky lg:z-30',
+        // z-10 on mobile so the diagonal bottom edge paints over the content
+        // that tucks up behind it (the listing wrapper pulls itself up with a
+        // negative margin); lg:z-30 keeps the desktop sticky stacking.
+        'relative z-10 pb-10 lg:sticky lg:z-30',
         hasImage
-          ? `mb-4 lg:mb-14 ${isPinned ? 'md:pb-3.5' : 'md:pb-16'}`
+          ? // lg:top-… is the sticky pin offset (= HERO_STICKY_TOP, 384 =
+            // HERO_PIN_TOP_PX). It MUST stay lg-only: on mobile the hero is
+            // position:relative, where a `top` would shift it up and leave an
+            // equal gap below — so it lives in a class, never inline.
+            `mb-0 lg:mb-14 lg:top-[calc(384px_-_68svh)] ${isPinned ? 'md:pb-3.5' : 'md:pb-16'}`
           : // No photo → compact panel that simply stays pinned where it loads
             // (top), with the content scrolling behind it.
             'mb-8 lg:mb-14 md:pb-16 lg:top-0',
@@ -119,8 +127,6 @@ export default function EditorialHero({
       style={{
         backgroundColor: color,
         marginTop: 'calc(var(--header-height) * -1)',
-        // Sticky pin offset (shared with useHeroPin); ignored unless lg:sticky.
-        ...(hasImage ? { top: HERO_STICKY_TOP } : null),
         // Shared animated diagonal bottom edge (see useHeroDiagonal). The
         // clip-path + padding transitions live inline so an inline `transition`
         // doesn't override a Tailwind one.

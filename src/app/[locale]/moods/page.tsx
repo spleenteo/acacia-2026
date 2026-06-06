@@ -52,7 +52,7 @@ export const query = graphql(
         subtitle(locale: $locale)
         description(locale: $locale, markdown: true)
       }
-      allMoods(locale: $locale, orderBy: [position_ASC]) {
+      allMoods(locale: $locale, orderBy: [position_ASC], first: 100) {
         id
         ...MoodCardFragment
       }
