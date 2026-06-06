@@ -385,17 +385,35 @@ body.lightbox-open beddy-bar {
     margin-bottom: 0.5em;
   }
 
-  /* ── HERO STICKY PIN ───────────────────────────────────────────
-     The pinned hero's sticky `top` offset. Hand-written (not an
-     arbitrary `lg:top-[calc(...)]` Tailwind class) so it always ships
-     in the production build, regardless of class scanning. Desktop
-     only: below lg the hero is position:relative, where a `top` would
-     shift it up and leave a gap under the diagonal. 384px =
-     HERO_PIN_TOP_PX — keep in sync with useHeroPin.ts.
+  /* ── HERO PIN (sticky gated by viewport HEIGHT, not width) ─────
+     The hero pins only when the viewport is tall enough (≥820px) —
+     so iPad portrait pins, but short landscape tablets and phones
+     don't. Gating on height (not `lg` width) is what makes the pin
+     follow available vertical room instead of orientation.
+
+     Hand-written (not arbitrary Tailwind classes) so it always ships
+     in production, AND so position/z-index/top all come from one place
+     — the heroes carry NO Tailwind position/z/top utilities, avoiding
+     layer-priority conflicts. Below the threshold the hero is
+     position:relative with NO `top` (a `top` on a relative box would
+     shift it up and leave a gap under the diagonal).
+
+     Keep 820px / 384px in sync with src/lib/useHeroPin.ts.
   ──────────────────────────────────────────────────────────────── */
-  @media (min-width: 1024px) {
+  .hero-pin {
+    position: relative;
+    z-index: 10;
+  }
+  @media (min-height: 820px) {
+    .hero-pin {
+      position: sticky;
+      z-index: 30;
+    }
     .hero-pin-top {
       top: calc(384px - 68svh);
+    }
+    .hero-pin-top-0 {
+      top: 0;
     }
   }
 }

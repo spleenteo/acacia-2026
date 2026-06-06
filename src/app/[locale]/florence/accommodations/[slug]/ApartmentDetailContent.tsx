@@ -93,15 +93,15 @@ export default function ApartmentDetailContent({
           photo-derived colour. The coloured panel has a diagonal bottom edge. ── */}
       <section
         ref={heroRef}
-        className={`pointer-events-none relative z-10 mb-0 lg:mb-14 pb-10 lg:sticky lg:z-30 hero-pin-top ${
+        className={`pointer-events-none hero-pin mb-0 lg:mb-14 pb-10 hero-pin-top ${
           heroPinned ? 'md:pb-3.5' : 'md:pb-16'
         }`}
         style={{
           marginTop: 'calc(var(--header-height) * -1)',
-          // The sticky pin offset lives in the `hero-pin-top` class (global.css,
-          // lg-only) — hand-written CSS so it survives the production build, and
-          // NOT inline because on mobile the hero is position:relative, where a
-          // `top` would shift it up and leave a gap below.
+          // position/z/top come from `hero-pin` + `hero-pin-top` (global.css):
+          // sticky + pin offset only once the viewport is tall enough (≥820px),
+          // gated by HEIGHT not width. Hand-written so it ships in production and
+          // so no Tailwind position/top utility overrides it.
           transition: 'padding 500ms ease',
         }}
       >

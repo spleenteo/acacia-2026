@@ -10,23 +10,29 @@ import { useEffect, useRef, useState } from 'react';
  */
 export const HERO_PIN_TOP_PX = 384;
 
-/** The sticky `top` for a pinning hero — feed straight into an inline style. */
-export const HERO_STICKY_TOP = `calc(${HERO_PIN_TOP_PX}px - 68svh)`;
+/**
+ * Minimum viewport HEIGHT (px) at which the hero pins. Gating on height (not
+ * width) makes the pin follow available vertical room: iPad portrait pins,
+ * short landscape tablets / phones don't. Keep in sync with the
+ * `@media (min-height: …)` for `.hero-pin` in global.css.
+ */
+export const HERO_PIN_MIN_HEIGHT = 820;
 
 /**
  * Tracks whether a sticky hero has "pinned" — scrolled up to its sticky top.
- * Desktop only (≥1024px); below that it never pins.
+ * Only when the viewport is tall enough (≥`HERO_PIN_MIN_HEIGHT`); below that the
+ * hero is static and never pins.
  *
- * The companion sticky `top` is `HERO_STICKY_TOP`, chosen so the pinned copy
- * lands at a fixed px position regardless of viewport height; this recomputes
- * that same threshold from `innerHeight`. Hysteresis — pin at +8px, un-pin only
- * at +64px — absorbs the browser's scroll-anchoring nudge when the section's
- * padding shrinks on pin (which would otherwise oscillate the boolean in a tight
- * band). The reads are coalesced through requestAnimationFrame.
+ * The companion sticky `top` is `calc(HERO_PIN_TOP_PX - 68svh)` (the `.hero-pin`
+ * / `.hero-pin-top` rules in global.css), chosen so the pinned copy lands at a
+ * fixed px position regardless of viewport height; this recomputes that same
+ * threshold from `innerHeight`. Hysteresis — pin at +8px, un-pin only at +64px —
+ * absorbs the browser's scroll-anchoring nudge when the section's padding shrinks
+ * on pin. The reads are coalesced through requestAnimationFrame.
  *
- * Pair the returned `ref` with `lg:sticky` + `top: HERO_STICKY_TOP` on the
- * pinning section, and put the content that should scroll behind it in a sibling
- * with a lower stacking context (`relative lg:z-0`).
+ * Pair the returned `ref` with the `hero-pin` class on the pinning section, and
+ * put the content that should scroll behind it in a sibling with a lower
+ * stacking context (`relative z-0`).
  */
 export function useHeroPin<T extends HTMLElement = HTMLElement>() {
   const ref = useRef<T>(null);
@@ -35,7 +41,7 @@ export function useHeroPin<T extends HTMLElement = HTMLElement>() {
   useEffect(() => {
     let raf = 0;
     const evaluate = () => {
-      if (window.innerWidth < 1024) {
+      if (window.innerHeight < HERO_PIN_MIN_HEIGHT) {
         setPinned(false);
         return;
       }

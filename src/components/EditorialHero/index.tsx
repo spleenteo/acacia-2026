@@ -110,19 +110,17 @@ export default function EditorialHero({
       ref={ref}
       data-editorial-hero
       className={[
-        // z-10 on mobile so the diagonal bottom edge paints over the content
-        // that tucks up behind it (the listing wrapper pulls itself up with a
-        // negative margin); lg:z-30 keeps the desktop sticky stacking.
-        'relative z-10 pb-10 lg:sticky lg:z-30',
+        // `hero-pin` (global.css) owns position/z-index/top: relative+z-10 by
+        // default, sticky+z-30 once the viewport is tall enough (≥820px). Gating
+        // by HEIGHT (not `lg` width) means iPad portrait pins but short
+        // landscape tablets / phones don't. No Tailwind position/z/top utilities
+        // here, so nothing overrides the hand-written rule.
+        'hero-pin pb-10',
         hasImage
-          ? // `hero-pin-top` (global.css, lg-only) is the sticky pin offset.
-            // It's hand-written CSS, not an arbitrary Tailwind class, so it
-            // always ships in production; lg-only because on mobile the hero is
-            // position:relative, where a `top` would shift it up and leave a gap.
+          ? // hero-pin-top adds the photo hero's pin offset (height-gated).
             `mb-0 lg:mb-14 hero-pin-top ${isPinned ? 'md:pb-3.5' : 'md:pb-16'}`
-          : // No photo → compact panel that simply stays pinned where it loads
-            // (top), with the content scrolling behind it.
-            'mb-8 lg:mb-14 md:pb-16 lg:top-0',
+          : // No photo → compact panel that pins at top:0 (height-gated).
+            'mb-8 lg:mb-14 md:pb-16 hero-pin-top-0',
       ].join(' ')}
       style={{
         backgroundColor: color,
