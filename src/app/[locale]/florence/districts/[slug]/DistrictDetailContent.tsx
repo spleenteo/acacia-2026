@@ -10,6 +10,8 @@ import { GalleryImageFragment } from '@/components/ImageGallery/fragment';
 import ImageGallery from '@/components/ImageGallery';
 import { toSlide } from '@/components/Lightbox/toSlide';
 import ApartmentCard from '@/components/ApartmentCard';
+import { DistrictCardFragment } from '@/components/DistrictCard';
+import RelatedList from '@/components/RelatedList';
 import { readFragment } from '@/lib/datocms/graphql';
 import type { ResultOf } from 'gql.tada';
 import type { query as districtDetailQuery, apartmentsInDistrictQuery } from './page';
@@ -39,6 +41,17 @@ export default function DistrictDetailContent({
   const galleryItems = district.gallery
     .map((g) => readFragment(GalleryImageFragment, g))
     .filter((img) => img.image?.responsiveImage && img.image?.full);
+
+  // Other published districts for the "you might also be interested in" block.
+  const otherDistricts = data.allDistricts
+    .map((d) => readFragment(DistrictCardFragment, d))
+    .filter((d) => d.id !== district.id)
+    .map((d) => ({
+      id: d.id,
+      name: d.name,
+      slug: d.slug,
+      image: d.gallery[0]?.image?.responsiveImage,
+    }));
 
   return (
     <>
@@ -94,6 +107,13 @@ export default function DistrictDetailContent({
           </section>
         )}
       </div>
+
+      <RelatedList
+        title={tListing('alsoInterested')}
+        model="district"
+        items={otherDistricts}
+        locale={locale}
+      />
     </>
   );
 }

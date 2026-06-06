@@ -9,6 +9,7 @@ import { toNextMetadata } from 'react-datocms/seo';
 import type { Metadata } from 'next';
 import { ResponsiveImageFragment } from '@/components/ResponsiveImage';
 import { ApartmentCardFragment } from '@/components/ApartmentCard';
+import { MoodCardFragment } from '@/components/MoodCard';
 import RealtimeWrapper from '@/lib/datocms/realtime/RealtimeWrapper';
 import { getDraftRealtimeOptions } from '@/lib/datocms/realtime/getDraftRealtimeOptions';
 import MoodDetailContent, { type MoodDetailProps } from './MoodDetailContent';
@@ -73,9 +74,12 @@ export const query = graphql(
           }
         }
       }
+      allMoods(locale: $locale, orderBy: [position_ASC], first: 100) {
+        ...MoodCardFragment
+      }
     }
   `,
-  [ResponsiveImageFragment, ApartmentCardFragment],
+  [ResponsiveImageFragment, ApartmentCardFragment, MoodCardFragment],
 );
 
 const allSlugsQuery = graphql(`

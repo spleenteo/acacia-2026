@@ -7,6 +7,9 @@ import EditorialListingLayout from '@/components/EditorialListingLayout';
 import StructuredTextContent from '@/components/StructuredTextContent';
 import ReadMore from '@/components/ReadMore';
 import ApartmentCard from '@/components/ApartmentCard';
+import { MoodCardFragment } from '@/components/MoodCard';
+import RelatedList from '@/components/RelatedList';
+import { readFragment } from '@/lib/datocms/graphql';
 import type { ResultOf } from 'gql.tada';
 import type { query } from './page';
 
@@ -29,6 +32,18 @@ export default function MoodDetailContent({
   const description = mood.description?.value ? (
     <StructuredTextContent data={mood.description} className="font-body text-body text-dark" />
   ) : null;
+
+  // Other published moods for the "you might also be interested in" block.
+  const otherMoods = data.allMoods
+    .map((m) => readFragment(MoodCardFragment, m))
+    .filter((m) => m.id !== mood.id)
+    .map((m) => ({
+      id: m.id,
+      name: m.name,
+      slug: m.slug,
+      subtitle: m.claim,
+      image: m.image?.responsiveImage,
+    }));
 
   return (
     <>
@@ -64,6 +79,13 @@ export default function MoodDetailContent({
           )
         )}
       </div>
+
+      <RelatedList
+        title={tListing('alsoInterested')}
+        model="mood"
+        items={otherMoods}
+        locale={locale}
+      />
     </>
   );
 }

@@ -9,6 +9,7 @@ import { toNextMetadata } from 'react-datocms/seo';
 import type { Metadata } from 'next';
 import { GalleryImageFragment } from '@/components/ImageGallery/fragment';
 import { ApartmentCardFragment } from '@/components/ApartmentCard';
+import { DistrictCardFragment } from '@/components/DistrictCard';
 import RealtimeWrapper from '@/lib/datocms/realtime/RealtimeWrapper';
 import { getDraftRealtimeOptions } from '@/lib/datocms/realtime/getDraftRealtimeOptions';
 import DistrictDetailContent, { type DistrictDetailProps } from './DistrictDetailContent';
@@ -62,9 +63,12 @@ export const query = graphql(
           ...GalleryImageFragment
         }
       }
+      allDistricts(locale: $locale, orderBy: [position_ASC], first: 100) {
+        ...DistrictCardFragment
+      }
     }
   `,
-  [GalleryImageFragment],
+  [GalleryImageFragment, DistrictCardFragment],
 );
 
 export const apartmentsInDistrictQuery = graphql(
