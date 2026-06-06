@@ -29,17 +29,16 @@ export default function WhatWeLove({ data, title, label, description, lightboxSl
 
   return (
     <div>
+      {/* Title only — the "What We Love" kicker now sits with the gallery it
+          labels (below), letting the heading rise into the reclaimed space. */}
       <div ref={headingRef} className="mb-6">
-        <p className="font-body text-label uppercase tracking-[0.22em] text-primary font-medium mb-2">
-          {label}
-        </p>
         <h2 className="font-heading text-h2 text-dark">
           <em>{title}</em>
         </h2>
       </div>
 
       {description && (
-        <div className="mb-12">
+        <div className="mb-16 md:mb-24">
           <HtmlContent
             html={description}
             className="font-body text-body-lg text-dark leading-relaxed prose-acacia"
@@ -47,13 +46,19 @@ export default function WhatWeLove({ data, title, label, description, lightboxSl
         </div>
       )}
 
-      {/* Vertical, alternating photo flow — every wwl_gallery image, left/right */}
+      {/* Vertical, alternating photo flow — every wwl_gallery image, left/right.
+          The "What We Love" kicker labels this gallery directly. */}
       {photos.length > 0 && (
-        <div className="space-y-10 md:space-y-20">
-          {photos.map((photo, i) => (
-            <ZigZagItem key={photo.id} photo={photo} isRight={i % 2 === 1} index={i} />
-          ))}
-        </div>
+        <>
+          <p className="font-body text-label uppercase tracking-[0.22em] text-primary font-medium mb-6">
+            {label}
+          </p>
+          <div className="space-y-10 md:space-y-20">
+            {photos.map((photo, i) => (
+              <ZigZagItem key={photo.id} photo={photo} isRight={i % 2 === 1} index={i} />
+            ))}
+          </div>
+        </>
       )}
 
       {lightboxSlides && lightboxSlides.length > 0 && (
