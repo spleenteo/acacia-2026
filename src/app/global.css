@@ -386,9 +386,9 @@ body.lightbox-open beddy-bar {
   }
 
   /* ── HERO PIN (sticky gated by viewport HEIGHT, not width) ─────
-     The hero pins only when the viewport is tall enough (≥820px) —
+     The hero pins only when the viewport is tall enough (≥950px) —
      so iPad portrait pins, but short landscape tablets and phones
-     don't. Gating on height (not `lg` width) is what makes the pin
+     (≤932px tall, incl. the largest) don't. Gating on height (not `lg` width) is what makes the pin
      follow available vertical room instead of orientation.
 
      Hand-written (not arbitrary Tailwind classes) so it always ships
@@ -398,13 +398,15 @@ body.lightbox-open beddy-bar {
      position:relative with NO `top` (a `top` on a relative box would
      shift it up and leave a gap under the diagonal).
 
-     Keep 820px / 384px in sync with src/lib/useHeroPin.ts.
+     This @media height threshold is the single source of truth: useHeroPin
+     reads the computed position/top, so there's no JS height to keep in sync
+     (only 384px is shared, via HERO_PIN_TOP_PX).
   ──────────────────────────────────────────────────────────────── */
   .hero-pin {
     position: relative;
     z-index: 10;
   }
-  @media (min-height: 820px) {
+  @media (min-height: 950px) {
     .hero-pin {
       position: sticky;
       z-index: 30;
