@@ -43,6 +43,7 @@
     "eslint": "^9.39.4",
     "eslint-config-next": "^16.1.6",
     "lint-staged": "^16.4.0",
+    "parse5": "^8.0.1",
     "prettier": "3.8.3",
     "simple-git-hooks": "^2.13.1",
     "tsx": "^4.21.0",

@@ -65,10 +65,10 @@ const modelPrefixes: Record<string, string> = {
 const indexPaths: Record<string, string> = {
   home_page: '/',
   index_apartment: '/florence/accommodations',
-  page_districts: '/florence/districts',
-  page_moods: '/moods',
-  page_faq: '/faq',
-  page_guestbook: '/guestbook',
+  index_district: '/florence/districts',
+  index_mood: '/moods',
+  index_faq: '/faq',
+  index_guestbook: '/guestbook',
 };
 
 /** Whether a model API key corresponds to a singleton/index page (no slug required) */

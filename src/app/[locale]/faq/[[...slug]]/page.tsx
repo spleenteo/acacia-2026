@@ -18,6 +18,7 @@ import {
 } from '@/lib/faq/faqTree';
 import { FaqAnswerFragment } from '@/components/Faq/answerFragment';
 import { TagFragment } from '@/lib/datocms/commonFragments';
+import { ResponsiveImageFragment } from '@/components/ResponsiveImage';
 import { type Crumb } from '@/components/Faq/FaqBreadcrumb';
 import RealtimeWrapper from '@/lib/datocms/realtime/RealtimeWrapper';
 import { getDraftRealtimeOptions } from '@/lib/datocms/realtime/getDraftRealtimeOptions';
@@ -29,9 +30,17 @@ type Params = { locale: string; slug?: string[] };
 export const indexQuery = graphql(
   `
     query FaqIndexQuery($locale: SiteLocale!) {
-      pageFaq(locale: $locale) {
-        title(locale: $locale)
-        subtitle(locale: $locale)
+      indexFaq(locale: $locale) {
+        hero(locale: $locale) {
+          color
+          title
+          subtitle
+          featuredImage {
+            responsiveImage(imgixParams: { w: 1400, h: 500, fit: crop }) {
+              ...ResponsiveImageFragment
+            }
+          }
+        }
         intro(locale: $locale)
         _seoMetaTags(locale: $locale) {
           ...TagFragment
@@ -39,7 +48,7 @@ export const indexQuery = graphql(
       }
     }
   `,
-  [TagFragment],
+  [TagFragment, ResponsiveImageFragment],
 );
 
 export const nodeQuery = graphql(
@@ -90,7 +99,7 @@ export async function generateMetadata({ params }: { params: Promise<Params> }):
       includeDrafts: isEnabled,
     });
     return {
-      ...toNextMetadata(data.pageFaq?._seoMetaTags ?? []),
+      ...toNextMetadata(data.indexFaq?._seoMetaTags ?? []),
       alternates: {
         canonical: faqPath(loc, []),
         languages: Object.fromEntries(locales.map((l) => [l, faqPath(l, [])])),

@@ -5,6 +5,7 @@ import { localizedPath } from '@/i18n/paths';
 import { draftMode } from 'next/headers';
 import { TagFragment } from '@/lib/datocms/commonFragments';
 import { GuestbookCardFragment } from '@/components/GuestbookCard/fragment';
+import { ResponsiveImageFragment } from '@/components/ResponsiveImage';
 import { toNextMetadata } from 'react-datocms/seo';
 import type { Metadata } from 'next';
 import RealtimeWrapper from '@/lib/datocms/realtime/RealtimeWrapper';
@@ -21,7 +22,7 @@ const WINDOW_MONTHS = 24;
 const metaQuery = graphql(
   `
     query GuestbookMetaQuery($locale: SiteLocale!) {
-      pageGuestbook(locale: $locale) {
+      indexGuestbook(locale: $locale) {
         _seoMetaTags(locale: $locale) {
           ...TagFragment
         }
@@ -43,7 +44,7 @@ export async function generateMetadata({
     includeDrafts: isEnabled,
   });
   return {
-    ...toNextMetadata(data.pageGuestbook?._seoMetaTags ?? []),
+    ...toNextMetadata(data.indexGuestbook?._seoMetaTags ?? []),
     alternates: {
       canonical: `/${locale}${localizedPath(locale as Locale, '/guestbook')}`,
       languages: Object.fromEntries(
@@ -56,10 +57,20 @@ export async function generateMetadata({
 export const query = graphql(
   `
     query GuestbookQuery($locale: SiteLocale!, $cutoff: Date!) {
-      pageGuestbook(locale: $locale) {
-        title(locale: $locale)
-        subtitle(locale: $locale)
-        intro(locale: $locale, markdown: true)
+      indexGuestbook(locale: $locale) {
+        hero(locale: $locale) {
+          color
+          title
+          subtitle
+          featuredImage {
+            responsiveImage(imgixParams: { w: 1400, h: 500, fit: crop }) {
+              ...ResponsiveImageFragment
+            }
+          }
+        }
+        description(locale: $locale, fallbackLocales: [en]) {
+          value
+        }
       }
       allGuestbooks(
         locale: $locale
@@ -72,7 +83,7 @@ export const query = graphql(
       }
     }
   `,
-  [GuestbookCardFragment],
+  [GuestbookCardFragment, ResponsiveImageFragment],
 );
 
 /** First day of the N-month window, as a `YYYY-MM-DD` string (day-stable). */

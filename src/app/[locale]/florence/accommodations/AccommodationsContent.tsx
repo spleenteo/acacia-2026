@@ -2,28 +2,18 @@
 
 import { type Locale } from '@/i18n/config';
 import { useTranslations } from 'next-intl';
-import { stripStega } from 'react-datocms/use-content-link';
-import EditorialHero, { type HeroTone } from '@/components/EditorialHero';
+import EditorialHero from '@/components/EditorialHero';
 import EditorialListingLayout from '@/components/EditorialListingLayout';
 import StructuredTextContent from '@/components/StructuredTextContent';
 import ReadMore from '@/components/ReadMore';
 import BeddyBar from '@/components/BeddyBar';
 import CategoryFilter from '@/components/CategoryFilter';
+import { toHeroTone } from '@/lib/heroTone';
 import type { ResultOf } from 'gql.tada';
 import type { query } from './page';
 
 export type AccommodationsProps = { locale: Locale };
 type AccommodationsData = ResultOf<typeof query>;
-
-/** Tone codes the hero `color` field can return (must match EditorialHero). */
-const HERO_TONES: HeroTone[] = ['rust', 'gold', 'sage', 'slate', 'navy', 'primary'];
-
-/** Map the CMS `color` code to a valid hero tone, defaulting to primary.
- *  `color` is a string field, so strip stega before the membership check. */
-function toHeroTone(color: string | null | undefined): HeroTone {
-  const code = stripStega(color ?? '');
-  return (HERO_TONES as string[]).includes(code) ? (code as HeroTone) : 'primary';
-}
 
 export default function AccommodationsContent({
   locale,

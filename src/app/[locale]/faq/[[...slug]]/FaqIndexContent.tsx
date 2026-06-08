@@ -4,6 +4,7 @@ import type { ResultOf } from 'gql.tada';
 import type { indexQuery } from './page';
 import FaqCard from '@/components/Faq/FaqCard';
 import EditorialHero from '@/components/EditorialHero';
+import { toHeroTone } from '@/lib/heroTone';
 
 export type FaqIndexProps = {
   roots: { id: string; question: string; href: string }[];
@@ -11,14 +12,15 @@ export type FaqIndexProps = {
 type FaqIndexData = ResultOf<typeof indexQuery>;
 
 export default function FaqIndexContent({ roots, data }: FaqIndexProps & { data: FaqIndexData }) {
-  const page = data.pageFaq;
+  const page = data.indexFaq;
   return (
     <>
       <EditorialHero
-        tone="sage"
+        tone={toHeroTone(page?.hero.color)}
         label="FAQ"
-        title={page?.title ?? 'FAQ'}
-        subtitle={page?.subtitle}
+        title={page?.hero.title ?? 'FAQ'}
+        subtitle={page?.hero.subtitle}
+        image={page?.hero.featuredImage?.responsiveImage}
         priority
       />
 

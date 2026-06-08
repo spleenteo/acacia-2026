@@ -6,7 +6,10 @@ import { useTranslations } from 'next-intl';
 import type { ResultOf } from 'gql.tada';
 import EditorialHero from '@/components/EditorialHero';
 import EditorialListingLayout from '@/components/EditorialListingLayout';
+import StructuredTextContent from '@/components/StructuredTextContent';
+import ReadMore from '@/components/ReadMore';
 import GuestbookCard from '@/components/GuestbookCard';
+import { toHeroTone } from '@/lib/heroTone';
 import type { query } from './page';
 
 export type GuestbookProps = { locale: Locale };
@@ -17,7 +20,14 @@ export default function GuestbookContent({
   data,
 }: GuestbookProps & { data: GuestbookData }) {
   const t = useTranslations('guestbook');
-  const { pageGuestbook, allGuestbooks } = data;
+  const { indexGuestbook, allGuestbooks } = data;
+
+  const description = indexGuestbook?.description?.value ? (
+    <StructuredTextContent
+      data={indexGuestbook.description}
+      className="font-body text-body-sm text-muted"
+    />
+  ) : null;
 
   // Masonry that keeps date-DESC reading order left→right: round-robin the
   // reviews into N columns (item 0 → col 0, item 1 → col 1, item 2 → col 0…),
@@ -38,20 +48,23 @@ export default function GuestbookContent({
 
   return (
     <>
-      {/* Hero — same treatment as the moods index: solid tone panel + animated
-          diagonal, title + subtitle, no photo. */}
+      {/* Hero — driven by the single-instance `hero` block. */}
       <EditorialHero
-        tone="gold"
+        tone={toHeroTone(indexGuestbook?.hero.color)}
         label={t('kicker')}
-        title={pageGuestbook?.title ?? ''}
-        subtitle={pageGuestbook?.subtitle}
+        title={indexGuestbook?.hero.title ?? ''}
+        subtitle={indexGuestbook?.hero.subtitle}
+        image={indexGuestbook?.hero.featuredImage?.responsiveImage}
         priority
       />
 
       {/* Content tucks up under the hero's diagonal on mobile. */}
       <div className="relative z-0 -mt-8 lg:mt-0">
-        {/* Editorial rail (intro) on the left + reviews grid on the right. */}
-        <EditorialListingLayout kicker={t('kicker')} intro={pageGuestbook?.intro}>
+        {/* Editorial rail (description) on the left + reviews grid on the right. */}
+        <EditorialListingLayout
+          kicker={t('kicker')}
+          body={description && <ReadMore desktopExpanded>{description}</ReadMore>}
+        >
           {/* Masonry — natural-height cards in N ordered columns (see above). */}
           <div className="flex gap-6">
             {columns.map((col, ci) => (

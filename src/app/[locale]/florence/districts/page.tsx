@@ -7,6 +7,7 @@ import { TagFragment } from '@/lib/datocms/commonFragments';
 import { toNextMetadata } from 'react-datocms/seo';
 import type { Metadata } from 'next';
 import { DistrictCardFragment } from '@/components/DistrictCard';
+import { ResponsiveImageFragment } from '@/components/ResponsiveImage';
 import RealtimeWrapper from '@/lib/datocms/realtime/RealtimeWrapper';
 import { getDraftRealtimeOptions } from '@/lib/datocms/realtime/getDraftRealtimeOptions';
 import DistrictsContent, { type DistrictsProps } from './DistrictsContent';
@@ -14,7 +15,7 @@ import DistrictsContent, { type DistrictsProps } from './DistrictsContent';
 const metaQuery = graphql(
   `
     query DistrictsMetaQuery($locale: SiteLocale!) {
-      pageDistricts(locale: $locale) {
+      indexDistrict(locale: $locale) {
         _seoMetaTags(locale: $locale) {
           ...TagFragment
         }
@@ -36,7 +37,7 @@ export async function generateMetadata({
     includeDrafts: isEnabled,
   });
   return {
-    ...toNextMetadata(data.pageDistricts?._seoMetaTags ?? []),
+    ...toNextMetadata(data.indexDistrict?._seoMetaTags ?? []),
     alternates: {
       canonical: `/${locale}${localizedPath(locale as Locale, '/florence/districts')}`,
       languages: Object.fromEntries(
@@ -49,10 +50,20 @@ export async function generateMetadata({
 export const query = graphql(
   `
     query DistrictsQuery($locale: SiteLocale!) {
-      pageDistricts(locale: $locale) {
-        title(locale: $locale)
-        subtitle(locale: $locale)
-        description(locale: $locale, markdown: true)
+      indexDistrict(locale: $locale) {
+        hero(locale: $locale) {
+          color
+          title
+          subtitle
+          featuredImage {
+            responsiveImage(imgixParams: { w: 1400, h: 500, fit: crop }) {
+              ...ResponsiveImageFragment
+            }
+          }
+        }
+        description(locale: $locale, fallbackLocales: [en]) {
+          value
+        }
       }
       allDistricts(locale: $locale, orderBy: [position_ASC], first: 100) {
         id
@@ -60,7 +71,7 @@ export const query = graphql(
       }
     }
   `,
-  [DistrictCardFragment],
+  [DistrictCardFragment, ResponsiveImageFragment],
 );
 
 export default async function DistrictsPage({ params }: { params: Promise<{ locale: string }> }) {

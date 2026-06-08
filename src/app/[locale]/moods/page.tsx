@@ -7,6 +7,7 @@ import { TagFragment } from '@/lib/datocms/commonFragments';
 import { toNextMetadata } from 'react-datocms/seo';
 import type { Metadata } from 'next';
 import { MoodCardFragment } from '@/components/MoodCard';
+import { ResponsiveImageFragment } from '@/components/ResponsiveImage';
 import RealtimeWrapper from '@/lib/datocms/realtime/RealtimeWrapper';
 import { getDraftRealtimeOptions } from '@/lib/datocms/realtime/getDraftRealtimeOptions';
 import MoodsContent, { type MoodsProps } from './MoodsContent';
@@ -14,7 +15,7 @@ import MoodsContent, { type MoodsProps } from './MoodsContent';
 const metaQuery = graphql(
   `
     query MoodsMetaQuery($locale: SiteLocale!) {
-      pageMoods(locale: $locale) {
+      indexMood(locale: $locale) {
         _seoMetaTags(locale: $locale) {
           ...TagFragment
         }
@@ -36,7 +37,7 @@ export async function generateMetadata({
     includeDrafts: isEnabled,
   });
   return {
-    ...toNextMetadata(data.pageMoods?._seoMetaTags ?? []),
+    ...toNextMetadata(data.indexMood?._seoMetaTags ?? []),
     alternates: {
       canonical: `/${locale}${localizedPath(locale as Locale, '/moods')}`,
       languages: Object.fromEntries(locales.map((l) => [l, `/${l}${localizedPath(l, '/moods')}`])),
@@ -47,10 +48,20 @@ export async function generateMetadata({
 export const query = graphql(
   `
     query MoodsQuery($locale: SiteLocale!) {
-      pageMoods(locale: $locale) {
-        title(locale: $locale)
-        subtitle(locale: $locale)
-        description(locale: $locale, markdown: true)
+      indexMood(locale: $locale) {
+        hero(locale: $locale) {
+          color
+          title
+          subtitle
+          featuredImage {
+            responsiveImage(imgixParams: { w: 1400, h: 500, fit: crop }) {
+              ...ResponsiveImageFragment
+            }
+          }
+        }
+        description(locale: $locale, fallbackLocales: [en]) {
+          value
+        }
       }
       allMoods(locale: $locale, orderBy: [position_ASC], first: 100) {
         id
@@ -58,7 +69,7 @@ export const query = graphql(
       }
     }
   `,
-  [MoodCardFragment],
+  [MoodCardFragment, ResponsiveImageFragment],
 );
 
 export default async function MoodsPage({ params }: { params: Promise<{ locale: string }> }) {
