@@ -32,19 +32,9 @@ const query = graphql(
             label
             page {
               __typename
-              ... on HomePageRecord {
-                _modelApiKey
-              }
-              ... on IndexApartmentRecord {
-                _modelApiKey
-              }
-              ... on PageDistrictsRecord {
-                _modelApiKey
-              }
-              ... on PageMoodsRecord {
-                _modelApiKey
-              }
-              ... on PageFaqRecord {
+              # All page targets implement RecordInterface, so one fragment
+              # covers every current and future member of the menu page union.
+              ... on RecordInterface {
                 _modelApiKey
               }
             }
@@ -66,19 +56,8 @@ const query = graphql(
               label
               page {
                 __typename
-                ... on HomePageRecord {
-                  _modelApiKey
-                }
-                ... on IndexApartmentRecord {
-                  _modelApiKey
-                }
-                ... on PageDistrictsRecord {
-                  _modelApiKey
-                }
-                ... on PageMoodsRecord {
-                  _modelApiKey
-                }
-                ... on PageFaqRecord {
+                # See navItems above — one interface fragment covers all members.
+                ... on RecordInterface {
                   _modelApiKey
                 }
               }

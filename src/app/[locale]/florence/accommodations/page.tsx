@@ -51,13 +51,18 @@ export const query = graphql(
   `
     query AccommodationsQuery($locale: SiteLocale!) {
       indexApartment(locale: $locale) {
-        title(locale: $locale)
-        subtitle(locale: $locale)
-        intro(locale: $locale, markdown: true)
-        featuredImage {
-          responsiveImage(imgixParams: { w: 1400, h: 500, fit: crop }) {
-            ...ResponsiveImageFragment
+        hero(locale: $locale) {
+          color
+          title
+          subtitle
+          featuredImage {
+            responsiveImage(imgixParams: { w: 1400, h: 500, fit: crop }) {
+              ...ResponsiveImageFragment
+            }
           }
+        }
+        description(locale: $locale, fallbackLocales: [en]) {
+          value
         }
       }
       allApartmentCategories(locale: $locale, orderBy: [position_ASC]) {

@@ -7,20 +7,39 @@ type Props = {
   children: ReactNode;
   /** Number of lines shown when collapsed. */
   lines?: number;
+  /** When true, the content is shown in full (no clamp, no toggle) from `lg` up,
+   *  and only collapses below it. Defaults to clamping on every viewport. */
+  desktopExpanded?: boolean;
 };
 
 /**
  * Clamps its content to `lines` lines and reveals a "read more / read less"
- * toggle — but only when the content actually overflows the clamp. Works on all
- * viewports (the detail-page description rail is narrow, so long copy needs
- * trimming on desktop too). The full text stays in the DOM (CSS clamp), so it
- * remains crawlable/accessible.
+ * toggle — but only when the content actually overflows the clamp. The full text
+ * stays in the DOM (CSS clamp), so it remains crawlable/accessible.
+ *
+ * By default it clamps on every viewport (the detail-page rail is narrow, so
+ * long copy needs trimming on desktop too). Pass `desktopExpanded` for index
+ * pages that want the copy fully expanded from `lg` up and the toggle only on
+ * smaller screens.
  */
-export default function ReadMore({ children, lines = 8 }: Props) {
+export default function ReadMore({ children, lines = 8, desktopExpanded = false }: Props) {
   const t = useTranslations('listing');
   const [expanded, setExpanded] = useState(false);
   const [overflowing, setOverflowing] = useState(false);
+  const [isDesktop, setIsDesktop] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
+
+  // Only track the breakpoint when desktop-expansion is requested.
+  useEffect(() => {
+    if (!desktopExpanded) return;
+    const mq = window.matchMedia('(min-width: 1024px)');
+    const apply = () => setIsDesktop(mq.matches);
+    apply();
+    mq.addEventListener('change', apply);
+    return () => mq.removeEventListener('change', apply);
+  }, [desktopExpanded]);
+
+  const fullyOpen = expanded || (desktopExpanded && isDesktop);
 
   useEffect(() => {
     const el = ref.current;
@@ -30,14 +49,14 @@ export default function ReadMore({ children, lines = 8 }: Props) {
     check();
     window.addEventListener('resize', check);
     return () => window.removeEventListener('resize', check);
-  }, [children]);
+  }, [children, fullyOpen]);
 
   return (
     <div>
       <div
         ref={ref}
         style={
-          expanded
+          fullyOpen
             ? undefined
             : {
                 display: '-webkit-box',
@@ -50,7 +69,7 @@ export default function ReadMore({ children, lines = 8 }: Props) {
         {children}
       </div>
 
-      {(overflowing || expanded) && (
+      {!(desktopExpanded && isDesktop) && (overflowing || expanded) && (
         <button
           type="button"
           onClick={() => setExpanded((v) => !v)}
