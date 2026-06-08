@@ -27,7 +27,14 @@ const slugsQuery = graphql(`
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const data = await executeQuery(slugsQuery);
 
-  const staticPaths = ['', '/florence/accommodations', '/florence/districts', '/moods', '/faq'];
+  const staticPaths = [
+    '',
+    '/florence/accommodations',
+    '/florence/districts',
+    '/moods',
+    '/faq',
+    '/guestbook',
+  ];
 
   // FAQ tree: every node has its own (localized) hierarchical URL.
   const faqEntries: MetadataRoute.Sitemap = (

@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useInView } from '@/hooks/useInView';
 import Modal from '@/components/Modal';
+import { getChannelLogo } from '@/lib/channelLogos';
 
 type Review = {
   id: string;
@@ -18,18 +19,6 @@ type Props = {
   label: string;
   title: string;
 };
-
-const channelLogos: Record<string, { src: string; alt: string }> = {
-  booking: { src: '/booking-logo.svg', alt: 'Booking.com' },
-  airbnb: { src: '/airbnb-logo.svg', alt: 'Airbnb' },
-};
-
-const defaultLogo = { src: '/acacia-isologo.svg', alt: 'Acacia Firenze' };
-
-function getChannelLogo(channel: string | null) {
-  if (!channel) return defaultLogo;
-  return channelLogos[channel.toLowerCase()] ?? defaultLogo;
-}
 
 export default function ReviewsList({ reviews, label, title }: Props) {
   const headingRef = useInView<HTMLDivElement>();

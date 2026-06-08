@@ -10,6 +10,7 @@ const pathSegments: Record<string, Record<Locale, string>> = {
   districts: { en: 'districts', it: 'quartieri' },
   moods: { en: 'moods', it: 'moods' },
   faq: { en: 'faq', it: 'faq' },
+  guestbook: { en: 'guestbook', it: 'guestbook' },
 };
 
 /** Reverse map: for each locale, maps translated segment → canonical segment */
@@ -67,6 +68,7 @@ const indexPaths: Record<string, string> = {
   page_districts: '/florence/districts',
   page_moods: '/moods',
   page_faq: '/faq',
+  page_guestbook: '/guestbook',
 };
 
 /** Whether a model API key corresponds to a singleton/index page (no slug required) */
