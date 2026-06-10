@@ -38,6 +38,18 @@ export type FaqTree = {
   childrenOf: Map<string | null, FaqStructureNode[]>;
 };
 
+/**
+ * Serializable nested tree handed to the docs-style side navigation
+ * (`FaqSideNav`). Each node carries its localized question + resolved URL so the
+ * client component can render the whole phase tree without re-querying.
+ */
+export type FaqNavNode = {
+  id: string;
+  question: string;
+  href: string;
+  children: FaqNavNode[];
+};
+
 /** Fetch the flat FAQ structure for a locale and reconstruct the tree. */
 export async function fetchFaqTree(locale: Locale, includeDrafts: boolean): Promise<FaqTree> {
   const data = await executeQuery(faqStructureQuery, {

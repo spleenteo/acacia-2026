@@ -6,137 +6,194 @@ import { type Locale } from '@/i18n/config';
 import { stripStega } from 'react-datocms/use-content-link';
 import { readFragment } from '@/lib/datocms/graphql';
 import { dastToText } from '@/lib/faq/dastText';
+import type { FaqNavNode } from '@/lib/faq/faqTree';
 import type { nodeQuery } from './page';
 import { FaqAnswerFragment } from '@/components/Faq/answerFragment';
 import FaqStructuredText from '@/components/Faq/FaqStructuredText';
-import FaqAccordion from '@/components/Faq/FaqAccordion';
 import FaqBreadcrumb, { type Crumb } from '@/components/Faq/FaqBreadcrumb';
-import FaqCard from '@/components/Faq/FaqCard';
+import FaqSideNav from '@/components/Faq/FaqSideNav';
 import CopyLinkButton from '@/components/Faq/CopyLinkButton';
-
-export type ChildMeta = { id: string; isLeaf: boolean; href: string; question: string };
 
 export type FaqNodeProps = {
   locale: Locale;
   /** This node's own page URL, for the share button. */
   selfHref: string;
   crumbs: Crumb[];
-  childOrder: ChildMeta[];
-  childrenAllLeaves: boolean;
-  siblings: { id: string; question: string; href: string }[];
+  /** Full phase tree for the docs-style side navigation. */
+  navTree: FaqNavNode[];
+  activeId: string;
+  ancestorIds: string[];
+  /** True when this node has no children (a question, not a section). */
+  isLeaf: boolean;
   faqHrefById: Record<string, string>;
 };
 type FaqNodeData = ResultOf<typeof nodeQuery>;
+
+/** Depth-first flatten of the nav tree, for the prev/next pager. */
+function flatten(nodes: FaqNavNode[], out: FaqNavNode[] = []): FaqNavNode[] {
+  for (const n of nodes) {
+    out.push(n);
+    if (n.children.length) flatten(n.children, out);
+  }
+  return out;
+}
+
+function findNode(nodes: FaqNavNode[], id: string): FaqNavNode | null {
+  for (const n of nodes) {
+    if (n.id === id) return n;
+    const hit = findNode(n.children, id);
+    if (hit) return hit;
+  }
+  return null;
+}
 
 export default function FaqNodeContent({
   locale,
   selfHref,
   crumbs,
-  childOrder,
-  childrenAllLeaves,
-  siblings,
+  navTree,
+  activeId,
+  ancestorIds,
+  isLeaf,
   faqHrefById,
   data,
 }: FaqNodeProps & { data: FaqNodeData }) {
   const faq = data.faq;
   if (!faq) return null;
 
-  const childContentById = new Map((faq.children ?? []).map((c) => [c.id, c]));
+  const answer = faq.answerStructured
+    ? readFragment(FaqAnswerFragment, faq.answerStructured)
+    : null;
 
-  // FAQPage JSON-LD (only on accordion nodes whose children are questions)
-  const mainEntity = childrenAllLeaves
-    ? childOrder
-        .map((c) => {
-          const cc = childContentById.get(c.id);
-          const answer = cc?.answerStructured
-            ? readFragment(FaqAnswerFragment, cc.answerStructured)
-            : null;
-          const text = dastToText(answer?.value);
-          return text
-            ? {
-                '@type': 'Question',
-                // Strip stega: in draft mode `question` carries invisible
-                // click-to-edit metadata that must not leak into JSON-LD.
-                name: stripStega(cc?.question ?? c.question),
-                acceptedAnswer: { '@type': 'Answer', text },
-              }
-            : null;
-        })
-        .filter(Boolean)
-    : [];
+  // Single-question FAQPage JSON-LD on leaf pages (rich-result eligibility).
+  const answerText = isLeaf ? dastToText(answer?.value) : '';
+  const jsonLd =
+    isLeaf && answerText
+      ? {
+          '@context': 'https://schema.org',
+          '@type': 'FAQPage',
+          mainEntity: [
+            {
+              '@type': 'Question',
+              // Strip stega: in draft mode `question` carries invisible
+              // click-to-edit metadata that must not leak into JSON-LD.
+              name: stripStega(faq.question ?? ''),
+              acceptedAnswer: { '@type': 'Answer', text: answerText },
+            },
+          ],
+        }
+      : null;
+
+  // Section nodes list their direct children inline (a docs "in this section" index).
+  const activeNode = findNode(navTree, activeId);
+  const sectionChildren = !isLeaf ? (activeNode?.children ?? []) : [];
+
+  // Prev / next across the flattened tree, docs-style pager.
+  const flat = flatten(navTree);
+  const idx = flat.findIndex((n) => n.id === activeId);
+  const prev = idx > 0 ? flat[idx - 1] : null;
+  const next = idx >= 0 && idx < flat.length - 1 ? flat[idx + 1] : null;
 
   return (
-    <div className="mx-auto max-w-3xl px-5 py-12 md:py-16">
-      {mainEntity.length > 0 && (
+    <div className="mx-auto max-w-6xl px-5 py-12 md:py-16">
+      {jsonLd && (
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              '@context': 'https://schema.org',
-              '@type': 'FAQPage',
-              mainEntity,
-            }),
-          }}
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
       )}
 
-      <FaqBreadcrumb crumbs={crumbs} />
+      <div className="lg:grid lg:grid-cols-[minmax(0,1fr)_17rem] lg:gap-14">
+        {/* Side navigation — right column on desktop (order-last), on top on mobile */}
+        <aside className="mb-10 lg:order-last lg:mb-0">
+          <div className="lg:sticky lg:top-28">
+            <FaqSideNav
+              navTree={navTree}
+              activeId={activeId}
+              ancestorIds={ancestorIds}
+              locale={locale}
+            />
+          </div>
+        </aside>
 
-      <div className="flex items-start gap-3">
-        <h1 className="font-heading text-h1 font-normal text-dark leading-tight">{faq.question}</h1>
-        <CopyLinkButton href={selfHref} className="mt-2" />
-      </div>
+        {/* Article */}
+        <article className="min-w-0 max-w-3xl">
+          <FaqBreadcrumb crumbs={crumbs} />
 
-      <div className="mt-5">
-        <FaqStructuredText data={faq.answerStructured} faqHrefById={faqHrefById} locale={locale} />
-      </div>
+          <div className="flex items-start gap-3">
+            <h1 className="font-heading text-h1 font-normal leading-tight text-dark">
+              {faq.question}
+            </h1>
+            <CopyLinkButton href={selfHref} className="mt-2" />
+          </div>
 
-      {childOrder.length > 0 && (
-        <div className="mt-10">
-          {childrenAllLeaves ? (
-            <FaqAccordion
+          <div className="mt-6">
+            <FaqStructuredText
+              data={faq.answerStructured}
               faqHrefById={faqHrefById}
               locale={locale}
-              items={childOrder.map((c) => ({
-                id: c.id,
-                question: childContentById.get(c.id)?.question ?? c.question,
-                answer: childContentById.get(c.id)?.answerStructured ?? null,
-                href: c.href,
-              }))}
             />
-          ) : (
-            <div className="grid gap-5 sm:grid-cols-2">
-              {childOrder.map((c) => (
-                <FaqCard
-                  key={c.id}
-                  title={childContentById.get(c.id)?.question ?? c.question}
-                  href={c.href}
-                />
-              ))}
-            </div>
-          )}
-        </div>
-      )}
+          </div>
 
-      {siblings.length > 0 && (
-        <div className="mt-14 border-t border-border pt-6">
-          <p className="font-body text-label uppercase tracking-[0.18em] text-light font-medium">
-            Vai a
-          </p>
-          <ul className="mt-3 flex flex-wrap gap-x-5 gap-y-2">
-            {siblings.map((s) => (
-              <li key={s.id}>
+          {sectionChildren.length > 0 && (
+            <ul className="mt-8 divide-y divide-border border-t border-border">
+              {sectionChildren.map((c) => (
+                <li key={c.id}>
+                  <Link
+                    href={c.href}
+                    className="group flex items-center justify-between gap-4 py-4"
+                  >
+                    <span className="font-heading text-h4 font-normal text-dark transition-colors group-hover:text-primary">
+                      {c.question}
+                    </span>
+                    <span
+                      aria-hidden
+                      className="shrink-0 text-primary transition-transform duration-300 group-hover:translate-x-1"
+                    >
+                      →
+                    </span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          )}
+
+          {(prev || next) && (
+            <nav className="mt-14 grid gap-4 border-t border-border pt-6 sm:grid-cols-2">
+              {prev ? (
                 <Link
-                  href={s.href}
-                  className="font-body text-body-sm text-muted transition-colors hover:text-primary"
+                  href={prev.href}
+                  className="group rounded-card border border-border p-4 transition-colors hover:border-primary-pale"
                 >
-                  {s.question}
+                  <span className="font-body text-label uppercase tracking-[0.18em] text-light">
+                    ←
+                  </span>
+                  <span className="mt-1 block font-heading text-h4 font-normal text-dark transition-colors group-hover:text-primary">
+                    {prev.question}
+                  </span>
                 </Link>
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
+              ) : (
+                <span className="hidden sm:block" />
+              )}
+              {next ? (
+                <Link
+                  href={next.href}
+                  className="group rounded-card border border-border p-4 text-right transition-colors hover:border-primary-pale"
+                >
+                  <span className="font-body text-label uppercase tracking-[0.18em] text-light">
+                    →
+                  </span>
+                  <span className="mt-1 block font-heading text-h4 font-normal text-dark transition-colors group-hover:text-primary">
+                    {next.question}
+                  </span>
+                </Link>
+              ) : (
+                <span className="hidden sm:block" />
+              )}
+            </nav>
+          )}
+        </article>
+      </div>
     </div>
   );
 }

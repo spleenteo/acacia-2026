@@ -4,6 +4,7 @@ import type { ResultOf } from 'gql.tada';
 import type { indexQuery } from './page';
 import FaqCard from '@/components/Faq/FaqCard';
 import EditorialHero from '@/components/EditorialHero';
+import StructuredTextContent from '@/components/StructuredTextContent';
 import { toHeroTone } from '@/lib/heroTone';
 
 export type FaqIndexProps = {
@@ -27,11 +28,12 @@ export default function FaqIndexContent({ roots, data }: FaqIndexProps & { data:
       {/* Content scrolls BEHIND the sticky hero (desktop) — lower z-index. */}
       <div className="relative lg:z-0">
         <div className="mx-auto max-w-4xl px-5 py-12 md:py-16">
-          {page?.intro && (
-            <p className="font-body text-body-lg text-body leading-relaxed whitespace-pre-line">
-              {page.intro}
-            </p>
-          )}
+          {page?.description?.value ? (
+            <StructuredTextContent
+              data={page.description}
+              className="font-body text-body-lg text-body"
+            />
+          ) : null}
           <div className="mt-10 grid gap-5 sm:grid-cols-3">
             {roots.map((r) => (
               <FaqCard key={r.id} title={r.question} href={r.href} />

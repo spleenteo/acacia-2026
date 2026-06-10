@@ -13,8 +13,8 @@ import {
   nodeForPath,
   ancestorsOf,
   pathSlugsForNode,
-  siblingsOf,
   hasChildren,
+  type FaqNavNode,
 } from '@/lib/faq/faqTree';
 import { FaqAnswerFragment } from '@/components/Faq/answerFragment';
 import { TagFragment } from '@/lib/datocms/commonFragments';
@@ -23,7 +23,7 @@ import { type Crumb } from '@/components/Faq/FaqBreadcrumb';
 import RealtimeWrapper from '@/lib/datocms/realtime/RealtimeWrapper';
 import { getDraftRealtimeOptions } from '@/lib/datocms/realtime/getDraftRealtimeOptions';
 import FaqIndexContent from './FaqIndexContent';
-import FaqNodeContent, { type ChildMeta } from './FaqNodeContent';
+import FaqNodeContent from './FaqNodeContent';
 
 type Params = { locale: string; slug?: string[] };
 
@@ -41,7 +41,9 @@ export const indexQuery = graphql(
             }
           }
         }
-        intro(locale: $locale)
+        description(locale: $locale, fallbackLocales: [en]) {
+          value
+        }
         _seoMetaTags(locale: $locale) {
           ...TagFragment
         }
@@ -62,13 +64,6 @@ export const nodeQuery = graphql(
         }
         _seoMetaTags(locale: $locale) {
           ...TagFragment
-        }
-        children {
-          id
-          question(locale: $locale)
-          answerStructured {
-            ...FaqAnswer
-          }
         }
       }
     }
@@ -170,25 +165,23 @@ export default async function FaqPage({ params }: { params: Promise<Params> }) {
   const nodeData = await executeQuery(nodeQuery, { variables, includeDrafts });
   if (!nodeData.faq) notFound();
 
-  const children = childrenOfNode(tree, node.id);
-  const childOrder: ChildMeta[] = children.map((c) => ({
-    id: c.id,
-    isLeaf: !hasChildren(tree, c.id),
-    href: faqPath(loc, pathSlugsForNode(tree, c.id)),
-    question: c.question,
-  }));
-  const childrenAllLeaves = children.length > 0 && childOrder.every((c) => c.isLeaf);
-
   const crumbs: Crumb[] = [{ label: 'FAQ', href: faqPath(loc, []) }];
   for (const a of ancestorsOf(tree, node.id)) {
     crumbs.push({ label: a.question, href: faqPath(loc, pathSlugsForNode(tree, a.id)) });
   }
 
-  const siblings = siblingsOf(tree, node.id).map((s) => ({
-    id: s.id,
-    question: s.question,
-    href: faqPath(loc, pathSlugsForNode(tree, s.id)),
-  }));
+  // Full FAQ tree (roots → leaves) for the docs-style side navigation.
+  const buildNav = (nodeId: string): FaqNavNode => {
+    const n = tree.byId.get(nodeId)!;
+    return {
+      id: n.id,
+      question: n.question,
+      href: faqPath(loc, pathSlugsForNode(tree, n.id)),
+      children: childrenOfNode(tree, n.id).map((c) => buildNav(c.id)),
+    };
+  };
+  const navTree = rootNodes(tree).map((r) => buildNav(r.id));
+  const ancestorIds = ancestorsOf(tree, node.id).map((a) => a.id);
 
   // Map every faq node → its hierarchical URL, so inline links to FAQ records
   // (which need ancestry) resolve correctly inside the Structured Text renderer.
@@ -200,9 +193,10 @@ export default async function FaqPage({ params }: { params: Promise<Params> }) {
     locale: loc,
     selfHref: faqPath(loc, slug),
     crumbs,
-    childOrder,
-    childrenAllLeaves,
-    siblings,
+    navTree,
+    activeId: node.id,
+    ancestorIds,
+    isLeaf: !hasChildren(tree, node.id),
     faqHrefById,
   };
 
