@@ -1,8 +1,10 @@
+import { type ComponentProps } from 'react';
 import { StructuredText } from 'react-datocms/structured-text';
 import { type FragmentOf, readFragment } from '@/lib/datocms/graphql';
 import { type Locale } from '@/i18n/config';
 import { modelPath } from '@/i18n/paths';
 import { FaqAnswerFragment } from './answerFragment';
+import { makeStructuredTextBlockRenderer } from '@/components/StructuredText/StructuredTextBlocks';
 
 /** A record referenced inline from a FAQ answer (link or embed target). */
 type LinkedRecord =
@@ -48,9 +50,12 @@ export default function FaqStructuredText({ data, faqHrefById = {}, locale }: Pr
   if (!answer?.value) return null;
 
   return (
-    <div className="font-body text-body-lg text-body leading-relaxed [&_p]:mb-4 [&_ul]:my-4 [&_ul]:list-disc [&_ul]:pl-5 [&_li]:mb-1 [&_a]:text-primary [&_a]:underline [&_a]:underline-offset-2 hover:[&_a]:text-primary-hover">
+    <div className="prose prose-acacia font-body text-body-lg">
       <StructuredText
-        data={answer}
+        // gql.tada masks the union blocks (id lives inside each block fragment),
+        // so cast to the renderer's data type — runtime data carries the ids.
+        data={answer as unknown as ComponentProps<typeof StructuredText>['data']}
+        renderBlock={makeStructuredTextBlockRenderer(locale)}
         renderLinkToRecord={({ record, children, transformedMeta }) => (
           <a
             {...transformedMeta}

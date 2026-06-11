@@ -169,7 +169,7 @@
   }
 
   ::selection {
-    background-color: var(--color-gold);
+    background-color: var(--color-sage);
     color: var(--color-navy);
   }
 
@@ -356,6 +356,16 @@ body.lightbox-open beddy-bar {
   .prose-acacia em {
     font-style: italic;
   }
+  /* Editor highlight (<mark>) — a soft on-brand marker, not the browser's
+     bright yellow. box-decoration-break so multi-line marks stay clean. */
+  .prose-acacia mark {
+    background-color: var(--color-rust-pale);
+    color: inherit;
+    padding: 0.05em 0.18em;
+    border-radius: 2px;
+    -webkit-box-decoration-break: clone;
+    box-decoration-break: clone;
+  }
   .prose-acacia a {
     color: var(--color-primary);
     text-decoration: underline;
@@ -380,9 +390,33 @@ body.lightbox-open beddy-bar {
   .prose-acacia h4 {
     color: var(--color-dark);
     font-family: var(--font-heading);
-    font-weight: 400;
-    margin-top: 1.5em;
+    line-height: 1.2;
+    text-wrap: balance;
+  }
+  /* Distinct hierarchy + generous top spacing so sections breathe, tighter
+     below so the heading hugs its paragraph. Heavier weight than body. */
+  .prose-acacia h2 {
+    font-size: 1.75rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    margin-top: 2.25em;
+    margin-bottom: 0.6em;
+  }
+  .prose-acacia h3 {
+    font-size: 1.375rem;
+    font-weight: 600;
+    margin-top: 1.9em;
     margin-bottom: 0.5em;
+  }
+  .prose-acacia h4 {
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin-top: 1.6em;
+    margin-bottom: 0.4em;
+  }
+  /* No runaway gap above the very first block. */
+  .prose-acacia > :first-child {
+    margin-top: 0;
   }
 
   /* ── HERO PIN (sticky gated by viewport HEIGHT, not width) ─────
