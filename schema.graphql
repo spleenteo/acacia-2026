@@ -1539,22 +1539,6 @@ type EssentialRecord implements RecordInterface {
   ): String
 }
 
-union FaqModelAnswerStructuredBlocksField = CtaBlogPostRecord | ImageBlockRecord | ImageGalleryBlockRecord | VideoBlockRecord
-
-type FaqModelAnswerStructuredField {
-  blocks: [FaqModelAnswerStructuredBlocksField!]!
-  inlineBlocks: [String!]!
-  links: [FaqModelAnswerStructuredLinksField!]!
-  value: JsonField!
-}
-
-type FaqModelAnswerStructuredFieldMultiLocaleField {
-  locale: SiteLocale
-  value: FaqModelAnswerStructuredField
-}
-
-union FaqModelAnswerStructuredLinksField = FaqRecord | PageRecord | PostRecord
-
 input FaqModelFilter {
   _createdAt: CreatedAtFilter
   createdAt: CreatedAtFilter
@@ -1570,14 +1554,32 @@ input FaqModelFilter {
   updatedAt: UpdatedAtFilter
   _isValid: BooleanFilter
   _locales: LocalesFilter
-  answerStructured: StructuredTextFilter
+  longAnswer: StructuredTextFilter
   posts: LinksFilter
   question: StringFilter
+  seo: SeoFilter
   services: LinksFilter
+  shortAnswer: StructuredTextFilter
   slug: SlugFilter
   OR: [FaqModelFilter]
   AND: [FaqModelFilter]
 }
+
+union FaqModelLongAnswerBlocksField = CtaBlogPostRecord | ImageBlockRecord | ImageGalleryBlockRecord | VideoBlockRecord
+
+type FaqModelLongAnswerField {
+  blocks: [FaqModelLongAnswerBlocksField!]!
+  inlineBlocks: [String!]!
+  links: [FaqModelLongAnswerLinksField!]!
+  value: JsonField!
+}
+
+type FaqModelLongAnswerFieldMultiLocaleField {
+  locale: SiteLocale
+  value: FaqModelLongAnswerField
+}
+
+union FaqModelLongAnswerLinksField = FaqRecord | PageRecord | PostRecord
 
 enum FaqModelOrderBy {
   _createdAt_ASC
@@ -1608,20 +1610,48 @@ enum FaqModelOrderBy {
   question_DESC
 }
 
+union FaqModelShortAnswerBlocksField = CtaBlogPostRecord | ImageBlockRecord | ImageGalleryBlockRecord | VideoBlockRecord
+
+type FaqModelShortAnswerField {
+  blocks: [FaqModelShortAnswerBlocksField!]!
+  inlineBlocks: [String!]!
+  links: [FaqModelShortAnswerLinksField!]!
+  value: JsonField!
+}
+
+type FaqModelShortAnswerFieldMultiLocaleField {
+  locale: SiteLocale
+  value: FaqModelShortAnswerField
+}
+
+union FaqModelShortAnswerLinksField = FaqRecord | PageRecord | PostRecord
+
 """Record of type ⁉️ Faq (faq)"""
 type FaqRecord implements RecordInterface {
-  _allAnswerStructuredLocales(
+  _allLongAnswerLocales(
     """
     If you want to fallback to a default translation when a translation has not been found
     """
     fallbackLocales: [SiteLocale!]
-  ): [FaqModelAnswerStructuredFieldMultiLocaleField!]
+  ): [FaqModelLongAnswerFieldMultiLocaleField!]
   _allQuestionLocales(
     """
     If you want to fallback to a default translation when a translation has not been found
     """
     fallbackLocales: [SiteLocale!]
   ): [StringNonNullMultiLocaleField!]
+  _allSeoLocales(
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): [SeoFieldMultiLocaleField!]
+  _allShortAnswerLocales(
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): [FaqModelShortAnswerFieldMultiLocaleField!]
   _allSlugLocales(
     """
     If you want to fallback to a default translation when a translation has not been found
@@ -1647,7 +1677,10 @@ type FaqRecord implements RecordInterface {
   _status: ItemStatus!
   _unpublishingScheduledAt: DateTime
   _updatedAt: DateTime!
-  answerStructured(
+  children: [FaqRecord!]!
+  createdAt: DateTime!
+  id: ItemId!
+  longAnswer(
     """The locale to use to fetch the field's content"""
     locale: SiteLocale
 
@@ -1655,10 +1688,7 @@ type FaqRecord implements RecordInterface {
     If you want to fallback to a default translation when a translation has not been found
     """
     fallbackLocales: [SiteLocale!]
-  ): FaqModelAnswerStructuredField
-  children: [FaqRecord!]!
-  createdAt: DateTime!
-  id: ItemId!
+  ): FaqModelLongAnswerField
   parent: FaqRecord
   position: IntType
   posts: [PostRecord!]!
@@ -1671,7 +1701,25 @@ type FaqRecord implements RecordInterface {
     """
     fallbackLocales: [SiteLocale!]
   ): String!
+  seo(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): SeoField
   services: [ServiceRecord!]!
+  shortAnswer(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): FaqModelShortAnswerField
   slug(
     """The locale to use to fetch the field's content"""
     locale: SiteLocale

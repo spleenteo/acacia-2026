@@ -4,11 +4,12 @@ import type { ResultOf } from 'gql.tada';
 import Link from 'next/link';
 import { type Locale } from '@/i18n/config';
 import { stripStega } from 'react-datocms/use-content-link';
+import { useTranslations } from 'next-intl';
 import { readFragment } from '@/lib/datocms/graphql';
 import { dastToText } from '@/lib/faq/dastText';
 import type { FaqNavNode } from '@/lib/faq/faqTree';
 import type { nodeQuery } from './page';
-import { FaqAnswerFragment } from '@/components/Faq/answerFragment';
+import { FaqShortAnswerFragment, FaqLongAnswerFragment } from '@/components/Faq/answerFragment';
 import FaqStructuredText from '@/components/Faq/FaqStructuredText';
 import FaqBreadcrumb, { type Crumb } from '@/components/Faq/FaqBreadcrumb';
 import FaqSideNav from '@/components/Faq/FaqSideNav';
@@ -50,15 +51,18 @@ export default function FaqNodeContent({
   faqHrefById,
   data,
 }: FaqNodeProps & { data: FaqNodeData }) {
+  const t = useTranslations('faq');
   const faq = data.faq;
   if (!faq) return null;
 
-  const answer = faq.answerStructured
-    ? readFragment(FaqAnswerFragment, faq.answerStructured)
-    : null;
+  const short = faq.shortAnswer ? readFragment(FaqShortAnswerFragment, faq.shortAnswer) : null;
+  const long = faq.longAnswer ? readFragment(FaqLongAnswerFragment, faq.longAnswer) : null;
+  const longHasContent =
+    !!long && (dastToText(long.value).trim().length > 0 || long.blocks.length > 0);
 
-  // Single-question FAQPage JSON-LD on leaf pages (rich-result eligibility).
-  const answerText = isLeaf ? dastToText(answer?.value) : '';
+  // Single-question FAQPage JSON-LD on leaf pages (rich-result eligibility) —
+  // the concise short answer is the accepted answer.
+  const answerText = isLeaf ? dastToText(short?.value) : '';
   const jsonLd =
     isLeaf && answerText
       ? {
@@ -115,13 +119,25 @@ export default function FaqNodeContent({
             <CopyLinkButton href={selfHref} className="mt-2" />
           </div>
 
-          <div className="mt-6">
-            <FaqStructuredText
-              data={faq.answerStructured}
-              faqHrefById={faqHrefById}
-              locale={locale}
-            />
-          </div>
+          {/* Short answer — the TL;DR, highlighted in a soft sand box. */}
+          {short?.value ? (
+            <div className="mt-6 rounded-card bg-surface-warm px-6 py-5 sm:px-7 sm:py-6">
+              <p className="mb-2 font-body text-label font-medium uppercase tracking-[0.18em] text-primary">
+                {locale === 'it' ? 'In breve' : 'In short'}
+              </p>
+              <FaqStructuredText data={short} faqHrefById={faqHrefById} locale={locale} />
+            </div>
+          ) : null}
+
+          {/* Long answer — full write-up under a "want to know more?" heading. */}
+          {longHasContent && (
+            <div className="mt-10">
+              <h2 className="font-heading text-h3 font-normal text-dark">{t('readMore')}</h2>
+              <div className="mt-4">
+                <FaqStructuredText data={long} faqHrefById={faqHrefById} locale={locale} />
+              </div>
+            </div>
+          )}
 
           {/* Related posts (the model's `posts` field) — services intentionally
               skipped for now. */}

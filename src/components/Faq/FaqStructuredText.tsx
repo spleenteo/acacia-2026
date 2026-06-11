@@ -1,9 +1,7 @@
 import { type ComponentProps } from 'react';
 import { StructuredText } from 'react-datocms/structured-text';
-import { type FragmentOf, readFragment } from '@/lib/datocms/graphql';
 import { type Locale } from '@/i18n/config';
 import { modelPath } from '@/i18n/paths';
-import { FaqAnswerFragment } from './answerFragment';
 import { makeStructuredTextBlockRenderer } from '@/components/StructuredText/StructuredTextBlocks';
 
 /** A record referenced inline from a FAQ answer (link or embed target). */
@@ -13,10 +11,17 @@ type LinkedRecord =
   | { __typename: 'PageRecord'; id: string; slug: string; title: string };
 
 type Props = {
-  data: FragmentOf<typeof FaqAnswerFragment> | null | undefined;
+  /**
+   * Already-unmasked structured-text answer (`{ value, blocks, links }`) — the
+   * caller reads the short/long fragment and passes the result, so this one
+   * component renders either FAQ answer field.
+   */
+  data: { value: unknown } | null | undefined;
   /** Map of faq record id → its hierarchical URL (ancestry-aware, built from the tree). */
   faqHrefById?: Record<string, string>;
   locale: Locale;
+  /** Tailwind classes for the prose container (size/colour); structure stays. */
+  className?: string;
 };
 
 function hrefFor(
@@ -42,19 +47,23 @@ function labelFor(record: LinkedRecord): string {
 
 /**
  * Renders a FAQ answer (Structured Text), including inline links/embeds to
- * other records (faq/post/page). Editorial body styling tuned for mobile.
+ * other records (faq/post/page) and embedded blocks (image/gallery/video/CTA).
  * No interactivity → usable in both server and client components.
  */
-export default function FaqStructuredText({ data, faqHrefById = {}, locale }: Props) {
-  const answer = data ? readFragment(FaqAnswerFragment, data) : null;
-  if (!answer?.value) return null;
+export default function FaqStructuredText({
+  data,
+  faqHrefById = {},
+  locale,
+  className = 'font-body text-body-lg',
+}: Props) {
+  if (!data?.value) return null;
 
   return (
-    <div className="prose prose-acacia font-body text-body-lg">
+    <div className={`prose prose-acacia ${className}`}>
       <StructuredText
         // gql.tada masks the union blocks (id lives inside each block fragment),
         // so cast to the renderer's data type — runtime data carries the ids.
-        data={answer as unknown as ComponentProps<typeof StructuredText>['data']}
+        data={data as unknown as ComponentProps<typeof StructuredText>['data']}
         renderBlock={makeStructuredTextBlockRenderer(locale)}
         renderLinkToRecord={({ record, children, transformedMeta }) => (
           <a

@@ -16,7 +16,7 @@ import {
   hasChildren,
   type FaqNavNode,
 } from '@/lib/faq/faqTree';
-import { FaqAnswerFragment } from '@/components/Faq/answerFragment';
+import { FaqShortAnswerFragment, FaqLongAnswerFragment } from '@/components/Faq/answerFragment';
 import { PostCardFragment } from '@/components/PostCard';
 import { TagFragment } from '@/lib/datocms/commonFragments';
 import { ResponsiveImageFragment } from '@/components/ResponsiveImage';
@@ -60,8 +60,11 @@ export const nodeQuery = graphql(
       faq(locale: $locale, filter: { id: { eq: $id } }) {
         id
         question(locale: $locale)
-        answerStructured {
-          ...FaqAnswer
+        shortAnswer {
+          ...FaqShortAnswer
+        }
+        longAnswer {
+          ...FaqLongAnswer
         }
         posts {
           ...PostCardFragment
@@ -72,7 +75,7 @@ export const nodeQuery = graphql(
       }
     }
   `,
-  [FaqAnswerFragment, PostCardFragment, TagFragment],
+  [FaqShortAnswerFragment, FaqLongAnswerFragment, PostCardFragment, TagFragment],
 );
 
 export async function generateStaticParams() {
