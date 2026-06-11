@@ -12,6 +12,7 @@ import { ApartmentCardFragment } from '@/components/ApartmentCard';
 import { MoodCardFragment } from '@/components/MoodCard';
 import RealtimeWrapper from '@/lib/datocms/realtime/RealtimeWrapper';
 import { getDraftRealtimeOptions } from '@/lib/datocms/realtime/getDraftRealtimeOptions';
+import { SetAlternateLocalePaths } from '@/components/LocaleSwitcher/AlternateLocaleContext';
 import MoodDetailContent, { type MoodDetailProps } from './MoodDetailContent';
 
 const metaQuery = graphql(
@@ -21,7 +22,10 @@ const metaQuery = graphql(
         _seoMetaTags(locale: $locale) {
           ...TagFragment
         }
-        slug(locale: $locale)
+        _allSlugLocales {
+          locale
+          value
+        }
       }
     }
   `,
@@ -39,15 +43,32 @@ export async function generateMetadata({
     variables: { locale: locale as Locale, slug },
     includeDrafts: isEnabled,
   });
+  // Mood slugs are localized, so the same record has a different slug per locale.
+  // Resolve each from `_allSlugLocales` instead of re-using the current slug.
+  const moodPaths = moodAltPaths(data.mood?._allSlugLocales ?? []);
   return {
     ...toNextMetadata(data.mood?._seoMetaTags ?? []),
     alternates: {
-      canonical: `/${locale}${localizedPath(locale as Locale, `/moods/${slug}`)}`,
-      languages: Object.fromEntries(
-        locales.map((l) => [l, `/${l}${localizedPath(l, `/moods/${slug}`)}`]),
-      ),
+      canonical: moodPaths[locale as Locale],
+      languages: moodPaths,
     },
   };
+}
+
+/**
+ * Builds the per-locale URL for a mood from its localized slugs. Falls back to
+ * the moods index in a locale that has no translated slug.
+ */
+function moodAltPaths(
+  allSlugLocales: ReadonlyArray<{ locale: string | null; value: string | null }>,
+): Record<Locale, string> {
+  const slugByLocale = new Map(allSlugLocales.map((s) => [s.locale, s.value]));
+  return Object.fromEntries(
+    locales.map((l) => {
+      const slug = slugByLocale.get(l);
+      return [l, `/${l}${localizedPath(l, slug ? `/moods/${slug}` : '/moods')}`];
+    }),
+  ) as Record<Locale, string>;
 }
 
 export const query = graphql(
@@ -57,6 +78,10 @@ export const query = graphql(
         id
         name(locale: $locale)
         slug(locale: $locale)
+        _allSlugLocales {
+          locale
+          value
+        }
         claim(locale: $locale)
         description(locale: $locale) {
           value
@@ -113,19 +138,25 @@ export default async function MoodDetailPage({
   if (!data.mood) notFound();
 
   const resolvedProps: MoodDetailProps = { locale: locale as Locale };
+  // Publish the correct "same mood, other language" URLs to the locale switcher
+  // (mood slugs are localized, so the generic path swap would guess wrong).
+  const altPaths = moodAltPaths(data.mood._allSlugLocales ?? []);
 
-  if (isDraftModeEnabled) {
-    return (
-      <RealtimeWrapper
-        contentComponent={MoodDetailContent}
-        resolvedProps={resolvedProps}
-        query={query}
-        variables={variables}
-        initialData={data}
-        {...getDraftRealtimeOptions()}
-      />
-    );
-  }
-
-  return <MoodDetailContent {...resolvedProps} data={data} />;
+  return (
+    <>
+      <SetAlternateLocalePaths paths={altPaths} />
+      {isDraftModeEnabled ? (
+        <RealtimeWrapper
+          contentComponent={MoodDetailContent}
+          resolvedProps={resolvedProps}
+          query={query}
+          variables={variables}
+          initialData={data}
+          {...getDraftRealtimeOptions()}
+        />
+      ) : (
+        <MoodDetailContent {...resolvedProps} data={data} />
+      )}
+    </>
+  );
 }

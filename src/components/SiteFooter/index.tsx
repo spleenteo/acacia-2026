@@ -3,6 +3,7 @@ import type { FooterColumn, SocialLink } from '@/app/[locale]/layout';
 import { getAmenityIcon } from '@/lib/amenity-icons';
 import { getTranslations } from 'next-intl/server';
 import Link from 'next/link';
+import LocaleSwitcher from '@/components/LocaleSwitcher';
 
 type Props = {
   locale: Locale;
@@ -100,13 +101,16 @@ export default async function SiteFooter({ locale, footerColumns, socialLinks, l
 
       {/* Band 3 — Bottom bar */}
       <div className="bg-dark border-t border-white/10 py-5">
-        <div className="mx-auto max-w-6xl px-8 flex flex-col md:flex-row items-center justify-between gap-2">
+        <div className="mx-auto max-w-6xl px-8 flex flex-col md:flex-row items-center justify-between gap-3">
           <p className="font-body text-caption text-white/55">
             {typeof legalText === 'string'
               ? legalText
               : `© ${new Date().getFullYear()} Acacia Firenze — P.IVA 07339190485`}
           </p>
-          <p className="font-body text-caption text-white/40">Made with DatoCMS</p>
+          <div className="flex items-center gap-5">
+            <LocaleSwitcher locale={locale} variant="footer" />
+            <p className="font-body text-caption text-white/40">Made with DatoCMS</p>
+          </div>
         </div>
       </div>
     </footer>

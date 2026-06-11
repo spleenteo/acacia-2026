@@ -2,6 +2,7 @@ import ContentLink from '@/components/ContentLink';
 import SiteHeader from '@/components/SiteHeader';
 import SiteFooter from '@/components/SiteFooter';
 import { HeaderThemeProvider } from '@/components/HeaderTheme';
+import { AlternateLocaleProvider } from '@/components/LocaleSwitcher/AlternateLocaleContext';
 import { BookingProvider } from '@/components/BookingModal';
 import { TagFragment } from '@/lib/datocms/commonFragments';
 import { executeQuery } from '@/lib/datocms/executeQuery';
@@ -207,18 +208,24 @@ export default async function LocaleLayout({
         />
       )}
       {isDraftModeEnabled && <ContentLink />}
-      <BookingProvider locale={locale} defaultWidgetCode={data.homePage?.beddyId ?? null}>
-        <HeaderThemeProvider>
-          <SiteHeader locale={locale} isDraftModeEnabled={isDraftModeEnabled} navItems={navItems} />
-          <main style={{ paddingTop: 'var(--header-height)' }}>{children}</main>
-        </HeaderThemeProvider>
-        <SiteFooter
-          locale={locale}
-          footerColumns={footerColumns}
-          socialLinks={socialLinks}
-          legalText={legalText}
-        />
-      </BookingProvider>
+      <AlternateLocaleProvider>
+        <BookingProvider locale={locale} defaultWidgetCode={data.homePage?.beddyId ?? null}>
+          <HeaderThemeProvider>
+            <SiteHeader
+              locale={locale}
+              isDraftModeEnabled={isDraftModeEnabled}
+              navItems={navItems}
+            />
+            <main style={{ paddingTop: 'var(--header-height)' }}>{children}</main>
+          </HeaderThemeProvider>
+          <SiteFooter
+            locale={locale}
+            footerColumns={footerColumns}
+            socialLinks={socialLinks}
+            legalText={legalText}
+          />
+        </BookingProvider>
+      </AlternateLocaleProvider>
     </NextIntlClientProvider>
   );
 }

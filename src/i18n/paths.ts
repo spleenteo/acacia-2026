@@ -1,4 +1,4 @@
-import type { Locale } from './config';
+import { type Locale, locales } from './config';
 
 /**
  * Maps canonical (filesystem) path segments to their translated equivalents per locale.
@@ -50,6 +50,28 @@ export function canonicalPath(locale: Locale, localizedPath: string): string {
 export function faqPath(locale: Locale, slugs: string[]): string {
   const base = `/${locale}${localizedPath(locale, '/faq')}`;
   return slugs.length ? `${base}/${slugs.join('/')}` : base;
+}
+
+/**
+ * Re-expresses a localized URL (incl. its `/{locale}` prefix) in another locale,
+ * keeping the same page. Translates the path segments through the segment map
+ * (florence ↔ firenze, …); works for every page whose slug is NOT localized
+ * (home, indexes, apartments, districts, blog). Pages with per-locale slugs
+ * (mood, FAQ) must override the result via the AlternateLocale context instead.
+ * e.g. switchLocalePath('/it/firenze/appartamenti/abaco', 'it', 'en')
+ *        → '/en/florence/accommodations/abaco'
+ */
+export function switchLocalePath(
+  localizedPathname: string,
+  fromLocale: Locale,
+  toLocale: Locale,
+): string {
+  const parts = localizedPathname.split('/').filter(Boolean);
+  // Drop the leading locale segment if present.
+  const rest = locales.includes(parts[0] as Locale) ? parts.slice(1) : parts;
+  const canonical = canonicalPath(fromLocale, '/' + rest.join('/'));
+  const localized = localizedPath(toLocale, canonical);
+  return `/${toLocale}${localized === '/' ? '' : localized}`;
 }
 
 /** Maps model API keys (detail records) to their canonical path prefixes */

@@ -9,6 +9,7 @@ import { TONES } from '@/components/WidgetLabel';
 import { wonkyClip } from '@/lib/wonkyClip';
 import type { Locale } from '@/i18n/config';
 import type { NavItem } from '@/app/[locale]/layout';
+import LocaleSwitcher from '@/components/LocaleSwitcher';
 import Link from 'next/link';
 
 /** Light Japan Fish tints, cycled across nav items for the hover highlight. */
@@ -29,7 +30,6 @@ export default function SiteHeader({ locale, isDraftModeEnabled, navItems }: Pro
   const { open: openBooking } = useBooking();
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
-  const otherLocale = locale === 'en' ? 'it' : 'en';
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 50);
@@ -267,16 +267,7 @@ export default function SiteHeader({ locale, isDraftModeEnabled, navItems }: Pro
               {t('book')}
             </button>
           </div>
-          <span className="font-body text-caption text-white/70">
-            {locale.toUpperCase()} /{' '}
-            <Link
-              href={`/${otherLocale}`}
-              onClick={() => setMenuOpen(false)}
-              className="text-white/70 transition-colors duration-200 hover:text-white"
-            >
-              {otherLocale.toUpperCase()}
-            </Link>
-          </span>
+          <LocaleSwitcher locale={locale} variant="menu" onNavigate={() => setMenuOpen(false)} />
         </div>
       </div>
     </>
