@@ -4,7 +4,6 @@ import { useState, useEffect } from 'react';
 import { useTranslations } from 'next-intl';
 import { useHeaderOverDark } from '@/components/HeaderTheme';
 import { useBooking } from '@/components/BookingModal';
-import DraftModeToggler from '@/components/DraftModeToggler';
 import { TONES } from '@/components/WidgetLabel';
 import { wonkyClip } from '@/lib/wonkyClip';
 import type { Locale } from '@/i18n/config';
@@ -17,14 +16,13 @@ const NAV_TINTS = [TONES.sage.bg, TONES.gold.bg, TONES.slate.bg, TONES.rust.bg];
 
 type Props = {
   locale: Locale;
-  isDraftModeEnabled: boolean;
   navItems: NavItem[];
 };
 
 /** WhatsApp contact — same number used by the apartment detail CTA band. */
 const WHATSAPP_URL = 'https://wa.me/393939070181';
 
-export default function SiteHeader({ locale, isDraftModeEnabled, navItems }: Props) {
+export default function SiteHeader({ locale, navItems }: Props) {
   const t = useTranslations('nav');
   const overDark = useHeaderOverDark();
   const { open: openBooking } = useBooking();
@@ -164,8 +162,6 @@ export default function SiteHeader({ locale, isDraftModeEnabled, navItems }: Pro
 
           {/* Right: Contact (desktop) + Book + hamburger (mobile/tablet) */}
           <div className="flex items-center justify-end gap-3 lg:justify-self-end lg:gap-5">
-            {isDraftModeEnabled && <DraftModeToggler draftModeEnabled={isDraftModeEnabled} />}
-
             {/* Secondary CTA — Contact (desktop) */}
             <a
               href={WHATSAPP_URL}

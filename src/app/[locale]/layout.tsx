@@ -1,4 +1,5 @@
 import ContentLink from '@/components/ContentLink';
+import DraftModeToggler from '@/components/DraftModeToggler';
 import SiteHeader from '@/components/SiteHeader';
 import SiteFooter from '@/components/SiteFooter';
 import { HeaderThemeProvider } from '@/components/HeaderTheme';
@@ -211,11 +212,7 @@ export default async function LocaleLayout({
       <AlternateLocaleProvider>
         <BookingProvider locale={locale} defaultWidgetCode={data.homePage?.beddyId ?? null}>
           <HeaderThemeProvider>
-            <SiteHeader
-              locale={locale}
-              isDraftModeEnabled={isDraftModeEnabled}
-              navItems={navItems}
-            />
+            <SiteHeader locale={locale} navItems={navItems} />
             <main style={{ paddingTop: 'var(--header-height)' }}>{children}</main>
           </HeaderThemeProvider>
           <SiteFooter
@@ -226,6 +223,7 @@ export default async function LocaleLayout({
           />
         </BookingProvider>
       </AlternateLocaleProvider>
+      <DraftModeToggler draftModeEnabled={isDraftModeEnabled} />
     </NextIntlClientProvider>
   );
 }
