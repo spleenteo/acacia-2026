@@ -1,8 +1,9 @@
 import type { Locale } from '@/i18n/config';
 import type { FooterColumn, SocialLink } from '@/app/[locale]/layout';
-import { getAmenityIcon } from '@/lib/amenity-icons';
 import { getTranslations } from 'next-intl/server';
 import Link from 'next/link';
+import LocaleSwitcher from '@/components/LocaleSwitcher';
+import { SocialBrandIcon, SocialFallbackIcon, hasSocialIcon } from '@/lib/social-icons';
 
 type Props = {
   locale: Locale;
@@ -16,13 +17,16 @@ export default async function SiteFooter({ locale, footerColumns, socialLinks, l
 
   return (
     <footer>
-      {/* Band 1 — Light navigation columns */}
-      {footerColumns.length > 0 && (
+      {/* Band 1 — Light navigation columns (+ social as its own column) */}
+      {(footerColumns.length > 0 || socialLinks.length > 0) && (
         <div className="bg-surface-alt border-t border-border py-14">
           <div
             className="mx-auto max-w-6xl px-8 grid grid-cols-1 gap-12"
             style={{
-              gridTemplateColumns: `repeat(${Math.min(footerColumns.length, 4)}, minmax(0, 1fr))`,
+              gridTemplateColumns: `repeat(${Math.min(
+                footerColumns.length + (socialLinks.length > 0 ? 1 : 0),
+                4,
+              )}, minmax(0, 1fr))`,
             }}
           >
             {footerColumns.map((column) => (
@@ -55,58 +59,60 @@ export default async function SiteFooter({ locale, footerColumns, socialLinks, l
                 </nav>
               </div>
             ))}
+
+            {socialLinks.length > 0 && (
+              <div className="max-md:first:pt-0">
+                <h4 className="font-body text-label uppercase tracking-[0.22em] text-primary font-medium mb-5">
+                  {tFooter('followUs')}
+                </h4>
+                <nav className="flex flex-col gap-3">
+                  {socialLinks.map((social) => {
+                    const iconKey = social.iconName || social.platform;
+                    return (
+                      <a
+                        key={social.platform}
+                        href={social.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-2.5 font-body text-body text-dark hover:text-primary transition-colors duration-300"
+                      >
+                        {hasSocialIcon(iconKey) ? (
+                          <SocialBrandIcon name={iconKey} size={18} />
+                        ) : (
+                          <SocialFallbackIcon size={18} strokeWidth={1.5} />
+                        )}
+                        <span className="capitalize">{social.platform}</span>
+                      </a>
+                    );
+                  })}
+                </nav>
+              </div>
+            )}
           </div>
         </div>
       )}
 
-      {/* Band 2 — Dark brand + social */}
+      {/* Band 2 — Dark brand */}
       <div className="bg-dark py-14">
-        <div className="mx-auto max-w-6xl px-8 grid grid-cols-1 md:grid-cols-3 gap-12">
-          <div className="md:col-span-2">
-            <span className="font-heading italic font-normal text-h4 text-white tracking-tight block mb-4">
-              Acacia Firenze
-            </span>
-            <p className="font-body text-body text-white/80 leading-relaxed max-w-md">
-              {tFooter('brandDescription')}
-            </p>
-          </div>
-
-          {socialLinks.length > 0 && (
-            <div>
-              <h4 className="font-body text-label uppercase tracking-[0.22em] text-primary/70 font-medium mb-5">
-                {tFooter('followUs')}
-              </h4>
-              <div className="flex items-center gap-4">
-                {socialLinks.map((social) => {
-                  const Icon = getAmenityIcon(social.iconName);
-                  return (
-                    <a
-                      key={social.platform}
-                      href={social.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      aria-label={social.platform}
-                      className="text-white/70 hover:text-primary transition-colors duration-300"
-                    >
-                      <Icon size={20} strokeWidth={1.5} />
-                    </a>
-                  );
-                })}
-              </div>
-            </div>
-          )}
+        <div className="mx-auto max-w-6xl px-8">
+          <span className="font-heading italic font-normal text-h4 text-white tracking-tight block mb-4">
+            Acacia Firenze
+          </span>
+          <p className="font-body text-body text-white/80 leading-relaxed max-w-md">
+            {tFooter('brandDescription')}
+          </p>
         </div>
       </div>
 
       {/* Band 3 — Bottom bar */}
       <div className="bg-dark border-t border-white/10 py-5">
-        <div className="mx-auto max-w-6xl px-8 flex flex-col md:flex-row items-center justify-between gap-2">
+        <div className="mx-auto max-w-6xl px-8 flex flex-col md:flex-row items-center justify-between gap-3">
           <p className="font-body text-caption text-white/55">
             {typeof legalText === 'string'
               ? legalText
               : `© ${new Date().getFullYear()} Acacia Firenze — P.IVA 07339190485`}
           </p>
-          <p className="font-body text-caption text-white/40">Made with DatoCMS</p>
+          <LocaleSwitcher locale={locale} variant="footer" />
         </div>
       </div>
     </footer>

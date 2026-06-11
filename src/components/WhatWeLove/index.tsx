@@ -110,7 +110,17 @@ function ZigZagItem({ photo, isRight, index }: { photo: Photo; isRight: boolean;
   const textClass = isLightColor(bg) ? 'text-dark' : 'text-white';
 
   return (
-    <div className={`relative md:w-[72%] ${isRight ? 'md:ml-auto' : 'md:mr-auto'}`}>
+    <div
+      className={[
+        // Mobile/tablet: reserve 64px of padding above the photo so the caption
+        // (anchored at the block top, see below) sits in dedicated space and
+        // only grazes the photo's top edge instead of covering a big slice of
+        // it. The padding stays INSIDE the block, so it never collides with the
+        // previous item. lg restores the original inline overlay.
+        'relative pt-16 lg:pt-0 md:w-[72%]',
+        isRight ? 'md:ml-auto' : 'md:mr-auto',
+      ].join(' ')}
+    >
       <div ref={imgRef}>
         {full && (
           <ResponsiveImage
@@ -129,7 +139,10 @@ function ZigZagItem({ photo, isRight, index }: { photo: Photo; isRight: boolean;
             transitionTimingFunction: 'cubic-bezier(0.34, 1.56, 0.64, 1)',
           }}
           className={[
-            'absolute top-6 z-10 max-w-[15rem] md:max-w-xs px-7 py-5',
+            // Mobile/tablet: anchor the caption to the block top — it fills the
+            // reserved padding above the photo and only its bottom edge overlaps
+            // the image. Desktop keeps the original inline overlay (top: 24px).
+            'absolute top-2 lg:top-6 z-10 max-w-[15rem] md:max-w-xs px-7 py-3 lg:py-5',
             isRight ? 'left-0 md:-left-10' : 'right-0 md:-right-10',
             'transition-all duration-700',
             textClass,

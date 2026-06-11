@@ -23,6 +23,7 @@ import { ResponsiveImageFragment } from '@/components/ResponsiveImage';
 import { type Crumb } from '@/components/Faq/FaqBreadcrumb';
 import RealtimeWrapper from '@/lib/datocms/realtime/RealtimeWrapper';
 import { getDraftRealtimeOptions } from '@/lib/datocms/realtime/getDraftRealtimeOptions';
+import { SetAlternateLocalePaths } from '@/components/LocaleSwitcher/AlternateLocaleContext';
 import FaqIndexContent from './FaqIndexContent';
 import FaqNodeContent from './FaqNodeContent';
 
@@ -207,17 +208,30 @@ export default async function FaqPage({ params }: { params: Promise<Params> }) {
     faqHrefById,
   };
 
-  if (includeDrafts) {
-    return (
-      <RealtimeWrapper
-        contentComponent={FaqNodeContent}
-        resolvedProps={resolvedProps}
-        query={nodeQuery}
-        variables={variables}
-        initialData={nodeData}
-        {...getDraftRealtimeOptions()}
-      />
-    );
+  // Same-page URLs per locale for the language switcher. FAQ slug chains are
+  // localized, so resolve each node by its stable ID in the other locale's tree;
+  // fall back to the FAQ index where the node has no translation.
+  const altPaths: Record<string, string> = {};
+  for (const l of locales) {
+    const t = l === loc ? tree : await fetchFaqTree(l, includeDrafts);
+    altPaths[l] = t.byId.has(node.id) ? faqPath(l, pathSlugsForNode(t, node.id)) : faqPath(l, []);
   }
-  return <FaqNodeContent {...resolvedProps} data={nodeData} />;
+
+  return (
+    <>
+      <SetAlternateLocalePaths paths={altPaths} />
+      {includeDrafts ? (
+        <RealtimeWrapper
+          contentComponent={FaqNodeContent}
+          resolvedProps={resolvedProps}
+          query={nodeQuery}
+          variables={variables}
+          initialData={nodeData}
+          {...getDraftRealtimeOptions()}
+        />
+      ) : (
+        <FaqNodeContent {...resolvedProps} data={nodeData} />
+      )}
+    </>
+  );
 }

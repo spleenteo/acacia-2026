@@ -4,11 +4,11 @@ import { useState, useEffect } from 'react';
 import { useTranslations } from 'next-intl';
 import { useHeaderOverDark } from '@/components/HeaderTheme';
 import { useBooking } from '@/components/BookingModal';
-import DraftModeToggler from '@/components/DraftModeToggler';
 import { TONES } from '@/components/WidgetLabel';
 import { wonkyClip } from '@/lib/wonkyClip';
 import type { Locale } from '@/i18n/config';
 import type { NavItem } from '@/app/[locale]/layout';
+import LocaleSwitcher from '@/components/LocaleSwitcher';
 import Link from 'next/link';
 
 /** Light Japan Fish tints, cycled across nav items for the hover highlight. */
@@ -16,20 +16,18 @@ const NAV_TINTS = [TONES.sage.bg, TONES.gold.bg, TONES.slate.bg, TONES.rust.bg];
 
 type Props = {
   locale: Locale;
-  isDraftModeEnabled: boolean;
   navItems: NavItem[];
 };
 
 /** WhatsApp contact — same number used by the apartment detail CTA band. */
 const WHATSAPP_URL = 'https://wa.me/393939070181';
 
-export default function SiteHeader({ locale, isDraftModeEnabled, navItems }: Props) {
+export default function SiteHeader({ locale, navItems }: Props) {
   const t = useTranslations('nav');
   const overDark = useHeaderOverDark();
   const { open: openBooking } = useBooking();
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
-  const otherLocale = locale === 'en' ? 'it' : 'en';
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 50);
@@ -164,8 +162,6 @@ export default function SiteHeader({ locale, isDraftModeEnabled, navItems }: Pro
 
           {/* Right: Contact (desktop) + Book + hamburger (mobile/tablet) */}
           <div className="flex items-center justify-end gap-3 lg:justify-self-end lg:gap-5">
-            {isDraftModeEnabled && <DraftModeToggler draftModeEnabled={isDraftModeEnabled} />}
-
             {/* Secondary CTA — Contact (desktop) */}
             <a
               href={WHATSAPP_URL}
@@ -267,16 +263,7 @@ export default function SiteHeader({ locale, isDraftModeEnabled, navItems }: Pro
               {t('book')}
             </button>
           </div>
-          <span className="font-body text-caption text-white/70">
-            {locale.toUpperCase()} /{' '}
-            <Link
-              href={`/${otherLocale}`}
-              onClick={() => setMenuOpen(false)}
-              className="text-white/70 transition-colors duration-200 hover:text-white"
-            >
-              {otherLocale.toUpperCase()}
-            </Link>
-          </span>
+          <LocaleSwitcher locale={locale} variant="menu" onNavigate={() => setMenuOpen(false)} />
         </div>
       </div>
     </>
