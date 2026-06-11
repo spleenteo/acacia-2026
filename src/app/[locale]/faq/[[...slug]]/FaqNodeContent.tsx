@@ -38,15 +38,6 @@ function flatten(nodes: FaqNavNode[], out: FaqNavNode[] = []): FaqNavNode[] {
   return out;
 }
 
-function findNode(nodes: FaqNavNode[], id: string): FaqNavNode | null {
-  for (const n of nodes) {
-    if (n.id === id) return n;
-    const hit = findNode(n.children, id);
-    if (hit) return hit;
-  }
-  return null;
-}
-
 export default function FaqNodeContent({
   locale,
   selfHref,
@@ -84,10 +75,6 @@ export default function FaqNodeContent({
         }
       : null;
 
-  // Section nodes list their direct children inline (a docs "in this section" index).
-  const activeNode = findNode(navTree, activeId);
-  const sectionChildren = !isLeaf ? (activeNode?.children ?? []) : [];
-
   // Prev / next across the flattened tree, docs-style pager.
   const flat = flatten(navTree);
   const idx = flat.findIndex((n) => n.id === activeId);
@@ -103,9 +90,9 @@ export default function FaqNodeContent({
         />
       )}
 
-      <div className="lg:grid lg:grid-cols-[minmax(0,1fr)_17rem] lg:gap-14">
-        {/* Side navigation — right column on desktop (order-last), on top on mobile */}
-        <aside className="mb-10 lg:order-last lg:mb-0">
+      <div className="lg:grid lg:grid-cols-[17rem_minmax(0,1fr)] lg:gap-14">
+        {/* Side navigation — left column on desktop, on top on mobile */}
+        <aside className="mb-10 lg:mb-0">
           <div className="lg:sticky lg:top-28">
             <FaqSideNav
               navTree={navTree}
@@ -134,29 +121,6 @@ export default function FaqNodeContent({
               locale={locale}
             />
           </div>
-
-          {sectionChildren.length > 0 && (
-            <ul className="mt-8 divide-y divide-border border-t border-border">
-              {sectionChildren.map((c) => (
-                <li key={c.id}>
-                  <Link
-                    href={c.href}
-                    className="group flex items-center justify-between gap-4 py-4"
-                  >
-                    <span className="font-heading text-h4 font-normal text-dark transition-colors group-hover:text-primary">
-                      {c.question}
-                    </span>
-                    <span
-                      aria-hidden
-                      className="shrink-0 text-primary transition-transform duration-300 group-hover:translate-x-1"
-                    >
-                      →
-                    </span>
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          )}
 
           {(prev || next) && (
             <nav className="mt-14 grid gap-4 border-t border-border pt-6 sm:grid-cols-2">

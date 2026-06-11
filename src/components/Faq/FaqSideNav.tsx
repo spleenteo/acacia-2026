@@ -4,6 +4,10 @@ import { useState } from 'react';
 import Link from 'next/link';
 import type { Locale } from '@/i18n/config';
 import type { FaqNavNode } from '@/lib/faq/faqTree';
+import { wonkyClip } from '@/lib/wonkyClip';
+
+/** Stable numeric seed from a record id, so each marker keeps the same tilt. */
+const seed = (id: string) => [...id].reduce((sum, ch) => sum + ch.charCodeAt(0), 0);
 
 type Props = {
   navTree: FaqNavNode[];
@@ -97,7 +101,7 @@ function Branch({
           href={node.href}
           aria-current={isActive ? 'page' : undefined}
           className={[
-            'min-w-0 flex-1 py-1.5 transition-colors',
+            'relative min-w-0 flex-1 py-1.5 transition-colors',
             isRoot
               ? 'text-label font-medium uppercase tracking-[0.18em] text-dark hover:text-primary'
               : isActive
@@ -105,7 +109,16 @@ function Branch({
                 : 'text-body-sm text-muted hover:text-primary',
           ].join(' ')}
         >
-          {node.question}
+          {/* Active node — the house "wonky" marker: a gently skewed pale
+              rectangle behind the title, same shape language used elsewhere. */}
+          {isActive && (
+            <span
+              aria-hidden
+              style={{ clipPath: wonkyClip(seed(node.id)) }}
+              className="absolute -inset-x-2 inset-y-0 -z-10 bg-primary-pale"
+            />
+          )}
+          <span className="relative">{node.question}</span>
         </Link>
         {hasChildren && (
           <button
