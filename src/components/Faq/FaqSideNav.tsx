@@ -101,12 +101,12 @@ function Branch({
           href={node.href}
           aria-current={isActive ? 'page' : undefined}
           className={[
-            'relative min-w-0 flex-1 py-1.5 transition-colors',
+            'relative min-w-0 flex-1 py-1 transition-colors',
             isRoot
               ? 'text-label font-medium uppercase tracking-[0.18em] text-dark hover:text-primary'
               : isActive
-                ? 'text-body-sm font-medium text-primary'
-                : 'text-body-sm text-muted hover:text-primary',
+                ? 'text-caption font-medium text-primary'
+                : 'text-caption text-muted hover:text-primary',
           ].join(' ')}
         >
           {/* Active node — the house "wonky" marker: a gently skewed pale

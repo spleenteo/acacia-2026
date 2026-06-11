@@ -94,7 +94,7 @@ export default function FaqNodeContent({
       <div className="lg:grid lg:grid-cols-[17rem_minmax(0,1fr)] lg:gap-14">
         {/* Side navigation — left column on desktop, on top on mobile */}
         <aside className="mb-10 lg:mb-0">
-          <div className="lg:sticky lg:top-28">
+          <div className="faq-nav-sticky">
             <FaqSideNav
               navTree={navTree}
               activeId={activeId}

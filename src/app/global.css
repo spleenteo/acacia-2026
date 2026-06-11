@@ -173,6 +173,25 @@
     color: var(--color-navy);
   }
 
+  /* FAQ docs side nav — sticky column that scrolls internally when the tree is
+     taller than the viewport, so long phases stay reachable. lg+ only.
+     Hand-written (not an arbitrary max-h-[calc()] class) so the calc ships in
+     production builds. `top` matches the header clearance. */
+  @media (min-width: 1024px) {
+    .faq-nav-sticky {
+      position: sticky;
+      top: 7rem;
+      max-height: calc(100vh - 9rem);
+      overflow-x: hidden;
+      overflow-y: auto;
+      overscroll-behavior: contain;
+      /* room for the active node's wonky marker (-inset-x-2) without an
+         horizontal scrollbar */
+      padding-left: 0.5rem;
+      padding-right: 0.5rem;
+    }
+  }
+
   /*
    * DatoCMS Content Link adds invisible stega-encoded characters to text fields
    * in draft mode. They can cause unexpected letter-spacing on titles and other
