@@ -437,6 +437,39 @@ body.lightbox-open beddy-bar {
   .prose-acacia > :first-child {
     margin-top: 0;
   }
+  /* Inline code: a restrained chip that WRAPS long unbreakable strings (e.g.
+     URLs) instead of forcing horizontal page scroll — the main offender on
+     mobile. `anywhere` also keeps the element's min-width small in flex/grid. */
+  .prose-acacia code {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.88em;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+    background-color: var(--color-surface-alt);
+    padding: 0.12em 0.4em;
+    border-radius: 4px;
+  }
+  /* Block code (<pre>) scrolls within its own box instead of the page. */
+  .prose-acacia pre {
+    max-width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    margin: 1.5em 0;
+    padding: 1em 1.15em;
+    border-radius: var(--radius-card);
+    background-color: var(--color-surface-warm);
+    border: 1px solid var(--color-border);
+  }
+  .prose-acacia pre code {
+    display: block;
+    white-space: pre;
+    background: none;
+    padding: 0;
+    border-radius: 0;
+    font-size: inherit;
+    overflow-wrap: normal;
+    word-break: normal;
+  }
 
   /* ── HERO PIN (sticky gated by viewport HEIGHT, not width) ─────
      The hero pins only when the viewport is tall enough (≥950px) —
