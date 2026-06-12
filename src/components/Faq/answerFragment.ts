@@ -27,15 +27,16 @@ export const FaqShortAnswerFragment = graphql(
       }
       links {
         __typename
+        # Every linked record (incl. legacy posts with no route) exposes its id
+        # via RecordInterface, so the Structured Text renderer always finds the
+        # itemLink target in the links array and won't throw on unsupported types.
+        ... on RecordInterface {
+          id
+        }
         ... on FaqRecord {
           id
           slug(locale: $locale)
           question(locale: $locale)
-        }
-        ... on PostRecord {
-          id
-          slug
-          title
         }
         ... on PageRecord {
           id
@@ -61,15 +62,16 @@ export const FaqLongAnswerFragment = graphql(
       }
       links {
         __typename
+        # Every linked record (incl. legacy posts with no route) exposes its id
+        # via RecordInterface, so the Structured Text renderer always finds the
+        # itemLink target in the links array and won't throw on unsupported types.
+        ... on RecordInterface {
+          id
+        }
         ... on FaqRecord {
           id
           slug(locale: $locale)
           question(locale: $locale)
-        }
-        ... on PostRecord {
-          id
-          slug
-          title
         }
         ... on PageRecord {
           id

@@ -17,7 +17,6 @@ import {
   type FaqNavNode,
 } from '@/lib/faq/faqTree';
 import { FaqShortAnswerFragment, FaqLongAnswerFragment } from '@/components/Faq/answerFragment';
-import { PostCardFragment } from '@/components/PostCard';
 import { TagFragment } from '@/lib/datocms/commonFragments';
 import { ResponsiveImageFragment } from '@/components/ResponsiveImage';
 import { type Crumb } from '@/components/Faq/FaqBreadcrumb';
@@ -67,16 +66,13 @@ export const nodeQuery = graphql(
         longAnswer {
           ...FaqLongAnswer
         }
-        posts {
-          ...PostCardFragment
-        }
         _seoMetaTags(locale: $locale) {
           ...TagFragment
         }
       }
     }
   `,
-  [FaqShortAnswerFragment, FaqLongAnswerFragment, PostCardFragment, TagFragment],
+  [FaqShortAnswerFragment, FaqLongAnswerFragment, TagFragment],
 );
 
 export async function generateStaticParams() {

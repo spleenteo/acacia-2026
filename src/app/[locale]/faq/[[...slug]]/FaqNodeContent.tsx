@@ -14,7 +14,6 @@ import FaqStructuredText from '@/components/Faq/FaqStructuredText';
 import FaqBreadcrumb, { type Crumb } from '@/components/Faq/FaqBreadcrumb';
 import FaqSideNav from '@/components/Faq/FaqSideNav';
 import CopyLinkButton from '@/components/Faq/CopyLinkButton';
-import PostCard from '@/components/PostCard';
 
 export type FaqNodeProps = {
   locale: Locale;
@@ -137,21 +136,6 @@ export default function FaqNodeContent({
                 <FaqStructuredText data={long} faqHrefById={faqHrefById} locale={locale} />
               </div>
             </div>
-          )}
-
-          {/* Related posts (the model's `posts` field) — services intentionally
-              skipped for now. */}
-          {faq.posts.length > 0 && (
-            <section className="mt-14 border-t border-border pt-8">
-              <h2 className="font-heading text-h3 font-normal text-dark">
-                {locale === 'it' ? 'Approfondimenti' : 'Related articles'}
-              </h2>
-              <div className="mt-6 grid gap-x-6 gap-y-8 sm:grid-cols-2">
-                {faq.posts.map((post, i) => (
-                  <PostCard key={i} data={post} locale={locale} />
-                ))}
-              </div>
-            </section>
           )}
 
           {(prev || next) && (

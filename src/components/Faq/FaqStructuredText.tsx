@@ -7,7 +7,6 @@ import { makeStructuredTextBlockRenderer } from '@/components/StructuredText/Str
 /** A record referenced inline from a FAQ answer (link or embed target). */
 type LinkedRecord =
   | { __typename: 'FaqRecord'; id: string; slug: string; question: string }
-  | { __typename: 'PostRecord'; id: string; slug: string; title: string }
   | { __typename: 'PageRecord'; id: string; slug: string; title: string };
 
 type Props = {
@@ -32,8 +31,6 @@ function hrefFor(
   switch (record.__typename) {
     case 'FaqRecord':
       return faqHrefById[record.id] ?? '#';
-    case 'PostRecord':
-      return modelPath('post', record.slug, locale) ?? '#';
     case 'PageRecord':
       return modelPath('page', record.slug, locale) ?? '#';
     default:
@@ -65,17 +62,22 @@ export default function FaqStructuredText({
         // so cast to the renderer's data type — runtime data carries the ids.
         data={data as unknown as ComponentProps<typeof StructuredText>['data']}
         renderBlock={makeStructuredTextBlockRenderer(locale)}
-        renderLinkToRecord={({ record, children, transformedMeta }) => (
-          <a
-            {...transformedMeta}
-            href={hrefFor(record as unknown as LinkedRecord, faqHrefById, locale)}
-          >
-            {children}
-          </a>
-        )}
+        renderLinkToRecord={({ record, children, transformedMeta }) => {
+          const href = hrefFor(record as unknown as LinkedRecord, faqHrefById, locale);
+          // Unsupported targets (e.g. legacy blog posts with no route) → plain text.
+          if (href === '#') return <>{children}</>;
+          return (
+            <a {...transformedMeta} href={href}>
+              {children}
+            </a>
+          );
+        }}
         renderInlineRecord={({ record }) => {
           const r = record as unknown as LinkedRecord;
-          return <a href={hrefFor(r, faqHrefById, locale)}>{labelFor(r)}</a>;
+          const label = labelFor(r);
+          if (!label) return null;
+          const href = hrefFor(r, faqHrefById, locale);
+          return href === '#' ? <span>{label}</span> : <a href={href}>{label}</a>;
         }}
       />
     </div>
