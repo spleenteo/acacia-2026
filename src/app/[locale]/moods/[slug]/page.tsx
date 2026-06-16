@@ -1,7 +1,7 @@
 import { executeQuery } from '@/lib/datocms/executeQuery';
 import { graphql } from '@/lib/datocms/graphql';
 import { type Locale, locales } from '@/i18n/config';
-import { localizedPath } from '@/i18n/paths';
+import { localizedPath, localeSlugParams } from '@/i18n/paths';
 import { draftMode } from 'next/headers';
 import { notFound } from 'next/navigation';
 import { TagFragment } from '@/lib/datocms/commonFragments';
@@ -146,7 +146,7 @@ const allSlugsQuery = graphql(`
 export async function generateStaticParams() {
   const data = await executeQuery(allSlugsQuery);
   const slugs = data.allMoods.map((m) => m.slug);
-  return locales.flatMap((locale) => slugs.map((slug) => ({ locale, slug })));
+  return localeSlugParams(slugs);
 }
 
 export default async function MoodDetailPage({

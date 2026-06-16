@@ -116,3 +116,26 @@ export function modelPath(modelApiKey: string, slug: string, locale: Locale): st
   if (!prefix) return null;
   return `/${locale}${localizedPath(locale, `/${prefix}/${slug}`)}`;
 }
+
+/**
+ * Builds the `alternates` (canonical + per-locale `languages`) for a page whose
+ * slug is NOT localized — the same canonical path translated into each locale.
+ * Pages with per-locale slugs (mood, FAQ) build their alternates from the
+ * record's localized slugs instead.
+ * e.g. indexAlternates('it', '/moods') → { canonical: '/it/moods', languages: { en: '/en/moods', it: '/it/moods' } }
+ */
+export function indexAlternates(locale: Locale, path: string) {
+  return {
+    canonical: `/${locale}${localizedPath(locale, path)}`,
+    languages: Object.fromEntries(locales.map((l) => [l, `/${l}${localizedPath(l, path)}`])),
+  };
+}
+
+/**
+ * Expands a list of slugs into `{ locale, slug }` params for every locale —
+ * the shared body of the detail pages' `generateStaticParams`. Skips empty slugs.
+ */
+export function localeSlugParams(slugs: ReadonlyArray<string | null | undefined>) {
+  const valid = slugs.filter((s): s is string => Boolean(s));
+  return locales.flatMap((locale) => valid.map((slug) => ({ locale, slug })));
+}

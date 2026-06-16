@@ -1,7 +1,7 @@
 import { executeQuery } from '@/lib/datocms/executeQuery';
 import { graphql } from '@/lib/datocms/graphql';
-import { type Locale, locales } from '@/i18n/config';
-import { localizedPath } from '@/i18n/paths';
+import { type Locale } from '@/i18n/config';
+import { indexAlternates, localeSlugParams } from '@/i18n/paths';
 import { draftMode } from 'next/headers';
 import { notFound } from 'next/navigation';
 import { TagFragment } from '@/lib/datocms/commonFragments';
@@ -51,12 +51,7 @@ export async function generateMetadata({
   });
   return {
     ...toNextMetadata(data.post?._seoMetaTags ?? []),
-    alternates: {
-      canonical: `/${locale}${localizedPath(locale as Locale, `/blog/${slug}`)}`,
-      languages: Object.fromEntries(
-        locales.map((l) => [l, `/${l}${localizedPath(l, `/blog/${slug}`)}`]),
-      ),
-    },
+    alternates: indexAlternates(locale as Locale, `/blog/${slug}`),
   };
 }
 
@@ -149,7 +144,7 @@ const allSlugsQuery = graphql(`
 export async function generateStaticParams() {
   const data = await executeQuery(allSlugsQuery);
   const slugs = data.allPosts.map((p) => p.slug).filter((s): s is string => Boolean(s));
-  return locales.flatMap((locale) => slugs.map((slug) => ({ locale, slug })));
+  return localeSlugParams(slugs);
 }
 
 export default async function BlogPostPage({

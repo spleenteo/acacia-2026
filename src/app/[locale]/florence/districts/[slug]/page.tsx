@@ -1,7 +1,7 @@
 import { executeQuery } from '@/lib/datocms/executeQuery';
 import { graphql } from '@/lib/datocms/graphql';
-import { type Locale, locales } from '@/i18n/config';
-import { localizedPath } from '@/i18n/paths';
+import { type Locale } from '@/i18n/config';
+import { indexAlternates, localeSlugParams } from '@/i18n/paths';
 import { draftMode } from 'next/headers';
 import { notFound } from 'next/navigation';
 import { TagFragment } from '@/lib/datocms/commonFragments';
@@ -41,12 +41,7 @@ export async function generateMetadata({
   });
   return {
     ...toNextMetadata(data.district?._seoMetaTags ?? []),
-    alternates: {
-      canonical: `/${locale}${localizedPath(locale as Locale, `/florence/districts/${slug}`)}`,
-      languages: Object.fromEntries(
-        locales.map((l) => [l, `/${l}${localizedPath(l, `/florence/districts/${slug}`)}`]),
-      ),
-    },
+    alternates: indexAlternates(locale as Locale, `/florence/districts/${slug}`),
   };
 }
 
@@ -99,7 +94,7 @@ const allSlugsQuery = graphql(`
 export async function generateStaticParams() {
   const data = await executeQuery(allSlugsQuery);
   const slugs = data.allDistricts.map((d) => d.slug);
-  return locales.flatMap((locale) => slugs.map((slug) => ({ locale, slug })));
+  return localeSlugParams(slugs);
 }
 
 export default async function DistrictDetailPage({

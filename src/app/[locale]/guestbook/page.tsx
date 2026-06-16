@@ -1,7 +1,7 @@
 import { executeQuery } from '@/lib/datocms/executeQuery';
 import { graphql } from '@/lib/datocms/graphql';
-import { type Locale, locales } from '@/i18n/config';
-import { localizedPath } from '@/i18n/paths';
+import { type Locale } from '@/i18n/config';
+import { indexAlternates } from '@/i18n/paths';
 import { draftMode } from 'next/headers';
 import { TagFragment } from '@/lib/datocms/commonFragments';
 import { GuestbookCardFragment } from '@/components/GuestbookCard/fragment';
@@ -45,12 +45,7 @@ export async function generateMetadata({
   });
   return {
     ...toNextMetadata(data.indexGuestbook?._seoMetaTags ?? []),
-    alternates: {
-      canonical: `/${locale}${localizedPath(locale as Locale, '/guestbook')}`,
-      languages: Object.fromEntries(
-        locales.map((l) => [l, `/${l}${localizedPath(l, '/guestbook')}`]),
-      ),
-    },
+    alternates: indexAlternates(locale as Locale, '/guestbook'),
   };
 }
 

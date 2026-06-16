@@ -14,7 +14,7 @@ Ogni slice è verificabile in isolamento (`tsc` + lint, e runtime EN+IT dove toc
 | **V2** | R3 (R6 _Out_) — quick wins   | `accommodations/[slug]/page.tsx`                                | basso   | ✅    |
 | **V3** | R5 — de-dup componenti       | nuovo `CardImage`, `lib/text/excerpt`, easing token, 4 card     | medio   | ✅    |
 | **V4** | R5 — `WidgetList` generico   | nuovo `WidgetList`, Amenities/Comforts/Essentials               | medio   | ✅    |
-| **V5** | R4 — helper anti-boilerplate | `i18n/paths` (indexAlternates), pagine index                    | medio   | ☐     |
+| **V5** | R4 — helper anti-boilerplate | `i18n/paths` (`indexAlternates`+`localeSlugParams`), 9 pagine   | medio   | ✅    |
 | **V6** | R7 — split FAQ               | `faq/[[...slug]]` → `/faq` + `/faq/[...slug]`                   | alto    | ☐     |
 | **V7** | R7 — slim ApartmentDetail    | `accommodations/[slug]/page.tsx` + `ApartmentDetailContent.tsx` | alto    | ☐     |
 
