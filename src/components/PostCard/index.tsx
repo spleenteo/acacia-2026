@@ -2,10 +2,11 @@
 
 import { type FragmentOf, readFragment } from '@/lib/datocms/graphql';
 import { useTranslations } from 'next-intl';
-import ResponsiveImage from '@/components/ResponsiveImage';
+import CardImage from '@/components/CardImage';
 import type { Locale } from '@/i18n/config';
 import { modelPath } from '@/i18n/paths';
 import { dastToText } from '@/lib/faq/dastText';
+import { excerpt } from '@/lib/text/excerpt';
 import { PostCardFragment } from './fragment';
 import Link from 'next/link';
 
@@ -13,14 +14,6 @@ type Props = {
   data: FragmentOf<typeof PostCardFragment>;
   locale: Locale;
 };
-
-/** Trim a plain-text excerpt to a word boundary near `max` chars. */
-function excerpt(text: string, max = 150): string {
-  if (text.length <= max) return text;
-  const sliced = text.slice(0, max);
-  const lastSpace = sliced.lastIndexOf(' ');
-  return `${sliced.slice(0, lastSpace > 0 ? lastSpace : max).trimEnd()}…`;
-}
 
 /**
  * Blog post card — stacked in reading order: category kicker, serif title,
@@ -48,19 +41,7 @@ export default function PostCard({ data, locale }: Props) {
         </h3>
 
         {/* Featured image — optional, horizontal 16:9 crop on the focal point. */}
-        {image && (
-          <div
-            className="mt-4 overflow-hidden rounded-sm transition-shadow duration-500 group-hover:shadow-card-hover"
-            style={{ transitionTimingFunction: 'cubic-bezier(0.19,1,0.22,1)' }}
-          >
-            <div
-              className="transition-transform duration-700 group-hover:scale-[1.03]"
-              style={{ transitionTimingFunction: 'cubic-bezier(0.19,1,0.22,1)' }}
-            >
-              <ResponsiveImage data={image} />
-            </div>
-          </div>
-        )}
+        {image && <CardImage data={image} className="mt-4" />}
 
         {subtitle && (
           <p className="mt-4 line-clamp-3 font-body text-body-sm text-muted leading-relaxed">

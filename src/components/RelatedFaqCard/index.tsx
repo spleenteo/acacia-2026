@@ -1,5 +1,6 @@
 import { type FragmentOf, graphql, readFragment } from '@/lib/datocms/graphql';
 import { dastToText } from '@/lib/faq/dastText';
+import { excerpt } from '@/lib/text/excerpt';
 import Link from 'next/link';
 
 /**
@@ -24,17 +25,9 @@ type Props = {
   href: string;
 };
 
-/** Trim a plain-text excerpt to a word boundary near `max` chars. */
-function excerpt(text: string, max = 160): string {
-  if (text.length <= max) return text;
-  const sliced = text.slice(0, max);
-  const lastSpace = sliced.lastIndexOf(' ');
-  return `${sliced.slice(0, lastSpace > 0 ? lastSpace : max).trimEnd()}…`;
-}
-
 export default function RelatedFaqCard({ data, href }: Props) {
   const faq = readFragment(RelatedFaqCardFragment, data);
-  const answer = excerpt(dastToText(faq.shortAnswer?.value));
+  const answer = excerpt(dastToText(faq.shortAnswer?.value), 160);
 
   return (
     <Link

@@ -7,6 +7,11 @@
 @import 'tailwindcss';
 
 @theme {
+  /* Motion — shared easing for card image zoom / shadow (was an inline
+     cubic-bezier repeated across every card). `--ease-*` is the Tailwind
+     transition-timing namespace, so this also exposes an `ease-card` utility. */
+  --ease-card: cubic-bezier(0.19, 1, 0.22, 1);
+
   /* ══════════════════════════════════════
      COLORS — "Japan Fish" editorial palette
      warm rust & gold against cool sage, slate

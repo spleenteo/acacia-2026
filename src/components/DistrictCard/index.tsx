@@ -25,16 +25,10 @@ export default function DistrictCard({ data, locale }: Props) {
 
   return (
     <Link href={modelPath('district', district.slug, locale)!} className="group block">
-      <article
-        className="relative overflow-hidden rounded-sm transition-shadow duration-500 group-hover:shadow-card-hover"
-        style={{ transitionTimingFunction: 'cubic-bezier(0.19,1,0.22,1)' }}
-      >
+      <article className="relative overflow-hidden rounded-sm transition-shadow duration-500 ease-card group-hover:shadow-card-hover">
         {/* Image — portrait 3:4 */}
         {coverImage && (
-          <div
-            className="transition-transform duration-700 group-hover:scale-[1.03]"
-            style={{ transitionTimingFunction: 'cubic-bezier(0.19,1,0.22,1)' }}
-          >
+          <div className="transition-transform duration-700 ease-card group-hover:scale-[1.03]">
             <ResponsiveImage data={coverImage} />
           </div>
         )}
