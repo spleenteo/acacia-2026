@@ -70,5 +70,9 @@
     "moods": "Moods",
     "districts": "Quartieri",
     "accommodations": "Alloggi"
+  },
+  "blog": {
+    "label": "Dal blog",
+    "noPosts": "Nessun articolo in questa categoria"
   }
 }

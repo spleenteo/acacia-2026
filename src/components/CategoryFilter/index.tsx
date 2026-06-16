@@ -1,15 +1,10 @@
 'use client';
 
-import { Suspense, useRef, useState } from 'react';
+import { Suspense, useRef, useState, type ReactNode } from 'react';
 import { useSearchParams } from 'next/navigation';
-import { useTranslations } from 'next-intl';
-import { type FragmentOf } from '@/lib/datocms/graphql';
-import { ApartmentCardFragment } from '@/components/ApartmentCard';
-import ApartmentCard from '@/components/ApartmentCard';
 import { wonkyClip } from '@/lib/wonkyClip';
 import { HERO_PIN_TOP_PX } from '@/lib/useHeroPin';
 import { TONES } from '@/components/WidgetLabel';
-import type { Locale } from '@/i18n/config';
 
 /** Light Japan Fish tints, cycled across filters for the hover highlight. */
 const FILTER_TINTS = [TONES.sage.bg, TONES.gold.bg, TONES.slate.bg, TONES.rust.bg];
@@ -20,19 +15,23 @@ type Category = {
   slug: string;
 };
 
-type Props = {
-  categories: Category[];
-  apartments: {
-    id: string;
-    categorySlug: string;
-    data: FragmentOf<typeof ApartmentCardFragment>;
-  }[];
-  locale: Locale;
-  allLabel: string;
+/** A pre-rendered card to show in the grid, tagged with its category slug. */
+type FilterItem = {
+  id: string;
+  categorySlug: string;
+  node: ReactNode;
 };
 
-function CategoryFilterInner({ categories, apartments, locale }: Props) {
-  const t = useTranslations('listing');
+type Props = {
+  categories: Category[];
+  items: FilterItem[];
+  /** Label for the "All" filter (e.g. "All"). */
+  allLabel: string;
+  /** Message shown when a filter yields no items. */
+  emptyLabel?: string;
+};
+
+function CategoryFilterInner({ categories, items, allLabel, emptyLabel }: Props) {
   const searchParams = useSearchParams();
   const [activeCategory, setActiveCategory] = useState<string | null>(searchParams.get('category'));
   const filtersRef = useRef<HTMLDivElement>(null);
@@ -80,15 +79,15 @@ function CategoryFilterInner({ categories, apartments, locale }: Props) {
     requestAnimationFrame(scrollToHeroPin);
   };
 
-  const filteredApartments = activeCategory
-    ? apartments.filter((a) => a.categorySlug === activeCategory)
-    : apartments;
+  const filteredItems = activeCategory
+    ? items.filter((a) => a.categorySlug === activeCategory)
+    : items;
 
   return (
     <>
       <div ref={filtersRef} className="flex flex-wrap justify-start gap-x-1 gap-y-1 mb-10">
         {[
-          { slug: null as string | null, label: t('allFilter') },
+          { slug: null as string | null, label: allLabel },
           ...categories.map((c) => ({ slug: c.slug, label: c.name })),
         ].map((item, i) => {
           const isActive = (item.slug ?? null) === (activeCategory ?? null);
@@ -128,14 +127,14 @@ function CategoryFilterInner({ categories, apartments, locale }: Props) {
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-12 sm:gap-6">
-        {filteredApartments.map((apartment) => (
-          <ApartmentCard key={apartment.id} data={apartment.data} locale={locale} />
+        {filteredItems.map((item) => (
+          <div key={item.id}>{item.node}</div>
         ))}
       </div>
 
-      {filteredApartments.length === 0 && (
+      {filteredItems.length === 0 && emptyLabel && (
         <p className="text-center text-light font-heading italic text-body-lg py-12">
-          {t('noApartments')}
+          {emptyLabel}
         </p>
       )}
     </>
@@ -147,8 +146,8 @@ export default function CategoryFilter(props: Props) {
     <Suspense
       fallback={
         <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-12 sm:gap-6">
-          {props.apartments.map((apartment) => (
-            <ApartmentCard key={apartment.id} data={apartment.data} locale={props.locale} />
+          {props.items.map((item) => (
+            <div key={item.id}>{item.node}</div>
           ))}
         </div>
       }

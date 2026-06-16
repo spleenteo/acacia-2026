@@ -36,6 +36,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     '/florence/accommodations',
     '/florence/districts',
     '/moods',
+    '/blog',
     '/faq',
     '/guestbook',
   ];

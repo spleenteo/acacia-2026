@@ -70,5 +70,9 @@
     "moods": "Moods",
     "districts": "Districts",
     "accommodations": "Accommodations"
+  },
+  "blog": {
+    "label": "From the blog",
+    "noPosts": "No posts in this category"
   }
 }

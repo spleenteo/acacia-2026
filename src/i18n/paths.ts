@@ -89,6 +89,7 @@ const indexPaths: Record<string, string> = {
   index_apartment: '/florence/accommodations',
   index_district: '/florence/districts',
   index_mood: '/moods',
+  index_blog: '/blog',
   index_faq: '/faq',
   index_guestbook: '/guestbook',
 };

@@ -8,6 +8,7 @@ import StructuredTextContent from '@/components/StructuredTextContent';
 import ReadMore from '@/components/ReadMore';
 import BeddyBar from '@/components/BeddyBar';
 import CategoryFilter from '@/components/CategoryFilter';
+import ApartmentCard from '@/components/ApartmentCard';
 import { toHeroTone } from '@/lib/heroTone';
 import type { ResultOf } from 'gql.tada';
 import type { query } from './page';
@@ -31,7 +32,7 @@ export default function AccommodationsContent({
   const apartments = allApartments.map((apt) => ({
     id: apt.id,
     categorySlug: apt.category.slug,
-    data: apt,
+    node: <ApartmentCard data={apt} locale={locale} />,
   }));
 
   // Sidebar copy is now the `description` structured-text field (was `intro`).
@@ -65,9 +66,9 @@ export default function AccommodationsContent({
         >
           <CategoryFilter
             categories={categories}
-            apartments={apartments}
-            locale={locale}
+            items={apartments}
             allLabel={t('allFilter')}
+            emptyLabel={t('noApartments')}
           />
         </EditorialListingLayout>
 
