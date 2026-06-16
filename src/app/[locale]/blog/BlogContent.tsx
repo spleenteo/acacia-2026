@@ -20,11 +20,15 @@ export default function BlogContent({ locale, data }: BlogProps & { data: BlogDa
   const tListing = useTranslations('listing');
   const { indexBlog, allBlogCategories, allPosts } = data;
 
-  const categories = allBlogCategories.map((cat) => ({
-    id: cat.id,
-    name: cat.name,
-    slug: cat.slug,
-  }));
+  // Only surface categories that have at least one published post (count from
+  // the DatoCMS inverse-relationship meta).
+  const categories = allBlogCategories
+    .filter((cat) => cat._allReferencingPostsMeta.count > 0)
+    .map((cat) => ({
+      id: cat.id,
+      name: cat.name,
+      slug: cat.slug,
+    }));
 
   const posts = allPosts.map((post) => ({
     id: post.id,

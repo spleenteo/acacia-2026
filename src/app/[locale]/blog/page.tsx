@@ -67,6 +67,10 @@ export const query = graphql(
         id
         name
         slug
+        # Only categories with at least one published post are shown.
+        _allReferencingPostsMeta(filter: { _status: { eq: published } }) {
+          count
+        }
       }
       allPosts(
         locale: $locale
