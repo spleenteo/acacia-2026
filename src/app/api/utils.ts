@@ -1,6 +1,5 @@
 import { ApiError } from '@datocms/cma-client';
 import { NextResponse } from 'next/server';
-import { serializeError } from 'serialize-error';
 
 export function withCORS(responseInit?: ResponseInit): ResponseInit {
   return {
@@ -15,25 +14,19 @@ export function withCORS(responseInit?: ResponseInit): ResponseInit {
 }
 
 export function handleUnexpectedError(error: unknown) {
-  try {
-    throw error;
-  } catch (e) {
-    console.error(e);
-  }
+  // Log the full error server-side (incl. ApiError request/response, which may
+  // carry the CMA token in its Authorization header) but never echo those
+  // details back to the caller.
+  console.error(error);
 
-  if (error instanceof ApiError) {
-    return NextResponse.json(
-      {
-        success: false,
-        error: error.message,
-        request: error.request,
-        response: error.response,
-      },
-      withCORS({ status: 500 }),
-    );
-  }
+  const message =
+    error instanceof ApiError
+      ? 'Upstream API error'
+      : error instanceof Error
+        ? error.message
+        : 'Unexpected error';
 
-  return invalidRequestResponse(serializeError(error), 500);
+  return invalidRequestResponse(message, 500);
 }
 
 export function invalidRequestResponse(error: unknown, status = 422) {
@@ -101,8 +94,15 @@ export async function makeDraftModeWorkWithinIframes() {
 }
 
 export function isRelativeUrl(path: string): boolean {
+  // Must be a path-absolute URL ("/foo"). Reject protocol-relative ("//host")
+  // and backslash-tricks ("/\\host") that browsers normalize to an external
+  // origin — those would turn `redirect()` into an open redirect.
+  if (!path.startsWith('/') || path.startsWith('//') || path.startsWith('/\\')) {
+    return false;
+  }
   try {
-    // Try to create a URL object — if it succeeds without a base, it's absolute
+    // A leading slash makes it absolute; if it still parses as absolute on its
+    // own (has a scheme), it's not relative.
     new URL(path);
     return false;
   } catch {
