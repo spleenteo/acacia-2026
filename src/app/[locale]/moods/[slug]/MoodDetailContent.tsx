@@ -57,6 +57,7 @@ export default function MoodDetailContent({
     <>
       <EditorialHero
         tone="gold"
+        label={tMoods('label')}
         title={mood.name ?? ''}
         subtitle={mood.claim}
         image={mood.image?.responsiveImage}
