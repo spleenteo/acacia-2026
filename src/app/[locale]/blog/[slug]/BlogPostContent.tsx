@@ -9,7 +9,11 @@ import { makeStructuredTextBlockRenderer } from '@/components/StructuredText/Str
 import type { ResultOf } from 'gql.tada';
 import type { query } from './page';
 
-export type BlogPostProps = { locale: Locale };
+export type BlogPostProps = {
+  locale: Locale;
+  /** Resolved full FAQ URLs keyed by record id (for embedded `cta_faq` blocks). */
+  faqHrefById: Record<string, string>;
+};
 type BlogPostData = ResultOf<typeof query>;
 
 /** A record referenced inline from the post body (itemLink / inlineItem). */
@@ -38,7 +42,11 @@ function labelFor(record: LinkedRecord): string {
   return 'name' in record ? record.name : record.title;
 }
 
-export default function BlogPostContent({ locale, data }: BlogPostProps & { data: BlogPostData }) {
+export default function BlogPostContent({
+  locale,
+  faqHrefById,
+  data,
+}: BlogPostProps & { data: BlogPostData }) {
   const post = data.post;
   if (!post) return null;
 
@@ -48,6 +56,7 @@ export default function BlogPostContent({ locale, data }: BlogPostProps & { data
         tone="sage"
         label={post.category?.name}
         title={post.title ?? ''}
+        subtitle={post.abstract}
         image={post.featuredImage?.responsiveImage}
         priority
       />
@@ -62,7 +71,7 @@ export default function BlogPostContent({ locale, data }: BlogPostProps & { data
                 // fragment), so cast to the renderer's data type — runtime data
                 // carries the ids.
                 data={post.content as unknown as ComponentProps<typeof StructuredText>['data']}
-                renderBlock={makeStructuredTextBlockRenderer(locale)}
+                renderBlock={makeStructuredTextBlockRenderer(locale, faqHrefById)}
                 renderLinkToRecord={({ record, children, transformedMeta }) => {
                   const href = hrefFor(record as unknown as LinkedRecord, locale);
                   if (href === '#') return <>{children}</>;

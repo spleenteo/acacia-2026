@@ -13,8 +13,7 @@ import { PostCardFragment } from '@/components/PostCard';
 import { DistrictCardFragment } from '@/components/DistrictCard';
 import { RelatedFaqCardFragment } from '@/components/RelatedFaqCard';
 import { MoodCardFragment } from '@/components/MoodCard';
-import { fetchFaqTree, pathSlugsForNode } from '@/lib/faq/faqTree';
-import { faqPath } from '@/i18n/paths';
+import { faqHrefMap } from '@/lib/faq/faqTree';
 import RealtimeWrapper from '@/lib/datocms/realtime/RealtimeWrapper';
 import { getDraftRealtimeOptions } from '@/lib/datocms/realtime/getDraftRealtimeOptions';
 import { SetAlternateLocalePaths } from '@/components/LocaleSwitcher/AlternateLocaleContext';
@@ -169,18 +168,13 @@ export default async function MoodDetailPage({
   // A related FAQ record only knows its own slug; its public URL is the full
   // root→node chain. Resolve every related FAQ's href from the tree (fetched
   // once, and only when the mood actually links to a FAQ).
-  const faqIds = data.mood.relatedContent
-    .filter((item) => item.__typename === 'FaqRecord')
-    .map((item) => item.id);
-  let faqHrefById: Record<string, string> = {};
-  if (faqIds.length > 0) {
-    const tree = await fetchFaqTree(locale as Locale, isDraftModeEnabled);
-    faqHrefById = Object.fromEntries(
-      faqIds
-        .filter((id) => tree.byId.has(id))
-        .map((id) => [id, faqPath(locale as Locale, pathSlugsForNode(tree, id))]),
-    );
-  }
+  const faqHrefById = await faqHrefMap(
+    locale as Locale,
+    isDraftModeEnabled,
+    data.mood.relatedContent
+      .filter((item) => item.__typename === 'FaqRecord')
+      .map((item) => item.id),
+  );
 
   const resolvedProps: MoodDetailProps = { locale: locale as Locale, faqHrefById };
   // Publish the correct "same mood, other language" URLs to the locale switcher

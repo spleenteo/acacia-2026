@@ -3,8 +3,10 @@ import { type FragmentOf, readFragment } from '@/lib/datocms/graphql';
 import { type Locale } from '@/i18n/config';
 import { modelPath } from '@/i18n/paths';
 import ResponsiveImage, { ResponsiveImageFragment } from '@/components/ResponsiveImage';
+import RelatedFaqCard from '@/components/RelatedFaqCard';
 import {
   CtaBlogPostFragment,
+  CtaFaqFragment,
   ImageBlockFragment,
   ImageGalleryBlockFragment,
   VideoBlockFragment,
@@ -16,9 +18,16 @@ import {
  * `<StructuredText>` renderers. Takes the current locale (needed to resolve the
  * blog-post CTA link + its label) and handles the shared block models:
  * `image_block`, `image_gallery_block`, `video_block` (external `embedded_video`),
- * and `cta_blog_post`.
+ * `cta_blog_post`, and `cta_faq` (coloured FAQ card).
+ *
+ * `faqHrefById` maps an embedded FAQ record id to its hierarchical URL (the
+ * caller resolves it from the FAQ tree, since a record doesn't know its
+ * ancestor chain); pass `{}` when the field can't contain a `cta_faq` block.
  */
-export function makeStructuredTextBlockRenderer(locale: Locale) {
+export function makeStructuredTextBlockRenderer(
+  locale: Locale,
+  faqHrefById: Record<string, string> = {},
+) {
   return function renderStructuredTextBlock({ record }: { record: { __typename: string } }) {
     switch (record.__typename) {
       case 'ImageBlockRecord': {
@@ -67,6 +76,15 @@ export function makeStructuredTextBlockRenderer(locale: Locale) {
           record as unknown as FragmentOf<typeof CtaBlogPostFragment>,
         );
         return <CtaBlogPost post={block.post} locale={locale} />;
+      }
+
+      case 'CtaFaqRecord': {
+        const block = readFragment(
+          CtaFaqFragment,
+          record as unknown as FragmentOf<typeof CtaFaqFragment>,
+        );
+        if (!block.faq) return null;
+        return <RelatedFaqCard data={block.faq} href={faqHrefById[block.faq.id] ?? '#'} />;
       }
 
       // ButtonBlockRecord: link resolution not wired yet → renders nothing.

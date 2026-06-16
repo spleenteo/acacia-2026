@@ -1241,6 +1241,32 @@ type CtaBlogPostRecord implements RecordInterface {
   updatedAt: DateTime!
 }
 
+"""Block of type CTA FAQ (cta_faq)"""
+type CtaFaqRecord implements RecordInterface {
+  _createdAt: DateTime!
+
+  """Editing URL"""
+  _editingUrl: String
+  _firstPublishedAt: DateTime!
+  _isValid: BooleanType!
+  _modelApiKey: String!
+  _publicationScheduledAt: DateTime
+  _publishedAt: DateTime!
+
+  """Generates SEO and Social card meta tags to be used in your frontend"""
+  _seoMetaTags(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+  ): [Tag!]!
+  _status: ItemStatus!
+  _unpublishingScheduledAt: DateTime
+  _updatedAt: DateTime!
+  createdAt: DateTime!
+  faq: FaqRecord!
+  id: ItemId!
+  updatedAt: DateTime!
+}
+
 scalar CustomData
 
 """A ISO 8601 compliant date value"""
@@ -7364,7 +7390,7 @@ enum PageModelOrderBy {
   title_DESC
 }
 
-union PageModelStructuredTextBlocksField = ImageBlockRecord | ImageGalleryBlockRecord | VideoBlockRecord
+union PageModelStructuredTextBlocksField = CtaFaqRecord | ImageBlockRecord | ImageGalleryBlockRecord | VideoBlockRecord
 
 type PageModelStructuredTextField {
   blocks: [PageModelStructuredTextBlocksField!]!
@@ -7592,7 +7618,7 @@ input PositionFilter {
   neq: IntType
 }
 
-union PostModelContentBlocksField = ButtonBlockRecord | CtaBlogPostRecord | ImageBlockRecord | ImageGalleryBlockRecord | VideoBlockRecord
+union PostModelContentBlocksField = ButtonBlockRecord | CtaBlogPostRecord | CtaFaqRecord | ImageBlockRecord | ImageGalleryBlockRecord | VideoBlockRecord
 
 type PostModelContentField {
   blocks: [PostModelContentBlocksField!]!
@@ -7641,6 +7667,7 @@ input PostModelFilter {
   updatedAt: UpdatedAtFilter
   _isValid: BooleanFilter
   _locales: LocalesFilter
+  abstract: TextFilter
   category: LinkFilter
   content: StructuredTextFilter
   featuredImage: FileFilter
@@ -7808,6 +7835,15 @@ type PostOldRecord implements RecordInterface {
 
 """Record of type Post (post)"""
 type PostRecord implements RecordInterface {
+  _allAbstractLocales(
+    """Process content as markdown"""
+    markdown: Boolean
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): [StringMultiLocaleField!]
   _allContentLocales(
     """
     If you want to fallback to a default translation when a translation has not been found
@@ -7851,6 +7887,18 @@ type PostRecord implements RecordInterface {
   _status: ItemStatus!
   _unpublishingScheduledAt: DateTime
   _updatedAt: DateTime!
+  abstract(
+    """Process content as markdown"""
+    markdown: Boolean
+
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): String
   category: BlogCategoryRecord!
   content(
     """The locale to use to fetch the field's content"""

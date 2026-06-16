@@ -1,6 +1,7 @@
 import { executeQuery } from '@/lib/datocms/executeQuery';
 import { graphql } from '@/lib/datocms/graphql';
 import type { Locale } from '@/i18n/config';
+import { faqPath } from '@/i18n/paths';
 
 /**
  * The FAQ section is a single tree of `faq` records (DatoCMS `tree: true`).
@@ -117,6 +118,27 @@ export function ancestorsOf(tree: FaqTree, nodeId: string): FaqStructureNode[] {
 /** Slug chain for a node (root → node), used to build its URL. */
 export function pathSlugsForNode(tree: FaqTree, nodeId: string): string[] {
   return ancestorsOf(tree, nodeId).map((n) => n.slug);
+}
+
+/**
+ * Resolve the public (ancestry-aware) URL for a set of FAQ record ids. A single
+ * FAQ record only knows its own slug, so any page that links to a FAQ (mood
+ * related box, embedded `cta_faq` block) needs the tree to build the full path.
+ * Fetches the tree once, and only when there's at least one id to resolve.
+ */
+export async function faqHrefMap(
+  locale: Locale,
+  includeDrafts: boolean,
+  faqIds: string[],
+): Promise<Record<string, string>> {
+  const ids = Array.from(new Set(faqIds));
+  if (ids.length === 0) return {};
+  const tree = await fetchFaqTree(locale, includeDrafts);
+  return Object.fromEntries(
+    ids
+      .filter((id) => tree.byId.has(id))
+      .map((id) => [id, faqPath(locale, pathSlugsForNode(tree, id))]),
+  );
 }
 
 /** Siblings of a node (same parent), excluding itself. */

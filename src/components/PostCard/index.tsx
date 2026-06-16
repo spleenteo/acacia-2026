@@ -10,8 +10,8 @@ import Link from 'next/link';
  * Blog post card — portrait 3:4 image, category kicker, serif title shifting to
  * primary on hover, and a short excerpt. Post fields are localized but the blog
  * is legacy EN-only content, so localized fields fall back to `en` (otherwise a
- * null IT slug would break the non-nullable query). The acacia-2026 model has no
- * `abstract` field, so the teaser is derived from the `content` Structured Text.
+ * null IT slug would break the non-nullable query). The teaser is the `abstract`
+ * field, falling back to an excerpt of the `content` Structured Text when empty.
  */
 export const PostCardFragment = graphql(
   `
@@ -19,6 +19,7 @@ export const PostCardFragment = graphql(
       id
       title(fallbackLocales: [en])
       slug(fallbackLocales: [en])
+      abstract(fallbackLocales: [en])
       category {
         name
       }
@@ -50,7 +51,8 @@ function excerpt(text: string, max = 150): string {
 
 export default function PostCard({ data, locale }: Props) {
   const post = readFragment(PostCardFragment, data);
-  const teaser = excerpt(dastToText(post.content?.value));
+  // Prefer the editorial `abstract`; fall back to a content excerpt when empty.
+  const teaser = post.abstract?.trim() ? post.abstract : excerpt(dastToText(post.content?.value));
 
   return (
     <Link href={modelPath('post', post.slug, locale)!} className="group block">

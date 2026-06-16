@@ -13,8 +13,10 @@ import {
   ImageGalleryBlockFragment,
   VideoBlockFragment,
   CtaBlogPostFragment,
+  CtaFaqFragment,
   ButtonBlockFragment,
 } from '@/components/StructuredText/blocksFragment';
+import { faqHrefMap } from '@/lib/faq/faqTree';
 import RealtimeWrapper from '@/lib/datocms/realtime/RealtimeWrapper';
 import { getDraftRealtimeOptions } from '@/lib/datocms/realtime/getDraftRealtimeOptions';
 import BlogPostContent, { type BlogPostProps } from './BlogPostContent';
@@ -65,6 +67,7 @@ export const query = graphql(
         id
         title
         slug
+        abstract
         _firstPublishedAt
         category {
           name
@@ -78,10 +81,18 @@ export const query = graphql(
           value
           blocks {
             __typename
+            # Unmasked faq id (for the cta_faq block) so the page can resolve
+            # the FAQ URLs from the tree before rendering.
+            ... on CtaFaqRecord {
+              faq {
+                id
+              }
+            }
             ...ImageBlockFields
             ...ImageGalleryBlockFields
             ...VideoBlockFields
             ...CtaBlogPostFields
+            ...CtaFaqFields
             ...ButtonBlockFields
           }
           links {
@@ -122,6 +133,7 @@ export const query = graphql(
     ImageGalleryBlockFragment,
     VideoBlockFragment,
     CtaBlogPostFragment,
+    CtaFaqFragment,
     ButtonBlockFragment,
   ],
 );
@@ -156,7 +168,16 @@ export default async function BlogPostPage({
 
   if (!data.post) notFound();
 
-  const resolvedProps: BlogPostProps = { locale: locale as Locale };
+  // Resolve hierarchical URLs for any FAQ embedded via a `cta_faq` block.
+  const faqHrefById = await faqHrefMap(
+    locale as Locale,
+    isDraftModeEnabled,
+    (data.post.content?.blocks ?? []).flatMap((b) =>
+      b.__typename === 'CtaFaqRecord' && b.faq ? [b.faq.id] : [],
+    ),
+  );
+
+  const resolvedProps: BlogPostProps = { locale: locale as Locale, faqHrefById };
 
   if (isDraftModeEnabled) {
     return (

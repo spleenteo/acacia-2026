@@ -61,7 +61,7 @@ export default function FaqStructuredText({
         // gql.tada masks the union blocks (id lives inside each block fragment),
         // so cast to the renderer's data type — runtime data carries the ids.
         data={data as unknown as ComponentProps<typeof StructuredText>['data']}
-        renderBlock={makeStructuredTextBlockRenderer(locale)}
+        renderBlock={makeStructuredTextBlockRenderer(locale, faqHrefById)}
         renderLinkToRecord={({ record, children, transformedMeta }) => {
           const href = hrefFor(record as unknown as LinkedRecord, faqHrefById, locale);
           // Unsupported targets (e.g. legacy blog posts with no route) → plain text.

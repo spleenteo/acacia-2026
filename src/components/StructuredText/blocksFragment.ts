@@ -1,5 +1,6 @@
 import { graphql } from '@/lib/datocms/graphql';
 import { ResponsiveImageFragment } from '@/components/ResponsiveImage';
+import { RelatedFaqCardFragment } from '@/components/RelatedFaqCard';
 
 /**
  * Block fragments for the structured-text fields that allow embedded blocks
@@ -77,6 +78,25 @@ export const CtaBlogPostFragment = graphql(
     }
   `,
   [ResponsiveImageFragment],
+);
+
+/**
+ * FAQ block — embeds a single FAQ record, rendered as the coloured
+ * question + short-answer card (same look as the mood page's related-FAQ box).
+ * The destination URL is resolved by the caller from the FAQ tree.
+ */
+export const CtaFaqFragment = graphql(
+  `
+    fragment CtaFaqFields on CtaFaqRecord {
+      __typename
+      id
+      faq {
+        id
+        ...RelatedFaqCardFragment
+      }
+    }
+  `,
+  [RelatedFaqCardFragment],
 );
 
 /**
