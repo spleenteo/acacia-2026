@@ -56,7 +56,6 @@ export default function BlogPostContent({
         tone="sage"
         label={post.category?.name}
         title={post.title ?? ''}
-        subtitle={post.abstract}
         image={post.featuredImage?.responsiveImage}
         priority
       />
@@ -64,6 +63,14 @@ export default function BlogPostContent({
       {/* Tucks under the hero diagonal on mobile; desktop overlap via the layout. */}
       <article className="relative z-0 -mt-8 lg:mt-0">
         <div className="mx-auto max-w-3xl px-5 pb-20 pt-12 md:pt-16 lg:pb-28">
+          {/* Abstract as a serif standfirst — large, but smaller than the hero
+              title so the two never read as the same level. */}
+          {post.abstract?.trim() ? (
+            <p className="mb-10 font-heading text-h2 font-normal leading-snug text-dark">
+              {post.abstract}
+            </p>
+          ) : null}
+
           {post.content?.value ? (
             <div className="prose prose-acacia font-body text-body-lg">
               <StructuredText

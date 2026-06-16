@@ -84,7 +84,12 @@ export function makeStructuredTextBlockRenderer(
           record as unknown as FragmentOf<typeof CtaFaqFragment>,
         );
         if (!block.faq) return null;
-        return <RelatedFaqCard data={block.faq} href={faqHrefById[block.faq.id] ?? '#'} />;
+        // Generous spacing inside the article flow, with extra room below.
+        return (
+          <div className="mt-10 mb-14 sm:mt-12 sm:mb-16">
+            <RelatedFaqCard data={block.faq} href={faqHrefById[block.faq.id] ?? '#'} />
+          </div>
+        );
       }
 
       // ButtonBlockRecord: link resolution not wired yet → renders nothing.
