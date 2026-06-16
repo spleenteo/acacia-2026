@@ -57,6 +57,8 @@ export const VideoBlockFragment = graphql(`
   }
 `);
 
+// NOTE: `cta_blog_post.post` links to the LEGACY blog model (modular `content`,
+// has an `abstract`), not the new `PostRecord`. Keep `abstract` here.
 export const CtaBlogPostFragment = graphql(
   `
     fragment CtaBlogPostFields on CtaBlogPostRecord {
@@ -76,3 +78,15 @@ export const CtaBlogPostFragment = graphql(
   `,
   [ResponsiveImageFragment],
 );
+
+/**
+ * Button block — a styled CTA whose `button` single-block carries the label and
+ * a polymorphic link. Only the presence is queried here; full link resolution
+ * isn't wired into the renderer yet, so it renders nothing for now.
+ */
+export const ButtonBlockFragment = graphql(`
+  fragment ButtonBlockFields on ButtonBlockRecord {
+    __typename
+    id
+  }
+`);

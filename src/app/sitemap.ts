@@ -21,6 +21,10 @@ const slugsQuery = graphql(`
       slug
       _updatedAt
     }
+    allPosts(first: 100) {
+      slug
+      _updatedAt
+    }
   }
 `);
 
@@ -85,5 +89,24 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     })),
   );
 
-  return [...staticEntries, ...apartmentEntries, ...districtEntries, ...moodEntries, ...faqEntries];
+  // Blog is legacy EN-only content, but both locale routes render it.
+  const postEntries: MetadataRoute.Sitemap = locales.flatMap((locale) =>
+    data.allPosts
+      .filter((p) => p.slug)
+      .map((p) => ({
+        url: `${siteUrl}/${locale}${localizedPath(locale, `/blog/${p.slug}`)}`,
+        lastModified: new Date(p._updatedAt),
+        changeFrequency: 'monthly' as const,
+        priority: 0.5,
+      })),
+  );
+
+  return [
+    ...staticEntries,
+    ...apartmentEntries,
+    ...districtEntries,
+    ...moodEntries,
+    ...postEntries,
+    ...faqEntries,
+  ];
 }

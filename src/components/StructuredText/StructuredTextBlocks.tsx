@@ -69,6 +69,7 @@ export function makeStructuredTextBlockRenderer(locale: Locale) {
         return <CtaBlogPost post={block.post} locale={locale} />;
       }
 
+      // ButtonBlockRecord: link resolution not wired yet → renders nothing.
       default:
         return null;
     }

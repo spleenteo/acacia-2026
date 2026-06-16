@@ -19,6 +19,8 @@ type Props = {
   model: 'mood' | 'district';
   items: RelatedItem[];
   locale: Locale;
+  /** Stacked rows ('list', default) or a three-column grid ('grid'). */
+  layout?: 'list' | 'grid';
 };
 
 /**
@@ -27,16 +29,24 @@ type Props = {
  * Each row: small round avatar on the left, name (+ optional subtitle) on the
  * right. Same UI for moods and districts; only the collection differs.
  */
-export default function RelatedList({ title, model, items, locale }: Props) {
+export default function RelatedList({ title, model, items, locale, layout = 'list' }: Props) {
   if (items.length === 0) return null;
+
+  const isGrid = layout === 'grid';
 
   return (
     <section className="py-16 lg:py-20 bg-surface-alt">
-      <div className="mx-auto max-w-3xl px-8">
+      <div className={`mx-auto px-8 ${isGrid ? 'max-w-6xl' : 'max-w-3xl'}`}>
         <p className="mb-6 font-body text-label uppercase tracking-[0.22em] text-primary font-medium">
           {title}
         </p>
-        <ul className="divide-y divide-border">
+        <ul
+          className={
+            isGrid
+              ? 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-2'
+              : 'divide-y divide-border'
+          }
+        >
           {items.map((item) => {
             const href = (item.slug && modelPath(model, item.slug, locale)) || '#';
             return (

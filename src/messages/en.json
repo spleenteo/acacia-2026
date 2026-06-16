@@ -57,7 +57,9 @@
   "moods": {
     "apartments": "Apartments for this mood",
     "title": "Discover our moods",
-    "label": "Travel by feeling"
+    "label": "Travel by feeling",
+    "relatedLabel": "Explore",
+    "relatedTitle": "Worth a look"
   },
   "districts": {
     "title": "Explore the city",

@@ -63,7 +63,12 @@ export const query = graphql(
           value
         }
       }
-      allMoods(locale: $locale, orderBy: [position_ASC], first: 100) {
+      allMoods(
+        locale: $locale
+        filter: { _status: { eq: published } }
+        orderBy: [position_ASC]
+        first: 100
+      ) {
         id
         ...MoodCardFragment
       }

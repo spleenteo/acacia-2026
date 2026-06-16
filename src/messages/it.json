@@ -57,7 +57,9 @@
   "moods": {
     "apartments": "Alloggi per questo mood",
     "title": "Scopri i nostri mood",
-    "label": "Viaggia per ispirazione"
+    "label": "Viaggia per ispirazione",
+    "relatedLabel": "Esplora",
+    "relatedTitle": "Da non perdere"
   },
   "districts": {
     "title": "Esplora la città",

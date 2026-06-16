@@ -9,7 +9,12 @@ import { toNextMetadata } from 'react-datocms/seo';
 import type { Metadata } from 'next';
 import { ResponsiveImageFragment } from '@/components/ResponsiveImage';
 import { ApartmentCardFragment } from '@/components/ApartmentCard';
+import { PostCardFragment } from '@/components/PostCard';
+import { DistrictCardFragment } from '@/components/DistrictCard';
+import { RelatedFaqCardFragment } from '@/components/RelatedFaqCard';
 import { MoodCardFragment } from '@/components/MoodCard';
+import { fetchFaqTree, pathSlugsForNode } from '@/lib/faq/faqTree';
+import { faqPath } from '@/i18n/paths';
 import RealtimeWrapper from '@/lib/datocms/realtime/RealtimeWrapper';
 import { getDraftRealtimeOptions } from '@/lib/datocms/realtime/getDraftRealtimeOptions';
 import { SetAlternateLocalePaths } from '@/components/LocaleSwitcher/AlternateLocaleContext';
@@ -92,19 +97,43 @@ export const query = graphql(
           }
         }
         relatedContent {
+          __typename
           ... on ApartmentRecord {
-            __typename
             id
             ...ApartmentCardFragment
           }
+          ... on PostRecord {
+            id
+            ...PostCardFragment
+          }
+          ... on FaqRecord {
+            id
+            ...RelatedFaqCardFragment
+          }
+          ... on DistrictRecord {
+            id
+            ...DistrictCardFragment
+          }
         }
       }
-      allMoods(locale: $locale, orderBy: [position_ASC], first: 100) {
+      allMoods(
+        locale: $locale
+        filter: { _status: { eq: published } }
+        orderBy: [position_ASC]
+        first: 100
+      ) {
         ...MoodCardFragment
       }
     }
   `,
-  [ResponsiveImageFragment, ApartmentCardFragment, MoodCardFragment],
+  [
+    ResponsiveImageFragment,
+    ApartmentCardFragment,
+    PostCardFragment,
+    DistrictCardFragment,
+    RelatedFaqCardFragment,
+    MoodCardFragment,
+  ],
 );
 
 const allSlugsQuery = graphql(`
@@ -137,7 +166,23 @@ export default async function MoodDetailPage({
 
   if (!data.mood) notFound();
 
-  const resolvedProps: MoodDetailProps = { locale: locale as Locale };
+  // A related FAQ record only knows its own slug; its public URL is the full
+  // root→node chain. Resolve every related FAQ's href from the tree (fetched
+  // once, and only when the mood actually links to a FAQ).
+  const faqIds = data.mood.relatedContent
+    .filter((item) => item.__typename === 'FaqRecord')
+    .map((item) => item.id);
+  let faqHrefById: Record<string, string> = {};
+  if (faqIds.length > 0) {
+    const tree = await fetchFaqTree(locale as Locale, isDraftModeEnabled);
+    faqHrefById = Object.fromEntries(
+      faqIds
+        .filter((id) => tree.byId.has(id))
+        .map((id) => [id, faqPath(locale as Locale, pathSlugsForNode(tree, id))]),
+    );
+  }
+
+  const resolvedProps: MoodDetailProps = { locale: locale as Locale, faqHrefById };
   // Publish the correct "same mood, other language" URLs to the locale switcher
   // (mood slugs are localized, so the generic path swap would guess wrong).
   const altPaths = moodAltPaths(data.mood._allSlugLocales ?? []);

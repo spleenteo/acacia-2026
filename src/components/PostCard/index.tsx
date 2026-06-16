@@ -3,24 +3,32 @@ import { ResponsiveImageFragment } from '@/components/ResponsiveImage';
 import ResponsiveImage from '@/components/ResponsiveImage';
 import type { Locale } from '@/i18n/config';
 import { modelPath } from '@/i18n/paths';
+import { dastToText } from '@/lib/faq/dastText';
 import Link from 'next/link';
 
 /**
- * Blog post card — portrait 3:4 image, serif title shifting to primary on hover,
- * optional abstract. Posts are single-language (no localized fields), so the
- * fragment takes no `$locale`. Used for FAQ "related posts".
+ * Blog post card — portrait 3:4 image, category kicker, serif title shifting to
+ * primary on hover, and a short excerpt. Post fields are localized but the blog
+ * is legacy EN-only content, so localized fields fall back to `en` (otherwise a
+ * null IT slug would break the non-nullable query). The acacia-2026 model has no
+ * `abstract` field, so the teaser is derived from the `content` Structured Text.
  */
 export const PostCardFragment = graphql(
   `
     fragment PostCardFragment on PostRecord {
       id
-      title
-      slug
-      abstract
+      title(fallbackLocales: [en])
+      slug(fallbackLocales: [en])
+      category {
+        name
+      }
       featuredImage {
         responsiveImage(imgixParams: { w: 600, h: 800, fit: crop }) {
           ...ResponsiveImageFragment
         }
+      }
+      content(fallbackLocales: [en]) {
+        value
       }
     }
   `,
@@ -32,8 +40,17 @@ type Props = {
   locale: Locale;
 };
 
+/** Trim a plain-text excerpt to a word boundary near `max` chars. */
+function excerpt(text: string, max = 150): string {
+  if (text.length <= max) return text;
+  const sliced = text.slice(0, max);
+  const lastSpace = sliced.lastIndexOf(' ');
+  return `${sliced.slice(0, lastSpace > 0 ? lastSpace : max).trimEnd()}…`;
+}
+
 export default function PostCard({ data, locale }: Props) {
   const post = readFragment(PostCardFragment, data);
+  const teaser = excerpt(dastToText(post.content?.value));
 
   return (
     <Link href={modelPath('post', post.slug, locale)!} className="group block">
@@ -54,11 +71,18 @@ export default function PostCard({ data, locale }: Props) {
         </div>
 
         <div className="pt-4">
-          <h3 className="font-heading text-h4 font-normal leading-snug text-dark transition-colors duration-300 group-hover:text-primary">
+          {post.category?.name && (
+            <p className="font-body text-label uppercase tracking-[0.18em] text-muted font-medium mb-2">
+              {post.category.name}
+            </p>
+          )}
+          <h3 className="font-heading text-h3 font-normal leading-snug text-dark transition-colors duration-300 group-hover:text-primary">
             {post.title}
           </h3>
-          {post.abstract && (
-            <p className="mt-2 line-clamp-2 font-body text-caption text-muted">{post.abstract}</p>
+          {teaser && (
+            <p className="mt-2 line-clamp-3 font-body text-body-sm text-muted leading-relaxed">
+              {teaser}
+            </p>
           )}
         </div>
       </article>
