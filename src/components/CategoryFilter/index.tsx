@@ -49,7 +49,12 @@ function CategoryFilterInner({ categories, items, allLabel, emptyLabel }: Props)
       if (!hero) return;
       const heroTopDoc = hero.getBoundingClientRect().top + window.scrollY;
       const stickyTop = HERO_PIN_TOP_PX - 0.68 * window.innerHeight;
-      window.scrollTo({ top: Math.max(0, heroTopDoc - stickyTop), behavior: 'smooth' });
+      const target = heroTopDoc - stickyTop;
+      const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+      // Short results (e.g. a single post) can't scroll far enough for the hero
+      // to pin: the browser clamps to the bottom and the sticky hero ends up
+      // covering the grid. In that case stay at the top instead of over-scrolling.
+      window.scrollTo({ top: target > maxScroll ? 0 : Math.max(0, target), behavior: 'smooth' });
     } else {
       const el = filtersRef.current;
       if (!el) return;
