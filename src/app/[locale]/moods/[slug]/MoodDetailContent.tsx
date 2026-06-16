@@ -1,5 +1,6 @@
 'use client';
 
+import { useEffect, useState, type ReactNode } from 'react';
 import { type Locale } from '@/i18n/config';
 import { useTranslations } from 'next-intl';
 import EditorialHero from '@/components/EditorialHero';
@@ -30,12 +31,50 @@ export default function MoodDetailContent({
 }: MoodDetailProps & { data: MoodDetailData }) {
   const tMoods = useTranslations('moods');
   const tListing = useTranslations('listing');
+
+  // Masonry column count: 1 below sm, 2 from sm up (two columns on desktop too).
+  // Default 2 for SSR (matches the desktop-first markup), then adjust on client.
+  const [columnCount, setColumnCount] = useState(2);
+  useEffect(() => {
+    const sm = window.matchMedia('(min-width: 640px)');
+    const apply = () => setColumnCount(sm.matches ? 2 : 1);
+    apply();
+    sm.addEventListener('change', apply);
+    return () => sm.removeEventListener('change', apply);
+  }, []);
+
   const { mood } = data;
   if (!mood) return null;
 
   // `relatedContent` is a union of apartment | post | faq | district links.
   // Each record type renders with its own card, in the order set in the CMS.
   const related = mood.relatedContent;
+
+  // Pre-render each item to its model-specific card (dropping unknown types).
+  const renderCard = (item: (typeof related)[number]): ReactNode => {
+    switch (item.__typename) {
+      case 'ApartmentRecord':
+        return <ApartmentCard data={item} locale={locale} />;
+      case 'PostRecord':
+        return <PostCard data={item} locale={locale} />;
+      case 'DistrictRecord':
+        return <DistrictCard data={item} locale={locale} />;
+      case 'FaqRecord':
+        return <RelatedFaqCard data={item} href={faqHrefById[item.id] ?? '#'} />;
+      default:
+        return null;
+    }
+  };
+  const cards = related
+    .map((item) => ({ id: item.id, node: renderCard(item) }))
+    .filter((c): c is { id: string; node: ReactNode } => c.node !== null);
+
+  // Masonry that keeps the CMS reading order left→right: round-robin the cards
+  // into N columns (item 0 → col 0, item 1 → col 1, …), natural heights fill
+  // the space, and the per-column gap gives a clear separation between items.
+  const columns = Array.from({ length: columnCount }, (_, c) =>
+    cards.filter((_card, i) => i % columnCount === c),
+  );
 
   const description = mood.description?.value ? (
     <StructuredTextContent data={mood.description} className="font-body text-body text-dark" />
@@ -76,27 +115,16 @@ export default function MoodDetailContent({
             <h2 className="mb-8 font-heading font-normal text-h2 text-dark tracking-[-0.02em]">
               {tMoods('relatedTitle')}
             </h2>
-            <div className="grid grid-cols-1 items-start sm:grid-cols-2 xl:grid-cols-3 gap-12 sm:gap-6">
-              {related.map((item) => {
-                switch (item.__typename) {
-                  case 'ApartmentRecord':
-                    return <ApartmentCard key={item.id} data={item} locale={locale} />;
-                  case 'PostRecord':
-                    return <PostCard key={item.id} data={item} locale={locale} />;
-                  case 'DistrictRecord':
-                    return <DistrictCard key={item.id} data={item} locale={locale} />;
-                  case 'FaqRecord':
-                    return (
-                      <RelatedFaqCard
-                        key={item.id}
-                        data={item}
-                        href={faqHrefById[item.id] ?? '#'}
-                      />
-                    );
-                  default:
-                    return null;
-                }
-              })}
+            {/* Masonry — natural-height cards in N ordered columns (see above),
+                so the very different block heights fill the space with no gaps. */}
+            <div className="flex gap-6">
+              {columns.map((col, ci) => (
+                <div key={ci} className="flex flex-1 flex-col gap-12">
+                  {col.map((card) => (
+                    <div key={card.id}>{card.node}</div>
+                  ))}
+                </div>
+              ))}
             </div>
           </EditorialListingLayout>
         ) : (
