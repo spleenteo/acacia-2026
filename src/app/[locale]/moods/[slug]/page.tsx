@@ -9,7 +9,7 @@ import { toNextMetadata } from 'react-datocms/seo';
 import type { Metadata } from 'next';
 import { ResponsiveImageFragment } from '@/components/ResponsiveImage';
 import { ApartmentCardFragment } from '@/components/ApartmentCard';
-import { PostCardFragment } from '@/components/PostCard';
+import { PostCardFragment } from '@/components/PostCard/fragment';
 import { DistrictCardFragment } from '@/components/DistrictCard';
 import { RelatedFaqCardFragment } from '@/components/RelatedFaqCard';
 import { MoodCardFragment } from '@/components/MoodCard';

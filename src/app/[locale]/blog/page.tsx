@@ -6,7 +6,7 @@ import { draftMode } from 'next/headers';
 import { TagFragment } from '@/lib/datocms/commonFragments';
 import { toNextMetadata } from 'react-datocms/seo';
 import type { Metadata } from 'next';
-import { PostCardFragment } from '@/components/PostCard';
+import { PostCardFragment } from '@/components/PostCard/fragment';
 import { ResponsiveImageFragment } from '@/components/ResponsiveImage';
 import RealtimeWrapper from '@/lib/datocms/realtime/RealtimeWrapper';
 import { getDraftRealtimeOptions } from '@/lib/datocms/realtime/getDraftRealtimeOptions';
