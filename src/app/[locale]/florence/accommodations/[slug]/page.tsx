@@ -234,39 +234,37 @@ export default async function ApartmentDetailPage({
   const { apartment } = data;
   if (!apartment) notFound();
 
-  const essentialsData = await executeQuery(essentialsQuery, {
-    variables: { locale: locale as Locale },
-    includeDrafts: isDraftModeEnabled,
-  });
-  const essentials = essentialsData.allEssentials;
-
-  const reviewsData = await executeQuery(reviewsQuery, {
-    variables: { apartmentId: apartment.id },
-    includeDrafts: isDraftModeEnabled,
-  });
-  const reviews = reviewsData.allGuestbooks;
-
   // Similar apartments (same category)
   const categoryId = apartment.category ? (apartment.category as { id?: string }).id : null;
 
-  const similarApartments = categoryId
-    ? (
-        await executeQuery(similarQuery, {
-          variables: {
-            locale: locale as Locale,
-            categoryId,
-            excludeId: apartment.id,
-          },
+  // These four reads are independent of each other — run them in parallel
+  // instead of as a waterfall.
+  const [essentialsData, reviewsData, similarData, moodsData] = await Promise.all([
+    executeQuery(essentialsQuery, {
+      variables: { locale: locale as Locale },
+      includeDrafts: isDraftModeEnabled,
+    }),
+    executeQuery(reviewsQuery, {
+      variables: { apartmentId: apartment.id },
+      includeDrafts: isDraftModeEnabled,
+    }),
+    categoryId
+      ? executeQuery(similarQuery, {
+          variables: { locale: locale as Locale, categoryId, excludeId: apartment.id },
           includeDrafts: isDraftModeEnabled,
         })
-      ).allApartments
-    : [];
+      : Promise.resolve(null),
+    executeQuery(moodsQuery, {
+      variables: { locale: locale as Locale },
+      includeDrafts: isDraftModeEnabled,
+    }),
+  ]);
+
+  const essentials = essentialsData.allEssentials;
+  const reviews = reviewsData.allGuestbooks;
+  const similarApartments = similarData?.allApartments ?? [];
 
   // Related moods (those that link to this apartment)
-  const moodsData = await executeQuery(moodsQuery, {
-    variables: { locale: locale as Locale },
-    includeDrafts: isDraftModeEnabled,
-  });
   const relatedMoods = moodsData.allMoods.filter((mood) =>
     mood.boxes.some((box) => {
       const objects = box.object as { __typename: string; id?: string }[];
