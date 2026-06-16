@@ -1,6 +1,5 @@
 import { type FragmentOf, graphql, readFragment } from '@/lib/datocms/graphql';
-import WidgetTitle from '@/components/WidgetTitle';
-import WidgetItemList from '@/components/WidgetItemList';
+import WidgetList from '@/components/WidgetList';
 
 export const EssentialFragment = graphql(`
   fragment EssentialFragment on EssentialRecord {
@@ -17,14 +16,6 @@ type Props = {
 };
 
 export default function EssentialsList({ data, title }: Props) {
-  if (data.length === 0) return null;
-
   const essentials = data.map((d) => readFragment(EssentialFragment, d));
-
-  return (
-    <div>
-      <WidgetTitle tone="rust" label={title} />
-      <WidgetItemList items={essentials} tone="rust" />
-    </div>
-  );
+  return <WidgetList items={essentials} tone="rust" label={title} />;
 }

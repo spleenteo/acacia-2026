@@ -1,6 +1,5 @@
 import { type FragmentOf, graphql, readFragment } from '@/lib/datocms/graphql';
-import WidgetTitle from '@/components/WidgetTitle';
-import WidgetItemList from '@/components/WidgetItemList';
+import WidgetList from '@/components/WidgetList';
 
 export const AmenityFragment = graphql(`
   fragment AmenityFragment on AmenityRecord {
@@ -18,14 +17,6 @@ type Props = {
 };
 
 export default function AmenitiesList({ data, label, title }: Props) {
-  if (data.length === 0) return null;
-
   const amenities = data.map((d) => readFragment(AmenityFragment, d));
-
-  return (
-    <div>
-      <WidgetTitle tone="sage" label={label} title={title} />
-      <WidgetItemList items={amenities} tone="sage" />
-    </div>
-  );
+  return <WidgetList items={amenities} tone="sage" label={label} title={title} />;
 }
