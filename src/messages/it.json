@@ -63,7 +63,8 @@
   },
   "districts": {
     "title": "Esplora la città",
-    "label": "Quartieri di Firenze"
+    "label": "Quartieri di Firenze",
+    "tag": "Quartiere"
   },
   "nav": {
     "book": "Prenota",

@@ -63,7 +63,8 @@
   },
   "districts": {
     "title": "Explore the city",
-    "label": "Florence neighborhoods"
+    "label": "Florence neighborhoods",
+    "tag": "District"
   },
   "nav": {
     "book": "Book",

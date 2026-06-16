@@ -10,7 +10,7 @@ import { GalleryImageFragment } from '@/components/ImageGallery/fragment';
 import ImageGallery from '@/components/ImageGallery';
 import { toSlide } from '@/components/Lightbox/toSlide';
 import ApartmentCard from '@/components/ApartmentCard';
-import { DistrictCardFragment } from '@/components/DistrictCard';
+import { DistrictCardFragment } from '@/components/DistrictCard/fragment';
 import RelatedList from '@/components/RelatedList';
 import { readFragment } from '@/lib/datocms/graphql';
 import type { ResultOf } from 'gql.tada';

@@ -9,7 +9,7 @@ import { toNextMetadata } from 'react-datocms/seo';
 import type { Metadata } from 'next';
 import { GalleryImageFragment } from '@/components/ImageGallery/fragment';
 import { ApartmentCardFragment } from '@/components/ApartmentCard';
-import { DistrictCardFragment } from '@/components/DistrictCard';
+import { DistrictCardFragment } from '@/components/DistrictCard/fragment';
 import RealtimeWrapper from '@/lib/datocms/realtime/RealtimeWrapper';
 import { getDraftRealtimeOptions } from '@/lib/datocms/realtime/getDraftRealtimeOptions';
 import DistrictDetailContent, { type DistrictDetailProps } from './DistrictDetailContent';
