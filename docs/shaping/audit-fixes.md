@@ -118,4 +118,10 @@ Branch dedicato, da affrontare **a slice** (un'area per volta, ognuna verificabi
 2. **Poi → B** (o A+B insieme): quick-win a rischio minimo.
 3. **C come follow-up sliceato** su `chore/audit-fixes`, una slice per area (C2 → C3 → C4 → C5 → C6), ciascuna con verifica EN+IT, perché tocca codice condiviso.
 
-Decisione aperta: confermare il bersaglio (A, B o C) e se procedere subito con lo slicing di C.
+## Esito (2026-06-17)
+
+Scelto **C**, implementato su `chore/audit-fixes` (vedi [audit-fixes-slices.md](./audit-fixes-slices.md)).
+
+- **Consegnato (V1–V5):** R0, R1, R2, R3, R4, R5 — sicurezza, parallelizzazione, de-dup componenti (`CardImage`/`WidgetList`/`excerpt`/`ease-card`) e pagine (`indexAlternates`/`localeSlugParams`).
+- **R6 → Out:** `HomeContent`/`FaqIndexContent` devono restare `'use client'` (passano dal `RealtimeWrapper`); rilievo dell'audit non valido qui.
+- **R7 → backlog:** V6 (split FAQ) e V7 (slim ApartmentDetail) deferite — solo manutenibilità, alto rischio su codice funzionante.

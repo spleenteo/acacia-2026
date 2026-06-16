@@ -8,16 +8,18 @@ shaping: true
 
 Ogni slice è verificabile in isolamento (`tsc` + lint, e runtime EN+IT dove tocca rendering). Vincolo trasversale **R8**: nessuna regressione visibile.
 
-| Slice  | Copre                        | Aree toccate                                                    | Rischio | Stato |
-| ------ | ---------------------------- | --------------------------------------------------------------- | ------- | ----- |
-| **V1** | R0, R1, R2 — sicurezza       | `api/utils.ts`, `FaqNodeContent.tsx`                            | basso   | ✅    |
-| **V2** | R3 (R6 _Out_) — quick wins   | `accommodations/[slug]/page.tsx`                                | basso   | ✅    |
-| **V3** | R5 — de-dup componenti       | nuovo `CardImage`, `lib/text/excerpt`, easing token, 4 card     | medio   | ✅    |
-| **V4** | R5 — `WidgetList` generico   | nuovo `WidgetList`, Amenities/Comforts/Essentials               | medio   | ✅    |
-| **V5** | R4 — helper anti-boilerplate | `i18n/paths` (`indexAlternates`+`localeSlugParams`), 9 pagine   | medio   | ✅    |
-| **V6** | R7 — split FAQ               | `faq/[[...slug]]` → `/faq` + `/faq/[...slug]`                   | alto    | ☐     |
-| **V7** | R7 — slim ApartmentDetail    | `accommodations/[slug]/page.tsx` + `ApartmentDetailContent.tsx` | alto    | ☐     |
+| Slice  | Copre                        | Aree toccate                                                    | Rischio | Stato      |
+| ------ | ---------------------------- | --------------------------------------------------------------- | ------- | ---------- |
+| **V1** | R0, R1, R2 — sicurezza       | `api/utils.ts`, `FaqNodeContent.tsx`                            | basso   | ✅         |
+| **V2** | R3 (R6 _Out_) — quick wins   | `accommodations/[slug]/page.tsx`                                | basso   | ✅         |
+| **V3** | R5 — de-dup componenti       | nuovo `CardImage`, `lib/text/excerpt`, easing token, 4 card     | medio   | ✅         |
+| **V4** | R5 — `WidgetList` generico   | nuovo `WidgetList`, Amenities/Comforts/Essentials               | medio   | ✅         |
+| **V5** | R4 — helper anti-boilerplate | `i18n/paths` (`indexAlternates`+`localeSlugParams`), 9 pagine   | medio   | ✅         |
+| **V6** | R7 — split FAQ               | `faq/[[...slug]]` → `/faq` + `/faq/[...slug]`                   | alto    | ⏸️ backlog |
+| **V7** | R7 — slim ApartmentDetail    | `accommodations/[slug]/page.tsx` + `ApartmentDetailContent.tsx` | alto    | ⏸️ backlog |
 
 Ordine: V1 → V2 → V3 → V4 → V5 → V6 → V7 (rischio crescente; le ultime toccano route/markup condivisi).
+
+**Stato finale:** consegnate V1–V5 (tutti i must-have: R0–R3 + R4, R5). **V6 e V7 deferite a backlog** (decisione del 2026-06-17): coprono R7 (era _Undecided_), sono solo manutenibilità e ad alto rischio di regressione (R8) su codice funzionante. Da riprendere come lavoro a sé, una slice per volta con verifica EN+IT.
 
 **Nota su R6 (Out):** `HomeContent` e `FaqIndexContent` sono passati come `contentComponent` al `RealtimeWrapper` (client), quindi **devono** restare `'use client'` — un Server Component non può essere renderizzato attraverso un boundary client. Il rilievo dell'audit non teneva conto del `RealtimeWrapper`. Per togliere il `'use client'` servirebbe ristrutturare il pattern realtime (fuori scope).
