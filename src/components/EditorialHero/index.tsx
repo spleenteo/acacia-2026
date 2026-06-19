@@ -106,67 +106,79 @@ export default function EditorialHero({
   );
 
   return (
-    <section
-      ref={ref}
-      data-editorial-hero
-      className={[
-        // `hero-pin` (global.css) owns position/z-index/top: relative+z-10 by
-        // default, sticky+z-30 once the viewport is tall enough (≥820px). Gating
-        // by HEIGHT (not `lg` width) means iPad portrait pins but short
-        // landscape tablets / phones don't. No Tailwind position/z/top utilities
-        // here, so nothing overrides the hand-written rule.
-        'hero-pin pb-10',
-        hasImage
-          ? // hero-pin-top adds the photo hero's pin offset (height-gated).
-            `mb-0 lg:mb-14 hero-pin-top ${isPinned ? 'md:pb-3.5' : 'md:pb-16'}`
-          : // No photo → compact panel that pins at top:0 (height-gated).
-            'mb-8 lg:mb-14 md:pb-16 hero-pin-top-0',
-      ].join(' ')}
-      style={{
-        backgroundColor: color,
-        marginTop: 'calc(var(--header-height) * -1)',
-        // Shared animated diagonal bottom edge (see useHeroDiagonal). The
-        // clip-path + padding transitions live inline so an inline `transition`
-        // doesn't override a Tailwind one.
-        clipPath: heroClip,
-        transition: 'clip-path 700ms cubic-bezier(0.22, 1, 0.36, 1), padding 500ms ease',
-      }}
-    >
-      {/* Dark photo / dark tone → transparent white header until scrolled. */}
-      {(hasImage || !isLightColor(color)) && <OverDarkHeader />}
+    <>
+      {/* Scroll anchor — a non-sticky first node pinned to the document top.
+          The App Router's scroll-on-navigation skips sticky/fixed elements
+          (it assumes they're nav bars) and instead targets the next sibling,
+          then `scrollIntoView`s it. Our pages lead with the sticky hero, so
+          without this it scrolls the body content up under the hero (landing
+          ~200px off). This anchor is targeted instead. It's `absolute` at
+          `top:0` (out of flow, so it doesn't disturb the hero's negative margin)
+          so its top sits at the real document top — Next aligns to it and the
+          page settles at scroll 0, not at the header's height. */}
+      <div aria-hidden className="pointer-events-none absolute inset-x-0 top-0 h-0" />
+      <section
+        ref={ref}
+        data-editorial-hero
+        className={[
+          // `hero-pin` (global.css) owns position/z-index/top: relative+z-10 by
+          // default, sticky+z-30 once the viewport is tall enough (≥820px). Gating
+          // by HEIGHT (not `lg` width) means iPad portrait pins but short
+          // landscape tablets / phones don't. No Tailwind position/z/top utilities
+          // here, so nothing overrides the hand-written rule.
+          'hero-pin pb-10',
+          hasImage
+            ? // hero-pin-top adds the photo hero's pin offset (height-gated).
+              `mb-0 lg:mb-14 hero-pin-top ${isPinned ? 'md:pb-3.5' : 'md:pb-16'}`
+            : // No photo → compact panel that pins at top:0 (height-gated).
+              'mb-8 lg:mb-14 md:pb-16 hero-pin-top-0',
+        ].join(' ')}
+        style={{
+          backgroundColor: color,
+          marginTop: 'calc(var(--header-height) * -1)',
+          // Shared animated diagonal bottom edge (see useHeroDiagonal). The
+          // clip-path + padding transitions live inline so an inline `transition`
+          // doesn't override a Tailwind one.
+          clipPath: heroClip,
+          transition: 'clip-path 700ms cubic-bezier(0.22, 1, 0.36, 1), padding 500ms ease',
+        }}
+      >
+        {/* Dark photo / dark tone → transparent white header until scrolled. */}
+        {(hasImage || !isLightColor(color)) && <OverDarkHeader />}
 
-      <div className="md:mx-auto md:max-w-7xl md:px-8">
-        {hasImage ? (
-          <div
-            className={`relative min-h-[calc(58svh-50px)] md:min-h-[calc(68svh-50px)] overflow-hidden md:rounded-card transition-shadow duration-500 ${
-              isPinned ? 'md:shadow-none' : 'md:shadow-card-hover'
-            }`}
-          >
-            <ResponsiveImage
-              data={image!}
-              pictureClassName={`absolute inset-0 w-full h-full transition-opacity duration-500 ${
-                isPinned ? 'opacity-0' : 'opacity-100'
-              }`}
-              imgClassName="w-full h-full object-cover object-center"
-              imgStyle={{ maxWidth: 'none', height: '100%', aspectRatio: 'unset' }}
-              priority={priority}
-            />
+        <div className="md:mx-auto md:max-w-7xl md:px-8">
+          {hasImage ? (
             <div
-              className={`absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent transition-opacity duration-500 ${
-                isPinned ? 'opacity-0' : 'opacity-100'
+              className={`relative min-h-[calc(58svh-50px)] md:min-h-[calc(68svh-50px)] overflow-hidden md:rounded-card transition-shadow duration-500 ${
+                isPinned ? 'md:shadow-none' : 'md:shadow-card-hover'
               }`}
-            />
-            <div className="absolute inset-x-0 bottom-0 p-6 md:p-10">{copy}</div>
-          </div>
-        ) : (
-          // No photo → no full-size state to collapse from, so the panel opens
-          // already at the compact "pinned" size: a content-height copy band
-          // with enough top padding to clear the fixed header.
-          <div className="px-6 pb-2 pt-[calc(var(--header-height)+2.5rem)] md:px-0 md:pb-4 md:pt-[calc(var(--header-height)+3.5rem)]">
-            {copy}
-          </div>
-        )}
-      </div>
-    </section>
+            >
+              <ResponsiveImage
+                data={image!}
+                pictureClassName={`absolute inset-0 w-full h-full transition-opacity duration-500 ${
+                  isPinned ? 'opacity-0' : 'opacity-100'
+                }`}
+                imgClassName="w-full h-full object-cover object-center"
+                imgStyle={{ maxWidth: 'none', height: '100%', aspectRatio: 'unset' }}
+                priority={priority}
+              />
+              <div
+                className={`absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent transition-opacity duration-500 ${
+                  isPinned ? 'opacity-0' : 'opacity-100'
+                }`}
+              />
+              <div className="absolute inset-x-0 bottom-0 p-6 md:p-10">{copy}</div>
+            </div>
+          ) : (
+            // No photo → no full-size state to collapse from, so the panel opens
+            // already at the compact "pinned" size: a content-height copy band
+            // with enough top padding to clear the fixed header.
+            <div className="px-6 pb-2 pt-[calc(var(--header-height)+2.5rem)] md:px-0 md:pb-4 md:pt-[calc(var(--header-height)+3.5rem)]">
+              {copy}
+            </div>
+          )}
+        </div>
+      </section>
+    </>
   );
 }
