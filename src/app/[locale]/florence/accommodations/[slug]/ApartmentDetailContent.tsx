@@ -212,9 +212,10 @@ export default function ApartmentDetailContent({
                         </a>
                       )}
                     </div>
-                    {/* Stat line + Check availability share a row, bottom-aligned
-                        so the CTA sits on the same baseline as the stat copy. */}
-                    <div className="mt-4 flex items-end justify-between gap-4">
+                    {/* Stat line + Check availability share a row, vertically
+                        centred so the CTA's middle lines up with the stat copy.
+                        Tight `mt-2` keeps the stat line close to the pills above. */}
+                    <div className="mt-2 flex items-center justify-between gap-4">
                       <p
                         className={[
                           'font-body text-body-lg leading-snug transition-colors duration-500',
