@@ -103,7 +103,7 @@ acacia-next/
 ├── pitches/
 │   ├── apartment-detail-redesign.md           # Apartment detail page pitch
 │   └── web-previews-visual-editing.md         # Web Previews & Visual Editing pitch
-├── middleware.ts                               # Locale redirect + translated path rewrite
+├── src/proxy.ts                                # Locale redirect + translated path rewrite + /blog→/magazine 301 (Next 16 proxy, replaces middleware)
 ├── schema.graphql                             # Auto-generated DatoCMS schema
 ├── tsconfig.json                              # TypeScript strict + gql.tada plugin
 ├── postcss.config.mjs                         # PostCSS with Tailwind

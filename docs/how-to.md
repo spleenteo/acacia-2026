@@ -80,20 +80,35 @@ Middleware rewrites translated segments to canonical filesystem paths. Browser U
 
 ### Path generation
 
-| Function                            | Purpose                                              | Location            |
-| ----------------------------------- | ---------------------------------------------------- | ------------------- |
-| `localizedPath(locale, canonical)`  | Translate canonical path to locale-specific segments | `src/i18n/paths.ts` |
-| `canonicalPath(locale, localized)`  | Reverse: localized → canonical (used by middleware)  | `src/i18n/paths.ts` |
-| `modelPath(modelKey, slug, locale)` | Full localized path for a CMS model record           | `src/i18n/paths.ts` |
+| Function                             | Purpose                                              | Location            |
+| ------------------------------------ | ---------------------------------------------------- | ------------------- |
+| `localizedPath(locale, canonical)`   | Translate canonical path to locale-specific segments | `src/i18n/paths.ts` |
+| `canonicalPath(locale, localized)`   | Reverse: localized → canonical (used by middleware)  | `src/i18n/paths.ts` |
+| `modelPath(modelKey, slug, locale)`  | Full localized path for a CMS model record           | `src/i18n/paths.ts` |
+| `indexPageSlug(route, locale)`       | Slug that selects an `index_page` record for a route | `src/i18n/paths.ts` |
+| `indexPageRouteBySlug(slug, locale)` | Inverse: `index_page` record slug → localized URL    | `src/i18n/paths.ts` |
 
-### Singleton index models
+### Index pages — `index_page` collection
 
-Models without detail slug (`index_apartment`, `page_districts`, `page_moods`) map to fixed paths via `indexPaths`. The better-linking plugin requires a slug field but the slug is ignored — only the hardcoded canonical path is used.
+Index pages (apartments, districts, moods, faq, guestbook, blog) are records of the single `index_page` collection, selected by slug. Each record's per-locale slug = the route's localized final segment, so:
+
+- Page query: `indexPage(locale: $locale, filter: { slug: { eq: $slug } })`, `$slug = indexPageSlug(route, locale)`.
+- Menu/link resolution: `modelPath('index_page', record.slug, locale)` → `indexPageRouteBySlug()`.
+
+`index_page`-backed routes are listed in `indexPageRoutes`; slugs with no route (e.g. `services`, `offers`) resolve to `null`.
+
+### Legacy singleton index models
+
+The old `index_*` singletons still resolve via `indexPaths` (fixed path, slug ignored) so menu items pointing at them keep working during migration. They are unhooked from the page data source but not deleted.
+
+### Blog route = `/magazine`
+
+`pathSegments.blog = { en: 'magazine', it: 'magazine' }` renames the public route (filesystem stays `/blog`). `src/proxy.ts` 301-redirects legacy `/{locale}/blog[/...]` → `/{locale}/magazine[/...]`.
 
 ### Adding a new section
 
 1. Add segment to `pathSegments` in `src/i18n/paths.ts`
-2. Add model to `modelPrefixes` (detail) or `indexPaths` (singleton)
+2. Add model to `modelPrefixes` (detail) or `indexPaths` (singleton); for an `index_page`-backed route add it to `indexPageRoutes`
 3. All components using `modelPath()`/`localizedPath()` pick it up automatically
 
 ---

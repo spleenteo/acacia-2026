@@ -1,5 +1,22 @@
 # Changelog
 
+## v1.0.0 — 2026-06-20 — Index pages on the `index_page` collection + `/magazine` route
+
+The single-instance `index_*` models were consolidated into one reusable `index_page` collection. All index pages now read their hero/description/SEO from a collection record selected by slug, and the blog section moved to the `/magazine` public route.
+
+- **Content migration**: Eight `index_page` records created in DatoCMS (`acacia-2026`) from the legacy singletons — apartments, districts, moods, blog, faq, guestbook, services, offers — copying `hero` (deep-copied block), `description` and `seo` in both locales. `index_acacialife` (old site) and `index_event` (no record) were excluded.
+- **Index pages re-sourced**: The six index pages (apartments, districts, moods, faq, guestbook, blog) now query `indexPage(filter: { slug: { eq: $slug } })` instead of their singleton model. The selecting slug is the route's localized final segment, resolved by the new `indexPageSlug(route, locale)` helper.
+- **Blog → `/magazine`**: New `pathSegments` entry `blog: { en: 'magazine', it: 'magazine' }` renames the public route in both locales (filesystem stays `/blog`); post URLs and the sitemap follow automatically. A **301 redirect** in `src/proxy.ts` sends legacy `/{locale}/blog[/...]` to `/{locale}/magazine[/...]`.
+- **Collection-aware `modelPath`**: `modelPath('index_page', slug, locale)` resolves a collection record to its route via the new `indexPageRouteBySlug()` (inverse of `indexPageSlug`); legacy singleton api_keys still resolve via `indexPaths`. This lets header and footer menus work whether a `MenuItemRecord` points at an old singleton or a new `index_page` record.
+- **Menu fragment**: `src/app/[locale]/layout.tsx` selects `... on IndexPageRecord { slug }` for nav and footer links and passes the slug to `modelPath`, fixing menu links that broke after items were repointed to the collection.
+- **Schema regenerated**: `schema.graphql` + `graphql-env.d.ts` regenerated from the `acacia-2026` environment to include `IndexPageRecord` and its filter.
+
+Design note: a collection needs a stable selector. DatoCMS filters localized slugs against the queried locale, so each `index_page` record's per-locale slug is set to its route's localized final segment (e.g. `accommodations`/`appartamenti`, `magazine`/`magazine`) — selection and URL stay in lockstep.
+
+Migration note: the legacy `index_*` singleton models are unhooked from the frontend but left in DatoCMS. Before deleting them, repoint any remaining menu items to the matching `index_page` records (some were still pointing at singletons per-locale).
+
+---
+
 ## v0.7.0 — 2026-03-22 — CMS-driven navigation, YARL lightbox, locale fix
 
 Three improvements: navigation from CMS, swipe-enabled photo lightbox, and localized UI translations that actually work in Italian.
