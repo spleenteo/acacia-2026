@@ -21,7 +21,7 @@ export default function AccommodationsContent({
   data,
 }: AccommodationsProps & { data: AccommodationsData }) {
   const t = useTranslations('listing');
-  const { indexApartment, allApartmentCategories, allApartments, homePage } = data;
+  const { page, allApartmentCategories, allApartments, homePage } = data;
 
   const categories = allApartmentCategories.map((cat) => ({
     id: cat.id,
@@ -36,11 +36,8 @@ export default function AccommodationsContent({
   }));
 
   // Sidebar copy is now the `description` structured-text field (was `intro`).
-  const description = indexApartment?.description?.value ? (
-    <StructuredTextContent
-      data={indexApartment.description}
-      className="font-body text-body-sm text-muted"
-    />
+  const description = page?.description?.value ? (
+    <StructuredTextContent data={page.description} className="font-body text-body-sm text-muted" />
   ) : null;
 
   return (
@@ -48,10 +45,10 @@ export default function AccommodationsContent({
       {/* Hero — driven by the single-instance `hero` block (title, subtitle,
           optional image); background tone comes from the `color` field. */}
       <EditorialHero
-        tone={toHeroTone(indexApartment?.hero.color)}
-        title={indexApartment?.hero.title ?? ''}
-        subtitle={indexApartment?.hero.subtitle}
-        image={indexApartment?.hero.featuredImage?.responsiveImage}
+        tone={toHeroTone(page?.hero.color)}
+        title={page?.hero.title ?? ''}
+        subtitle={page?.hero.subtitle}
+        image={page?.hero.featuredImage?.responsiveImage}
         priority
       />
 

@@ -19,24 +19,21 @@ export default function DistrictsContent({
   data,
 }: DistrictsProps & { data: DistrictsData }) {
   const t = useTranslations('districts');
-  const { indexDistrict, allDistricts } = data;
+  const { page, allDistricts } = data;
 
-  const description = indexDistrict?.description?.value ? (
-    <StructuredTextContent
-      data={indexDistrict.description}
-      className="font-body text-body-sm text-muted"
-    />
+  const description = page?.description?.value ? (
+    <StructuredTextContent data={page.description} className="font-body text-body-sm text-muted" />
   ) : null;
 
   return (
     <>
       {/* Hero — driven by the single-instance `hero` block. */}
       <EditorialHero
-        tone={toHeroTone(indexDistrict?.hero.color)}
+        tone={toHeroTone(page?.hero.color)}
         label={t('label')}
-        title={indexDistrict?.hero.title ?? ''}
-        subtitle={indexDistrict?.hero.subtitle}
-        image={indexDistrict?.hero.featuredImage?.responsiveImage}
+        title={page?.hero.title ?? ''}
+        subtitle={page?.hero.subtitle}
+        image={page?.hero.featuredImage?.responsiveImage}
         priority
       />
 

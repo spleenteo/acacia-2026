@@ -20,13 +20,10 @@ export default function GuestbookContent({
   data,
 }: GuestbookProps & { data: GuestbookData }) {
   const t = useTranslations('guestbook');
-  const { indexGuestbook, allGuestbooks } = data;
+  const { page, allGuestbooks } = data;
 
-  const description = indexGuestbook?.description?.value ? (
-    <StructuredTextContent
-      data={indexGuestbook.description}
-      className="font-body text-body-sm text-muted"
-    />
+  const description = page?.description?.value ? (
+    <StructuredTextContent data={page.description} className="font-body text-body-sm text-muted" />
   ) : null;
 
   // Masonry that keeps date-DESC reading order left→right: round-robin the
@@ -50,11 +47,11 @@ export default function GuestbookContent({
     <>
       {/* Hero — driven by the single-instance `hero` block. */}
       <EditorialHero
-        tone={toHeroTone(indexGuestbook?.hero.color)}
+        tone={toHeroTone(page?.hero.color)}
         label={t('kicker')}
-        title={indexGuestbook?.hero.title ?? ''}
-        subtitle={indexGuestbook?.hero.subtitle}
-        image={indexGuestbook?.hero.featuredImage?.responsiveImage}
+        title={page?.hero.title ?? ''}
+        subtitle={page?.hero.subtitle}
+        image={page?.hero.featuredImage?.responsiveImage}
         priority
       />
 

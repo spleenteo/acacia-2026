@@ -11,6 +11,10 @@ const pathSegments: Record<string, Record<Locale, string>> = {
   moods: { en: 'moods', it: 'moods' },
   faq: { en: 'faq', it: 'faq' },
   guestbook: { en: 'guestbook', it: 'guestbook' },
+  // The blog section is published under the public segment "magazine" in both
+  // locales; the filesystem route stays `/blog` (canonical) and the proxy
+  // rewrites `/magazine` back to it.
+  blog: { en: 'magazine', it: 'magazine' },
 };
 
 /** Reverse map: for each locale, maps translated segment → canonical segment */
@@ -100,13 +104,54 @@ export function isSingletonModelApiKey(modelApiKey: string): boolean {
 }
 
 /**
+ * Slug of the `index_page` collection record that backs an index route.
+ * Each record's per-locale slug equals the route's final segment translated
+ * into that locale (e.g. `/florence/accommodations` → en `accommodations`,
+ * it `appartamenti`; `/blog` → `magazine` in both). DatoCMS filters localized
+ * slugs against the queried locale, so the page must select with this value.
+ * e.g. indexPageSlug('/florence/accommodations', 'it') → 'appartamenti'
+ */
+export function indexPageSlug(canonicalRoute: string, locale: Locale): string {
+  const segment = canonicalRoute.split('/').filter(Boolean).pop() ?? '';
+  return pathSegments[segment]?.[locale] ?? segment;
+}
+
+/** Canonical index routes that are backed by `index_page` collection records. */
+const indexPageRoutes = [
+  '/florence/accommodations',
+  '/florence/districts',
+  '/moods',
+  '/blog',
+  '/faq',
+  '/guestbook',
+] as const;
+
+/**
+ * Resolves an `index_page` collection record to its localized URL from the
+ * record's (localized) slug — the inverse of {@link indexPageSlug}. Records
+ * whose slug has no front-end route yet (e.g. `services`, `offers`) return
+ * `null`. e.g. indexPageRouteBySlug('quartieri', 'it') → '/it/firenze/quartieri'
+ */
+export function indexPageRouteBySlug(slug: string, locale: Locale): string | null {
+  const route = indexPageRoutes.find((r) => indexPageSlug(r, locale) === slug);
+  return route ? `/${locale}${localizedPath(locale, route)}` : null;
+}
+
+/**
  * Generates the full localized path for a DatoCMS model record.
  * Handles both detail records (with slug) and singleton/index pages (no slug).
  * e.g. modelPath('apartment', 'abaco', 'it') → '/it/firenze/appartamenti/abaco'
  * e.g. modelPath('index_apartment', '', 'it') → '/it/firenze/appartamenti'
+ * e.g. modelPath('index_page', 'quartieri', 'it') → '/it/firenze/quartieri'
  */
 export function modelPath(modelApiKey: string, slug: string, locale: Locale): string | null {
-  // Check singleton/index models first
+  // `index_page` is a collection: one model backing many index routes, so the
+  // record's slug (not its api_key) selects the destination.
+  if (modelApiKey === 'index_page') {
+    return indexPageRouteBySlug(slug, locale);
+  }
+
+  // Legacy singleton index models map straight to a fixed path (no slug).
   const indexPath = indexPaths[modelApiKey];
   if (indexPath) {
     return `/${locale}${localizedPath(locale, indexPath)}`;

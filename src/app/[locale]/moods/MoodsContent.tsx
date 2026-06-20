@@ -16,24 +16,21 @@ type MoodsData = ResultOf<typeof query>;
 
 export default function MoodsContent({ locale, data }: MoodsProps & { data: MoodsData }) {
   const t = useTranslations('moods');
-  const { indexMood, allMoods } = data;
+  const { page, allMoods } = data;
 
-  const description = indexMood?.description?.value ? (
-    <StructuredTextContent
-      data={indexMood.description}
-      className="font-body text-body-sm text-muted"
-    />
+  const description = page?.description?.value ? (
+    <StructuredTextContent data={page.description} className="font-body text-body-sm text-muted" />
   ) : null;
 
   return (
     <>
       {/* Hero — driven by the single-instance `hero` block. */}
       <EditorialHero
-        tone={toHeroTone(indexMood?.hero.color)}
+        tone={toHeroTone(page?.hero.color)}
         label={t('label')}
-        title={indexMood?.hero.title ?? ''}
-        subtitle={indexMood?.hero.subtitle}
-        image={indexMood?.hero.featuredImage?.responsiveImage}
+        title={page?.hero.title ?? ''}
+        subtitle={page?.hero.subtitle}
+        image={page?.hero.featuredImage?.responsiveImage}
         priority
       />
 

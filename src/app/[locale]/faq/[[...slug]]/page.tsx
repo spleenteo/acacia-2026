@@ -1,7 +1,7 @@
 import { executeQuery } from '@/lib/datocms/executeQuery';
 import { graphql } from '@/lib/datocms/graphql';
 import { type Locale, locales } from '@/i18n/config';
-import { faqPath } from '@/i18n/paths';
+import { faqPath, indexPageSlug } from '@/i18n/paths';
 import { draftMode } from 'next/headers';
 import { notFound } from 'next/navigation';
 import { toNextMetadata } from 'react-datocms/seo';
@@ -30,8 +30,8 @@ type Params = { locale: string; slug?: string[] };
 
 export const indexQuery = graphql(
   `
-    query FaqIndexQuery($locale: SiteLocale!) {
-      indexFaq(locale: $locale) {
+    query FaqIndexQuery($locale: SiteLocale!, $slug: String!) {
+      page: indexPage(locale: $locale, filter: { slug: { eq: $slug } }) {
         hero(locale: $locale) {
           color
           title
@@ -94,11 +94,11 @@ export async function generateMetadata({ params }: { params: Promise<Params> }):
 
   if (!slug || slug.length === 0) {
     const data = await executeQuery(indexQuery, {
-      variables: { locale: loc },
+      variables: { locale: loc, slug: indexPageSlug('/faq', loc) },
       includeDrafts: isEnabled,
     });
     return {
-      ...toNextMetadata(data.indexFaq?._seoMetaTags ?? []),
+      ...toNextMetadata(data.page?._seoMetaTags ?? []),
       alternates: {
         canonical: faqPath(loc, []),
         languages: Object.fromEntries(locales.map((l) => [l, faqPath(l, [])])),
@@ -136,7 +136,10 @@ export default async function FaqPage({ params }: { params: Promise<Params> }) {
   // INDEX (/faq)
   if (!slug || slug.length === 0) {
     const [data, tree] = await Promise.all([
-      executeQuery(indexQuery, { variables: { locale: loc }, includeDrafts }),
+      executeQuery(indexQuery, {
+        variables: { locale: loc, slug: indexPageSlug('/faq', loc) },
+        includeDrafts,
+      }),
       fetchFaqTree(loc, includeDrafts),
     ]);
     const roots = rootNodes(tree).map((r) => ({
@@ -151,7 +154,7 @@ export default async function FaqPage({ params }: { params: Promise<Params> }) {
           contentComponent={FaqIndexContent}
           resolvedProps={{ roots }}
           query={indexQuery}
-          variables={{ locale: loc }}
+          variables={{ locale: loc, slug: indexPageSlug('/faq', loc) }}
           initialData={data}
           {...getDraftRealtimeOptions()}
         />

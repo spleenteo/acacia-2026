@@ -18,7 +18,7 @@ type BlogData = ResultOf<typeof query>;
 export default function BlogContent({ locale, data }: BlogProps & { data: BlogData }) {
   const t = useTranslations('blog');
   const tListing = useTranslations('listing');
-  const { indexBlog, allBlogCategories, allPosts } = data;
+  const { page, allBlogCategories, allPosts } = data;
 
   // Only surface categories that have at least one published post (count from
   // the DatoCMS inverse-relationship meta).
@@ -36,22 +36,19 @@ export default function BlogContent({ locale, data }: BlogProps & { data: BlogDa
     node: <PostCard data={post} locale={locale} />,
   }));
 
-  const description = indexBlog?.description?.value ? (
-    <StructuredTextContent
-      data={indexBlog.description}
-      className="font-body text-body-sm text-muted"
-    />
+  const description = page?.description?.value ? (
+    <StructuredTextContent data={page.description} className="font-body text-body-sm text-muted" />
   ) : null;
 
   return (
     <>
       {/* Hero — driven by the single-instance `hero` block. */}
       <EditorialHero
-        tone={toHeroTone(indexBlog?.hero.color)}
+        tone={toHeroTone(page?.hero.color)}
         label={t('label')}
-        title={indexBlog?.hero.title ?? ''}
-        subtitle={indexBlog?.hero.subtitle}
-        image={indexBlog?.hero.featuredImage?.responsiveImage}
+        title={page?.hero.title ?? ''}
+        subtitle={page?.hero.subtitle}
+        image={page?.hero.featuredImage?.responsiveImage}
         priority
       />
 

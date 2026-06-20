@@ -39,6 +39,10 @@ const query = graphql(
               ... on RecordInterface {
                 _modelApiKey
               }
+              # index_page is a collection — its slug selects which index route.
+              ... on IndexPageRecord {
+                slug
+              }
             }
           }
           ... on MenuExternalItemRecord {
@@ -61,6 +65,9 @@ const query = graphql(
                 # See navItems above — one interface fragment covers all members.
                 ... on RecordInterface {
                   _modelApiKey
+                }
+                ... on IndexPageRecord {
+                  slug
                 }
               }
             }
@@ -114,13 +121,15 @@ function resolveMenuLink(
     __typename?: string;
     label?: string | null;
     url?: string;
-    page?: { _modelApiKey: string } | null;
+    page?: { _modelApiKey: string; slug?: string | null } | null;
   },
   locale: Locale,
 ): NavItem | null {
   if (item.__typename === 'MenuItemRecord') {
     if (!item.page || !item.label) return null;
-    const href = modelPath(item.page._modelApiKey, '', locale);
+    // `index_page` records carry a slug that selects the index route; legacy
+    // singleton targets ignore the slug (fixed path).
+    const href = modelPath(item.page._modelApiKey, item.page.slug ?? '', locale);
     if (!href) return null;
     return { label: item.label, href, isExternal: false };
   }

@@ -57,6 +57,15 @@ export function proxy(request: NextRequest) {
   const locale = pathname.split('/')[1] as Locale;
   const restOfPath = pathname.slice(locale.length + 1); // includes leading /
 
+  // The blog section moved to the public segment `/magazine`. Permanently
+  // redirect the legacy `/{locale}/blog[/...]` URLs so links and search
+  // engines land on the new path (the filesystem route stays `/blog`).
+  if (restOfPath === '/blog' || restOfPath.startsWith('/blog/')) {
+    const url = request.nextUrl.clone();
+    url.pathname = `/${locale}/magazine${restOfPath.slice('/blog'.length)}`;
+    return NextResponse.redirect(url, 301);
+  }
+
   if (restOfPath && restOfPath !== '/') {
     const canonical = canonicalPath(locale, restOfPath);
     if (canonical !== restOfPath) {

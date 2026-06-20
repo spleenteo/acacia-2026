@@ -1,7 +1,7 @@
 import { executeQuery } from '@/lib/datocms/executeQuery';
 import { graphql } from '@/lib/datocms/graphql';
 import { type Locale } from '@/i18n/config';
-import { indexAlternates } from '@/i18n/paths';
+import { indexAlternates, indexPageSlug } from '@/i18n/paths';
 import { draftMode } from 'next/headers';
 import { TagFragment } from '@/lib/datocms/commonFragments';
 import { GuestbookCardFragment } from '@/components/GuestbookCard/fragment';
@@ -21,8 +21,8 @@ const WINDOW_MONTHS = 24;
 
 const metaQuery = graphql(
   `
-    query GuestbookMetaQuery($locale: SiteLocale!) {
-      indexGuestbook(locale: $locale) {
+    query GuestbookMetaQuery($locale: SiteLocale!, $slug: String!) {
+      page: indexPage(locale: $locale, filter: { slug: { eq: $slug } }) {
         _seoMetaTags(locale: $locale) {
           ...TagFragment
         }
@@ -40,19 +40,19 @@ export async function generateMetadata({
   const { locale } = await params;
   const { isEnabled } = await draftMode();
   const data = await executeQuery(metaQuery, {
-    variables: { locale: locale as Locale },
+    variables: { locale: locale as Locale, slug: indexPageSlug('/guestbook', locale as Locale) },
     includeDrafts: isEnabled,
   });
   return {
-    ...toNextMetadata(data.indexGuestbook?._seoMetaTags ?? []),
+    ...toNextMetadata(data.page?._seoMetaTags ?? []),
     alternates: indexAlternates(locale as Locale, '/guestbook'),
   };
 }
 
 export const query = graphql(
   `
-    query GuestbookQuery($locale: SiteLocale!, $cutoff: Date!) {
-      indexGuestbook(locale: $locale) {
+    query GuestbookQuery($locale: SiteLocale!, $cutoff: Date!, $slug: String!) {
+      page: indexPage(locale: $locale, filter: { slug: { eq: $slug } }) {
         hero(locale: $locale) {
           color
           title
@@ -92,7 +92,11 @@ export default async function GuestbookPage({ params }: { params: Promise<{ loca
   const { locale } = await params;
   const { isEnabled: isDraftModeEnabled } = await draftMode();
 
-  const variables = { locale: locale as Locale, cutoff: windowCutoff(WINDOW_MONTHS) };
+  const variables = {
+    locale: locale as Locale,
+    cutoff: windowCutoff(WINDOW_MONTHS),
+    slug: indexPageSlug('/guestbook', locale as Locale),
+  };
   const data = await executeQuery(query, {
     variables,
     includeDrafts: isDraftModeEnabled,

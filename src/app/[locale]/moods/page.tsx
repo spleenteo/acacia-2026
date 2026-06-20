@@ -1,7 +1,7 @@
 import { executeQuery } from '@/lib/datocms/executeQuery';
 import { graphql } from '@/lib/datocms/graphql';
 import { type Locale } from '@/i18n/config';
-import { indexAlternates } from '@/i18n/paths';
+import { indexAlternates, indexPageSlug } from '@/i18n/paths';
 import { draftMode } from 'next/headers';
 import { TagFragment } from '@/lib/datocms/commonFragments';
 import { toNextMetadata } from 'react-datocms/seo';
@@ -14,8 +14,8 @@ import MoodsContent, { type MoodsProps } from './MoodsContent';
 
 const metaQuery = graphql(
   `
-    query MoodsMetaQuery($locale: SiteLocale!) {
-      indexMood(locale: $locale) {
+    query MoodsMetaQuery($locale: SiteLocale!, $slug: String!) {
+      page: indexPage(locale: $locale, filter: { slug: { eq: $slug } }) {
         _seoMetaTags(locale: $locale) {
           ...TagFragment
         }
@@ -33,19 +33,19 @@ export async function generateMetadata({
   const { locale } = await params;
   const { isEnabled } = await draftMode();
   const data = await executeQuery(metaQuery, {
-    variables: { locale: locale as Locale },
+    variables: { locale: locale as Locale, slug: indexPageSlug('/moods', locale as Locale) },
     includeDrafts: isEnabled,
   });
   return {
-    ...toNextMetadata(data.indexMood?._seoMetaTags ?? []),
+    ...toNextMetadata(data.page?._seoMetaTags ?? []),
     alternates: indexAlternates(locale as Locale, '/moods'),
   };
 }
 
 export const query = graphql(
   `
-    query MoodsQuery($locale: SiteLocale!) {
-      indexMood(locale: $locale) {
+    query MoodsQuery($locale: SiteLocale!, $slug: String!) {
+      page: indexPage(locale: $locale, filter: { slug: { eq: $slug } }) {
         hero(locale: $locale) {
           color
           title
@@ -78,7 +78,7 @@ export default async function MoodsPage({ params }: { params: Promise<{ locale: 
   const { locale } = await params;
   const { isEnabled: isDraftModeEnabled } = await draftMode();
 
-  const variables = { locale: locale as Locale };
+  const variables = { locale: locale as Locale, slug: indexPageSlug('/moods', locale as Locale) };
   const data = await executeQuery(query, {
     variables,
     includeDrafts: isDraftModeEnabled,

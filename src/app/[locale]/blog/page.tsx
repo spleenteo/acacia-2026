@@ -1,7 +1,7 @@
 import { executeQuery } from '@/lib/datocms/executeQuery';
 import { graphql } from '@/lib/datocms/graphql';
 import { type Locale } from '@/i18n/config';
-import { indexAlternates } from '@/i18n/paths';
+import { indexAlternates, indexPageSlug } from '@/i18n/paths';
 import { draftMode } from 'next/headers';
 import { TagFragment } from '@/lib/datocms/commonFragments';
 import { toNextMetadata } from 'react-datocms/seo';
@@ -14,8 +14,8 @@ import BlogContent, { type BlogProps } from './BlogContent';
 
 const metaQuery = graphql(
   `
-    query BlogMetaQuery($locale: SiteLocale!) {
-      indexBlog(locale: $locale) {
+    query BlogMetaQuery($locale: SiteLocale!, $slug: String!) {
+      page: indexPage(locale: $locale, filter: { slug: { eq: $slug } }) {
         _seoMetaTags(locale: $locale) {
           ...TagFragment
         }
@@ -33,19 +33,19 @@ export async function generateMetadata({
   const { locale } = await params;
   const { isEnabled } = await draftMode();
   const data = await executeQuery(metaQuery, {
-    variables: { locale: locale as Locale },
+    variables: { locale: locale as Locale, slug: indexPageSlug('/blog', locale as Locale) },
     includeDrafts: isEnabled,
   });
   return {
-    ...toNextMetadata(data.indexBlog?._seoMetaTags ?? []),
+    ...toNextMetadata(data.page?._seoMetaTags ?? []),
     alternates: indexAlternates(locale as Locale, '/blog'),
   };
 }
 
 export const query = graphql(
   `
-    query BlogQuery($locale: SiteLocale!) {
-      indexBlog(locale: $locale) {
+    query BlogQuery($locale: SiteLocale!, $slug: String!) {
+      page: indexPage(locale: $locale, filter: { slug: { eq: $slug } }) {
         hero(locale: $locale) {
           color
           title
@@ -90,7 +90,7 @@ export default async function BlogPage({ params }: { params: Promise<{ locale: s
   const { locale } = await params;
   const { isEnabled: isDraftModeEnabled } = await draftMode();
 
-  const variables = { locale: locale as Locale };
+  const variables = { locale: locale as Locale, slug: indexPageSlug('/blog', locale as Locale) };
   const data = await executeQuery(query, {
     variables,
     includeDrafts: isDraftModeEnabled,

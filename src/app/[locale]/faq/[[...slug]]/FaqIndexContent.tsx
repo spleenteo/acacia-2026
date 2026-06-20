@@ -13,7 +13,7 @@ export type FaqIndexProps = {
 type FaqIndexData = ResultOf<typeof indexQuery>;
 
 export default function FaqIndexContent({ roots, data }: FaqIndexProps & { data: FaqIndexData }) {
-  const page = data.indexFaq;
+  const page = data.page;
   return (
     <>
       <EditorialHero
