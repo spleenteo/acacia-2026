@@ -15,6 +15,8 @@ const pathSegments: Record<string, Record<Locale, string>> = {
   // locales; the filesystem route stays `/blog` (canonical) and the proxy
   // rewrites `/magazine` back to it.
   blog: { en: 'magazine', it: 'magazine' },
+  // Search page: filesystem route `/search`, Italian public URL `/cerca`.
+  search: { en: 'search', it: 'cerca' },
 };
 
 /** Reverse map: for each locale, maps translated segment → canonical segment */
