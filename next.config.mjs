@@ -18,6 +18,11 @@ const nextConfig = {
       // Guestbook pagination — the index exists, the /page/N URLs don't.
       { source: '/it/guestbook/page/:path*', destination: '/it/guestbook', permanent: true },
       { source: '/en/guestbook/page/:path*', destination: '/en/guestbook', permanent: true },
+      // Legacy blog posts live in `post_old` (not migrated to the new `post`
+      // model), so /blog/<slug> would soft-404 (empty 200) — send them to the
+      // Magazine index. Supersedes the proxy's path-preserving /blog→/magazine.
+      { source: '/it/blog/:path*', destination: '/it/magazine', permanent: true },
+      { source: '/en/blog/:path*', destination: '/en/magazine', permanent: true },
       // Offers / events / acacialife / debug — gone → locale home.
       { source: '/it/offerte/:path*', destination: '/it', permanent: true },
       { source: '/en/offers/:path*', destination: '/en', permanent: true },
