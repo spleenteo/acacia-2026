@@ -217,6 +217,21 @@ export default async function LocaleLayout({
           strategy="lazyOnload"
         />
       )}
+      {/* Iubenda Cookie Solution (consent banner) + embed (for the footer
+          policy links to open in a modal). Same project ids as the legacy site. */}
+      {!isDraftModeEnabled && (
+        <>
+          <Script id="iubenda-cs-config" strategy="afterInteractive">
+            {`var _iub = _iub || [];
+_iub.csConfiguration = { siteId: 306241, cookiePolicyId: 684676, lang: "${locale}" };`}
+          </Script>
+          <Script
+            src="https://cdn.iubenda.com/cookie_solution/safemode/iubenda_cs.js"
+            strategy="afterInteractive"
+          />
+          <Script src="https://cdn.iubenda.com/iubenda.js" strategy="afterInteractive" />
+        </>
+      )}
       {isDraftModeEnabled && <ContentLink />}
       <AlternateLocaleProvider>
         <BookingProvider locale={locale} defaultWidgetCode={data.homePage?.beddyId ?? null}>

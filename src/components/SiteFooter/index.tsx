@@ -107,11 +107,31 @@ export default async function SiteFooter({ locale, footerColumns, socialLinks, l
       {/* Band 3 — Bottom bar */}
       <div className="bg-dark border-t border-white/10 py-5">
         <div className="mx-auto max-w-6xl px-8 flex flex-col md:flex-row items-center justify-between gap-3">
-          <p className="font-body text-caption text-white/55">
-            {typeof legalText === 'string'
-              ? legalText
-              : `© ${new Date().getFullYear()} Acacia Firenze — P.IVA 07339190485`}
-          </p>
+          <div className="flex flex-col items-center gap-2 md:flex-row md:gap-5">
+            <p className="font-body text-caption text-white/55">
+              {typeof legalText === 'string'
+                ? legalText
+                : `© ${new Date().getFullYear()} Acacia Firenze — P.IVA 07339190485`}
+            </p>
+            {/* Legal policies — Iubenda embed (opens in a modal), same id as the
+                legacy acaciafirenze.com footer. */}
+            <nav className="flex items-center gap-4">
+              <a
+                className="iubenda-nostyle no-brand iubenda-embed font-body text-caption text-white/55 transition-colors duration-300 hover:text-white"
+                href="https://www.iubenda.com/privacy-policy/684676"
+                title="Privacy Policy"
+              >
+                Privacy policy
+              </a>
+              <a
+                className="iubenda-nostyle no-brand iubenda-embed font-body text-caption text-white/55 transition-colors duration-300 hover:text-white"
+                href="https://www.iubenda.com/privacy-policy/684676/cookie-policy"
+                title="Cookie Policy"
+              >
+                Cookie Policy
+              </a>
+            </nav>
+          </div>
           <LocaleSwitcher locale={locale} variant="footer" />
         </div>
       </div>
