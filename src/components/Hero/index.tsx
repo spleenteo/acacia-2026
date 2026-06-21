@@ -86,7 +86,7 @@ export default function Hero({
         <div className="max-w-5xl mx-auto text-center">
           <h1
             className={[
-              'font-heading font-semibold leading-[1.06] mb-6',
+              'hero-wonky font-heading font-semibold leading-[1.06] mb-6',
               'text-[2.7rem] sm:text-[3.6rem] md:text-[var(--text-display)]',
               // text-white when over an image, navy on the plain (imageless) hero
               hasImage ? 'text-white' : 'text-dark',

@@ -54,6 +54,16 @@ export default function SearchResults({ locale, initialQuery }: Props) {
     };
   }, [trimmed, tooShort, locale]);
 
+  // Keep the URL shareable: reflect the current query in `?q=` (replaceState,
+  // no router — Turbopack-safe). The initial `?q=` is read server-side (page.tsx).
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (trimmed.length >= MIN_QUERY_LENGTH) params.set('q', trimmed);
+    else params.delete('q');
+    const qs = params.toString();
+    window.history.replaceState(null, '', qs ? `?${qs}` : window.location.pathname);
+  }, [trimmed]);
+
   // Bucket the (retrieved) results by type, derived from the URL — Site Search
   // has no native facets. Counts reflect the retrieved set (API caps at 100).
   const typed = useMemo<TypedHit[]>(

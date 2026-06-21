@@ -246,6 +246,32 @@
     transform: scaleX(1);
   }
 
+  /* Home hero <em>: a wonky tinted panel behind the keyword that wipes in on
+     scroll, replacing the thin underline (same parallelogram as the nav
+     highlight). Scoped to `.hero-wonky` so only the big landing title gets it. */
+  .hero-wonky em {
+    display: inline-block;
+    z-index: 0;
+  }
+  .hero-wonky em::after {
+    content: none;
+  }
+  .hero-wonky em::before {
+    content: '';
+    position: absolute;
+    inset: -0.02em -0.22em;
+    z-index: -1;
+    background: var(--color-surface-alt);
+    clip-path: polygon(7px 0, 100% 0, calc(100% - 7px) 100%, 0 100%);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.7s cubic-bezier(0.19, 1, 0.22, 1) 0.2s;
+  }
+  .in-view .hero-wonky em::before,
+  .hero-wonky.in-view em::before {
+    transform: scaleX(1);
+  }
+
   body {
     font-weight: 400;
     /* Default text size for Lato body copy is 19px — unclassed text inherits this. */
