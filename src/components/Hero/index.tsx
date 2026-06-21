@@ -45,7 +45,7 @@ export default function Hero({
     <InViewSection
       as="section"
       className={[
-        'relative flex items-center justify-center min-h-[88svh] overflow-hidden',
+        'relative flex items-center justify-center min-h-[100svh] overflow-hidden',
         hasImage ? 'bg-dark' : 'bg-surface',
       ].join(' ')}
       style={{ marginTop: 'calc(var(--header-height) * -1)' }}
@@ -115,7 +115,7 @@ export default function Hero({
             </div>
           )}
 
-          {children && <div className="mt-10">{children}</div>}
+          {children && <div className="mt-16 md:mt-24">{children}</div>}
         </div>
       </div>
     </InViewSection>
