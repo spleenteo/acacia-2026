@@ -107,6 +107,15 @@ const seoQuery = graphql(`
       seo {
         description
       }
+      category {
+        name(locale: $locale)
+      }
+      featuredImage {
+        responsiveImage(imgixParams: { w: 240, h: 240, fit: crop }) {
+          src
+          alt
+        }
+      }
     }
     allDistricts(locale: $locale, filter: { slug: { in: $dist } }) {
       slug
@@ -124,6 +133,9 @@ const seoQuery = graphql(`
       slug
       seo {
         description
+      }
+      category {
+        name(locale: $locale)
       }
     }
     allFaqs(locale: $locale, filter: { slug: { in: $faq } }) {
@@ -166,25 +178,37 @@ async function attachSeoDescriptions(hits: SearchHit[], locale: string): Promise
       },
     });
 
-    const map = new Map<string, string>();
-    const add = (
-      type: SearchResultType,
-      rows: { slug: string | null; seo: { description: string | null } | null }[],
-    ) => {
-      for (const r of rows) {
-        if (r.slug && r.seo?.description) map.set(`${type}:${r.slug}`, r.seo.description);
-      }
+    type Extra = Pick<SearchHit, 'seoDescription' | 'category' | 'image'>;
+    const map = new Map<string, Extra>();
+    const put = (type: SearchResultType, slug: string | null, extra: Extra) => {
+      if (slug) map.set(`${type}:${slug}`, extra);
     };
-    add('apartment', data.allApartments);
-    add('district', data.allDistricts);
-    add('mood', data.allMoods);
-    add('magazine', data.allPosts);
-    add('faq', data.allFaqs);
+
+    for (const r of data.allApartments) {
+      const ri = r.featuredImage?.responsiveImage;
+      put('apartment', r.slug, {
+        seoDescription: r.seo?.description ?? undefined,
+        category: r.category?.name ?? undefined,
+        image: ri ? { src: ri.src, alt: ri.alt } : undefined,
+      });
+    }
+    for (const r of data.allPosts) {
+      put('magazine', r.slug, {
+        seoDescription: r.seo?.description ?? undefined,
+        category: r.category?.name ?? undefined,
+      });
+    }
+    for (const r of data.allDistricts)
+      put('district', r.slug, { seoDescription: r.seo?.description ?? undefined });
+    for (const r of data.allMoods)
+      put('mood', r.slug, { seoDescription: r.seo?.description ?? undefined });
+    for (const r of data.allFaqs)
+      put('faq', r.slug, { seoDescription: r.seo?.description ?? undefined });
 
     return hits.map((h) => {
       const type = getResultType(h.path);
-      const desc = type ? map.get(`${type}:${lastSegment(h.path)}`) : undefined;
-      return desc ? { ...h, seoDescription: desc } : h;
+      const extra = type ? map.get(`${type}:${lastSegment(h.path)}`) : undefined;
+      return extra ? { ...h, ...extra } : h;
     });
   } catch (e) {
     console.error('[search] SEO enrich failed:', e);

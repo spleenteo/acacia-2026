@@ -18,6 +18,10 @@ export type SearchHit = {
   /** Clean SEO meta description (fetched per result) — preferred over the
    *  nav/footer-noisy `bodyExcerpt` for the preview line. */
   seoDescription?: string;
+  /** Category name — shown next to the title for apartments and magazine posts. */
+  category?: string;
+  /** Thumbnail (apartment featured image) shown on the left of the card. */
+  image?: { src: string; alt: string | null };
 };
 
 export type SearchResponse = { results: SearchHit[]; total: number };

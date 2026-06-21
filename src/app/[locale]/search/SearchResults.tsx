@@ -142,28 +142,48 @@ export default function SearchResults({ locale, initialQuery }: Props) {
         <ul className="mt-8 space-y-7">
           {visible.map((hit) => (
             <li key={hit.id} className="border-b border-border pb-7 last:border-0">
-              <Link href={hit.path} className="group block">
-                {hit.type && (
-                  <p className="mb-1.5 font-body text-label uppercase tracking-[0.18em] text-rust">
-                    {t(SEARCH_TYPE_LABEL_KEY[hit.type])}
-                  </p>
+              <Link href={hit.path} className="group flex gap-4">
+                {/* Apartment thumbnail (left). */}
+                {hit.image && (
+                  <div className="shrink-0">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={hit.image.src}
+                      alt={hit.image.alt ?? ''}
+                      className="h-16 w-16 rounded-sm object-cover sm:h-20 sm:w-20"
+                    />
+                  </div>
                 )}
-                <h2 className="font-heading text-h4 text-dark transition-colors group-hover:text-primary">
-                  {cleanTitle(hit.title)}
-                </h2>
-                {hit.seoDescription ? (
-                  // Clean editor-written summary (no nav/footer noise).
-                  <p className="mt-1.5 line-clamp-2 font-body text-body-sm leading-relaxed text-muted">
-                    {hit.seoDescription}
-                  </p>
-                ) : hit.bodyHighlights.length > 0 ? (
-                  <p className="mt-1.5 line-clamp-2 font-body text-body-sm leading-relaxed text-muted">
-                    {renderHighlight(hit.bodyHighlights[0])}
-                  </p>
-                ) : null}
-                <span className="mt-2 inline-block font-body text-fine uppercase tracking-[0.14em] text-light">
-                  {hit.path}
-                </span>
+
+                <div className="min-w-0 flex-1">
+                  {hit.type && (
+                    <p className="mb-1.5 font-body text-label uppercase tracking-[0.18em] text-rust">
+                      {t(SEARCH_TYPE_LABEL_KEY[hit.type])}
+                    </p>
+                  )}
+                  {/* Title + category beside it (apartments, magazine posts). */}
+                  <div className="flex flex-wrap items-baseline gap-x-2.5 gap-y-0.5">
+                    <h2 className="font-heading text-h4 text-dark transition-colors group-hover:text-primary">
+                      {cleanTitle(hit.title)}
+                    </h2>
+                    {hit.category && (
+                      <span className="font-body text-body-sm text-muted">· {hit.category}</span>
+                    )}
+                  </div>
+                  {hit.seoDescription ? (
+                    // Clean editor-written summary (no nav/footer noise).
+                    <p className="mt-1.5 line-clamp-2 font-body text-body-sm leading-relaxed text-muted">
+                      {hit.seoDescription}
+                    </p>
+                  ) : hit.bodyHighlights.length > 0 ? (
+                    <p className="mt-1.5 line-clamp-2 font-body text-body-sm leading-relaxed text-muted">
+                      {renderHighlight(hit.bodyHighlights[0])}
+                    </p>
+                  ) : null}
+                  <span className="mt-2 inline-block font-body text-fine uppercase tracking-[0.14em] text-light">
+                    {hit.path}
+                  </span>
+                </div>
               </Link>
             </li>
           ))}
