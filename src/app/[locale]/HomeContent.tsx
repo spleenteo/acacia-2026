@@ -7,6 +7,7 @@ import MoodCard from '@/components/MoodCard';
 import SectionHeader from '@/components/SectionHeader';
 import HtmlContent from '@/components/HtmlContent';
 import Hero from '@/components/Hero';
+import SearchBox from '@/components/SearchBox';
 import ReviewSpotlight from '@/components/ReviewSpotlight';
 import SectionDock, { type DockItem } from '@/components/SectionDock';
 import { readFragment } from '@/lib/datocms/graphql';
@@ -64,13 +65,11 @@ export default function HomeContent({
       <SectionDock items={dockItems} />
 
       <div id="home-top">
-        <Hero
-          title={homePage?.title ?? ''}
-          subtitle={homePage?.claim}
-          buttons={homePage?.buttons}
-          locale={locale}
-          priority
-        />
+        {/* The hero CTAs are replaced by the search entry point (above the
+            fold). `homePage.buttons` stays in the CMS, just not rendered here. */}
+        <Hero title={homePage?.title ?? ''} subtitle={homePage?.claim} locale={locale} priority>
+          <SearchBox locale={locale} />
+        </Hero>
       </div>
 
       {spotlightReview && (
