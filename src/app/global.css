@@ -261,7 +261,7 @@
     position: absolute;
     inset: -0.02em -0.22em;
     z-index: -1;
-    background: var(--color-surface-alt);
+    background: var(--color-gold-soft);
     clip-path: polygon(7px 0, 100% 0, calc(100% - 7px) 100%, 0 100%);
     transform: scaleX(0);
     transform-origin: left;

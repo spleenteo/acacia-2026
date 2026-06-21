@@ -47,7 +47,8 @@ export default function SearchBox({ locale, className }: Props) {
         setLabel(current.slice(0, charIdx));
         if (charIdx === current.length) {
           deleting = true;
-          timer = setTimeout(tick, 1800);
+          // Hold the full question on screen before regenerating the next one.
+          timer = setTimeout(tick, 5000);
         } else {
           timer = setTimeout(tick, 45);
         }
