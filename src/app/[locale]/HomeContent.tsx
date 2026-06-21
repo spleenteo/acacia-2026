@@ -6,14 +6,40 @@ import MoodCard from '@/components/MoodCard';
 import SectionHeader from '@/components/SectionHeader';
 import HtmlContent from '@/components/HtmlContent';
 import Hero from '@/components/Hero';
+import ReviewSpotlight from '@/components/ReviewSpotlight';
+import { readFragment } from '@/lib/datocms/graphql';
+import { ReviewSpotlightFragment } from '@/components/ReviewSpotlight/fragment';
 import type { ResultOf } from 'gql.tada';
 import type { query } from './page';
 
-export type HomeProps = { locale: Locale };
+export type HomeProps = { locale: Locale; spotlightSeed: number };
 type HomeData = ResultOf<typeof query>;
 
-export default function HomeContent({ locale, data }: HomeProps & { data: HomeData }) {
+export default function HomeContent({
+  locale,
+  spotlightSeed,
+  data,
+}: HomeProps & { data: HomeData }) {
   const { homePage } = data;
+
+  // Dedupe the review pool to the most recent review per apartment, then pick
+  // one via the server-provided seed (so SSR and client agree, and each request
+  // rotates the spotlight).
+  const spotlightPool = (() => {
+    const seen = new Set<string>();
+    const out: typeof data.spotlightReviews = [];
+    for (const item of data.spotlightReviews ?? []) {
+      const slug = readFragment(ReviewSpotlightFragment, item).apartment?.slug;
+      if (!slug || seen.has(slug)) continue;
+      seen.add(slug);
+      out.push(item);
+      if (out.length >= 10) break;
+    }
+    return out;
+  })();
+  const spotlightReview = spotlightPool.length
+    ? spotlightPool[Math.floor(spotlightSeed * spotlightPool.length) % spotlightPool.length]
+    : null;
 
   return (
     <>
@@ -24,6 +50,8 @@ export default function HomeContent({ locale, data }: HomeProps & { data: HomeDa
         locale={locale}
         priority
       />
+
+      {spotlightReview && <ReviewSpotlight data={spotlightReview} locale={locale} />}
 
       {/* Stay Section */}
       {homePage?.stayText && (
