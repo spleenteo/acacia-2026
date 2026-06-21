@@ -7,7 +7,7 @@ import { makeStructuredTextBlockRenderer } from '@/components/StructuredText/Str
 /** A record referenced inline from a FAQ answer (link or embed target). */
 type LinkedRecord =
   | { __typename: 'FaqRecord'; id: string; slug: string; question: string }
-  | { __typename: 'PageRecord'; id: string; slug: string; title: string };
+  | { __typename: 'LandingPageRecord'; id: string; slug: string; title: string };
 
 type Props = {
   /**
@@ -31,8 +31,8 @@ function hrefFor(
   switch (record.__typename) {
     case 'FaqRecord':
       return faqHrefById[record.id] ?? '#';
-    case 'PageRecord':
-      return modelPath('page', record.slug, locale) ?? '#';
+    case 'LandingPageRecord':
+      return modelPath('landing_page', record.slug, locale) ?? '#';
     default:
       return '#';
   }

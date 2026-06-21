@@ -84,7 +84,7 @@ const modelPrefixes: Record<string, string> = {
   district: 'florence/districts',
   mood: 'moods',
   post: 'blog',
-  page: 'info',
+  landing_page: 'info',
 };
 
 /** Maps singleton/index model API keys to their canonical paths (no slug needed) */

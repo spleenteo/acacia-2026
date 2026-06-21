@@ -1753,7 +1753,7 @@ type FaqModelLongAnswerFieldMultiLocaleField {
   value: FaqModelLongAnswerField
 }
 
-union FaqModelLongAnswerLinksField = FaqRecord | PageRecord | PostOldRecord
+union FaqModelLongAnswerLinksField = FaqRecord | LandingPageRecord | PostOldRecord
 
 enum FaqModelOrderBy {
   _createdAt_ASC
@@ -1798,7 +1798,7 @@ type FaqModelShortAnswerFieldMultiLocaleField {
   value: FaqModelShortAnswerField
 }
 
-union FaqModelShortAnswerLinksField = FaqRecord | PageRecord | PostOldRecord
+union FaqModelShortAnswerLinksField = FaqRecord | LandingPageRecord | PostOldRecord
 
 """Record of type ⁉️ Faq (faq)"""
 type FaqRecord implements RecordInterface {
@@ -5264,685 +5264,6 @@ type IndexAcacialifeRecord implements RecordInterface {
   updatedAt: DateTime!
 }
 
-type IndexApartmentModelDescriptionField {
-  blocks: [String!]!
-  inlineBlocks: [String!]!
-  links: [String!]!
-  value: JsonField!
-}
-
-type IndexApartmentModelDescriptionFieldNonNullMultiLocaleField {
-  locale: SiteLocale
-  value: IndexApartmentModelDescriptionField!
-}
-
-"""Record of type Index Apartments (index_apartment)"""
-type IndexApartmentRecord implements RecordInterface {
-  _allDescriptionLocales(
-    """
-    If you want to fallback to a default translation when a translation has not been found
-    """
-    fallbackLocales: [SiteLocale!]
-  ): [IndexApartmentModelDescriptionFieldNonNullMultiLocaleField!]
-  _allHeroLocales(
-    """
-    If you want to fallback to a default translation when a translation has not been found
-    """
-    fallbackLocales: [SiteLocale!]
-  ): [HeroIndexRecordNonNullMultiLocaleField!]
-  _allSeoLocales(
-    """
-    If you want to fallback to a default translation when a translation has not been found
-    """
-    fallbackLocales: [SiteLocale!]
-  ): [SeoFieldMultiLocaleField!]
-  _allSlugLocales(
-    """
-    If you want to fallback to a default translation when a translation has not been found
-    """
-    fallbackLocales: [SiteLocale!]
-  ): [StringNonNullMultiLocaleField!]
-  _createdAt: DateTime!
-
-  """Editing URL"""
-  _editingUrl: String
-  _firstPublishedAt: DateTime!
-  _isValid: BooleanType!
-  _locales: [SiteLocale!]!
-  _modelApiKey: String!
-  _publicationScheduledAt: DateTime
-  _publishedAt: DateTime!
-
-  """Generates SEO and Social card meta tags to be used in your frontend"""
-  _seoMetaTags(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-  ): [Tag!]!
-  _status: ItemStatus!
-  _unpublishingScheduledAt: DateTime
-  _updatedAt: DateTime!
-  createdAt: DateTime!
-  description(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
-    """
-    If you want to fallback to a default translation when a translation has not been found
-    """
-    fallbackLocales: [SiteLocale!]
-  ): IndexApartmentModelDescriptionField!
-  hero(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
-    """
-    If you want to fallback to a default translation when a translation has not been found
-    """
-    fallbackLocales: [SiteLocale!]
-  ): HeroIndexRecord!
-  id: ItemId!
-  seo(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
-    """
-    If you want to fallback to a default translation when a translation has not been found
-    """
-    fallbackLocales: [SiteLocale!]
-  ): SeoField
-  slug(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
-    """
-    If you want to fallback to a default translation when a translation has not been found
-    """
-    fallbackLocales: [SiteLocale!]
-  ): String!
-  updatedAt: DateTime!
-}
-
-type IndexBlogModelDescriptionField {
-  blocks: [String!]!
-  inlineBlocks: [String!]!
-  links: [String!]!
-  value: JsonField!
-}
-
-type IndexBlogModelDescriptionFieldMultiLocaleField {
-  locale: SiteLocale
-  value: IndexBlogModelDescriptionField
-}
-
-"""Record of type Page blog (index_blog)"""
-type IndexBlogRecord implements RecordInterface {
-  _allDescriptionLocales(
-    """
-    If you want to fallback to a default translation when a translation has not been found
-    """
-    fallbackLocales: [SiteLocale!]
-  ): [IndexBlogModelDescriptionFieldMultiLocaleField!]
-  _allHeroLocales(
-    """
-    If you want to fallback to a default translation when a translation has not been found
-    """
-    fallbackLocales: [SiteLocale!]
-  ): [HeroIndexRecordNonNullMultiLocaleField!]
-  _allSeoLocales(
-    """
-    If you want to fallback to a default translation when a translation has not been found
-    """
-    fallbackLocales: [SiteLocale!]
-  ): [SeoFieldMultiLocaleField!]
-  _createdAt: DateTime!
-
-  """Editing URL"""
-  _editingUrl: String
-  _firstPublishedAt: DateTime!
-  _isValid: BooleanType!
-  _locales: [SiteLocale!]!
-  _modelApiKey: String!
-  _publicationScheduledAt: DateTime
-  _publishedAt: DateTime!
-
-  """Generates SEO and Social card meta tags to be used in your frontend"""
-  _seoMetaTags(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-  ): [Tag!]!
-  _status: ItemStatus!
-  _unpublishingScheduledAt: DateTime
-  _updatedAt: DateTime!
-  createdAt: DateTime!
-  description(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
-    """
-    If you want to fallback to a default translation when a translation has not been found
-    """
-    fallbackLocales: [SiteLocale!]
-  ): IndexBlogModelDescriptionField
-  hero(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
-    """
-    If you want to fallback to a default translation when a translation has not been found
-    """
-    fallbackLocales: [SiteLocale!]
-  ): HeroIndexRecord!
-  id: ItemId!
-  seo(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
-    """
-    If you want to fallback to a default translation when a translation has not been found
-    """
-    fallbackLocales: [SiteLocale!]
-  ): SeoField
-  updatedAt: DateTime!
-}
-
-type IndexDistrictModelDescriptionField {
-  blocks: [String!]!
-  inlineBlocks: [String!]!
-  links: [String!]!
-  value: JsonField!
-}
-
-type IndexDistrictModelDescriptionFieldMultiLocaleField {
-  locale: SiteLocale
-  value: IndexDistrictModelDescriptionField
-}
-
-"""Record of type Page districts (index_district)"""
-type IndexDistrictRecord implements RecordInterface {
-  _allDescriptionLocales(
-    """
-    If you want to fallback to a default translation when a translation has not been found
-    """
-    fallbackLocales: [SiteLocale!]
-  ): [IndexDistrictModelDescriptionFieldMultiLocaleField!]
-  _allHeroLocales(
-    """
-    If you want to fallback to a default translation when a translation has not been found
-    """
-    fallbackLocales: [SiteLocale!]
-  ): [HeroIndexRecordNonNullMultiLocaleField!]
-  _allSeoLocales(
-    """
-    If you want to fallback to a default translation when a translation has not been found
-    """
-    fallbackLocales: [SiteLocale!]
-  ): [SeoFieldMultiLocaleField!]
-  _createdAt: DateTime!
-
-  """Editing URL"""
-  _editingUrl: String
-  _firstPublishedAt: DateTime!
-  _isValid: BooleanType!
-  _locales: [SiteLocale!]!
-  _modelApiKey: String!
-  _publicationScheduledAt: DateTime
-  _publishedAt: DateTime!
-
-  """Generates SEO and Social card meta tags to be used in your frontend"""
-  _seoMetaTags(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-  ): [Tag!]!
-  _status: ItemStatus!
-  _unpublishingScheduledAt: DateTime
-  _updatedAt: DateTime!
-  createdAt: DateTime!
-  description(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
-    """
-    If you want to fallback to a default translation when a translation has not been found
-    """
-    fallbackLocales: [SiteLocale!]
-  ): IndexDistrictModelDescriptionField
-  hero(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
-    """
-    If you want to fallback to a default translation when a translation has not been found
-    """
-    fallbackLocales: [SiteLocale!]
-  ): HeroIndexRecord!
-  id: ItemId!
-  seo(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
-    """
-    If you want to fallback to a default translation when a translation has not been found
-    """
-    fallbackLocales: [SiteLocale!]
-  ): SeoField
-  updatedAt: DateTime!
-}
-
-type IndexEventModelDescriptionField {
-  blocks: [String!]!
-  inlineBlocks: [String!]!
-  links: [String!]!
-  value: JsonField!
-}
-
-type IndexEventModelDescriptionFieldMultiLocaleField {
-  locale: SiteLocale
-  value: IndexEventModelDescriptionField
-}
-
-"""Record of type Page Events (index_event)"""
-type IndexEventRecord implements RecordInterface {
-  _allDescriptionLocales(
-    """
-    If you want to fallback to a default translation when a translation has not been found
-    """
-    fallbackLocales: [SiteLocale!]
-  ): [IndexEventModelDescriptionFieldMultiLocaleField!]
-  _allHeroLocales(
-    """
-    If you want to fallback to a default translation when a translation has not been found
-    """
-    fallbackLocales: [SiteLocale!]
-  ): [HeroIndexRecordNonNullMultiLocaleField!]
-  _allSeoLocales(
-    """
-    If you want to fallback to a default translation when a translation has not been found
-    """
-    fallbackLocales: [SiteLocale!]
-  ): [SeoFieldMultiLocaleField!]
-  _createdAt: DateTime!
-
-  """Editing URL"""
-  _editingUrl: String
-  _firstPublishedAt: DateTime!
-  _isValid: BooleanType!
-  _locales: [SiteLocale!]!
-  _modelApiKey: String!
-  _publicationScheduledAt: DateTime
-  _publishedAt: DateTime!
-
-  """Generates SEO and Social card meta tags to be used in your frontend"""
-  _seoMetaTags(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-  ): [Tag!]!
-  _status: ItemStatus!
-  _unpublishingScheduledAt: DateTime
-  _updatedAt: DateTime!
-  createdAt: DateTime!
-  description(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
-    """
-    If you want to fallback to a default translation when a translation has not been found
-    """
-    fallbackLocales: [SiteLocale!]
-  ): IndexEventModelDescriptionField
-  hero(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
-    """
-    If you want to fallback to a default translation when a translation has not been found
-    """
-    fallbackLocales: [SiteLocale!]
-  ): HeroIndexRecord!
-  id: ItemId!
-  seo(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
-    """
-    If you want to fallback to a default translation when a translation has not been found
-    """
-    fallbackLocales: [SiteLocale!]
-  ): SeoField
-  updatedAt: DateTime!
-}
-
-type IndexFaqModelDescriptionField {
-  blocks: [String!]!
-  inlineBlocks: [String!]!
-  links: [String!]!
-  value: JsonField!
-}
-
-type IndexFaqModelDescriptionFieldMultiLocaleField {
-  locale: SiteLocale
-  value: IndexFaqModelDescriptionField
-}
-
-"""Record of type Page Faq (index_faq)"""
-type IndexFaqRecord implements RecordInterface {
-  _allDescriptionLocales(
-    """
-    If you want to fallback to a default translation when a translation has not been found
-    """
-    fallbackLocales: [SiteLocale!]
-  ): [IndexFaqModelDescriptionFieldMultiLocaleField!]
-  _allHeroLocales(
-    """
-    If you want to fallback to a default translation when a translation has not been found
-    """
-    fallbackLocales: [SiteLocale!]
-  ): [HeroIndexRecordNonNullMultiLocaleField!]
-  _allSeoLocales(
-    """
-    If you want to fallback to a default translation when a translation has not been found
-    """
-    fallbackLocales: [SiteLocale!]
-  ): [SeoFieldMultiLocaleField!]
-  _createdAt: DateTime!
-
-  """Editing URL"""
-  _editingUrl: String
-  _firstPublishedAt: DateTime!
-  _isValid: BooleanType!
-  _locales: [SiteLocale!]!
-  _modelApiKey: String!
-  _publicationScheduledAt: DateTime
-  _publishedAt: DateTime!
-
-  """Generates SEO and Social card meta tags to be used in your frontend"""
-  _seoMetaTags(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-  ): [Tag!]!
-  _status: ItemStatus!
-  _unpublishingScheduledAt: DateTime
-  _updatedAt: DateTime!
-  createdAt: DateTime!
-  description(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
-    """
-    If you want to fallback to a default translation when a translation has not been found
-    """
-    fallbackLocales: [SiteLocale!]
-  ): IndexFaqModelDescriptionField
-  hero(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
-    """
-    If you want to fallback to a default translation when a translation has not been found
-    """
-    fallbackLocales: [SiteLocale!]
-  ): HeroIndexRecord!
-  id: ItemId!
-  seo(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
-    """
-    If you want to fallback to a default translation when a translation has not been found
-    """
-    fallbackLocales: [SiteLocale!]
-  ): SeoField
-  updatedAt: DateTime!
-}
-
-type IndexGuestbookModelDescriptionField {
-  blocks: [String!]!
-  inlineBlocks: [String!]!
-  links: [String!]!
-  value: JsonField!
-}
-
-type IndexGuestbookModelDescriptionFieldMultiLocaleField {
-  locale: SiteLocale
-  value: IndexGuestbookModelDescriptionField
-}
-
-"""Record of type Page Guestbook (index_guestbook)"""
-type IndexGuestbookRecord implements RecordInterface {
-  _allDescriptionLocales(
-    """
-    If you want to fallback to a default translation when a translation has not been found
-    """
-    fallbackLocales: [SiteLocale!]
-  ): [IndexGuestbookModelDescriptionFieldMultiLocaleField!]
-  _allHeroLocales(
-    """
-    If you want to fallback to a default translation when a translation has not been found
-    """
-    fallbackLocales: [SiteLocale!]
-  ): [HeroIndexRecordNonNullMultiLocaleField!]
-  _allSeoLocales(
-    """
-    If you want to fallback to a default translation when a translation has not been found
-    """
-    fallbackLocales: [SiteLocale!]
-  ): [SeoFieldMultiLocaleField!]
-  _createdAt: DateTime!
-
-  """Editing URL"""
-  _editingUrl: String
-  _firstPublishedAt: DateTime!
-  _isValid: BooleanType!
-  _locales: [SiteLocale!]!
-  _modelApiKey: String!
-  _publicationScheduledAt: DateTime
-  _publishedAt: DateTime!
-
-  """Generates SEO and Social card meta tags to be used in your frontend"""
-  _seoMetaTags(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-  ): [Tag!]!
-  _status: ItemStatus!
-  _unpublishingScheduledAt: DateTime
-  _updatedAt: DateTime!
-  createdAt: DateTime!
-  description(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
-    """
-    If you want to fallback to a default translation when a translation has not been found
-    """
-    fallbackLocales: [SiteLocale!]
-  ): IndexGuestbookModelDescriptionField
-  hero(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
-    """
-    If you want to fallback to a default translation when a translation has not been found
-    """
-    fallbackLocales: [SiteLocale!]
-  ): HeroIndexRecord!
-  id: ItemId!
-  seo(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
-    """
-    If you want to fallback to a default translation when a translation has not been found
-    """
-    fallbackLocales: [SiteLocale!]
-  ): SeoField
-  updatedAt: DateTime!
-}
-
-type IndexMoodModelDescriptionField {
-  blocks: [String!]!
-  inlineBlocks: [String!]!
-  links: [String!]!
-  value: JsonField!
-}
-
-type IndexMoodModelDescriptionFieldMultiLocaleField {
-  locale: SiteLocale
-  value: IndexMoodModelDescriptionField
-}
-
-"""Record of type Page Moods (index_mood)"""
-type IndexMoodRecord implements RecordInterface {
-  _allDescriptionLocales(
-    """
-    If you want to fallback to a default translation when a translation has not been found
-    """
-    fallbackLocales: [SiteLocale!]
-  ): [IndexMoodModelDescriptionFieldMultiLocaleField!]
-  _allHeroLocales(
-    """
-    If you want to fallback to a default translation when a translation has not been found
-    """
-    fallbackLocales: [SiteLocale!]
-  ): [HeroIndexRecordNonNullMultiLocaleField!]
-  _allSeoLocales(
-    """
-    If you want to fallback to a default translation when a translation has not been found
-    """
-    fallbackLocales: [SiteLocale!]
-  ): [SeoFieldMultiLocaleField!]
-  _createdAt: DateTime!
-
-  """Editing URL"""
-  _editingUrl: String
-  _firstPublishedAt: DateTime!
-  _isValid: BooleanType!
-  _locales: [SiteLocale!]!
-  _modelApiKey: String!
-  _publicationScheduledAt: DateTime
-  _publishedAt: DateTime!
-
-  """Generates SEO and Social card meta tags to be used in your frontend"""
-  _seoMetaTags(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-  ): [Tag!]!
-  _status: ItemStatus!
-  _unpublishingScheduledAt: DateTime
-  _updatedAt: DateTime!
-  createdAt: DateTime!
-  description(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
-    """
-    If you want to fallback to a default translation when a translation has not been found
-    """
-    fallbackLocales: [SiteLocale!]
-  ): IndexMoodModelDescriptionField
-  hero(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
-    """
-    If you want to fallback to a default translation when a translation has not been found
-    """
-    fallbackLocales: [SiteLocale!]
-  ): HeroIndexRecord!
-  id: ItemId!
-  seo(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
-    """
-    If you want to fallback to a default translation when a translation has not been found
-    """
-    fallbackLocales: [SiteLocale!]
-  ): SeoField
-  updatedAt: DateTime!
-}
-
-type IndexOfferModelDescriptionField {
-  blocks: [String!]!
-  inlineBlocks: [String!]!
-  links: [String!]!
-  value: JsonField!
-}
-
-type IndexOfferModelDescriptionFieldMultiLocaleField {
-  locale: SiteLocale
-  value: IndexOfferModelDescriptionField
-}
-
-"""Record of type Page Offers (index_offer)"""
-type IndexOfferRecord implements RecordInterface {
-  _allDescriptionLocales(
-    """
-    If you want to fallback to a default translation when a translation has not been found
-    """
-    fallbackLocales: [SiteLocale!]
-  ): [IndexOfferModelDescriptionFieldMultiLocaleField!]
-  _allHeroLocales(
-    """
-    If you want to fallback to a default translation when a translation has not been found
-    """
-    fallbackLocales: [SiteLocale!]
-  ): [HeroIndexRecordNonNullMultiLocaleField!]
-  _allSeoLocales(
-    """
-    If you want to fallback to a default translation when a translation has not been found
-    """
-    fallbackLocales: [SiteLocale!]
-  ): [SeoFieldMultiLocaleField!]
-  _createdAt: DateTime!
-
-  """Editing URL"""
-  _editingUrl: String
-  _firstPublishedAt: DateTime!
-  _isValid: BooleanType!
-  _locales: [SiteLocale!]!
-  _modelApiKey: String!
-  _publicationScheduledAt: DateTime
-  _publishedAt: DateTime!
-
-  """Generates SEO and Social card meta tags to be used in your frontend"""
-  _seoMetaTags(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-  ): [Tag!]!
-  _status: ItemStatus!
-  _unpublishingScheduledAt: DateTime
-  _updatedAt: DateTime!
-  createdAt: DateTime!
-  description(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
-    """
-    If you want to fallback to a default translation when a translation has not been found
-    """
-    fallbackLocales: [SiteLocale!]
-  ): IndexOfferModelDescriptionField
-  hero(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
-    """
-    If you want to fallback to a default translation when a translation has not been found
-    """
-    fallbackLocales: [SiteLocale!]
-  ): HeroIndexRecord!
-  id: ItemId!
-  seo(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
-    """
-    If you want to fallback to a default translation when a translation has not been found
-    """
-    fallbackLocales: [SiteLocale!]
-  ): SeoField
-  updatedAt: DateTime!
-}
-
 type IndexPageModelDescriptionField {
   blocks: [String!]!
   inlineBlocks: [String!]!
@@ -6081,89 +5402,6 @@ type IndexPageRecord implements RecordInterface {
     """
     fallbackLocales: [SiteLocale!]
   ): String!
-  updatedAt: DateTime!
-}
-
-type IndexServiceModelDescriptionField {
-  blocks: [String!]!
-  inlineBlocks: [String!]!
-  links: [String!]!
-  value: JsonField!
-}
-
-type IndexServiceModelDescriptionFieldMultiLocaleField {
-  locale: SiteLocale
-  value: IndexServiceModelDescriptionField
-}
-
-"""Record of type Page Services (index_service)"""
-type IndexServiceRecord implements RecordInterface {
-  _allDescriptionLocales(
-    """
-    If you want to fallback to a default translation when a translation has not been found
-    """
-    fallbackLocales: [SiteLocale!]
-  ): [IndexServiceModelDescriptionFieldMultiLocaleField!]
-  _allHeroLocales(
-    """
-    If you want to fallback to a default translation when a translation has not been found
-    """
-    fallbackLocales: [SiteLocale!]
-  ): [HeroIndexRecordNonNullMultiLocaleField!]
-  _allSeoLocales(
-    """
-    If you want to fallback to a default translation when a translation has not been found
-    """
-    fallbackLocales: [SiteLocale!]
-  ): [SeoFieldMultiLocaleField!]
-  _createdAt: DateTime!
-
-  """Editing URL"""
-  _editingUrl: String
-  _firstPublishedAt: DateTime!
-  _isValid: BooleanType!
-  _locales: [SiteLocale!]!
-  _modelApiKey: String!
-  _publicationScheduledAt: DateTime
-  _publishedAt: DateTime!
-
-  """Generates SEO and Social card meta tags to be used in your frontend"""
-  _seoMetaTags(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-  ): [Tag!]!
-  _status: ItemStatus!
-  _unpublishingScheduledAt: DateTime
-  _updatedAt: DateTime!
-  createdAt: DateTime!
-  description(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
-    """
-    If you want to fallback to a default translation when a translation has not been found
-    """
-    fallbackLocales: [SiteLocale!]
-  ): IndexServiceModelDescriptionField
-  hero(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
-    """
-    If you want to fallback to a default translation when a translation has not been found
-    """
-    fallbackLocales: [SiteLocale!]
-  ): HeroIndexRecord!
-  id: ItemId!
-  seo(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
-    """
-    If you want to fallback to a default translation when a translation has not been found
-    """
-    fallbackLocales: [SiteLocale!]
-  ): SeoField
   updatedAt: DateTime!
 }
 
@@ -6706,6 +5944,169 @@ input JsonFilter {
   exists: BooleanType
 }
 
+input LandingPageModelFilter {
+  _createdAt: CreatedAtFilter
+  createdAt: CreatedAtFilter
+  id: ItemIdFilter
+  _firstPublishedAt: PublishedAtFilter
+  _publicationScheduledAt: PublishedAtFilter
+  _unpublishingScheduledAt: PublishedAtFilter
+  _publishedAt: PublishedAtFilter
+  _status: StatusFilter
+  _updatedAt: UpdatedAtFilter
+  updatedAt: UpdatedAtFilter
+  _isValid: BooleanFilter
+  _locales: LocalesFilter
+  seoSettingsSocial: SeoFilter
+  slug: SlugFilter
+  structuredText: StructuredTextFilter
+  title: StringFilter
+  OR: [LandingPageModelFilter]
+  AND: [LandingPageModelFilter]
+}
+
+enum LandingPageModelOrderBy {
+  _createdAt_ASC
+  _createdAt_DESC
+  createdAt_ASC
+  createdAt_DESC
+  id_ASC
+  id_DESC
+  _firstPublishedAt_ASC
+  _firstPublishedAt_DESC
+  _publicationScheduledAt_ASC
+  _publicationScheduledAt_DESC
+  _unpublishingScheduledAt_ASC
+  _unpublishingScheduledAt_DESC
+  _publishedAt_ASC
+  _publishedAt_DESC
+  _status_ASC
+  _status_DESC
+  _updatedAt_ASC
+  _updatedAt_DESC
+  updatedAt_ASC
+  updatedAt_DESC
+  _isValid_ASC
+  _isValid_DESC
+  title_ASC
+  title_DESC
+}
+
+union LandingPageModelStructuredTextBlocksField = CtaFaqRecord | ImageBlockRecord | ImageGalleryBlockRecord | VideoBlockRecord
+
+type LandingPageModelStructuredTextField {
+  blocks: [LandingPageModelStructuredTextBlocksField!]!
+  inlineBlocks: [String!]!
+  links: [String!]!
+  value: JsonField!
+}
+
+type LandingPageModelStructuredTextFieldNonNullMultiLocaleField {
+  locale: SiteLocale
+  value: LandingPageModelStructuredTextField!
+}
+
+"""Record of type 📝 Landing Page (landing_page)"""
+type LandingPageRecord implements RecordInterface {
+  _allSectionsLocales(
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): [HeroBlockRecordListListNonNullMultiLocaleField!]
+  _allSeoSettingsSocialLocales(
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): [SeoFieldMultiLocaleField!]
+  _allSlugLocales(
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): [StringNonNullMultiLocaleField!]
+  _allStructuredTextLocales(
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): [LandingPageModelStructuredTextFieldNonNullMultiLocaleField!]
+  _allTitleLocales(
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): [StringNonNullMultiLocaleField!]
+  _createdAt: DateTime!
+
+  """Editing URL"""
+  _editingUrl: String
+  _firstPublishedAt: DateTime!
+  _isValid: BooleanType!
+  _locales: [SiteLocale!]!
+  _modelApiKey: String!
+  _publicationScheduledAt: DateTime
+  _publishedAt: DateTime!
+
+  """Generates SEO and Social card meta tags to be used in your frontend"""
+  _seoMetaTags(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+  ): [Tag!]!
+  _status: ItemStatus!
+  _unpublishingScheduledAt: DateTime
+  _updatedAt: DateTime!
+  createdAt: DateTime!
+  id: ItemId!
+  sections(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): [HeroBlockRecord!]!
+  seoSettingsSocial(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): SeoField
+  slug(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): String!
+  structuredText(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): LandingPageModelStructuredTextField!
+  title(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): String!
+  updatedAt: DateTime!
+}
+
 type LatLonField {
   latitude: FloatType!
   longitude: FloatType!
@@ -6851,7 +6252,7 @@ type MenuExternalItemRecord implements RecordInterface {
   url: String!
 }
 
-union MenuItemModelPageField = HomePageRecord | IndexApartmentRecord | IndexBlogRecord | IndexDistrictRecord | IndexFaqRecord | IndexGuestbookRecord | IndexMoodRecord | IndexOfferRecord | IndexPageRecord | IndexServiceRecord
+union MenuItemModelPageField = HomePageRecord | IndexPageRecord
 
 """Block of type 🔗 Menu Item (menu_item)"""
 type MenuItemRecord implements RecordInterface {
@@ -7037,7 +6438,7 @@ type MoodModelDescriptionFieldMultiLocaleField {
   value: MoodModelDescriptionField
 }
 
-union MoodModelDescriptionLinksField = DistrictRecord | PageRecord
+union MoodModelDescriptionLinksField = DistrictRecord | LandingPageRecord
 
 """Linking fields"""
 enum MoodModelFieldsReferencingApartmentModel {
@@ -7502,169 +6903,6 @@ input OrientationFilter {
   neq: UploadOrientation
 }
 
-input PageModelFilter {
-  _createdAt: CreatedAtFilter
-  createdAt: CreatedAtFilter
-  id: ItemIdFilter
-  _firstPublishedAt: PublishedAtFilter
-  _publicationScheduledAt: PublishedAtFilter
-  _unpublishingScheduledAt: PublishedAtFilter
-  _publishedAt: PublishedAtFilter
-  _status: StatusFilter
-  _updatedAt: UpdatedAtFilter
-  updatedAt: UpdatedAtFilter
-  _isValid: BooleanFilter
-  _locales: LocalesFilter
-  seoSettingsSocial: SeoFilter
-  slug: SlugFilter
-  structuredText: StructuredTextFilter
-  title: StringFilter
-  OR: [PageModelFilter]
-  AND: [PageModelFilter]
-}
-
-enum PageModelOrderBy {
-  _createdAt_ASC
-  _createdAt_DESC
-  createdAt_ASC
-  createdAt_DESC
-  id_ASC
-  id_DESC
-  _firstPublishedAt_ASC
-  _firstPublishedAt_DESC
-  _publicationScheduledAt_ASC
-  _publicationScheduledAt_DESC
-  _unpublishingScheduledAt_ASC
-  _unpublishingScheduledAt_DESC
-  _publishedAt_ASC
-  _publishedAt_DESC
-  _status_ASC
-  _status_DESC
-  _updatedAt_ASC
-  _updatedAt_DESC
-  updatedAt_ASC
-  updatedAt_DESC
-  _isValid_ASC
-  _isValid_DESC
-  title_ASC
-  title_DESC
-}
-
-union PageModelStructuredTextBlocksField = CtaFaqRecord | ImageBlockRecord | ImageGalleryBlockRecord | VideoBlockRecord
-
-type PageModelStructuredTextField {
-  blocks: [PageModelStructuredTextBlocksField!]!
-  inlineBlocks: [String!]!
-  links: [String!]!
-  value: JsonField!
-}
-
-type PageModelStructuredTextFieldNonNullMultiLocaleField {
-  locale: SiteLocale
-  value: PageModelStructuredTextField!
-}
-
-"""Record of type 📝 Page (page)"""
-type PageRecord implements RecordInterface {
-  _allSectionsLocales(
-    """
-    If you want to fallback to a default translation when a translation has not been found
-    """
-    fallbackLocales: [SiteLocale!]
-  ): [HeroBlockRecordListListNonNullMultiLocaleField!]
-  _allSeoSettingsSocialLocales(
-    """
-    If you want to fallback to a default translation when a translation has not been found
-    """
-    fallbackLocales: [SiteLocale!]
-  ): [SeoFieldMultiLocaleField!]
-  _allSlugLocales(
-    """
-    If you want to fallback to a default translation when a translation has not been found
-    """
-    fallbackLocales: [SiteLocale!]
-  ): [StringNonNullMultiLocaleField!]
-  _allStructuredTextLocales(
-    """
-    If you want to fallback to a default translation when a translation has not been found
-    """
-    fallbackLocales: [SiteLocale!]
-  ): [PageModelStructuredTextFieldNonNullMultiLocaleField!]
-  _allTitleLocales(
-    """
-    If you want to fallback to a default translation when a translation has not been found
-    """
-    fallbackLocales: [SiteLocale!]
-  ): [StringNonNullMultiLocaleField!]
-  _createdAt: DateTime!
-
-  """Editing URL"""
-  _editingUrl: String
-  _firstPublishedAt: DateTime!
-  _isValid: BooleanType!
-  _locales: [SiteLocale!]!
-  _modelApiKey: String!
-  _publicationScheduledAt: DateTime
-  _publishedAt: DateTime!
-
-  """Generates SEO and Social card meta tags to be used in your frontend"""
-  _seoMetaTags(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-  ): [Tag!]!
-  _status: ItemStatus!
-  _unpublishingScheduledAt: DateTime
-  _updatedAt: DateTime!
-  createdAt: DateTime!
-  id: ItemId!
-  sections(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
-    """
-    If you want to fallback to a default translation when a translation has not been found
-    """
-    fallbackLocales: [SiteLocale!]
-  ): [HeroBlockRecord!]!
-  seoSettingsSocial(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
-    """
-    If you want to fallback to a default translation when a translation has not been found
-    """
-    fallbackLocales: [SiteLocale!]
-  ): SeoField
-  slug(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
-    """
-    If you want to fallback to a default translation when a translation has not been found
-    """
-    fallbackLocales: [SiteLocale!]
-  ): String!
-  structuredText(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
-    """
-    If you want to fallback to a default translation when a translation has not been found
-    """
-    fallbackLocales: [SiteLocale!]
-  ): PageModelStructuredTextField!
-  title(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
-    """
-    If you want to fallback to a default translation when a translation has not been found
-    """
-    fallbackLocales: [SiteLocale!]
-  ): String!
-  updatedAt: DateTime!
-}
-
 input ParagraphModelFilter {
   _createdAt: CreatedAtFilter
   createdAt: CreatedAtFilter
@@ -7792,7 +7030,7 @@ type PostModelContentFieldMultiLocaleField {
   value: PostModelContentField
 }
 
-union PostModelContentLinksField = ApartmentRecord | DistrictRecord | FaqRecord | MoodRecord | PageRecord
+union PostModelContentLinksField = ApartmentRecord | DistrictRecord | FaqRecord | LandingPageRecord | MoodRecord
 
 """Linking fields"""
 enum PostModelFieldsReferencingApartmentModel {
@@ -8255,6 +7493,13 @@ type Query {
   ): CollectionMetadata!
 
   """Returns meta information regarding a record collection"""
+  _allLandingPagesMeta(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+    filter: LandingPageModelFilter
+  ): CollectionMetadata!
+
+  """Returns meta information regarding a record collection"""
   _allMoodItemsMeta(
     """The locale to use to fetch the field's content"""
     locale: SiteLocale
@@ -8273,13 +7518,6 @@ type Query {
     """The locale to use to fetch the field's content"""
     locale: SiteLocale
     filter: OfferModelFilter
-  ): CollectionMetadata!
-
-  """Returns meta information regarding a record collection"""
-  _allPagesMeta(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-    filter: PageModelFilter
   ): CollectionMetadata!
 
   """Returns meta information regarding a record collection"""
@@ -8675,6 +7913,25 @@ type Query {
   ): [InfoLabelRecord!]!
 
   """Returns a collection of records"""
+  allLandingPages(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+
+    """Skip the first results"""
+    skip: IntType
+
+    """Limit the number of results"""
+    first: IntType = 20
+    filter: LandingPageModelFilter
+    orderBy: [LandingPageModelOrderBy] = [_updatedAt_DESC]
+  ): [LandingPageRecord!]!
+
+  """Returns a collection of records"""
   allMoodItems(
     """The locale to use to fetch the field's content"""
     locale: SiteLocale
@@ -8730,25 +7987,6 @@ type Query {
     filter: OfferModelFilter
     orderBy: [OfferModelOrderBy] = [position_ASC]
   ): [OfferRecord!]!
-
-  """Returns a collection of records"""
-  allPages(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
-    """
-    If you want to fallback to a default translation when a translation has not been found
-    """
-    fallbackLocales: [SiteLocale!]
-
-    """Skip the first results"""
-    skip: IntType
-
-    """Limit the number of results"""
-    first: IntType = 20
-    filter: PageModelFilter
-    orderBy: [PageModelOrderBy] = [_updatedAt_DESC]
-  ): [PageRecord!]!
 
   """Returns a collection of records"""
   allParagraphs(
@@ -9174,94 +8412,6 @@ type Query {
     fallbackLocales: [SiteLocale!]
   ): IndexAcacialifeRecord
 
-  """Returns the single instance record"""
-  indexApartment(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
-    """
-    If you want to fallback to a default translation when a translation has not been found
-    """
-    fallbackLocales: [SiteLocale!]
-  ): IndexApartmentRecord
-
-  """Returns the single instance record"""
-  indexBlog(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
-    """
-    If you want to fallback to a default translation when a translation has not been found
-    """
-    fallbackLocales: [SiteLocale!]
-  ): IndexBlogRecord
-
-  """Returns the single instance record"""
-  indexDistrict(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
-    """
-    If you want to fallback to a default translation when a translation has not been found
-    """
-    fallbackLocales: [SiteLocale!]
-  ): IndexDistrictRecord
-
-  """Returns the single instance record"""
-  indexEvent(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
-    """
-    If you want to fallback to a default translation when a translation has not been found
-    """
-    fallbackLocales: [SiteLocale!]
-  ): IndexEventRecord
-
-  """Returns the single instance record"""
-  indexFaq(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
-    """
-    If you want to fallback to a default translation when a translation has not been found
-    """
-    fallbackLocales: [SiteLocale!]
-  ): IndexFaqRecord
-
-  """Returns the single instance record"""
-  indexGuestbook(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
-    """
-    If you want to fallback to a default translation when a translation has not been found
-    """
-    fallbackLocales: [SiteLocale!]
-  ): IndexGuestbookRecord
-
-  """Returns the single instance record"""
-  indexMood(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
-    """
-    If you want to fallback to a default translation when a translation has not been found
-    """
-    fallbackLocales: [SiteLocale!]
-  ): IndexMoodRecord
-
-  """Returns the single instance record"""
-  indexOffer(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
-    """
-    If you want to fallback to a default translation when a translation has not been found
-    """
-    fallbackLocales: [SiteLocale!]
-  ): IndexOfferRecord
-
   """Returns a specific record"""
   indexPage(
     """The locale to use to fetch the field's content"""
@@ -9275,17 +8425,6 @@ type Query {
     orderBy: [IndexPageModelOrderBy] = [_updatedAt_DESC]
   ): IndexPageRecord
 
-  """Returns the single instance record"""
-  indexService(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
-    """
-    If you want to fallback to a default translation when a translation has not been found
-    """
-    fallbackLocales: [SiteLocale!]
-  ): IndexServiceRecord
-
   """Returns a specific record"""
   infoLabel(
     """The locale to use to fetch the field's content"""
@@ -9298,6 +8437,19 @@ type Query {
     filter: InfoLabelModelFilter
     orderBy: [InfoLabelModelOrderBy] = [_updatedAt_DESC]
   ): InfoLabelRecord
+
+  """Returns a specific record"""
+  landingPage(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+    filter: LandingPageModelFilter
+    orderBy: [LandingPageModelOrderBy] = [_updatedAt_DESC]
+  ): LandingPageRecord
 
   """Returns a specific record"""
   mood(
@@ -9337,19 +8489,6 @@ type Query {
     filter: OfferModelFilter
     orderBy: [OfferModelOrderBy] = [position_ASC]
   ): OfferRecord
-
-  """Returns a specific record"""
-  page(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
-    """
-    If you want to fallback to a default translation when a translation has not been found
-    """
-    fallbackLocales: [SiteLocale!]
-    filter: PageModelFilter
-    orderBy: [PageModelOrderBy] = [_updatedAt_DESC]
-  ): PageRecord
 
   """Returns a specific record"""
   paragraph(
