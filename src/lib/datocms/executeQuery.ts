@@ -43,28 +43,29 @@ export async function executeQuery<Result, Variables>(
     baseEditingUrl: options?.includeDrafts
       ? `${process.env.DATOCMS_BASE_EDITING_URL}${process.env.DATOCMS_ENVIRONMENT ? `/environments/${process.env.DATOCMS_ENVIRONMENT}` : ''}`
       : undefined,
-    requestInitOptions: options?.includeDrafts
-      ? { cache: 'no-store' }
-      : {
-          cache: 'force-cache',
-          /*
-           * This project utilizes an extremely basic cache invalidation
-           * technique: by using the `next.tags` option, all requests to DatoCMS
-           * are tagged with "datocms" in the Next.js Data Cache. Whenever DatoCMS
-           * notifies us of any updates via webhook, we invalidate all requests
-           * with the same tag.
-           *
-           * Although this caching strategy may be sufficient for smaller
-           * websites, it is not advised for larger projects. Fortunately, with
-           * DatoCMS and Next, it is possible to implement a much more detailed
-           * invalidation strategy!
-           *
-           * For more info: https://www.datocms.com/docs/next-js/using-cache-tags
-           */
-          next: {
-            tags: [cacheTag],
+    requestInitOptions:
+      options?.includeDrafts || options?.noStore
+        ? { cache: 'no-store' }
+        : {
+            cache: 'force-cache',
+            /*
+             * This project utilizes an extremely basic cache invalidation
+             * technique: by using the `next.tags` option, all requests to DatoCMS
+             * are tagged with "datocms" in the Next.js Data Cache. Whenever DatoCMS
+             * notifies us of any updates via webhook, we invalidate all requests
+             * with the same tag.
+             *
+             * Although this caching strategy may be sufficient for smaller
+             * websites, it is not advised for larger projects. Fortunately, with
+             * DatoCMS and Next, it is possible to implement a much more detailed
+             * invalidation strategy!
+             *
+             * For more info: https://www.datocms.com/docs/next-js/using-cache-tags
+             */
+            next: {
+              tags: [cacheTag],
+            },
           },
-        },
   });
 
   return result;
@@ -73,4 +74,10 @@ export async function executeQuery<Result, Variables>(
 type ExecuteQueryOptions<Variables> = {
   variables?: Variables;
   includeDrafts?: boolean;
+  /**
+   * Bypass the Data Cache for this query (always refetch). Used in development
+   * for content that changes often outside the webhook flow (e.g. translations),
+   * so new records show up without clearing `.next/cache`.
+   */
+  noStore?: boolean;
 };

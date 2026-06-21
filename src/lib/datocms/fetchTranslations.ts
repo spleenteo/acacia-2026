@@ -43,6 +43,9 @@ function nestKeys(records: { key: string; value: string }[]): Record<string, unk
 export async function fetchTranslations(locale: Locale): Promise<Record<string, unknown>> {
   const data = await executeQuery(translationsQuery, {
     variables: { locale },
+    // In dev, skip the Data Cache so new Translation records show immediately
+    // (no need to wipe `.next/cache`). In prod the webhook invalidates the tag.
+    noStore: process.env.NODE_ENV !== 'production',
   });
 
   return nestKeys(data.allTranslations);
