@@ -7,6 +7,28 @@ const nextConfig = {
   // Allow accessing the dev server through a Cloudflare quick tunnel (remote
   // preview from a phone). Dev-only; harmless in production.
   allowedDevOrigins: ['*.trycloudflare.com', 'owners-quilt-dialog-being.trycloudflare.com'],
+  // Migration 301s (308/permanent) from the legacy acaciafirenze.com URL space.
+  // Only old paths that 404 on the new site are mapped; everything else
+  // (apartments, districts, moods, FAQ, blog→magazine) already resolves to 200.
+  async redirects() {
+    return [
+      // Services — no equivalent section on the new site → locale home.
+      { source: '/it/firenze/servizi/:path*', destination: '/it', permanent: true },
+      { source: '/en/florence/services/:path*', destination: '/en', permanent: true },
+      // Guestbook pagination — the index exists, the /page/N URLs don't.
+      { source: '/it/guestbook/page/:path*', destination: '/it/guestbook', permanent: true },
+      { source: '/en/guestbook/page/:path*', destination: '/en/guestbook', permanent: true },
+      // Offers / events / acacialife / debug — gone → locale home.
+      { source: '/it/offerte/:path*', destination: '/it', permanent: true },
+      { source: '/en/offers/:path*', destination: '/en', permanent: true },
+      { source: '/it/eventi/:path*', destination: '/it', permanent: true },
+      { source: '/en/events/:path*', destination: '/en', permanent: true },
+      { source: '/it/acacialife/:path*', destination: '/it', permanent: true },
+      { source: '/en/acacialife/:path*', destination: '/en', permanent: true },
+      { source: '/it/debug/:path*', destination: '/it', permanent: true },
+      { source: '/en/debug/:path*', destination: '/en', permanent: true },
+    ];
+  },
   async headers() {
     return [
       {
