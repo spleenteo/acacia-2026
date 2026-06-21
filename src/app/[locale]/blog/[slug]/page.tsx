@@ -112,7 +112,7 @@ export const query = graphql(
               slug
               name
             }
-            ... on PageRecord {
+            ... on LandingPageRecord {
               id
               slug
               title
