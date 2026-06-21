@@ -1,12 +1,14 @@
 'use client';
 
 import { type Locale } from '@/i18n/config';
+import { useTranslations } from 'next-intl';
 import ApartmentCard from '@/components/ApartmentCard';
 import MoodCard from '@/components/MoodCard';
 import SectionHeader from '@/components/SectionHeader';
 import HtmlContent from '@/components/HtmlContent';
 import Hero from '@/components/Hero';
 import ReviewSpotlight from '@/components/ReviewSpotlight';
+import SectionDock, { type DockItem } from '@/components/SectionDock';
 import { readFragment } from '@/lib/datocms/graphql';
 import { ReviewSpotlightFragment } from '@/components/ReviewSpotlight/fragment';
 import type { ResultOf } from 'gql.tada';
@@ -41,35 +43,59 @@ export default function HomeContent({
     ? spotlightPool[Math.floor(spotlightSeed * spotlightPool.length) % spotlightPool.length]
     : null;
 
+  const t = useTranslations('home');
+  const hasStay = !!homePage?.stayText;
+  const hasApartments = !!homePage?.highlightedApartments?.length;
+  const hasMoods = !!homePage?.moods?.length;
+  const hasDo = !!homePage?.doText;
+
+  // Dock entries mirror the sections actually rendered below, in order.
+  const dockItems: DockItem[] = [
+    { id: 'home-top', label: t('navHome') },
+    spotlightReview && { id: 'home-review', label: t('navReview') },
+    hasStay && { id: 'home-stay', label: t('navStay') },
+    hasApartments && { id: 'home-apartments', label: t('navApartments') },
+    hasMoods && { id: 'home-moods', label: t('navMoods') },
+    hasDo && { id: 'home-experiences', label: t('navExperiences') },
+  ].filter((x): x is DockItem => Boolean(x));
+
   return (
     <>
-      <Hero
-        title={homePage?.title ?? ''}
-        subtitle={homePage?.claim}
-        buttons={homePage?.buttons}
-        locale={locale}
-        priority
-      />
+      <SectionDock items={dockItems} />
 
-      {spotlightReview && <ReviewSpotlight data={spotlightReview} locale={locale} />}
+      <div id="home-top">
+        <Hero
+          title={homePage?.title ?? ''}
+          subtitle={homePage?.claim}
+          buttons={homePage?.buttons}
+          locale={locale}
+          priority
+        />
+      </div>
+
+      {spotlightReview && (
+        <div id="home-review" className="scroll-mt-24">
+          <ReviewSpotlight data={spotlightReview} locale={locale} />
+        </div>
+      )}
 
       {/* Stay Section */}
-      {homePage?.stayText && (
-        <section className="py-20 lg:py-28 bg-surface-alt">
+      {hasStay && (
+        <section id="home-stay" className="scroll-mt-24 py-20 lg:py-28 bg-surface-alt">
           <div className="mx-auto max-w-3xl px-8 text-center">
-            <HtmlContent html={homePage.stayText} className="font-body text-body-lg text-dark" />
+            <HtmlContent html={homePage!.stayText!} className="font-body text-body-lg text-dark" />
             <div className="mx-auto mt-8 w-12 h-[3px] bg-primary rounded-sm" />
           </div>
         </section>
       )}
 
       {/* Featured Apartments */}
-      {homePage?.highlightedApartments && homePage.highlightedApartments.length > 0 && (
-        <section className="py-20 lg:py-28 bg-surface">
+      {hasApartments && (
+        <section id="home-apartments" className="scroll-mt-24 py-20 lg:py-28 bg-surface">
           <div className="mx-auto max-w-6xl px-8">
-            {homePage.highlightsHeader && <SectionHeader data={homePage.highlightsHeader} />}
+            {homePage!.highlightsHeader && <SectionHeader data={homePage!.highlightsHeader} />}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-6">
-              {homePage.highlightedApartments.map((apartment) => (
+              {homePage!.highlightedApartments.map((apartment) => (
                 <ApartmentCard key={apartment.id} data={apartment} locale={locale} />
               ))}
             </div>
@@ -78,12 +104,12 @@ export default function HomeContent({
       )}
 
       {/* Moods Section */}
-      {homePage?.moods && homePage.moods.length > 0 && (
-        <section className="py-20 lg:py-28 bg-surface-alt">
+      {hasMoods && (
+        <section id="home-moods" className="scroll-mt-24 py-20 lg:py-28 bg-surface-alt">
           <div className="mx-auto max-w-6xl px-8">
-            {homePage.moodsHeader && <SectionHeader data={homePage.moodsHeader} />}
+            {homePage!.moodsHeader && <SectionHeader data={homePage!.moodsHeader} />}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-6">
-              {homePage.moods.map((mood) => (
+              {homePage!.moods.map((mood) => (
                 <MoodCard key={mood.id} data={mood} locale={locale} />
               ))}
             </div>
@@ -92,10 +118,10 @@ export default function HomeContent({
       )}
 
       {/* Do Section */}
-      {homePage?.doText && (
-        <section className="py-20 lg:py-28 bg-surface">
+      {hasDo && (
+        <section id="home-experiences" className="scroll-mt-24 py-20 lg:py-28 bg-surface">
           <div className="mx-auto max-w-3xl px-8 text-center">
-            <HtmlContent html={homePage.doText} className="font-body text-body-lg text-dark" />
+            <HtmlContent html={homePage!.doText!} className="font-body text-body-lg text-dark" />
             <div className="mx-auto mt-8 w-12 h-[3px] bg-primary rounded-sm" />
           </div>
         </section>
