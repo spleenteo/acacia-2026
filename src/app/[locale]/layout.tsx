@@ -248,7 +248,9 @@ _iub.csConfiguration = { siteId: 306241, cookiePolicyId: 684676, lang: "${locale
           />
         </BookingProvider>
       </AlternateLocaleProvider>
-      <DraftModeToggler draftModeEnabled={isDraftModeEnabled} />
+      {/* Only shown while draft mode is on (lets editors exit). The public site
+          no longer shows an "enable draft" button. */}
+      {isDraftModeEnabled && <DraftModeToggler draftModeEnabled={isDraftModeEnabled} />}
       <WhatsAppWidget />
     </NextIntlClientProvider>
   );

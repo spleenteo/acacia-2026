@@ -48,10 +48,6 @@ export default function SiteHeader({ locale, navItems }: Props) {
   const onLight = !menuOpen && (scrolled || !overDark);
   // Hamburger lines: dark on the solid header, white over a dark hero / open menu.
   const barColor = onLight ? 'bg-dark' : 'bg-white';
-  const navLinkClass = [
-    'font-body text-body-sm font-normal tracking-wide transition-colors duration-300',
-    onLight ? 'text-muted hover:text-primary' : 'text-white/80 hover:text-white',
-  ].join(' ');
 
   // Nav voce: on hover an irregular light-tinted highlight wipes in behind the
   // label (same wonky clip as the apartment photo captions); the text turns
@@ -160,18 +156,9 @@ export default function SiteHeader({ locale, navItems }: Props) {
             {navItems.map((item, i) => renderNavItem(item, i))}
           </nav>
 
-          {/* Right: Contact (desktop) + Book + hamburger (mobile/tablet) */}
+          {/* Right: Book + hamburger (mobile/tablet). Contact lives only in the
+              mobile menu now. */}
           <div className="flex items-center justify-end gap-3 lg:justify-self-end lg:gap-5">
-            {/* Secondary CTA — Contact (desktop) */}
-            <a
-              href={WHATSAPP_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className={`hidden lg:inline-flex ${navLinkClass}`}
-            >
-              {t('contact')}
-            </a>
-
             {/* Primary CTA — Book (always) → opens the site-wide booking modal */}
             <button
               type="button"

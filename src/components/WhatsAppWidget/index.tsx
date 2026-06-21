@@ -21,7 +21,7 @@ export default function WhatsAppWidget() {
   const href = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(t('prefill'))}`;
 
   return (
-    <div className="fixed bottom-5 right-5 z-50 flex flex-col items-end gap-3 print:hidden">
+    <div className="pointer-events-none fixed bottom-5 right-5 z-30 flex flex-col items-end gap-3 print:hidden">
       {/* Card — always mounted, toggled for a smooth open/close transition */}
       <div
         role="dialog"
@@ -87,7 +87,7 @@ export default function WhatsAppWidget() {
         onClick={() => setOpen((o) => !o)}
         aria-label={t('openLabel')}
         aria-expanded={open}
-        className="flex h-14 w-14 items-center justify-center rounded-full text-white shadow-card-hover transition-transform duration-300 hover:scale-105 active:scale-95"
+        className="pointer-events-auto flex h-14 w-14 items-center justify-center rounded-full text-white shadow-card-hover transition-transform duration-300 hover:scale-105 active:scale-95"
         style={{ backgroundColor: WHATSAPP_GREEN }}
       >
         {open ? (
