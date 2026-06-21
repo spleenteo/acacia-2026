@@ -57,8 +57,8 @@ export async function searchSite(query: string, locale: string): Promise<SearchR
       const a = r.attributes;
       results.push({
         id: r.id,
-        title: a.title,
-        bodyExcerpt: a.body_excerpt,
+        title: a.title ?? '',
+        bodyExcerpt: a.body_excerpt ?? '',
         path: toRelativePath(a.url),
         titleHighlights: a.highlight?.title ?? [],
         bodyHighlights: a.highlight?.body ?? [],
