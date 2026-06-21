@@ -146,8 +146,15 @@ Dalla home, sopra la piega, l'ospite digita una domanda in linguaggio naturale e
 
 1. 🟡 ~~Spike~~ ✅ fatto. ~~Decisione nav/footer noise~~ ✅ accettato (POC).
 2. 🟡 ~~`/breadboarding`~~ ✅ fatto → **`home-search-slices.md`** (Detail A: affordance UI/Non-UI + wiring + slice).
-3. 🟡 Slice (ground truth in `home-search-slices.md`). Il setup (ex-V0) è **assorbito in V1**:
-   - **V1** — Backend (robots + `NEXT_PUBLIC_SITE_URL` + `searchIndexes.create`/`trigger` + token) + route handler `/api/search` + pagina `/{locale}/cerca` minima (input live, risultati con highlight, link relativi).
-   - **V2** — facet per tipo + contatori (bucketing).
-   - **V3** — `SearchBox` nell'hero (al posto dei bottoni) + typewriter prompt.
-   - **V4** — `<em>` wonky animato + stati (vuoto/loading) + `?q=` condivisibile.
+3. 🟡 Slice (ground truth in `home-search-slices.md`). Il setup (ex-V0) è **assorbito in V1**. **Tutte fatte** sul branch `feat/site-search`:
+   - **V1** ✅ (`2defb83`) — Backend (robots + `searchIndexes` + token riusato `DATOCMS_CMA_TOKEN`) + route handler `/api/search` + pagina `/{locale}/cerca` (input live, highlight, link relativi).
+   - **V2** ✅ (`85d1aba`) — facet per tipo (da URL) + contatori (bucketing) + card pulite (kicker, titolo, excerpt).
+   - **V3** ✅ (`abfdd82`) — `SearchBox` nell'hero (al posto dei bottoni) + typewriter prompt bilingue.
+   - **V4** ✅ (`9bb7836`) — `<em>` wonky animato + `?q=` condivisibile (replaceState).
+
+### Note finali / fase 2
+
+- **Indice** `38576` popolato (crawl ok dopo `NEXT_PUBLIC_SITE_URL` su staging). Re-crawl automatico su pubblicazione: legare un build trigger (non fatto).
+- **Rumore nav/footer/"Attiva Draft Mode"** ancora negli excerpt — limite strutturale del Site Search. Mitigazione fase 2: markdown-twin / indice custom (Algolia/RAG).
+- Cap a 100 risultati recuperabili (API): i contatori per tipo riflettono i primi 100 quando il totale è maggiore.
+- `homePage.buttons` resta in CMS (non renderizzato in home).
