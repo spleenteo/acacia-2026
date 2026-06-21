@@ -151,11 +151,16 @@ export default function SearchResults({ locale, initialQuery }: Props) {
                 <h2 className="font-heading text-h4 text-dark transition-colors group-hover:text-primary">
                   {cleanTitle(hit.title)}
                 </h2>
-                {hit.bodyHighlights.length > 0 && (
+                {hit.seoDescription ? (
+                  // Clean editor-written summary (no nav/footer noise).
+                  <p className="mt-1.5 line-clamp-2 font-body text-body-sm leading-relaxed text-muted">
+                    {hit.seoDescription}
+                  </p>
+                ) : hit.bodyHighlights.length > 0 ? (
                   <p className="mt-1.5 line-clamp-2 font-body text-body-sm leading-relaxed text-muted">
                     {renderHighlight(hit.bodyHighlights[0])}
                   </p>
-                )}
+                ) : null}
                 <span className="mt-2 inline-block font-body text-fine uppercase tracking-[0.14em] text-light">
                   {hit.path}
                 </span>

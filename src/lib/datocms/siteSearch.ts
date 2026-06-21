@@ -1,6 +1,9 @@
 import { buildClient } from '@datocms/cma-client';
 import { MIN_QUERY_LENGTH, type SearchHit, type SearchResponse } from '@/lib/search/types';
 import { getResultType, type SearchResultType } from '@/lib/search/searchType';
+import { executeQuery } from '@/lib/datocms/executeQuery';
+import { graphql } from '@/lib/datocms/graphql';
+import { type Locale } from '@/i18n/config';
 
 /**
  * Server-side helper for DatoCMS Site Search. The crawler indexes the rendered
@@ -87,6 +90,108 @@ function rankBoost(hit: SearchHit, terms: string[]): number {
   return covered * 10 + strength;
 }
 
+// Per-result SEO descriptions, fetched in one batched CDA query (by slug, per
+// type). Site Search only returns the nav/footer-noisy body excerpt, so we use
+// the editor-written SEO description for a clean preview line instead.
+const seoQuery = graphql(`
+  query SearchSeoDescriptions(
+    $locale: SiteLocale!
+    $apt: [String]
+    $dist: [String]
+    $mood: [String]
+    $post: [String]
+    $faq: [String]
+  ) {
+    allApartments(locale: $locale, filter: { slug: { in: $apt } }) {
+      slug
+      seo {
+        description
+      }
+    }
+    allDistricts(locale: $locale, filter: { slug: { in: $dist } }) {
+      slug
+      seo {
+        description
+      }
+    }
+    allMoods(locale: $locale, filter: { slug: { in: $mood } }) {
+      slug
+      seo {
+        description
+      }
+    }
+    allPosts(locale: $locale, filter: { slug: { in: $post } }) {
+      slug
+      seo {
+        description
+      }
+    }
+    allFaqs(locale: $locale, filter: { slug: { in: $faq } }) {
+      slug
+      seo {
+        description
+      }
+    }
+  }
+`);
+
+function lastSegment(path: string): string {
+  return decodeURIComponent(path.split('/').filter(Boolean).pop() ?? '');
+}
+
+/** Attach the clean SEO description to each hit (by slug + type). Best-effort:
+ *  on any failure the hits are returned unchanged (the UI falls back). */
+async function attachSeoDescriptions(hits: SearchHit[], locale: string): Promise<SearchHit[]> {
+  const byType: Record<SearchResultType, string[]> = {
+    apartment: [],
+    district: [],
+    mood: [],
+    faq: [],
+    magazine: [],
+  };
+  for (const h of hits) {
+    const type = getResultType(h.path);
+    if (type) byType[type].push(lastSegment(h.path));
+  }
+
+  try {
+    const data = await executeQuery(seoQuery, {
+      variables: {
+        locale: locale as Locale,
+        apt: byType.apartment,
+        dist: byType.district,
+        mood: byType.mood,
+        post: byType.magazine,
+        faq: byType.faq,
+      },
+    });
+
+    const map = new Map<string, string>();
+    const add = (
+      type: SearchResultType,
+      rows: { slug: string | null; seo: { description: string | null } | null }[],
+    ) => {
+      for (const r of rows) {
+        if (r.slug && r.seo?.description) map.set(`${type}:${r.slug}`, r.seo.description);
+      }
+    };
+    add('apartment', data.allApartments);
+    add('district', data.allDistricts);
+    add('mood', data.allMoods);
+    add('magazine', data.allPosts);
+    add('faq', data.allFaqs);
+
+    return hits.map((h) => {
+      const type = getResultType(h.path);
+      const desc = type ? map.get(`${type}:${lastSegment(h.path)}`) : undefined;
+      return desc ? { ...h, seoDescription: desc } : h;
+    });
+  } catch (e) {
+    console.error('[search] SEO enrich failed:', e);
+    return hits;
+  }
+}
+
 /**
  * Full-text search across the crawled site for `query` in `locale`. Pages
  * through the Site Search API up to `MAX_RESULTS` so the caller can bucket and
@@ -143,7 +248,10 @@ export async function searchSite(query: string, locale: string): Promise<SearchR
     .sort((a, b) => b.boost - a.boost || a.index - b.index)
     .map((x) => x.hit);
 
+  // Enrich with clean SEO descriptions for the preview line.
+  const enriched = await attachSeoDescriptions(ranked, locale);
+
   // `apiTotal` counts both languages; report the locale-filtered count actually
   // shown (exact for queries under the 100-result retrieval cap).
-  return { results: ranked, total: ranked.length };
+  return { results: enriched, total: enriched.length };
 }

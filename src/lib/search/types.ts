@@ -15,6 +15,9 @@ export type SearchHit = {
   /** Highlight fragments with `[h]…[/h]` markers (rendered by `renderHighlight`). */
   titleHighlights: string[];
   bodyHighlights: string[];
+  /** Clean SEO meta description (fetched per result) — preferred over the
+   *  nav/footer-noisy `bodyExcerpt` for the preview line. */
+  seoDescription?: string;
 };
 
 export type SearchResponse = { results: SearchHit[]; total: number };
