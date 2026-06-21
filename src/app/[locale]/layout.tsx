@@ -2,6 +2,7 @@ import ContentLink from '@/components/ContentLink';
 import DraftModeToggler from '@/components/DraftModeToggler';
 import SiteHeader from '@/components/SiteHeader';
 import SiteFooter from '@/components/SiteFooter';
+import WhatsAppWidget from '@/components/WhatsAppWidget';
 import { HeaderThemeProvider } from '@/components/HeaderTheme';
 import { AlternateLocaleProvider } from '@/components/LocaleSwitcher/AlternateLocaleContext';
 import { BookingProvider } from '@/components/BookingModal';
@@ -248,6 +249,7 @@ _iub.csConfiguration = { siteId: 306241, cookiePolicyId: 684676, lang: "${locale
         </BookingProvider>
       </AlternateLocaleProvider>
       <DraftModeToggler draftModeEnabled={isDraftModeEnabled} />
+      <WhatsAppWidget />
     </NextIntlClientProvider>
   );
 }
