@@ -44,29 +44,37 @@ export async function searchSite(query: string, locale: string): Promise<SearchR
 
   const client = buildClient({ apiToken: TOKEN });
   const results: SearchHit[] = [];
-  let total = 0;
+  // DatoCMS can't reliably detect per-page locale here, so the API `locale`
+  // filter is a no-op (it returns both languages). Enforce the locale by the
+  // result's URL prefix instead — bulletproof, since every page is `/{locale}/…`.
+  const localePrefix = `/${locale}/`;
+  let apiTotal = 0;
 
   for (let offset = 0; offset < MAX_RESULTS; offset += PAGE_SIZE) {
     const { data, meta } = await client.searchResults.rawList({
       filter: { query: q, search_index_id: INDEX_ID, locale, fuzzy: true },
       page: { limit: PAGE_SIZE, offset },
     });
-    total = meta.total_count;
+    apiTotal = meta.total_count;
 
     for (const r of data) {
       const a = r.attributes;
+      const path = toRelativePath(a.url);
+      if (!path.startsWith(localePrefix)) continue;
       results.push({
         id: r.id,
         title: a.title ?? '',
         bodyExcerpt: a.body_excerpt ?? '',
-        path: toRelativePath(a.url),
+        path,
         titleHighlights: a.highlight?.title ?? [],
         bodyHighlights: a.highlight?.body ?? [],
       });
     }
 
-    if (offset + PAGE_SIZE >= total) break;
+    if (data.length < PAGE_SIZE || offset + PAGE_SIZE >= apiTotal) break;
   }
 
-  return { results, total };
+  // `apiTotal` counts both languages; report the locale-filtered count actually
+  // shown (exact for queries under the 100-result retrieval cap).
+  return { results, total: results.length };
 }
