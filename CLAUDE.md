@@ -138,7 +138,7 @@ Required in `.env.local` (see `.env.local.example`):
 - `DATOCMS_CMA_TOKEN` — Content Management API token (read-only, for schema generation)
 - `DATOCMS_BASE_EDITING_URL` — DatoCMS project URL for content link overlays
 - `SECRET_API_TOKEN` — Shared secret for webhook authentication
-- `NEXT_PUBLIC_SITE_URL` — Production URL (e.g. `https://acacia-firenze.com`), used as `metadataBase` for SEO and sitemap generation
+- `NEXT_PUBLIC_SITE_URL` — Production URL (e.g. `https://acaciafirenze.com`), used as `metadataBase` for SEO and sitemap generation
 
 ## SEO
 

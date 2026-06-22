@@ -96,12 +96,12 @@ Tutte le variabili necessarie sono definite in `.env.local.example`. L'uso nel c
 
 Configurare il plugin Web Previews direttamente dalla UI di DatoCMS, inserendo gli URL corretti.
 
-| Part   | Mechanism                                                                                                                                                                                                          | Flag |
-| ------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | :--: |
-| **A1** | **Configurare frontend nel plugin** — Aprire Settings → Plugins → Web Previews, aggiungere un frontend "Production" con: Preview webhook = `https://acacia-firenze.com/api/preview-links?token={SECRET_API_TOKEN}` |      |
-| **A2** | **Configurare Visual Editing** — Nello stesso frontend, impostare Draft mode URL = `https://acacia-firenze.com/api/draft-mode/enable?token={SECRET_API_TOKEN}`, Initial path = `/`                                 |      |
-| **A3** | **Verificare env vars su Vercel** — Controllare che `SECRET_API_TOKEN`, `DATOCMS_DRAFT_CONTENT_CDA_TOKEN`, `DATOCMS_BASE_EDITING_URL` siano configurati nell'environment Vercel                                    |      |
-| **A4** | **Test end-to-end** — Aprire un Apartment in DatoCMS, verificare sidebar preview links e Visual tab                                                                                                                |      |
+| Part   | Mechanism                                                                                                                                                                                                         | Flag |
+| ------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :--: |
+| **A1** | **Configurare frontend nel plugin** — Aprire Settings → Plugins → Web Previews, aggiungere un frontend "Production" con: Preview webhook = `https://acaciafirenze.com/api/preview-links?token={SECRET_API_TOKEN}` |      |
+| **A2** | **Configurare Visual Editing** — Nello stesso frontend, impostare Draft mode URL = `https://acaciafirenze.com/api/draft-mode/enable?token={SECRET_API_TOKEN}`, Initial path = `/`                                 |      |
+| **A3** | **Verificare env vars su Vercel** — Controllare che `SECRET_API_TOKEN`, `DATOCMS_DRAFT_CONTENT_CDA_TOKEN`, `DATOCMS_BASE_EDITING_URL` siano configurati nell'environment Vercel                                   |      |
+| **A4** | **Test end-to-end** — Aprire un Apartment in DatoCMS, verificare sidebar preview links e Visual tab                                                                                                               |      |
 
 ---
 
