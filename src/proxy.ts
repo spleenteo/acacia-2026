@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import { locales, defaultLocale } from '@/i18n/config';
 import type { Locale } from '@/i18n/config';
-import { canonicalPath } from '@/i18n/paths';
+import { canonicalPath, localizedPath } from '@/i18n/paths';
 
 const LOCALE_COOKIE = 'NEXT_LOCALE';
 const ONE_YEAR = 60 * 60 * 24 * 365;
@@ -57,17 +57,24 @@ export function proxy(request: NextRequest) {
   const locale = pathname.split('/')[1] as Locale;
   const restOfPath = pathname.slice(locale.length + 1); // includes leading /
 
-  // The blog section moved to the public segment `/magazine`. Permanently
-  // redirect the legacy `/{locale}/blog[/...]` URLs so links and search
-  // engines land on the new path (the filesystem route stays `/blog`).
-  if (restOfPath === '/blog' || restOfPath.startsWith('/blog/')) {
-    const url = request.nextUrl.clone();
-    url.pathname = `/${locale}/magazine${restOfPath.slice('/blog'.length)}`;
-    return NextResponse.redirect(url, 301);
-  }
-
   if (restOfPath && restOfPath !== '/') {
+    // `canonical` = the filesystem route (English segments); `localized` = the
+    // single public URL for this locale.
     const canonical = canonicalPath(locale, restOfPath);
+    const localized = localizedPath(locale, canonical);
+
+    // Any non-localized variant — English filesystem segments on a localized
+    // locale (`/it/florence/accommodations`), the legacy `/blog[/...]` path, or
+    // a mix of the two — is permanently redirected to the one public URL, so
+    // each page is served from a single address (no duplicate content).
+    if (restOfPath !== localized) {
+      const url = request.nextUrl.clone();
+      url.pathname = `/${locale}${localized}`;
+      return NextResponse.redirect(url, 301);
+    }
+
+    // Public localized URL whose segments differ from the filesystem route →
+    // rewrite to the canonical path so the App Router can resolve it.
     if (canonical !== restOfPath) {
       const url = request.nextUrl.clone();
       url.pathname = `/${locale}${canonical}`;

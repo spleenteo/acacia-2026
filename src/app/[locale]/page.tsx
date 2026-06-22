@@ -1,6 +1,7 @@
 import { executeQuery } from '@/lib/datocms/executeQuery';
 import { graphql } from '@/lib/datocms/graphql';
 import { type Locale } from '@/i18n/config';
+import { indexAlternates } from '@/i18n/paths';
 import { draftMode } from 'next/headers';
 import { TagFragment } from '@/lib/datocms/commonFragments';
 import { toNextMetadata } from 'react-datocms/seo';
@@ -40,10 +41,7 @@ export async function generateMetadata({
   });
   return {
     ...toNextMetadata(data.homePage?._seoMetaTags ?? []),
-    alternates: {
-      canonical: `/${locale}`,
-      languages: { en: '/en', it: '/it' },
-    },
+    alternates: indexAlternates(locale as Locale, '/'),
   };
 }
 

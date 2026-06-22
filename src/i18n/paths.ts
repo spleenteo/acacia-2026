@@ -1,4 +1,4 @@
-import { type Locale, locales } from './config';
+import { type Locale, locales, defaultLocale } from './config';
 
 /**
  * Maps canonical (filesystem) path segments to their translated equivalents per locale.
@@ -165,17 +165,64 @@ export function modelPath(modelApiKey: string, slug: string, locale: Locale): st
 }
 
 /**
- * Builds the `alternates` (canonical + per-locale `languages`) for a page whose
- * slug is NOT localized — the same canonical path translated into each locale.
- * Pages with per-locale slugs (mood, FAQ) build their alternates from the
- * record's localized slugs instead.
- * e.g. indexAlternates('it', '/moods') → { canonical: '/it/moods', languages: { en: '/en/moods', it: '/it/moods' } }
+ * Builds a `/{locale}`-prefixed URL, collapsing the root path so the home page
+ * stays `/{locale}` instead of `/{locale}/` (a trailing slash would mismatch the
+ * served URL and break the self-canonical).
+ */
+export function localeUrl(locale: Locale, path: string): string {
+  const localized = localizedPath(locale, path);
+  return localized === '/' ? `/${locale}` : `/${locale}${localized}`;
+}
+
+/**
+ * The `x-default` hreflang entry for a set of per-locale URLs: the default
+ * locale's URL when present, otherwise the first available one. Returns an empty
+ * object when there are no URLs, so it can be spread unconditionally.
+ * e.g. xDefault({ en: '/en/moods', it: '/it/moods' }) → { 'x-default': '/en/moods' }
+ */
+export function xDefault(languages: Record<string, string>): Record<string, string> {
+  const fallback = languages[defaultLocale] ?? Object.values(languages)[0];
+  return fallback ? { 'x-default': fallback } : {};
+}
+
+/**
+ * Builds the `alternates` (canonical + per-locale `languages` + `x-default`) for
+ * a page whose slug is NOT localized — the same canonical path translated into
+ * each locale. Pages with per-locale slugs (mood, FAQ) build their alternates
+ * from the record's localized slugs instead.
+ * e.g. indexAlternates('it', '/moods') → { canonical: '/it/moods', languages: { en: '/en/moods', it: '/it/moods', 'x-default': '/en/moods' } }
  */
 export function indexAlternates(locale: Locale, path: string) {
+  const languages = Object.fromEntries(locales.map((l) => [l, localeUrl(l, path)]));
   return {
-    canonical: `/${locale}${localizedPath(locale, path)}`,
-    languages: Object.fromEntries(locales.map((l) => [l, `/${l}${localizedPath(l, path)}`])),
+    canonical: localeUrl(locale, path),
+    languages: { ...languages, ...xDefault(languages) },
   };
+}
+
+/**
+ * Per-locale URLs for a detail record whose slug is **localized** (mood, post),
+ * derived from its `_allSlugLocales`. `prefix` is the canonical section path
+ * (e.g. 'moods', 'blog' — translated per locale by {@link localizedPath}).
+ *
+ * - `mode: 'hreflang'` includes only locales that actually have a translation —
+ *   a missing locale has no equivalent URL to advertise, so it is omitted.
+ * - `mode: 'switcher'` falls back to the section index for a missing locale, so
+ *   the UI language toggle always lands somewhere valid instead of a soft-404.
+ */
+export function localizedSlugPaths(
+  allSlugLocales: ReadonlyArray<{ locale: string | null; value: string | null }>,
+  prefix: string,
+  mode: 'hreflang' | 'switcher',
+): Record<string, string> {
+  const slugByLocale = new Map(allSlugLocales.map((s) => [s.locale, s.value]));
+  const paths: Record<string, string> = {};
+  for (const l of locales) {
+    const slug = slugByLocale.get(l);
+    if (slug) paths[l] = `/${l}${localizedPath(l, `/${prefix}/${slug}`)}`;
+    else if (mode === 'switcher') paths[l] = `/${l}${localizedPath(l, `/${prefix}`)}`;
+  }
+  return paths;
 }
 
 /**

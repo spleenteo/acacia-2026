@@ -1,7 +1,7 @@
 import { executeQuery } from '@/lib/datocms/executeQuery';
 import { graphql } from '@/lib/datocms/graphql';
 import { type Locale, locales } from '@/i18n/config';
-import { faqPath, indexPageSlug } from '@/i18n/paths';
+import { faqPath, indexPageSlug, xDefault } from '@/i18n/paths';
 import { draftMode } from 'next/headers';
 import { notFound } from 'next/navigation';
 import { toNextMetadata } from 'react-datocms/seo';
@@ -97,11 +97,12 @@ export async function generateMetadata({ params }: { params: Promise<Params> }):
       variables: { locale: loc, slug: indexPageSlug('/faq', loc) },
       includeDrafts: isEnabled,
     });
+    const languages = Object.fromEntries(locales.map((l) => [l, faqPath(l, [])]));
     return {
       ...toNextMetadata(data.page?._seoMetaTags ?? []),
       alternates: {
         canonical: faqPath(loc, []),
-        languages: Object.fromEntries(locales.map((l) => [l, faqPath(l, [])])),
+        languages: { ...languages, ...xDefault(languages) },
       },
     };
   }
@@ -124,7 +125,10 @@ export async function generateMetadata({ params }: { params: Promise<Params> }):
 
   return {
     ...toNextMetadata(data.faq?._seoMetaTags ?? []),
-    alternates: { canonical: faqPath(loc, slug), languages },
+    alternates: {
+      canonical: faqPath(loc, slug),
+      languages: { ...languages, ...xDefault(languages) },
+    },
   };
 }
 

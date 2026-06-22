@@ -1,7 +1,8 @@
 import { executeQuery } from '@/lib/datocms/executeQuery';
 import { graphql } from '@/lib/datocms/graphql';
 import { type Locale } from '@/i18n/config';
-import { indexAlternates, localeSlugParams } from '@/i18n/paths';
+import { localeSlugParams, localizedSlugPaths, xDefault } from '@/i18n/paths';
+import { SetAlternateLocalePaths } from '@/components/LocaleSwitcher/AlternateLocaleContext';
 import { draftMode } from 'next/headers';
 import { notFound } from 'next/navigation';
 import { TagFragment } from '@/lib/datocms/commonFragments';
@@ -21,16 +22,20 @@ import RealtimeWrapper from '@/lib/datocms/realtime/RealtimeWrapper';
 import { getDraftRealtimeOptions } from '@/lib/datocms/realtime/getDraftRealtimeOptions';
 import BlogPostContent, { type BlogPostProps } from './BlogPostContent';
 
-// The blog is legacy EN-only content: post fields are localized but only `en`
-// is populated, and the slug only exists in `en`. So every query runs against
-// the primary locale (no `locale` arg) — both /en and /it render the EN post.
+// Magazine posts are localized per-locale (content + slug). Every query is
+// locale-scoped, so a post with no translation in the requested locale isn't
+// found → the page 404s (no English fallback served under the other locale).
 
 const metaQuery = graphql(
   `
-    query BlogPostMetaQuery($slug: String!) {
-      post(filter: { slug: { eq: $slug } }) {
-        _seoMetaTags {
+    query BlogPostMetaQuery($locale: SiteLocale!, $slug: String!) {
+      post(locale: $locale, filter: { slug: { eq: $slug } }) {
+        _seoMetaTags(locale: $locale) {
           ...TagFragment
+        }
+        _allSlugLocales {
+          locale
+          value
         }
       }
     }
@@ -46,22 +51,32 @@ export async function generateMetadata({
   const { locale, slug } = await params;
   const { isEnabled } = await draftMode();
   const data = await executeQuery(metaQuery, {
-    variables: { slug },
+    variables: { locale: locale as Locale, slug },
     includeDrafts: isEnabled,
   });
+  // Post slugs are localized → build hreflang from the record's real per-locale
+  // slugs, advertising only the locales that actually have a translation.
+  const postPaths = localizedSlugPaths(data.post?._allSlugLocales ?? [], 'blog', 'hreflang');
   return {
     ...toNextMetadata(data.post?._seoMetaTags ?? []),
-    alternates: indexAlternates(locale as Locale, `/blog/${slug}`),
+    alternates: {
+      canonical: postPaths[locale],
+      languages: { ...postPaths, ...xDefault(postPaths) },
+    },
   };
 }
 
 export const query = graphql(
   `
-    query BlogPostQuery($slug: String!) {
-      post(filter: { slug: { eq: $slug } }) {
+    query BlogPostQuery($locale: SiteLocale!, $slug: String!) {
+      post(locale: $locale, filter: { slug: { eq: $slug } }) {
         id
         title
         slug
+        _allSlugLocales {
+          locale
+          value
+        }
         abstract
         _firstPublishedAt
         category {
@@ -155,7 +170,7 @@ export default async function BlogPostPage({
   const { locale, slug } = await params;
   const { isEnabled: isDraftModeEnabled } = await draftMode();
 
-  const variables = { slug };
+  const variables = { locale: locale as Locale, slug };
   const data = await executeQuery(query, {
     variables,
     includeDrafts: isDraftModeEnabled,
@@ -174,18 +189,30 @@ export default async function BlogPostPage({
 
   const resolvedProps: BlogPostProps = { locale: locale as Locale, faqHrefById };
 
+  // Per-locale URLs for the language switcher: the translated post where it
+  // exists, otherwise the Magazine index (no English post under the other URL).
+  const altPaths = localizedSlugPaths(data.post._allSlugLocales ?? [], 'blog', 'switcher');
+
   if (isDraftModeEnabled) {
     return (
-      <RealtimeWrapper
-        contentComponent={BlogPostContent}
-        resolvedProps={resolvedProps}
-        query={query}
-        variables={variables}
-        initialData={data}
-        {...getDraftRealtimeOptions()}
-      />
+      <>
+        <SetAlternateLocalePaths paths={altPaths} />
+        <RealtimeWrapper
+          contentComponent={BlogPostContent}
+          resolvedProps={resolvedProps}
+          query={query}
+          variables={variables}
+          initialData={data}
+          {...getDraftRealtimeOptions()}
+        />
+      </>
     );
   }
 
-  return <BlogPostContent {...resolvedProps} data={data} />;
+  return (
+    <>
+      <SetAlternateLocalePaths paths={altPaths} />
+      <BlogPostContent {...resolvedProps} data={data} />
+    </>
+  );
 }

@@ -1,7 +1,7 @@
 import { executeQuery } from '@/lib/datocms/executeQuery';
 import { graphql } from '@/lib/datocms/graphql';
-import { type Locale, locales } from '@/i18n/config';
-import { localizedPath, localeSlugParams } from '@/i18n/paths';
+import { type Locale } from '@/i18n/config';
+import { localeSlugParams, xDefault, localizedSlugPaths } from '@/i18n/paths';
 import { draftMode } from 'next/headers';
 import { notFound } from 'next/navigation';
 import { TagFragment } from '@/lib/datocms/commonFragments';
@@ -48,31 +48,15 @@ export async function generateMetadata({
     includeDrafts: isEnabled,
   });
   // Mood slugs are localized, so the same record has a different slug per locale.
-  // Resolve each from `_allSlugLocales` instead of re-using the current slug.
-  const moodPaths = moodAltPaths(data.mood?._allSlugLocales ?? []);
+  // hreflang advertises only locales that actually have a translation.
+  const moodPaths = localizedSlugPaths(data.mood?._allSlugLocales ?? [], 'moods', 'hreflang');
   return {
     ...toNextMetadata(data.mood?._seoMetaTags ?? []),
     alternates: {
-      canonical: moodPaths[locale as Locale],
-      languages: moodPaths,
+      canonical: moodPaths[locale],
+      languages: { ...moodPaths, ...xDefault(moodPaths) },
     },
   };
-}
-
-/**
- * Builds the per-locale URL for a mood from its localized slugs. Falls back to
- * the moods index in a locale that has no translated slug.
- */
-function moodAltPaths(
-  allSlugLocales: ReadonlyArray<{ locale: string | null; value: string | null }>,
-): Record<Locale, string> {
-  const slugByLocale = new Map(allSlugLocales.map((s) => [s.locale, s.value]));
-  return Object.fromEntries(
-    locales.map((l) => {
-      const slug = slugByLocale.get(l);
-      return [l, `/${l}${localizedPath(l, slug ? `/moods/${slug}` : '/moods')}`];
-    }),
-  ) as Record<Locale, string>;
 }
 
 export const query = graphql(
@@ -179,7 +163,7 @@ export default async function MoodDetailPage({
   const resolvedProps: MoodDetailProps = { locale: locale as Locale, faqHrefById };
   // Publish the correct "same mood, other language" URLs to the locale switcher
   // (mood slugs are localized, so the generic path swap would guess wrong).
-  const altPaths = moodAltPaths(data.mood._allSlugLocales ?? []);
+  const altPaths = localizedSlugPaths(data.mood._allSlugLocales ?? [], 'moods', 'switcher');
 
   return (
     <>
