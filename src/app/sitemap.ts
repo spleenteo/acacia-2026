@@ -1,7 +1,7 @@
 import { type MetadataRoute } from 'next';
 import { executeQuery } from '@/lib/datocms/executeQuery';
 import { graphql } from '@/lib/datocms/graphql';
-import { locales } from '@/i18n/config';
+import { locales, type Locale } from '@/i18n/config';
 import { localizedPath, faqPath } from '@/i18n/paths';
 import { fetchFaqTree, pathSlugsForNode } from '@/lib/faq/faqTree';
 
@@ -18,11 +18,17 @@ const slugsQuery = graphql(`
       _updatedAt
     }
     allMoods(first: 100) {
-      slug
+      _allSlugLocales {
+        locale
+        value
+      }
       _updatedAt
     }
     allPosts(first: 100) {
-      slug
+      _allSlugLocales {
+        locale
+        value
+      }
       _updatedAt
     }
   }
@@ -81,21 +87,27 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     })),
   );
 
-  const moodEntries: MetadataRoute.Sitemap = locales.flatMap((locale) =>
-    data.allMoods.map((m) => ({
-      url: `${siteUrl}/${locale}${localizedPath(locale, `/moods/${m.slug}`)}`,
-      lastModified: new Date(m._updatedAt),
-      changeFrequency: 'monthly' as const,
-      priority: 0.6,
-    })),
+  // Mood slugs are localized: emit each locale's own slug from `_allSlugLocales`
+  // (the bare slug is the default locale's, which would soft-404 under /it) and
+  // skip locales the mood isn't translated into.
+  const moodEntries: MetadataRoute.Sitemap = data.allMoods.flatMap((m) =>
+    (m._allSlugLocales ?? [])
+      .filter((s) => s.value && locales.includes(s.locale as Locale))
+      .map((s) => ({
+        url: `${siteUrl}/${s.locale}${localizedPath(s.locale as Locale, `/moods/${s.value}`)}`,
+        lastModified: new Date(m._updatedAt),
+        changeFrequency: 'monthly' as const,
+        priority: 0.6,
+      })),
   );
 
-  // Blog is legacy EN-only content, but both locale routes render it.
-  const postEntries: MetadataRoute.Sitemap = locales.flatMap((locale) =>
-    data.allPosts
-      .filter((p) => p.slug)
-      .map((p) => ({
-        url: `${siteUrl}/${locale}${localizedPath(locale, `/blog/${p.slug}`)}`,
+  // Magazine posts are localized per-locale (content + slug): list only the
+  // locales a post is actually translated into, each with its own slug.
+  const postEntries: MetadataRoute.Sitemap = data.allPosts.flatMap((p) =>
+    (p._allSlugLocales ?? [])
+      .filter((s) => s.value && locales.includes(s.locale as Locale))
+      .map((s) => ({
+        url: `${siteUrl}/${s.locale}${localizedPath(s.locale as Locale, `/blog/${s.value}`)}`,
         lastModified: new Date(p._updatedAt),
         changeFrequency: 'monthly' as const,
         priority: 0.5,
