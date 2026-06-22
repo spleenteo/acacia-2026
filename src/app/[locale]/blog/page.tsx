@@ -64,10 +64,6 @@ export const query = graphql(
         id
         name
         slug
-        # Only categories with at least one published post are shown.
-        _allReferencingPostsMeta(filter: { _status: { eq: published } }) {
-          count
-        }
       }
       allPosts(
         locale: $locale
@@ -76,6 +72,10 @@ export const query = graphql(
         first: 100
       ) {
         id
+        # Slug WITHOUT the fragment's en fallback → null when the post has no
+        # translation in $locale. Used to exclude untranslated posts from the
+        # listing (their detail page 404s in this locale anyway).
+        localeSlug: slug
         category {
           slug
         }

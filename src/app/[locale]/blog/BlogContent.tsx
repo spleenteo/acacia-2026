@@ -20,21 +20,26 @@ export default function BlogContent({ locale, data }: BlogProps & { data: BlogDa
   const tListing = useTranslations('listing');
   const { page, allBlogCategories, allPosts } = data;
 
-  // Only surface categories that have at least one published post (count from
-  // the DatoCMS inverse-relationship meta).
+  // Magazine posts are localized per-locale: exclude any post with no
+  // translation in the current locale (null `localeSlug`), so the IT index never
+  // lists English-only posts — their detail page 404s in this locale anyway.
+  const localizedPosts = allPosts.filter((post) => post.localeSlug);
+
+  const posts = localizedPosts.map((post) => ({
+    id: post.id,
+    categorySlug: post.category.slug,
+    node: <PostCard data={post} locale={locale} />,
+  }));
+
+  // Surface only categories that actually have a post in this locale's listing.
+  const presentCategorySlugs = new Set(localizedPosts.map((post) => post.category.slug));
   const categories = allBlogCategories
-    .filter((cat) => cat._allReferencingPostsMeta.count > 0)
+    .filter((cat) => presentCategorySlugs.has(cat.slug))
     .map((cat) => ({
       id: cat.id,
       name: cat.name,
       slug: cat.slug,
     }));
-
-  const posts = allPosts.map((post) => ({
-    id: post.id,
-    categorySlug: post.category.slug,
-    node: <PostCard data={post} locale={locale} />,
-  }));
 
   const description = page?.description?.value ? (
     <StructuredTextContent data={page.description} className="font-body text-body-sm text-muted" />
