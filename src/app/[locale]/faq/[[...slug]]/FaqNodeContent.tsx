@@ -3,7 +3,7 @@
 import type { ResultOf } from 'gql.tada';
 import Link from 'next/link';
 import { type Locale } from '@/i18n/config';
-import { stripStega } from 'react-datocms/use-content-link';
+import { stripStega } from 'react-datocms/stega';
 import { useTranslations } from 'next-intl';
 import { readFragment } from '@/lib/datocms/graphql';
 import { dastToText } from '@/lib/faq/dastText';

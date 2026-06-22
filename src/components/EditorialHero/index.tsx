@@ -6,7 +6,7 @@ import { OverDarkHeader } from '@/components/HeaderTheme';
 import { useHeroDiagonal } from '@/lib/useHeroDiagonal';
 import { useHeroPin } from '@/lib/useHeroPin';
 import { isLightColor } from '@/lib/heroColor';
-import { stripStega } from 'react-datocms/use-content-link';
+import { stripStega } from 'react-datocms/stega';
 
 /**
  * Panel tones — the saturated Japan Fish hues that work as a panel background

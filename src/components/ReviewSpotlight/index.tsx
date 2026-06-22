@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
-import { stripStega } from 'react-datocms/use-content-link';
+import { stripStega } from 'react-datocms/stega';
 import { type FragmentOf, readFragment } from '@/lib/datocms/graphql';
 import { type Locale } from '@/i18n/config';
 import { modelPath } from '@/i18n/paths';

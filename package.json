@@ -27,7 +27,7 @@
     "node-html-parser": "^7.0.1",
     "postcss": "^8.5.8",
     "react": "^19",
-    "react-datocms": "^8.0.2",
+    "react-datocms": "^8.1.0",
     "react-dom": "^19",
     "serialize-error": "^13.0.1",
     "tailwindcss": "^4.2.1",

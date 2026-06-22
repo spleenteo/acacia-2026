@@ -29,8 +29,11 @@ export const ResponsiveImageFragment = graphql(/* GraphQL */ `
     # LQIP (base64-encoded)
     base64
 
-    # you can omit 'sizes' if you explicitly pass the 'sizes' prop to the image component
-    sizes
+    # NB: 'sizes' is intentionally NOT requested. Without data.sizes (and no
+    # explicit sizes prop), react-datocms (>=8.0.6) emits sizes="auto, 100vw" on
+    # lazy images, letting the browser measure the real rendered width and pick
+    # the smallest sufficient srcSet candidate. Browsers without sizes="auto"
+    # support (Safari, older) fall back to the "100vw" part.
   }
 `);
 

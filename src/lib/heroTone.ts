@@ -1,4 +1,4 @@
-import { stripStega } from 'react-datocms/use-content-link';
+import { stripStega } from 'react-datocms/stega';
 import type { HeroTone } from '@/components/EditorialHero';
 
 /** Tone codes the hero block `color` field can return (must match EditorialHero). */

@@ -1,4 +1,4 @@
-import { stripStega } from 'react-datocms';
+import { stripStega } from 'react-datocms/stega';
 
 export type ChannelLogo = { src: string; alt: string };
 
