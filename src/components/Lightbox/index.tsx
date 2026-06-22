@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useCallback, useEffect, useRef, useMemo } from 'react';
+import { useTranslations } from 'next-intl';
 import YARLightbox from 'yet-another-react-lightbox';
 import 'yet-another-react-lightbox/styles.css';
 
@@ -118,6 +119,8 @@ export default function Lightbox({ slides, open, index = 0, onClose }: LightboxP
     [slides],
   );
 
+  const t = useTranslations('gallery');
+
   return (
     <>
       <YARLightbox
@@ -140,9 +143,9 @@ export default function Lightbox({ slides, open, index = 0, onClose }: LightboxP
           root: { '--yarl__color_backdrop': 'rgba(46, 40, 34, 0.95)' },
         }}
         labels={{
-          Previous: 'Precedente',
-          Next: 'Successiva',
-          Close: 'Chiudi',
+          Previous: t('previous'),
+          Next: t('next'),
+          Close: t('close'),
         }}
       />
     </>

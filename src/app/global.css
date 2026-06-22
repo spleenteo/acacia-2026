@@ -26,7 +26,6 @@
 
   /* Dark tones — deep navy ground, NEVER pure #000 */
   --color-dark: #00012a;
-  --color-dark-soft: #14163a;
 
   /* Text hierarchy — navy → desaturated navy */
   --color-body: #00012a;
@@ -36,29 +35,21 @@
   /* Primary — "blackberry", THE action colour (CTAs, links, focus) */
   --color-primary: #48182f;
   --color-primary-hover: #381325;
-  --color-primary-soft: #6e2d4e;
   --color-primary-pale: #efe2e9;
-  --color-primary-deep: #2e0f1e;
 
   /* Rust — warm accent, kept in the palette for specific touches */
   --color-rust: #d53302;
-  --color-rust-hover: #b32a02;
-  --color-rust-soft: #e6553a;
   --color-rust-pale: #fbe3da;
-  --color-rust-deep: #9c2602;
 
   /* Japan Fish supporting hues */
   --color-gold: #ffaa4d;
   --color-gold-soft: #ffc680;
   --color-sage: #a0cbad;
-  --color-sage-strong: #4e8a6a;
   --color-slate: #8fb1be;
   --color-navy: #00012a;
 
   /* Supporting */
   --color-card: #ffffff;
-  --color-alert: #d53302;
-  --color-notice: #ffaa4d;
   --color-white: #fff;
 
   /* Borders — crisp navy hairlines + soft slate divider */
@@ -113,10 +104,6 @@
   /* ══════════════════════════════════════
      SPACING
      ══════════════════════════════════════ */
-
-  --spacing-section-x: 3.5rem;
-  --spacing-section-y: 5rem;
-  --spacing-section-y-lg: 5.5rem;
 
   /* ══════════════════════════════════════
      BORDER RADIUS — crisp: 4px base

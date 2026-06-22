@@ -141,13 +141,6 @@ export async function faqHrefMap(
   );
 }
 
-/** Siblings of a node (same parent), excluding itself. */
-export function siblingsOf(tree: FaqTree, nodeId: string): FaqStructureNode[] {
-  const node = tree.byId.get(nodeId);
-  if (!node) return [];
-  return (tree.childrenOf.get(node.parentId) ?? []).filter((n) => n.id !== nodeId);
-}
-
 export function hasChildren(tree: FaqTree, nodeId: string): boolean {
   return (tree.childrenOf.get(nodeId)?.length ?? 0) > 0;
 }

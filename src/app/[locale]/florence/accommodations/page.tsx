@@ -63,7 +63,7 @@ export const query = graphql(
           value
         }
       }
-      allApartmentCategories(locale: $locale, orderBy: [position_ASC]) {
+      allApartmentCategories(locale: $locale, orderBy: [position_ASC], first: 100) {
         id
         name(locale: $locale)
         slug

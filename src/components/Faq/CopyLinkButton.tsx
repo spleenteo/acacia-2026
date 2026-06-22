@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useTranslations } from 'next-intl';
 
 /**
  * Copies the absolute, shareable URL of a FAQ page/leaf to the clipboard.
@@ -8,6 +9,7 @@ import { useState } from 'react';
  * the current origin so the copied link is ready to paste into WhatsApp/mail.
  */
 export default function CopyLinkButton({ href, className }: { href: string; className?: string }) {
+  const t = useTranslations('faq');
   const [copied, setCopied] = useState(false);
 
   async function copy(e: React.MouseEvent) {
@@ -27,8 +29,8 @@ export default function CopyLinkButton({ href, className }: { href: string; clas
     <button
       type="button"
       onClick={copy}
-      aria-label={copied ? 'Link copiato' : 'Copia link'}
-      title={copied ? 'Link copiato!' : 'Copia link'}
+      aria-label={copied ? t('linkCopied') : t('copyLink')}
+      title={copied ? t('linkCopied') : t('copyLink')}
       className={`shrink-0 rounded-full p-1.5 text-light transition-colors hover:text-primary hover:bg-primary-pale/60 ${className ?? ''}`}
     >
       {copied ? (

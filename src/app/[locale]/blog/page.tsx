@@ -60,7 +60,7 @@ export const query = graphql(
           value
         }
       }
-      allBlogCategories(locale: $locale, orderBy: [name_ASC]) {
+      allBlogCategories(locale: $locale, orderBy: [name_ASC], first: 100) {
         id
         name
         slug

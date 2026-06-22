@@ -5,7 +5,6 @@ import { type Locale } from '@/i18n/config';
 import { useTranslations } from 'next-intl';
 import type { FragmentOf } from '@/lib/datocms/graphql';
 import ResponsiveImage from '@/components/ResponsiveImage';
-import HtmlContent from '@/components/HtmlContent';
 import PhotoLightbox from '@/components/PhotoLightbox';
 import { toSlide } from '@/components/Lightbox/toSlide';
 import EssentialsList, { type EssentialFragment } from '@/components/EssentialsList';
@@ -163,17 +162,13 @@ export default function ApartmentDetailContent({
               </h1>
 
               {/* Key facts — two coloured pills (palette colours) + a stat line.
-                  NOTE: copy is inline/provisional. Move to DatoCMS `Translation`
-                  records once finalised. */}
+                  Copy comes from DatoCMS `Translation` records (ICU plurals). */}
               {(() => {
-                const isIt = locale === 'it';
                 const beds = apartment.bedrooms ?? 0;
                 const baths = apartment.bathrooms ?? 0;
                 // Use the real `bedrooms` figure (the category label already
                 // embeds it, which caused "1 bedroom 1 bedroom apartment").
-                const bedLabel = isIt
-                  ? `appartamento ${beds} ${beds === 1 ? 'camera' : 'camere'}`
-                  : `${beds} ${beds === 1 ? 'bedroom' : 'bedrooms'} apartment`;
+                const bedLabel = t('bedLabel', { count: beds });
                 const pillClass =
                   'inline-block font-body font-medium text-label uppercase tracking-[0.15em] text-white px-3 py-1.5 rounded-sm';
                 const gold = (v: React.ReactNode) => (
@@ -207,8 +202,7 @@ export default function ApartmentDetailContent({
                           className={`${pillClass} cursor-pointer transition-opacity hover:opacity-85`}
                           style={{ backgroundColor: pillB }}
                         >
-                          {isIt ? 'in ' : 'in '}
-                          {apartment.district.name}
+                          in {apartment.district.name}
                         </a>
                       )}
                     </div>
@@ -223,16 +217,9 @@ export default function ApartmentDetailContent({
                         ].join(' ')}
                       >
                         {apartment.houseBadge?.label && <>{apartment.houseBadge.label}, </>}
-                        {gold(apartment.sleeps)} {isIt ? 'posti letto' : 'sleeps'}
+                        {gold(apartment.sleeps)} {t('sleepsWord')}
                         {', '}
-                        {gold(baths)}{' '}
-                        {isIt
-                          ? baths === 1
-                            ? 'bagno'
-                            : 'bagni'
-                          : baths === 1
-                            ? 'bathroom'
-                            : 'bathrooms'}
+                        {gold(baths)} {t('bathWord', { count: baths })}
                       </p>
                       <div className="hidden shrink-0 lg:block">
                         <ScrollToBooking

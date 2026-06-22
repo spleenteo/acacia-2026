@@ -1,6 +1,7 @@
 'use client';
 
 import type { ResultOf } from 'gql.tada';
+import { useTranslations } from 'next-intl';
 import type { indexQuery } from './page';
 import FaqCard from '@/components/Faq/FaqCard';
 import EditorialHero from '@/components/EditorialHero';
@@ -13,6 +14,7 @@ export type FaqIndexProps = {
 type FaqIndexData = ResultOf<typeof indexQuery>;
 
 export default function FaqIndexContent({ roots, data }: FaqIndexProps & { data: FaqIndexData }) {
+  const t = useTranslations('faq');
   const page = data.page;
   return (
     <>
@@ -36,7 +38,7 @@ export default function FaqIndexContent({ roots, data }: FaqIndexProps & { data:
           ) : null}
           <div className="mt-10 grid gap-5 sm:grid-cols-3">
             {roots.map((r) => (
-              <FaqCard key={r.id} title={r.question} href={r.href} />
+              <FaqCard key={r.id} title={r.question} href={r.href} cta={t('explore')} />
             ))}
           </div>
         </div>

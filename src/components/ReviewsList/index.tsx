@@ -1,9 +1,11 @@
 'use client';
 
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { useLocale } from 'next-intl';
 import { useInView } from '@/hooks/useInView';
 import Modal from '@/components/Modal';
 import { getChannelLogo } from '@/lib/channelLogos';
+import { formatReviewDate } from '@/lib/formatReviewDate';
 
 type Review = {
   id: string;
@@ -21,6 +23,7 @@ type Props = {
 };
 
 export default function ReviewsList({ reviews, label, title }: Props) {
+  const locale = useLocale();
   const headingRef = useInView<HTMLDivElement>();
   const scrollRef = useRef<HTMLDivElement>(null);
   const [activeIndex, setActiveIndex] = useState(0);
@@ -121,10 +124,7 @@ export default function ReviewsList({ reviews, label, title }: Props) {
                     </p>
                   )}
                   <time className="font-body text-caption text-light mt-1 block">
-                    {new Date(review.date).toLocaleDateString('en-GB', {
-                      month: 'long',
-                      year: 'numeric',
-                    })}
+                    {formatReviewDate(review.date, locale)}
                   </time>
                 </footer>
               </blockquote>
@@ -177,10 +177,7 @@ export default function ReviewsList({ reviews, label, title }: Props) {
                 </p>
               )}
               <time className="font-body text-caption text-light mt-2 block">
-                {new Date(selectedReview.date).toLocaleDateString('en-GB', {
-                  month: 'long',
-                  year: 'numeric',
-                })}
+                {formatReviewDate(selectedReview.date, locale)}
               </time>
             </footer>
           </div>

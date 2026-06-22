@@ -18,7 +18,6 @@
   "dependencies": {
     "@datocms/cda-client": "^0.2.10",
     "@datocms/cma-client": "^5.2.6",
-    "@datocms/rest-client-utils": "^5.2.8",
     "@tailwindcss/postcss": "^4.2.1",
     "gql.tada": "^1.9.0",
     "lucide-react": "^1.14.0",
@@ -29,13 +28,11 @@
     "react": "^19",
     "react-datocms": "^8.1.0",
     "react-dom": "^19",
-    "serialize-error": "^13.0.1",
     "tailwindcss": "^4.2.1",
     "yet-another-react-lightbox": "^3.29.1"
   },
   "devDependencies": {
     "@datocms/cli": "^4.0.26",
-    "@types/jsdom": "^28.0.1",
     "@types/node": "^25.6.0",
     "@types/react": "^19",
     "@types/react-dom": "^19",

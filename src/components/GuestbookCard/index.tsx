@@ -7,6 +7,7 @@ import { type FragmentOf, readFragment } from '@/lib/datocms/graphql';
 import { type Locale } from '@/i18n/config';
 import { modelPath } from '@/i18n/paths';
 import { getChannelLogo } from '@/lib/channelLogos';
+import { formatReviewDate } from '@/lib/formatReviewDate';
 import ResponsiveImage from '@/components/ResponsiveImage';
 import { GuestbookCardFragment } from './fragment';
 
@@ -41,10 +42,7 @@ export default function GuestbookCard({ data, locale }: Props) {
     setTipSide(window.innerWidth - rect.right >= TOOLTIP_WIDTH ? 'right' : 'left');
   }, []);
 
-  const formattedDate = new Intl.DateTimeFormat(locale === 'it' ? 'it-IT' : 'en-GB', {
-    month: 'long',
-    year: 'numeric',
-  }).format(new Date(review.date));
+  const formattedDate = formatReviewDate(review.date, locale);
 
   // "Adelfa, 2 Bedroom Apartment" — name + localized category (the typology).
   const aptLabel = apt ? [apt.name, apt.category?.name].filter(Boolean).join(', ') : null;

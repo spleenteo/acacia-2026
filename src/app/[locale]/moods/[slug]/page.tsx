@@ -121,7 +121,7 @@ export const query = graphql(
 
 const allSlugsQuery = graphql(`
   query AllMoodSlugs {
-    allMoods {
+    allMoods(first: 100) {
       slug
     }
   }

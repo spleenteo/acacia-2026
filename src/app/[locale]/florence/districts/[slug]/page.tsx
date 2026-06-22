@@ -85,7 +85,7 @@ export const apartmentsInDistrictQuery = graphql(
 
 const allSlugsQuery = graphql(`
   query AllDistrictSlugs {
-    allDistricts {
+    allDistricts(first: 100) {
       slug
     }
   }

@@ -170,7 +170,7 @@ const similarQuery = graphql(
 const moodsQuery = graphql(
   `
     query RelatedMoods($locale: SiteLocale!) {
-      allMoods(locale: $locale, first: 20) {
+      allMoods(locale: $locale, first: 100) {
         ...MoodCardFragment
         boxes {
           object {
@@ -189,7 +189,7 @@ const moodsQuery = graphql(
 const essentialsQuery = graphql(
   `
     query AllEssentials($locale: SiteLocale!) {
-      allEssentials(locale: $locale, orderBy: [position_ASC]) {
+      allEssentials(locale: $locale, orderBy: [position_ASC], first: 100) {
         ...EssentialFragment
       }
     }
@@ -199,7 +199,7 @@ const essentialsQuery = graphql(
 
 const allSlugsQuery = graphql(`
   query AllApartmentSlugs {
-    allApartments {
+    allApartments(first: 100) {
       slug
     }
   }

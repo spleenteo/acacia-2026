@@ -102,7 +102,7 @@ const seoQuery = graphql(`
     $post: [String]
     $faq: [String]
   ) {
-    allApartments(locale: $locale, filter: { slug: { in: $apt } }) {
+    allApartments(locale: $locale, filter: { slug: { in: $apt } }, first: 100) {
       slug
       seo {
         description
@@ -117,19 +117,19 @@ const seoQuery = graphql(`
         }
       }
     }
-    allDistricts(locale: $locale, filter: { slug: { in: $dist } }) {
+    allDistricts(locale: $locale, filter: { slug: { in: $dist } }, first: 100) {
       slug
       seo {
         description
       }
     }
-    allMoods(locale: $locale, filter: { slug: { in: $mood } }) {
+    allMoods(locale: $locale, filter: { slug: { in: $mood } }, first: 100) {
       slug
       seo {
         description
       }
     }
-    allPosts(locale: $locale, filter: { slug: { in: $post } }) {
+    allPosts(locale: $locale, filter: { slug: { in: $post } }, first: 100) {
       slug
       seo {
         description
@@ -138,7 +138,7 @@ const seoQuery = graphql(`
         name(locale: $locale)
       }
     }
-    allFaqs(locale: $locale, filter: { slug: { in: $faq } }) {
+    allFaqs(locale: $locale, filter: { slug: { in: $faq } }, first: 100) {
       slug
       seo {
         description

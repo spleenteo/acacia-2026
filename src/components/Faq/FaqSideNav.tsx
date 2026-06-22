@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import type { Locale } from '@/i18n/config';
+import { useTranslations } from 'next-intl';
 import type { FaqNavNode } from '@/lib/faq/faqTree';
 import { wonkyClip } from '@/lib/wonkyClip';
 
@@ -14,7 +14,6 @@ type Props = {
   activeId: string;
   /** Ids from root → current node, so the active branch starts expanded. */
   ancestorIds: string[];
-  locale: Locale;
 };
 
 /**
@@ -24,7 +23,8 @@ type Props = {
  * client-side. On mobile it folds behind a single toggle so it never dominates
  * the article.
  */
-export default function FaqSideNav({ navTree, activeId, ancestorIds, locale }: Props) {
+export default function FaqSideNav({ navTree, activeId, ancestorIds }: Props) {
+  const t = useTranslations('faq');
   const [mobileOpen, setMobileOpen] = useState(false);
   const [expanded, setExpanded] = useState<Set<string>>(() => new Set(ancestorIds));
 
@@ -35,7 +35,7 @@ export default function FaqSideNav({ navTree, activeId, ancestorIds, locale }: P
       return next;
     });
 
-  const label = locale === 'it' ? 'Tutte le domande' : 'All questions';
+  const label = t('allQuestions');
 
   return (
     <nav aria-label="FAQ" className="font-body">

@@ -99,12 +99,7 @@ export default function FaqNodeContent({
         {/* Side navigation — left column on desktop, on top on mobile */}
         <aside className="mb-10 lg:mb-0">
           <div className="faq-nav-sticky">
-            <FaqSideNav
-              navTree={navTree}
-              activeId={activeId}
-              ancestorIds={ancestorIds}
-              locale={locale}
-            />
+            <FaqSideNav navTree={navTree} activeId={activeId} ancestorIds={ancestorIds} />
           </div>
         </aside>
 

@@ -71,7 +71,7 @@ Debug stega-related bugs with `revealStega(value)` from `react-datocms` — `con
 **UI Translations (next-intl)**: All user-facing UI strings are managed via the DatoCMS `Translation` model and consumed at runtime through `next-intl`. **No hardcoded strings** — every label, button text, section heading, or CTA must use a translation key.
 
 - **Source of truth**: DatoCMS `Translation` model with fields `key` (string, unique, format `section.camelCaseKey`) and `value` (string, localized EN/IT).
-- **Runtime fetch**: `src/lib/datocms/fetchTranslations.ts` queries all Translation records from the CDA at runtime via `executeQuery`, benefiting from Next.js Data Cache (tagged `datocms`). When an editor modifies a translation in DatoCMS, the existing cache invalidation webhook automatically refreshes translations — no rebuild needed. The `src/messages/*.json` files are kept as a fallback/reference but are no longer imported at runtime.
+- **Runtime fetch**: `src/lib/datocms/fetchTranslations.ts` queries all Translation records from the CDA at runtime via `executeQuery`, benefiting from Next.js Data Cache (tagged `datocms`). When an editor modifies a translation in DatoCMS, the existing cache invalidation webhook automatically refreshes translations — no rebuild needed. The static `src/messages/*.json` files have been removed (they were stale and unused at runtime); `npm run export-translations` regenerates them on demand for reference/debugging only.
 - **Configuration**: `src/i18n/request.ts` configures next-intl by calling `fetchTranslations(locale)`; `next.config.mjs` wraps with `createNextIntlPlugin`. The locale layout (`src/app/[locale]/layout.tsx`) provides `NextIntlClientProvider` with all messages.
 - **Client components** (`'use client'`): use `useTranslations('section')` hook → `t('keyName')`.
 - **Server components** (async): use `const t = await getTranslations('section')` from `next-intl/server` → `t('keyName')`.
@@ -79,7 +79,7 @@ Debug stega-related bugs with `revealStega(value)` from `react-datocms` — `con
 - **Key naming convention**: dot-notation `section.camelCaseKey`. Sections: `nav`, `footer`, `listing`, `districts`, `moods`, `district`, `apartment`, `gallery`. The `key` field on DatoCMS validates with `/^[a-zA-Z][a-zA-Z0-9_.]*$/`.
 - **Adding a new translated string**: (1) create a Translation record in DatoCMS with key + EN/IT values, (2) publish it, (3) the cache invalidation webhook will automatically refresh translations, (4) use `t('section.key')` in the component.
 - **Files not using translations**: `not-found.tsx` and `error.tsx` keep bilingual inline strings (no locale context available).
-- **Legacy export script**: `npm run export-translations` still exists for generating static JSON files (`src/messages/en.json`, `src/messages/it.json`) as reference or debugging aid, but these are no longer used at runtime.
+- **Legacy export script**: `npm run export-translations` regenerates the on-demand static JSON files (`src/messages/en.json`, `src/messages/it.json`) as a reference or debugging aid; they are not committed and not used at runtime.
 
 **Turbopack workaround**: Next.js 16 Turbopack has a bug where `useRouter()`, `usePathname()`, and other `next/navigation` hooks that subscribe to router state cause "Cannot read properties of undefined (reading 'unsubscribe')" errors. Use `window.history.replaceState` instead of `router.push`, `window.location.pathname` instead of `usePathname()`, and `window.location.assign()` for full navigation. `useSearchParams` works when wrapped in a Suspense boundary.
 
@@ -87,7 +87,7 @@ Debug stega-related bugs with `revealStega(value)` from `react-datocms` — `con
 
 > Re-skinned from the original "Rinascimento Moderno" (warm cream + Cormorant) to a light, editorial language: navy ground, warm-cool "Japan Fish" palette, Fraunces display serif. The token NAMES were kept and only their VALUES swapped, so every component re-themed automatically.
 
-Tailwind CSS v4 with `@theme` (NOT `@theme inline`) design tokens in `src/app/global.css`. Full design system reference: `pitches/demostyle.jsx`.
+Tailwind CSS v4 with `@theme` (NOT `@theme inline`) design tokens in `src/app/global.css`. Full design system reference: `docs/pitches/demostyle.jsx`.
 
 **Critical Tailwind v4 rules:**
 
@@ -96,7 +96,7 @@ Tailwind CSS v4 with `@theme` (NOT `@theme inline`) design tokens in `src/app/gl
 - All base/reset CSS must be inside `@layer base` — unlayered CSS overrides `@layer utilities` regardless of specificity
 - Never set `color`, `font-family`, or `font-weight` on `h1–h6` in base styles — use Tailwind utility classes
 
-**Palette ("Japan Fish"):** Rust accent `#D53302` (CTAs/links/focus), warm-cool support gold `#FFAA4D` (with `gold-soft` `#FFC680` hover) / sage `#A0CBAD` / slate `#8FB1BE`. Surfaces: white `surface` #FFFFFF / sage-tint `surface-alt` #EAF2F1 / warm sand `surface-warm` #FBF3E3. Deep **navy** ground `#00012A` (`dark`/`body`/dark sections, never pure black); muted text `#4C5168`. Hairline border `#DCE6E6`; crisp navy border via `border-strong`. Text selection is sage-on-navy; structured-text `<mark>` highlight uses `rust-pale`.
+**Palette ("Japan Fish"):** **Blackberry** `#48182F` (`primary`) is THE action colour — CTAs/links/focus (hover `#381325`, pale `#EFE2E9`); warm **rust** `#D53302` (`rust`/`rust-pale`) is a secondary accent kept for specific touches. Support hues gold `#FFAA4D` (with `gold-soft` `#FFC680` hover) / sage `#A0CBAD` / slate `#8FB1BE`. Surfaces: white `surface` #FFFFFF / sage-tint `surface-alt` #EAF2F1 / warm sand `surface-warm` #FBF3E3. Deep **navy** ground `#00012A` (`dark`/`body`/dark sections, never pure black); muted text `#4C5168`. Hairline border `#DCE6E6`; crisp navy border via `border-strong`. Text selection is sage-on-navy; structured-text `<mark>` highlight uses `rust-pale`.
 
 **Typography:** Fraunces (`font-heading`) for all headings — a free high-contrast "old style" serif (SIL OFL) standing in for Domaine Display, pinned to its sharp cut via `font-variation-settings: 'opsz' 144, 'SOFT' 0, 'WONK' 0` on h1–h6 + `.font-heading` (WONK 0 removes the playful quirks). Lato (`font-body`) for body/UI. **Fonts are loaded with `next/font/google` in `src/app/layout.tsx`** (self-hosted, exposing `--font-fraunces` / `--font-lato`), NOT a CSS `@import` — Turbopack strips external `@import url()` from the compiled stylesheet, so webfonts silently fell back to Georgia. Fraunces' `opsz`/`SOFT`/`WONK` axes are requested via next/font's `axes` so the variation-settings actually apply. Body scale is bumped up one step from the source demo: `text-hero` (56px), `text-h1` (42px), `text-h2` (36px), `text-h3` (24px), `text-h4` (18px), `text-body-lg` (19px), `text-body` (17px), `text-body-sm` (15px), `text-caption` (13.5px), `text-label` (12px), `text-tag` (10px), `text-fine` (11px).
 
@@ -179,6 +179,6 @@ export async function generateMetadata({ params }): Promise<Metadata> {
 ## Formatting
 
 - Prettier: single quotes, trailing commas, 100 char print width
-- Generated files to never edit: `schema.graphql`, `src/lib/datocms/graphql-env.d.ts`, `src/lib/datocms/cma-types.ts`, `src/messages/en.json`, `src/messages/it.json`
+- Generated files to never edit: `schema.graphql`, `src/lib/datocms/graphql-env.d.ts`, `src/lib/datocms/cma-types.ts`
 - Route handlers use `.ts` extension (not `.tsx`) since they contain no JSX
 - Always use the `/frontend-design` skill when evaluating or implementing UI changes
