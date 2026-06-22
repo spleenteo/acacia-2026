@@ -21,9 +21,11 @@ export default function BlogContent({ locale, data }: BlogProps & { data: BlogDa
   const { page, allBlogCategories, allPosts } = data;
 
   // Magazine posts are localized per-locale: exclude any post with no
-  // translation in the current locale (null `localeSlug`), so the IT index never
-  // lists English-only posts — their detail page 404s in this locale anyway.
-  const localizedPosts = allPosts.filter((post) => post.localeSlug);
+  // translation in the current locale (no slug for it in `_allSlugLocales`), so
+  // the IT index never lists English-only posts — their detail page 404s here.
+  const localizedPosts = allPosts.filter((post) =>
+    post._allSlugLocales?.some((s) => s.locale === locale && Boolean(s.value)),
+  );
 
   const posts = localizedPosts.map((post) => ({
     id: post.id,
