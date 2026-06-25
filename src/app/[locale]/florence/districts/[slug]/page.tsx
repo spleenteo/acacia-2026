@@ -2,6 +2,9 @@ import { executeQuery } from '@/lib/datocms/executeQuery';
 import { graphql } from '@/lib/datocms/graphql';
 import { type Locale } from '@/i18n/config';
 import { indexAlternates, localeSlugParams } from '@/i18n/paths';
+import { detailBreadcrumbJsonLd } from '@/lib/seo/jsonLd';
+import JsonLd from '@/components/JsonLd';
+import { stripStega } from 'react-datocms/stega';
 import { draftMode } from 'next/headers';
 import { notFound } from 'next/navigation';
 import { TagFragment } from '@/lib/datocms/commonFragments';
@@ -123,18 +126,33 @@ export default async function DistrictDetailPage({
     apartmentsData,
   };
 
+  const breadcrumbJsonLd = detailBreadcrumbJsonLd({
+    locale: locale as Locale,
+    sectionPath: '/florence/districts',
+    path: `/florence/districts/${slug}`,
+    name: stripStega(data.district.name ?? ''),
+  });
+
   if (isDraftModeEnabled) {
     return (
-      <RealtimeWrapper
-        contentComponent={DistrictDetailContent}
-        resolvedProps={resolvedProps}
-        query={query}
-        variables={variables}
-        initialData={data}
-        {...getDraftRealtimeOptions()}
-      />
+      <>
+        <JsonLd data={breadcrumbJsonLd} />
+        <RealtimeWrapper
+          contentComponent={DistrictDetailContent}
+          resolvedProps={resolvedProps}
+          query={query}
+          variables={variables}
+          initialData={data}
+          {...getDraftRealtimeOptions()}
+        />
+      </>
     );
   }
 
-  return <DistrictDetailContent {...resolvedProps} data={data} />;
+  return (
+    <>
+      <JsonLd data={breadcrumbJsonLd} />
+      <DistrictDetailContent {...resolvedProps} data={data} />
+    </>
+  );
 }

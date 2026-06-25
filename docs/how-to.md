@@ -197,6 +197,22 @@ Web component `<beddy-bar>` loaded via CDN script in layout. **Disabled in draft
 
 ---
 
+## Structured Data (JSON-LD)
+
+`<JsonLd>` (`src/components/JsonLd/`) renders `<script type="application/ld+json">` from a server component, escaping `<`. CMS strings MUST be `stripStega()`-cleaned (`JSON.stringify` = non-render path). Optional fields are omitted when absent (no empty props).
+
+| Schema           | Where (page)                          | Source                                                                                                                                 |
+| ---------------- | ------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
+| `Organization`   | `[locale]/layout.tsx` (sitewide)      | static name/url/logo + `sameAs` from `socialLinks`                                                                                     |
+| `Apartment`      | accommodations `[slug]`               | bedrooms/bathrooms/sleeps, amenities+comforts → `amenityFeature`, `InfoAddressRecord` → `address`+`geo`, `containedInPlace: Firenze`   |
+| `BlogPosting`    | blog `[slug]`                         | title/abstract/image/category, `_firstPublishedAt`→`datePublished`, `_updatedAt`→`dateModified`, author+publisher = brand Organization |
+| `BreadcrumbList` | apartment/district/mood/post `[slug]` | `detailBreadcrumbJsonLd()` — Home > Section > Current, section names localized per locale                                              |
+| `FAQPage`        | faq `[[...slug]]` node                | `FaqNodeContent` (pre-existing)                                                                                                        |
+
+Helpers: `src/lib/seo/jsonLd.ts` — `breadcrumbJsonLd`, `detailBreadcrumbJsonLd`, `absoluteUrl`. Not emitted: `AggregateRating`/`Review` (no numeric rating field on `Guestbook`).
+
+---
+
 ## Key Components
 
 | Component      | Client? | Fragment? | Notes                                                |

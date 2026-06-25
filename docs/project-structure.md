@@ -14,8 +14,7 @@ acacia-next/
 │   │   │   ├── page.tsx                        # Home page (query + realtime)
 │   │   │   ├── HomeContent.tsx                 # Home presentational component
 │   │   │   ├── error.tsx                       # Error boundary (client)
-│   │   │   ├── loading.tsx                     # Loading skeleton
-│   │   │   ├── not-found.tsx                   # 404 page
+│   │   │   ├── not-found.tsx                   # 404 page (loading.tsx removed: its Suspense made notFound() a soft-404)
 │   │   │   ├── florence/
 │   │   │   │   ├── accommodations/
 │   │   │   │   │   ├── page.tsx                # Apartments listing
@@ -55,6 +54,7 @@ acacia-next/
 │   │   ├── DistrictLink/index.tsx
 │   │   ├── DraftModeToggler/index.tsx
 │   │   ├── HtmlContent/index.tsx
+│   │   ├── JsonLd/index.tsx                    # <script type="application/ld+json"> renderer (server)
 │   │   ├── ImageGallery/
 │   │   │   ├── index.tsx
 │   │   │   └── fragment.ts
@@ -76,7 +76,7 @@ acacia-next/
 │   │   ├── request.ts                         # next-intl config (runtime CDA translations)
 │   │   └── paths.ts                           # Localized path segments + modelPath()
 │   └── lib/
-│       └── datocms/
+│       ├── datocms/
 │           ├── executeQuery.ts                 # Central CDA fetch wrapper (cache/no-store)
 │           ├── fetchTranslations.ts            # Runtime CDA fetch for next-intl translations
 │           ├── recordInfo.ts                   # Record type → URL mapping
@@ -84,6 +84,8 @@ acacia-next/
 │           ├── graphql-env.d.ts                # Generated gql.tada types
 │           └── realtime/
 │               └── RealtimeWrapper.tsx         # Shared 'use client' SSE subscription wrapper
+│       └── seo/
+│           └── jsonLd.ts                        # Shared JSON-LD builders (breadcrumb, absoluteUrl)
 ├── .claude/
 │   └── skills/
 │       └── realtime-page-pattern/SKILL.md     # Project skill: page creation pattern
@@ -112,7 +114,7 @@ acacia-next/
 ├── public/
 │   ├── logo--main.svg                         # Full wordmark SVG (ratio ~3.6:1)
 │   └── acacia-isologo.svg                     # Isologo (copyright: not for standalone use)
-└── package.json                               # v0.7.0
+└── package.json                               # v1.0.1
 ```
 
 ## Tech Stack

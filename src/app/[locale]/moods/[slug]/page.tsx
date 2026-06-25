@@ -2,6 +2,9 @@ import { executeQuery } from '@/lib/datocms/executeQuery';
 import { graphql } from '@/lib/datocms/graphql';
 import { type Locale } from '@/i18n/config';
 import { localeSlugParams, xDefault, localizedSlugPaths } from '@/i18n/paths';
+import { detailBreadcrumbJsonLd } from '@/lib/seo/jsonLd';
+import JsonLd from '@/components/JsonLd';
+import { stripStega } from 'react-datocms/stega';
 import { draftMode } from 'next/headers';
 import { notFound } from 'next/navigation';
 import { TagFragment } from '@/lib/datocms/commonFragments';
@@ -165,8 +168,16 @@ export default async function MoodDetailPage({
   // (mood slugs are localized, so the generic path swap would guess wrong).
   const altPaths = localizedSlugPaths(data.mood._allSlugLocales ?? [], 'moods', 'switcher');
 
+  const breadcrumbJsonLd = detailBreadcrumbJsonLd({
+    locale: locale as Locale,
+    sectionPath: '/moods',
+    path: `/moods/${data.mood.slug}`,
+    name: stripStega(data.mood.name ?? ''),
+  });
+
   return (
     <>
+      <JsonLd data={breadcrumbJsonLd} />
       <SetAlternateLocalePaths paths={altPaths} />
       {isDraftModeEnabled ? (
         <RealtimeWrapper

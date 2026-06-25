@@ -1,5 +1,20 @@
 # Changelog
 
+## v1.0.1 — 2026-06-25 — JSON-LD structured data + real 404 on detail pages
+
+Added structured data across the site and fixed detail pages returning a soft-404 (HTTP 200) for non-existent slugs.
+
+- **Real 404 on detail pages**: Removed `src/app/[locale]/loading.tsx`. Its route-level Suspense boundary started streaming with `HTTP 200` before the async page resolved, so `notFound()` could no longer set the status — every non-existent apartment/district/mood/post/faq slug rendered the not-found UI with a `200` (soft-404). Without the boundary the page is awaited fully before the response is sent, so `notFound()` now returns a real **404**. Verified in a production build. Tradeoff: no loading skeleton during client-side soft navigations (first load and crawlers are full SSR — unaffected).
+- **Reusable `<JsonLd>` component**: New `src/components/JsonLd/` server component renders `<script type="application/ld+json">`, escaping `<` so a string value cannot break out of the tag. All CMS strings must be `stripStega()`-cleaned before serialization (`JSON.stringify` is a non-render path).
+- **Organization (sitewide)**: `src/app/[locale]/layout.tsx` emits an `Organization` node (name, url, logo, `sameAs` from `socialLinks`) on every page.
+- **Apartment**: Accommodation detail pages emit an `Apartment` node — `numberOfBedrooms`, `numberOfBathroomsTotal`, `occupancy`, `amenityFeature` (amenities + comforts), `address` + `geo` (from the `InfoAddressRecord`, omitted when absent), `containedInPlace: Firenze`.
+- **BlogPosting**: Magazine posts emit a `BlogPosting` node — headline, `datePublished` (`_firstPublishedAt`) + `dateModified` (`_updatedAt`, added to the query), author + publisher (the brand Organization, as the post model has no author field), description, image, `articleSection`.
+- **BreadcrumbList**: Apartment, district, mood and post detail pages emit a localized `Home > Section > Current` breadcrumb. New shared helpers in `src/lib/seo/jsonLd.ts` (`breadcrumbJsonLd`, `detailBreadcrumbJsonLd`, `absoluteUrl`) with per-locale section names (Accommodations/Appartamenti, Districts/Quartieri, Moods, Magazine).
+
+Note: review stars (`AggregateRating`/`Review`) are intentionally not emitted — the `Guestbook` model has no numeric rating field yet. The Organization/publisher logo uses the SVG isologo; a raster (PNG/JPG ≥112px) is preferable for Google's knowledge panel.
+
+---
+
 ## v1.0.0 — 2026-06-20 — Index pages on the `index_page` collection + `/magazine` route
 
 The single-instance `index_*` models were consolidated into one reusable `index_page` collection. All index pages now read their hero/description/SEO from a collection record selected by slug, and the blog section moved to the `/magazine` public route.

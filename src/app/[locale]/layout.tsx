@@ -3,6 +3,7 @@ import DraftModeToggler from '@/components/DraftModeToggler';
 import SiteHeader from '@/components/SiteHeader';
 import SiteFooter from '@/components/SiteFooter';
 import WhatsAppWidget from '@/components/WhatsAppWidget';
+import JsonLd from '@/components/JsonLd';
 import { HeaderThemeProvider } from '@/components/HeaderTheme';
 import { AlternateLocaleProvider } from '@/components/LocaleSwitcher/AlternateLocaleContext';
 import { BookingProvider } from '@/components/BookingModal';
@@ -210,8 +211,21 @@ export default async function LocaleLayout({
   const socialLinks = resolveSocialLinks(data.app);
   const legalText = data.app?.legalText?.value ?? null;
 
+  // Sitewide Organization structured data. All values are static or `link`-type
+  // URLs (socialLinks), so none carry stega — nothing to strip here.
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000';
+  const organizationLd: Record<string, unknown> = {
+    '@context': 'https://schema.org',
+    '@type': 'Organization',
+    name: 'Acacia Firenze',
+    url: siteUrl,
+    logo: `${siteUrl}/acacia-isologo.svg`,
+    ...(socialLinks.length ? { sameAs: socialLinks.map((s) => s.url).filter(Boolean) } : {}),
+  };
+
   return (
     <NextIntlClientProvider messages={messages}>
+      <JsonLd data={organizationLd} />
       {!isDraftModeEnabled && (
         <Script
           src="https://cdn.beddy.io/bol/prod/beddybar.js?release13052020_v0"

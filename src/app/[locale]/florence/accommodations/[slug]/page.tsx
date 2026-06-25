@@ -1,9 +1,12 @@
 import { executeQuery } from '@/lib/datocms/executeQuery';
-import { graphql } from '@/lib/datocms/graphql';
+import { graphql, readFragment, type FragmentOf, type ResultOf } from '@/lib/datocms/graphql';
 import { type Locale } from '@/i18n/config';
-import { indexAlternates, localeSlugParams } from '@/i18n/paths';
+import { indexAlternates, localeSlugParams, localizedPath } from '@/i18n/paths';
 import { draftMode } from 'next/headers';
 import { notFound } from 'next/navigation';
+import { stripStega } from 'react-datocms/stega';
+import JsonLd from '@/components/JsonLd';
+import { detailBreadcrumbJsonLd } from '@/lib/seo/jsonLd';
 import { TagFragment } from '@/lib/datocms/commonFragments';
 import { toNextMetadata } from 'react-datocms/seo';
 import type { Metadata } from 'next';
@@ -211,6 +214,91 @@ export async function generateStaticParams() {
   return localeSlugParams(slugs);
 }
 
+type ApartmentData = NonNullable<ResultOf<typeof query>['apartment']>;
+
+/** Strip stega + collapse any inline HTML (markdown fields) to a clean sentence. */
+function plainText(value: string | null | undefined): string {
+  return stripStega(value ?? '')
+    .replace(/<[^>]*>/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+/**
+ * schema.org `Apartment` structured data for an accommodation detail page. Every
+ * CMS-sourced string is run through `stripStega()` because the object is fed to
+ * `JSON.stringify` (a non-render path). Optional fields are omitted when absent
+ * so the emitted JSON never carries empty/invalid properties.
+ */
+function buildApartmentJsonLd(
+  apartment: ApartmentData,
+  locale: Locale,
+  slug: string,
+): Record<string, unknown> {
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000';
+  const url = `${siteUrl}/${locale}${localizedPath(locale, `/florence/accommodations/${slug}`)}`;
+
+  const image = apartment.featuredImage?.responsiveImage
+    ? readFragment(ResponsiveImageFragment, apartment.featuredImage.responsiveImage).src
+    : undefined;
+
+  const features = [
+    ...readFragment(AmenityFragment, apartment.amenities),
+    ...readFragment(ComfortFragment, apartment.comforts),
+  ]
+    .map((f) => stripStega(f.name ?? ''))
+    .filter(Boolean);
+
+  const addressItem = apartment.infoDetail.find((i) => i.__typename === 'InfoAddressRecord');
+  const address = addressItem
+    ? readFragment(InfoAddressFragment, addressItem as FragmentOf<typeof InfoAddressFragment>)
+    : null;
+
+  const description = plainText(apartment.claim) || plainText(apartment.description);
+
+  const ld: Record<string, unknown> = {
+    '@context': 'https://schema.org',
+    '@type': 'Apartment',
+    '@id': `${url}#apartment`,
+    name: stripStega(apartment.name ?? ''),
+    url,
+  };
+  if (description) ld.description = description;
+  if (image) ld.image = image;
+  if (apartment.bedrooms != null) ld.numberOfBedrooms = apartment.bedrooms;
+  if (apartment.bathrooms != null) ld.numberOfBathroomsTotal = apartment.bathrooms;
+  if (apartment.sleeps != null) {
+    ld.occupancy = { '@type': 'QuantitativeValue', value: apartment.sleeps, unitText: 'person' };
+  }
+  if (features.length) {
+    ld.amenityFeature = features.map((name) => ({
+      '@type': 'LocationFeatureSpecification',
+      name,
+      value: true,
+    }));
+  }
+
+  const postalAddress: Record<string, unknown> = {
+    '@type': 'PostalAddress',
+    addressLocality: 'Firenze',
+    addressRegion: 'Toscana',
+    addressCountry: 'IT',
+  };
+  if (address?.addressText) postalAddress.streetAddress = stripStega(address.addressText);
+  ld.address = postalAddress;
+
+  if (address?.addressMap) {
+    ld.geo = {
+      '@type': 'GeoCoordinates',
+      latitude: address.addressMap.latitude,
+      longitude: address.addressMap.longitude,
+    };
+  }
+  ld.containedInPlace = { '@type': 'City', name: 'Firenze' };
+
+  return ld;
+}
+
 export default async function ApartmentDetailPage({
   params,
 }: {
@@ -274,18 +362,36 @@ export default async function ApartmentDetailPage({
     relatedMoods,
   };
 
+  const apartmentJsonLd = buildApartmentJsonLd(apartment, locale as Locale, slug);
+  const breadcrumbJsonLd = detailBreadcrumbJsonLd({
+    locale: locale as Locale,
+    sectionPath: '/florence/accommodations',
+    path: `/florence/accommodations/${slug}`,
+    name: stripStega(apartment.name ?? ''),
+  });
+
   if (isDraftModeEnabled) {
     return (
-      <RealtimeWrapper
-        contentComponent={ApartmentDetailContent}
-        resolvedProps={resolvedProps}
-        query={query}
-        variables={variables}
-        initialData={data}
-        {...getDraftRealtimeOptions()}
-      />
+      <>
+        <JsonLd data={apartmentJsonLd} />
+        <JsonLd data={breadcrumbJsonLd} />
+        <RealtimeWrapper
+          contentComponent={ApartmentDetailContent}
+          resolvedProps={resolvedProps}
+          query={query}
+          variables={variables}
+          initialData={data}
+          {...getDraftRealtimeOptions()}
+        />
+      </>
     );
   }
 
-  return <ApartmentDetailContent {...resolvedProps} data={data} />;
+  return (
+    <>
+      <JsonLd data={apartmentJsonLd} />
+      <JsonLd data={breadcrumbJsonLd} />
+      <ApartmentDetailContent {...resolvedProps} data={data} />
+    </>
+  );
 }
