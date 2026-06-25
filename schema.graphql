@@ -392,7 +392,7 @@ type ApartmentRecord implements RecordInterface {
   ): CollectionMetadata!
   _allReferencingMoodItems(
     """Specifies how to filter linking records"""
-    through: InverseRelationshipFilterBetweenMoodItemsAndApartment
+    through: InverseRelationshipFilterBetweenMoodItemAndApartment
 
     """The locale to use to fetch the field's content"""
     locale: SiteLocale
@@ -407,18 +407,18 @@ type ApartmentRecord implements RecordInterface {
 
     """Limit the number of results"""
     first: IntType = 20
-    filter: MoodItemsModelFilter
-    orderBy: [MoodItemsModelOrderBy] = [position_ASC]
-  ): [MoodItemsRecord!]!
+    filter: MoodItemModelFilter
+    orderBy: [MoodItemModelOrderBy] = [position_ASC]
+  ): [MoodItemRecord!]!
 
   """Returns meta information regarding a record collection"""
   _allReferencingMoodItemsMeta(
     """Specifies how to filter linking records"""
-    through: InverseRelationshipFilterBetweenMoodItemsAndApartment
+    through: InverseRelationshipFilterBetweenMoodItemAndApartment
 
     """The locale to use to fetch the field's content"""
     locale: SiteLocale
-    filter: MoodItemsModelFilter
+    filter: MoodItemModelFilter
   ): CollectionMetadata!
   _allReferencingMoods(
     """Specifies how to filter linking records"""
@@ -5200,7 +5200,7 @@ type IndexAcacialifeRecord implements RecordInterface {
   _status: ItemStatus!
   _unpublishingScheduledAt: DateTime
   _updatedAt: DateTime!
-  boxes: [MoodItemsRecord!]!
+  boxes: [MoodItemRecord!]!
   createdAt: DateTime!
   cta(
     """The locale to use to fetch the field's content"""
@@ -5673,16 +5673,16 @@ input InverseRelationshipFieldFilterBetweenMoodAndDistrict {
 }
 
 """Specifies how to filter by linking fields"""
-input InverseRelationshipFieldFilterBetweenMoodItemsAndApartment {
+input InverseRelationshipFieldFilterBetweenMoodItemAndApartment {
   """
   Filter linking records that reference current record in at least one of the specified fields
   """
-  anyIn: [MoodItemsModelFieldsReferencingApartmentModel!]
+  anyIn: [MoodItemModelFieldsReferencingApartmentModel!]
 
   """
   Filter linking records that do not reference current record in any of the specified fields
   """
-  notIn: [MoodItemsModelFieldsReferencingApartmentModel!]
+  notIn: [MoodItemModelFieldsReferencingApartmentModel!]
 }
 
 """Specifies how to filter by linking fields"""
@@ -5840,9 +5840,9 @@ input InverseRelationshipFilterBetweenMoodAndDistrict {
 }
 
 """Specifies how to filter linking records"""
-input InverseRelationshipFilterBetweenMoodItemsAndApartment {
+input InverseRelationshipFilterBetweenMoodItemAndApartment {
   """Specifies how to filter by linking fields"""
-  fields: InverseRelationshipFieldFilterBetweenMoodItemsAndApartment
+  fields: InverseRelationshipFieldFilterBetweenMoodItemAndApartment
 
   """Specifies how to filter by linking locales"""
   locales: LinkingLocalesFilter
@@ -6284,11 +6284,11 @@ type MenuItemRecord implements RecordInterface {
 scalar MetaTagAttributes
 
 """Linking fields"""
-enum MoodItemsModelFieldsReferencingApartmentModel {
-  moodItems_object
+enum MoodItemModelFieldsReferencingApartmentModel {
+  moodItem_object
 }
 
-input MoodItemsModelFilter {
+input MoodItemModelFilter {
   _createdAt: CreatedAtFilter
   createdAt: CreatedAtFilter
   id: ItemIdFilter
@@ -6307,13 +6307,13 @@ input MoodItemsModelFilter {
   name: StringFilter
   object: LinksFilter
   url: StringFilter
-  OR: [MoodItemsModelFilter]
-  AND: [MoodItemsModelFilter]
+  OR: [MoodItemModelFilter]
+  AND: [MoodItemModelFilter]
 }
 
-union MoodItemsModelObjectField = ApartmentRecord | PostOldRecord | ServiceRecord | TipRecord
+union MoodItemModelObjectField = ApartmentRecord | PostOldRecord | ServiceRecord | TipRecord
 
-enum MoodItemsModelOrderBy {
+enum MoodItemModelOrderBy {
   _createdAt_ASC
   _createdAt_DESC
   createdAt_ASC
@@ -6346,8 +6346,8 @@ enum MoodItemsModelOrderBy {
   url_DESC
 }
 
-"""Record of type Mood Item (mood_items)"""
-type MoodItemsRecord implements RecordInterface {
+"""Record of type Mood Item (mood_item)"""
+type MoodItemRecord implements RecordInterface {
   _allDescriptionLocales(
     """Process content as markdown"""
     markdown: Boolean
@@ -6412,7 +6412,7 @@ type MoodItemsRecord implements RecordInterface {
     fallbackLocales: [SiteLocale!]
   ): String
   name: String!
-  object: [MoodItemsModelObjectField!]!
+  object: [MoodItemModelObjectField!]!
   position: IntType
   updatedAt: DateTime!
   url(
@@ -6464,7 +6464,6 @@ input MoodModelFilter {
   _updatedAt: UpdatedAtFilter
   updatedAt: UpdatedAtFilter
   _isValid: BooleanFilter
-  _locales: LocalesFilter
   boxes: LinksFilter
   claim: StringFilter
   description: StructuredTextFilter
@@ -6618,7 +6617,6 @@ type MoodRecord implements RecordInterface {
   _editingUrl: String
   _firstPublishedAt: DateTime!
   _isValid: BooleanType!
-  _locales: [SiteLocale!]!
   _modelApiKey: String!
   _publicationScheduledAt: DateTime
   _publishedAt: DateTime!
@@ -6631,7 +6629,7 @@ type MoodRecord implements RecordInterface {
   _status: ItemStatus!
   _unpublishingScheduledAt: DateTime
   _updatedAt: DateTime!
-  boxes: [MoodItemsRecord!]!
+  boxes: [MoodItemRecord!]!
   claim(
     """The locale to use to fetch the field's content"""
     locale: SiteLocale
@@ -7503,7 +7501,7 @@ type Query {
   _allMoodItemsMeta(
     """The locale to use to fetch the field's content"""
     locale: SiteLocale
-    filter: MoodItemsModelFilter
+    filter: MoodItemModelFilter
   ): CollectionMetadata!
 
   """Returns meta information regarding a record collection"""
@@ -7946,9 +7944,9 @@ type Query {
 
     """Limit the number of results"""
     first: IntType = 20
-    filter: MoodItemsModelFilter
-    orderBy: [MoodItemsModelOrderBy] = [position_ASC]
-  ): [MoodItemsRecord!]!
+    filter: MoodItemModelFilter
+    orderBy: [MoodItemModelOrderBy] = [position_ASC]
+  ): [MoodItemRecord!]!
 
   """Returns a collection of records"""
   allMoods(
@@ -8465,7 +8463,7 @@ type Query {
   ): MoodRecord
 
   """Returns a specific record"""
-  moodItems(
+  moodItem(
     """The locale to use to fetch the field's content"""
     locale: SiteLocale
 
@@ -8473,9 +8471,9 @@ type Query {
     If you want to fallback to a default translation when a translation has not been found
     """
     fallbackLocales: [SiteLocale!]
-    filter: MoodItemsModelFilter
-    orderBy: [MoodItemsModelOrderBy] = [position_ASC]
-  ): MoodItemsRecord
+    filter: MoodItemModelFilter
+    orderBy: [MoodItemModelOrderBy] = [position_ASC]
+  ): MoodItemRecord
 
   """Returns a specific record"""
   offer(

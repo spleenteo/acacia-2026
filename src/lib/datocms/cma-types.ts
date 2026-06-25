@@ -235,8 +235,9 @@ export type Mood = ItemTypeDefinition<
   EnvironmentSettings,
   '2738',
   {
-    boxes: {
-      type: 'links';
+    description_old: {
+      type: 'text';
+      localized: true;
     };
     name: {
       type: 'string';
@@ -245,6 +246,9 @@ export type Mood = ItemTypeDefinition<
     slug: {
       type: 'slug';
       localized: true;
+    };
+    boxes: {
+      type: 'links';
     };
     claim: {
       type: 'string';
@@ -256,10 +260,6 @@ export type Mood = ItemTypeDefinition<
     };
     image: {
       type: 'file';
-    };
-    description_old: {
-      type: 'text';
-      localized: true;
     };
     description: {
       type: 'structured_text';
@@ -278,21 +278,27 @@ export const Mood = {
   REF: { type: 'item_type', id: '2738' },
 } as const;
 
-export type Post = ItemTypeDefinition<
+export type PostOld = ItemTypeDefinition<
   EnvironmentSettings,
   '2762',
   {
     published: {
       type: 'boolean';
     };
-    title: {
-      type: 'string';
-    };
     slug: {
       type: 'slug';
     };
+    seo: {
+      type: 'seo';
+    };
+    title: {
+      type: 'string';
+    };
     language: {
       type: 'string';
+    };
+    sticky: {
+      type: 'boolean';
     };
     category: {
       type: 'link';
@@ -324,15 +330,9 @@ export type Post = ItemTypeDefinition<
     published_at: {
       type: 'date';
     };
-    sticky: {
-      type: 'boolean';
-    };
-    seo: {
-      type: 'seo';
-    };
   }
 >;
-export const Post = {
+export const PostOld = {
   ID: '2762',
   REF: { type: 'item_type', id: '2762' },
 } as const;
@@ -343,9 +343,11 @@ export type BlogCategory = ItemTypeDefinition<
   {
     name: {
       type: 'string';
+      localized: true;
     };
     slug: {
       type: 'slug';
+      localized: true;
     };
     position: {
       type: 'integer';
@@ -403,22 +405,32 @@ export type Faq = ItemTypeDefinition<
   EnvironmentSettings,
   '2803',
   {
+    posts: {
+      type: 'links';
+    };
     question: {
       type: 'string';
       localized: true;
     };
-    answer_structured: {
-      type: 'structured_text';
+    slug: {
+      type: 'slug';
+      localized: true;
+    };
+    seo: {
+      type: 'seo';
       localized: true;
     };
     services: {
       type: 'links';
     };
-    posts: {
-      type: 'links';
+    short_answer: {
+      type: 'structured_text';
+      blocks: VideoBlock | ImageBlock | ImageGalleryBlock | CtaBlogPost;
+      localized: true;
     };
-    slug: {
-      type: 'slug';
+    long_answer: {
+      type: 'structured_text';
+      blocks: VideoBlock | ImageBlock | ImageGalleryBlock | CtaBlogPost;
       localized: true;
     };
     position: {
@@ -438,9 +450,6 @@ export type Guestbook = ItemTypeDefinition<
   EnvironmentSettings,
   '2804',
   {
-    published: {
-      type: 'boolean';
-    };
     name: {
       type: 'string';
     };
@@ -531,34 +540,7 @@ export const HomePage = {
   REF: { type: 'item_type', id: '2831' },
 } as const;
 
-export type PageMoods = ItemTypeDefinition<
-  EnvironmentSettings,
-  '2835',
-  {
-    title: {
-      type: 'string';
-      localized: true;
-    };
-    subtitle: {
-      type: 'string';
-      localized: true;
-    };
-    description: {
-      type: 'text';
-      localized: true;
-    };
-    seo: {
-      type: 'seo';
-      localized: true;
-    };
-  }
->;
-export const PageMoods = {
-  ID: '2835',
-  REF: { type: 'item_type', id: '2835' },
-} as const;
-
-export type MoodItems = ItemTypeDefinition<
+export type MoodItem = ItemTypeDefinition<
   EnvironmentSettings,
   '2903',
   {
@@ -588,7 +570,7 @@ export type MoodItems = ItemTypeDefinition<
     };
   }
 >;
-export const MoodItems = {
+export const MoodItem = {
   ID: '2903',
   REF: { type: 'item_type', id: '2903' },
 } as const;
@@ -612,44 +594,6 @@ export const CallToAction = {
   REF: { type: 'item_type', id: '2905' },
 } as const;
 
-export type IndexApartment = ItemTypeDefinition<
-  EnvironmentSettings,
-  '2970',
-  {
-    seo: {
-      type: 'seo';
-      localized: true;
-    };
-    title: {
-      type: 'string';
-      localized: true;
-    };
-    intro: {
-      type: 'text';
-      localized: true;
-    };
-    slug: {
-      type: 'slug';
-      localized: true;
-    };
-    subtitle: {
-      type: 'text';
-      localized: true;
-    };
-    featured_image: {
-      type: 'file';
-    };
-    sections: {
-      type: 'rich_text';
-      blocks: HeroBlock;
-    };
-  }
->;
-export const IndexApartment = {
-  ID: '2970',
-  REF: { type: 'item_type', id: '2970' },
-} as const;
-
 export type ApartmentCategory = ItemTypeDefinition<
   EnvironmentSettings,
   '2971',
@@ -671,94 +615,7 @@ export const ApartmentCategory = {
   REF: { type: 'item_type', id: '2971' },
 } as const;
 
-export type PageServices = ItemTypeDefinition<
-  EnvironmentSettings,
-  '2973',
-  {
-    title: {
-      type: 'string';
-      localized: true;
-    };
-    subtitle: {
-      type: 'string';
-      localized: true;
-    };
-    featured_image: {
-      type: 'file';
-    };
-    intro: {
-      type: 'text';
-      localized: true;
-    };
-    seo: {
-      type: 'seo';
-      localized: true;
-    };
-  }
->;
-export const PageServices = {
-  ID: '2973',
-  REF: { type: 'item_type', id: '2973' },
-} as const;
-
-export type PageBlog = ItemTypeDefinition<
-  EnvironmentSettings,
-  '2983',
-  {
-    title: {
-      type: 'string';
-      localized: true;
-    };
-    subtitle: {
-      type: 'string';
-      localized: true;
-    };
-    featured_image: {
-      type: 'file';
-    };
-    intro: {
-      type: 'text';
-      localized: true;
-    };
-    seo: {
-      type: 'seo';
-      localized: true;
-    };
-  }
->;
-export const PageBlog = {
-  ID: '2983',
-  REF: { type: 'item_type', id: '2983' },
-} as const;
-
-export type PageDistricts = ItemTypeDefinition<
-  EnvironmentSettings,
-  '3036',
-  {
-    title: {
-      type: 'string';
-      localized: true;
-    };
-    subtitle: {
-      type: 'string';
-      localized: true;
-    };
-    description: {
-      type: 'text';
-      localized: true;
-    };
-    seo: {
-      type: 'seo';
-      localized: true;
-    };
-  }
->;
-export const PageDistricts = {
-  ID: '3036',
-  REF: { type: 'item_type', id: '3036' },
-} as const;
-
-export type PageAcacialife = ItemTypeDefinition<
+export type IndexAcacialife = ItemTypeDefinition<
   EnvironmentSettings,
   '3125',
   {
@@ -788,41 +645,16 @@ export type PageAcacialife = ItemTypeDefinition<
     boxes: {
       type: 'links';
     };
+    hero: {
+      type: 'single_block';
+      blocks: HeroIndex;
+      localized: true;
+    };
   }
 >;
-export const PageAcacialife = {
+export const IndexAcacialife = {
   ID: '3125',
   REF: { type: 'item_type', id: '3125' },
-} as const;
-
-export type PageGuestbook = ItemTypeDefinition<
-  EnvironmentSettings,
-  '3289',
-  {
-    title: {
-      type: 'string';
-      localized: true;
-    };
-    subtitle: {
-      type: 'string';
-      localized: true;
-    };
-    featured_image: {
-      type: 'file';
-    };
-    intro: {
-      type: 'text';
-      localized: true;
-    };
-    seo: {
-      type: 'seo';
-      localized: true;
-    };
-  }
->;
-export const PageGuestbook = {
-  ID: '3289',
-  REF: { type: 'item_type', id: '3289' },
 } as const;
 
 export type Offer = ItemTypeDefinition<
@@ -863,36 +695,6 @@ export type Offer = ItemTypeDefinition<
 export const Offer = {
   ID: '3389',
   REF: { type: 'item_type', id: '3389' },
-} as const;
-
-export type PageOffers = ItemTypeDefinition<
-  EnvironmentSettings,
-  '3392',
-  {
-    title: {
-      type: 'string';
-      localized: true;
-    };
-    subtitle: {
-      type: 'string';
-      localized: true;
-    };
-    intro: {
-      type: 'text';
-      localized: true;
-    };
-    featured_image: {
-      type: 'file';
-    };
-    seo: {
-      type: 'seo';
-      localized: true;
-    };
-  }
->;
-export const PageOffers = {
-  ID: '3392',
-  REF: { type: 'item_type', id: '3392' },
 } as const;
 
 export type GuestPost = ItemTypeDefinition<
@@ -946,66 +748,6 @@ export type Tip = ItemTypeDefinition<
 export const Tip = {
   ID: '3599',
   REF: { type: 'item_type', id: '3599' },
-} as const;
-
-export type PageFaq = ItemTypeDefinition<
-  EnvironmentSettings,
-  '3706',
-  {
-    title: {
-      type: 'string';
-      localized: true;
-    };
-    subtitle: {
-      type: 'string';
-      localized: true;
-    };
-    intro: {
-      type: 'text';
-      localized: true;
-    };
-    featured_image: {
-      type: 'file';
-    };
-    seo: {
-      type: 'seo';
-      localized: true;
-    };
-  }
->;
-export const PageFaq = {
-  ID: '3706',
-  REF: { type: 'item_type', id: '3706' },
-} as const;
-
-export type PageEvent = ItemTypeDefinition<
-  EnvironmentSettings,
-  '16694',
-  {
-    title: {
-      type: 'string';
-      localized: true;
-    };
-    subtitle: {
-      type: 'string';
-      localized: true;
-    };
-    intro: {
-      type: 'text';
-      localized: true;
-    };
-    featured_image: {
-      type: 'file';
-    };
-    seo: {
-      type: 'seo';
-      localized: true;
-    };
-  }
->;
-export const PageEvent = {
-  ID: '16694',
-  REF: { type: 'item_type', id: '16694' },
 } as const;
 
 export type Redirect = ItemTypeDefinition<
@@ -1166,8 +908,8 @@ export type VideoBlock = ItemTypeDefinition<
   EnvironmentSettings,
   'A0cNQOy5SuONmoLpo8x6bg',
   {
-    asset: {
-      type: 'file';
+    embedded_video: {
+      type: 'video';
     };
   }
 >;
@@ -1188,6 +930,29 @@ export type ButtonBlock = ItemTypeDefinition<
 export const ButtonBlock = {
   ID: 'D6Mq0lExTdaSzsqpy02N0g',
   REF: { type: 'item_type', id: 'D6Mq0lExTdaSzsqpy02N0g' },
+} as const;
+
+export type HeroIndex = ItemTypeDefinition<
+  EnvironmentSettings,
+  'EYk_5XZGRsatdHYno4e7-g',
+  {
+    color: {
+      type: 'string';
+    };
+    title: {
+      type: 'string';
+    };
+    subtitle: {
+      type: 'string';
+    };
+    featured_image: {
+      type: 'file';
+    };
+  }
+>;
+export const HeroIndex = {
+  ID: 'EYk_5XZGRsatdHYno4e7-g',
+  REF: { type: 'item_type', id: 'EYk_5XZGRsatdHYno4e7-g' },
 } as const;
 
 export type ImageBlock = ItemTypeDefinition<
@@ -1220,6 +985,44 @@ export type MenuDropdown = ItemTypeDefinition<
 export const MenuDropdown = {
   ID: 'JQeKJz2cRJ6tXjeGw9dQTw',
   REF: { type: 'item_type', id: 'JQeKJz2cRJ6tXjeGw9dQTw' },
+} as const;
+
+export type Post = ItemTypeDefinition<
+  EnvironmentSettings,
+  'MbGgb5GrS4uafx00M18eJA',
+  {
+    slug: {
+      type: 'slug';
+      localized: true;
+    };
+    seo: {
+      type: 'seo';
+      localized: true;
+    };
+    title: {
+      type: 'string';
+      localized: true;
+    };
+    abstract: {
+      type: 'text';
+      localized: true;
+    };
+    content: {
+      type: 'structured_text';
+      blocks: VideoBlock | ButtonBlock | ImageBlock | ImageGalleryBlock | CtaBlogPost | CtaFaq;
+      localized: true;
+    };
+    featured_image: {
+      type: 'file';
+    };
+    category: {
+      type: 'link';
+    };
+  }
+>;
+export const Post = {
+  ID: 'MbGgb5GrS4uafx00M18eJA',
+  REF: { type: 'item_type', id: 'MbGgb5GrS4uafx00M18eJA' },
 } as const;
 
 export type RecordBin = ItemTypeDefinition<
@@ -1319,7 +1122,7 @@ export const MenuExternalItem = {
   REF: { type: 'item_type', id: 'S-IlPzGxRNy5H1eByC2yXQ' },
 } as const;
 
-export type Page = ItemTypeDefinition<
+export type LandingPage = ItemTypeDefinition<
   EnvironmentSettings,
   'U_D3IZZUTcOj76Aaxqk73g',
   {
@@ -1342,12 +1145,12 @@ export type Page = ItemTypeDefinition<
     };
     structured_text: {
       type: 'structured_text';
-      blocks: VideoBlock | ImageBlock | ImageGalleryBlock;
+      blocks: VideoBlock | ImageBlock | ImageGalleryBlock | CtaFaq;
       localized: true;
     };
   }
 >;
-export const Page = {
+export const LandingPage = {
   ID: 'U_D3IZZUTcOj76Aaxqk73g',
   REF: { type: 'item_type', id: 'U_D3IZZUTcOj76Aaxqk73g' },
 } as const;
@@ -1384,6 +1187,76 @@ export type SocialLink = ItemTypeDefinition<
 export const SocialLink = {
   ID: 'WiMHjAJsQqmSl0NMPGkSeA',
   REF: { type: 'item_type', id: 'WiMHjAJsQqmSl0NMPGkSeA' },
+} as const;
+
+export type SchemaMigration = ItemTypeDefinition<
+  EnvironmentSettings,
+  'YeOxxlBLR_iVo0C91KZVfw',
+  {
+    name: {
+      type: 'string';
+    };
+  }
+>;
+export const SchemaMigration = {
+  ID: 'YeOxxlBLR_iVo0C91KZVfw',
+  REF: { type: 'item_type', id: 'YeOxxlBLR_iVo0C91KZVfw' },
+} as const;
+
+export type IndexPage = ItemTypeDefinition<
+  EnvironmentSettings,
+  'ZOa9QihDSZ2Fi8kBsrv0jg',
+  {
+    hero: {
+      type: 'single_block';
+      blocks: HeroIndex;
+      localized: true;
+    };
+    seo: {
+      type: 'seo';
+      localized: true;
+    };
+    description: {
+      type: 'structured_text';
+      localized: true;
+    };
+    slug: {
+      type: 'slug';
+      localized: true;
+    };
+  }
+>;
+export const IndexPage = {
+  ID: 'ZOa9QihDSZ2Fi8kBsrv0jg',
+  REF: { type: 'item_type', id: 'ZOa9QihDSZ2Fi8kBsrv0jg' },
+} as const;
+
+export type CtaBlogPost = ItemTypeDefinition<
+  EnvironmentSettings,
+  'bb9IfZPPRQWgoPCDbdkdeg',
+  {
+    post: {
+      type: 'link';
+    };
+  }
+>;
+export const CtaBlogPost = {
+  ID: 'bb9IfZPPRQWgoPCDbdkdeg',
+  REF: { type: 'item_type', id: 'bb9IfZPPRQWgoPCDbdkdeg' },
+} as const;
+
+export type CtaFaq = ItemTypeDefinition<
+  EnvironmentSettings,
+  'cAZ0WadJTNaKprh6welhew',
+  {
+    faq: {
+      type: 'link';
+    };
+  }
+>;
+export const CtaFaq = {
+  ID: 'cAZ0WadJTNaKprh6welhew',
+  REF: { type: 'item_type', id: 'cAZ0WadJTNaKprh6welhew' },
 } as const;
 
 export type App = ItemTypeDefinition<
@@ -1492,6 +1365,7 @@ export type AnyBlock =
   | FooterMenuBlock
   | VideoBlock
   | ButtonBlock
+  | HeroIndex
   | ImageBlock
   | MenuDropdown
   | MenuItem
@@ -1499,6 +1373,8 @@ export type AnyBlock =
   | MenuExternalItem
   | ImageGalleryBlock
   | SocialLink
+  | CtaBlogPost
+  | CtaFaq
   | SectionHeader;
 export type AnyModel =
   | Apartment
@@ -1507,36 +1383,30 @@ export type AnyModel =
   | Service
   | ServiceCategories
   | Mood
-  | Post
+  | PostOld
   | BlogCategory
   | Paragraph
   | Image
   | Faq
   | Guestbook
   | HomePage
-  | PageMoods
-  | MoodItems
+  | MoodItem
   | CallToAction
-  | IndexApartment
   | ApartmentCategory
-  | PageServices
-  | PageBlog
-  | PageDistricts
-  | PageAcacialife
-  | PageGuestbook
+  | IndexAcacialife
   | Offer
-  | PageOffers
   | GuestPost
   | Tip
-  | PageFaq
-  | PageEvent
   | Redirect
   | Essential
   | Amenity
   | InfoLabel
+  | Post
   | RecordBin
   | Translation
-  | Page
+  | LandingPage
+  | SchemaMigration
+  | IndexPage
   | App
   | HouseBadge
   | Comfort;
