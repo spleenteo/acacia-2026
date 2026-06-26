@@ -1,5 +1,7 @@
 import './global.css';
 import { Fraunces, Lato } from 'next/font/google';
+import { SpeedInsights } from '@vercel/speed-insights/next';
+import { Analytics } from '@vercel/analytics/next';
 import { defaultLocale } from '@/i18n/config';
 import type { Metadata } from 'next';
 
@@ -44,7 +46,11 @@ export default async function RootLayout({
 
   return (
     <html lang={locale ?? defaultLocale} className={`${fraunces.variable} ${lato.variable}`}>
-      <body>{children}</body>
+      <body>
+        {children}
+        <Analytics />
+        <SpeedInsights />
+      </body>
     </html>
   );
 }
