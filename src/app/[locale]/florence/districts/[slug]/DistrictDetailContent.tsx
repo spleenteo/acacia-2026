@@ -1,13 +1,15 @@
 'use client';
 
+import { useEffect, useState, type ReactNode } from 'react';
 import { type Locale } from '@/i18n/config';
 import { useTranslations } from 'next-intl';
 import EditorialHero from '@/components/EditorialHero';
 import EditorialListingLayout from '@/components/EditorialListingLayout';
 import HtmlContent from '@/components/HtmlContent';
 import ReadMore from '@/components/ReadMore';
+import ResponsiveImage from '@/components/ResponsiveImage';
 import { GalleryImageFragment } from '@/components/ImageGallery/fragment';
-import ImageGallery from '@/components/ImageGallery';
+import Lightbox, { useLightbox, type LightboxSlide } from '@/components/Lightbox';
 import { toSlide } from '@/components/Lightbox/toSlide';
 import ApartmentCard from '@/components/ApartmentCard';
 import PostCard from '@/components/PostCard';
@@ -29,7 +31,23 @@ export default function DistrictDetailContent({
   data,
 }: DistrictDetailProps & { data: DistrictDetailData }) {
   const tListing = useTranslations('listing');
-  const tDistrict = useTranslations('district');
+  const lightbox = useLightbox();
+
+  // Masonry column count: 1 (<sm), 2 (sm–xl), 3 (xl+). Default 2 for SSR.
+  const [columnCount, setColumnCount] = useState(2);
+  useEffect(() => {
+    const sm = window.matchMedia('(min-width: 640px)');
+    const xl = window.matchMedia('(min-width: 1280px)');
+    const apply = () => setColumnCount(xl.matches ? 3 : sm.matches ? 2 : 1);
+    apply();
+    sm.addEventListener('change', apply);
+    xl.addEventListener('change', apply);
+    return () => {
+      sm.removeEventListener('change', apply);
+      xl.removeEventListener('change', apply);
+    };
+  }, []);
+
   const { district } = data;
   if (!district) return null;
 
@@ -39,21 +57,63 @@ export default function DistrictDetailContent({
     <HtmlContent html={district.description} className="font-body text-body text-dark" />
   ) : null;
 
-  // `gallery` is a union (GalleryImage | Post); the lightbox shows only the images.
-  // The narrowed branch carries an extra `__typename`, so we coerce it back to a
-  // plain `FragmentOf` (the return annotation) before unmasking with readFragment.
-  const galleryImages = district.gallery
-    .flatMap((g): FragmentOf<typeof GalleryImageFragment>[] =>
-      g.__typename === 'GalleryImageRecord' ? [g] : [],
-    )
-    .map((g) => readFragment(GalleryImageFragment, g));
+  // Walk the `gallery` union once, in CMS order, turning each block into a card:
+  // GalleryImage → image card that opens the shared lightbox at its slide index;
+  // Post → PostCard. The narrowed branches already satisfy the components' props
+  // (image blocks are coerced to a plain `FragmentOf` so readFragment can unmask).
+  const slides: LightboxSlide[] = [];
+  const galleryCards: { id: string; node: ReactNode }[] = [];
+  for (const block of district.gallery) {
+    if (block.__typename === 'GalleryImageRecord') {
+      const imageBlock: FragmentOf<typeof GalleryImageFragment> = block;
+      const img = readFragment(GalleryImageFragment, imageBlock);
+      const thumb = img.image?.responsiveImage;
+      const full = img.image?.full;
+      if (!thumb || !full) continue;
+      const slideIndex = slides.length;
+      slides.push(toSlide(full, img.description));
+      galleryCards.push({
+        id: `img-${img.id}`,
+        node: (
+          <button
+            type="button"
+            onClick={() => lightbox.openAt(slideIndex)}
+            className="group block w-full text-left cursor-pointer"
+          >
+            <div className="overflow-hidden rounded-sm">
+              <div className="transition-transform duration-700 ease-card group-hover:scale-[1.03]">
+                <ResponsiveImage data={thumb} />
+              </div>
+            </div>
+            {img.description && (
+              <p className="pt-3 font-heading italic text-body-sm text-muted">{img.description}</p>
+            )}
+          </button>
+        ),
+      });
+    } else if (block.__typename === 'PostRecord') {
+      galleryCards.push({
+        id: `post-${block.id}`,
+        node: <PostCard data={block} locale={locale} />,
+      });
+    }
+  }
 
-  const galleryItems = galleryImages.filter((img) => img.image?.responsiveImage && img.image?.full);
+  // One masonry of apartments + gallery images + posts. Apartments lead (the
+  // district's core "where to stay"), then the curated gallery in CMS order.
+  const cards = [
+    ...allApartments.map((apartment) => ({
+      id: `apt-${apartment.id}`,
+      node: <ApartmentCard data={apartment} locale={locale} />,
+    })),
+    ...galleryCards,
+  ];
 
-  // The same `gallery` union can also hold Post blocks, rendered as a dedicated
-  // "Magazine" section of PostCards (the narrowed branch already satisfies the
-  // card's `FragmentOf` prop, so no readFragment/coercion is needed here).
-  const posts = district.gallery.flatMap((g) => (g.__typename === 'PostRecord' ? [g] : []));
+  // Round-robin into N columns so the reading order flows left→right; natural
+  // card heights fill the space, the per-column gap separates items.
+  const columns = Array.from({ length: columnCount }, (_, c) =>
+    cards.filter((_card, i) => i % columnCount === c),
+  );
 
   // Other published districts for the "you might also be interested in" block.
   const otherDistricts = data.allDistricts
@@ -80,17 +140,22 @@ export default function DistrictDetailContent({
 
       {/* Tucks under the hero diagonal on mobile; desktop overlap via the layout. */}
       <div className="relative z-0 -mt-8 lg:mt-0">
-        {allApartments.length > 0 ? (
+        {cards.length > 0 ? (
           <EditorialListingLayout body={description && <ReadMore>{description}</ReadMore>}>
             <p className="mb-3 font-body text-label uppercase tracking-[0.22em] text-primary font-medium">
-              {tListing('whereToStay')}
+              {tListing('discoverArea')}
             </p>
             <h2 className="mb-8 font-heading font-normal text-h2 text-dark tracking-[-0.02em]">
-              {tDistrict('apartments')} {district.name}
+              {district.name}
             </h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-12 sm:gap-6">
-              {allApartments.map((apartment) => (
-                <ApartmentCard key={apartment.id} data={apartment} locale={locale} />
+            {/* Masonry — natural-height cards in N ordered columns. */}
+            <div className="flex gap-6">
+              {columns.map((col, ci) => (
+                <div key={ci} className="flex flex-1 flex-col gap-12">
+                  {col.map((card) => (
+                    <div key={card.id}>{card.node}</div>
+                  ))}
+                </div>
               ))}
             </div>
           </EditorialListingLayout>
@@ -101,45 +166,16 @@ export default function DistrictDetailContent({
             </section>
           )
         )}
-
-        {/* Gallery — full-width below the two-column block */}
-        {galleryItems.length > 0 && (
-          <section className="py-16 lg:py-20 bg-surface-alt">
-            <div className="mx-auto max-w-6xl px-8">
-              <ImageGallery
-                items={galleryItems.map((img) => ({
-                  id: img.id,
-                  thumb: img.image!.responsiveImage!,
-                  full: img.image!.full!,
-                  caption: img.description,
-                }))}
-                slides={galleryImages
-                  .filter((img) => img.image?.full)
-                  .map((img) => toSlide(img.image!.full!, img.description))}
-              />
-            </div>
-          </section>
-        )}
-
-        {/* Magazine — Post blocks from the gallery, as a dedicated card section */}
-        {posts.length > 0 && (
-          <section className="py-16 lg:py-20">
-            <div className="mx-auto max-w-6xl px-8">
-              <p className="mb-3 font-body text-label uppercase tracking-[0.22em] text-primary font-medium">
-                {tDistrict('storiesLabel')}
-              </p>
-              <h2 className="mb-8 font-heading font-normal text-h2 text-dark tracking-[-0.02em]">
-                {tDistrict('storiesTitle')}
-              </h2>
-              <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-12 sm:gap-6">
-                {posts.map((post) => (
-                  <PostCard key={post.id} data={post} locale={locale} />
-                ))}
-              </div>
-            </div>
-          </section>
-        )}
       </div>
+
+      {slides.length > 0 && (
+        <Lightbox
+          slides={slides}
+          open={lightbox.open}
+          index={lightbox.index}
+          onClose={lightbox.close}
+        />
+      )}
 
       <RelatedList
         title={tListing('alsoInterested')}
