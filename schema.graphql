@@ -1368,6 +1368,8 @@ input DistrictModelFilter {
   AND: [DistrictModelFilter]
 }
 
+union DistrictModelGalleryField = GalleryImageRecord | PostRecord
+
 enum DistrictModelOrderBy {
   _createdAt_ASC
   _createdAt_DESC
@@ -1586,7 +1588,7 @@ type DistrictRecord implements RecordInterface {
     """
     fallbackLocales: [SiteLocale!]
   ): String
-  gallery: [GalleryImageRecord!]!
+  gallery: [DistrictModelGalleryField!]!
   id: ItemId!
   name: String!
   position: IntType

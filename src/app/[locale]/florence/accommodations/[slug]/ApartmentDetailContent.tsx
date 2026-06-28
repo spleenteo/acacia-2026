@@ -447,7 +447,11 @@ export default function ApartmentDetailContent({
               locale={locale}
               abstract={apartment.district.abstract}
               description={apartment.district.description}
-              image={apartment.district.gallery[0]?.image?.responsiveImage}
+              image={
+                apartment.district.gallery.flatMap((g) =>
+                  g.__typename === 'GalleryImageRecord' ? [g.image?.responsiveImage] : [],
+                )[0]
+              }
             />
           </div>
         )}

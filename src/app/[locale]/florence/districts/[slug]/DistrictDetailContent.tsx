@@ -10,10 +10,11 @@ import { GalleryImageFragment } from '@/components/ImageGallery/fragment';
 import ImageGallery from '@/components/ImageGallery';
 import { toSlide } from '@/components/Lightbox/toSlide';
 import ApartmentCard from '@/components/ApartmentCard';
+import PostCard from '@/components/PostCard';
 import { DistrictCardFragment } from '@/components/DistrictCard/fragment';
 import RelatedList from '@/components/RelatedList';
 import { readFragment } from '@/lib/datocms/graphql';
-import type { ResultOf } from 'gql.tada';
+import type { FragmentOf, ResultOf } from 'gql.tada';
 import type { query as districtDetailQuery, apartmentsInDistrictQuery } from './page';
 
 export type DistrictDetailProps = {
@@ -38,9 +39,21 @@ export default function DistrictDetailContent({
     <HtmlContent html={district.description} className="font-body text-body text-dark" />
   ) : null;
 
-  const galleryItems = district.gallery
-    .map((g) => readFragment(GalleryImageFragment, g))
-    .filter((img) => img.image?.responsiveImage && img.image?.full);
+  // `gallery` is a union (GalleryImage | Post); the lightbox shows only the images.
+  // The narrowed branch carries an extra `__typename`, so we coerce it back to a
+  // plain `FragmentOf` (the return annotation) before unmasking with readFragment.
+  const galleryImages = district.gallery
+    .flatMap((g): FragmentOf<typeof GalleryImageFragment>[] =>
+      g.__typename === 'GalleryImageRecord' ? [g] : [],
+    )
+    .map((g) => readFragment(GalleryImageFragment, g));
+
+  const galleryItems = galleryImages.filter((img) => img.image?.responsiveImage && img.image?.full);
+
+  // The same `gallery` union can also hold Post blocks, rendered as a dedicated
+  // "Magazine" section of PostCards (the narrowed branch already satisfies the
+  // card's `FragmentOf` prop, so no readFragment/coercion is needed here).
+  const posts = district.gallery.flatMap((g) => (g.__typename === 'PostRecord' ? [g] : []));
 
   // Other published districts for the "you might also be interested in" block.
   const otherDistricts = data.allDistricts
@@ -50,7 +63,9 @@ export default function DistrictDetailContent({
       id: d.id,
       name: d.name,
       slug: d.slug,
-      image: d.gallery[0]?.image?.responsiveImage,
+      image: d.gallery.flatMap((g) =>
+        g.__typename === 'GalleryImageRecord' ? [g.image?.responsiveImage] : [],
+      )[0],
     }));
 
   return (
@@ -98,11 +113,29 @@ export default function DistrictDetailContent({
                   full: img.image!.full!,
                   caption: img.description,
                 }))}
-                slides={district.gallery
-                  .map((g) => readFragment(GalleryImageFragment, g))
+                slides={galleryImages
                   .filter((img) => img.image?.full)
                   .map((img) => toSlide(img.image!.full!, img.description))}
               />
+            </div>
+          </section>
+        )}
+
+        {/* Magazine — Post blocks from the gallery, as a dedicated card section */}
+        {posts.length > 0 && (
+          <section className="py-16 lg:py-20">
+            <div className="mx-auto max-w-6xl px-8">
+              <p className="mb-3 font-body text-label uppercase tracking-[0.22em] text-primary font-medium">
+                {tDistrict('storiesLabel')}
+              </p>
+              <h2 className="mb-8 font-heading font-normal text-h2 text-dark tracking-[-0.02em]">
+                {tDistrict('storiesTitle')}
+              </h2>
+              <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-12 sm:gap-6">
+                {posts.map((post) => (
+                  <PostCard key={post.id} data={post} locale={locale} />
+                ))}
+              </div>
             </div>
           </section>
         )}

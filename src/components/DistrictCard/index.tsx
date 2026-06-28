@@ -21,7 +21,10 @@ type Props = {
 export default function DistrictCard({ data, locale }: Props) {
   const t = useTranslations('districts');
   const district = readFragment(DistrictCardFragment, data);
-  const coverImage = district.gallery[0]?.image?.responsiveImage;
+  // `gallery` is a union (GalleryImage | Post); the cover is the first image block.
+  const coverImage = district.gallery.flatMap((g) =>
+    g.__typename === 'GalleryImageRecord' ? [g.image?.responsiveImage] : [],
+  )[0];
 
   return (
     <Link href={modelPath('district', district.slug, locale)!} className="group block">

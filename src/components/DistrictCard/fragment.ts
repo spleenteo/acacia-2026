@@ -12,9 +12,12 @@ export const DistrictCardFragment = graphql(
       name
       slug
       gallery {
-        image {
-          responsiveImage(imgixParams: { w: 600, h: 800, fit: crop }) {
-            ...ResponsiveImageFragment
+        __typename
+        ... on GalleryImageRecord {
+          image {
+            responsiveImage(imgixParams: { w: 600, h: 800, fit: crop }) {
+              ...ResponsiveImageFragment
+            }
           }
         }
       }

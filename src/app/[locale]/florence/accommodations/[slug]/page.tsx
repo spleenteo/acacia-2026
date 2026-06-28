@@ -102,9 +102,12 @@ export const query = graphql(
           abstract(locale: $locale, markdown: true)
           description(locale: $locale, markdown: true)
           gallery {
-            image {
-              responsiveImage(imgixParams: { w: 600, h: 400, fit: crop }) {
-                ...ResponsiveImageFragment
+            __typename
+            ... on GalleryImageRecord {
+              image {
+                responsiveImage(imgixParams: { w: 600, h: 400, fit: crop }) {
+                  ...ResponsiveImageFragment
+                }
               }
             }
           }
