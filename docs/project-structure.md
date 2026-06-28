@@ -56,8 +56,7 @@ acacia-next/
 │   │   ├── HtmlContent/index.tsx
 │   │   ├── JsonLd/index.tsx                    # <script type="application/ld+json"> renderer (server)
 │   │   ├── ImageGallery/
-│   │   │   ├── index.tsx
-│   │   │   └── fragment.ts
+│   │   │   └── fragment.ts                       # GalleryImageFragment (shared; grid component removed)
 │   │   ├── Lightbox/
 │   │   │   ├── index.tsx                       # YARL lightbox modal (swipe, lazy, dots)
 │   │   │   └── toSlide.ts                      # ResponsiveImage → LightboxSlide converter
@@ -76,6 +75,7 @@ acacia-next/
 │   │   ├── request.ts                         # next-intl config (runtime CDA translations)
 │   │   └── paths.ts                           # Localized path segments + modelPath()
 │   └── lib/
+│       ├── seededShuffle.ts                     # Deterministic seeded shuffle (SSR-safe masonry order)
 │       ├── datocms/
 │           ├── executeQuery.ts                 # Central CDA fetch wrapper (cache/no-store)
 │           ├── fetchTranslations.ts            # Runtime CDA fetch for next-intl translations

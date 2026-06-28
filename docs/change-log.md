@@ -1,5 +1,20 @@
 # Changelog
 
+## v1.1.0 — 2026-06-28 — District detail: unified content masonry + Post blocks
+
+The district `gallery` field gained a Post block type; the district detail page now renders apartments, gallery photos, and posts together in one shuffled masonry.
+
+- **Post blocks in the district gallery**: The `gallery` modular field went from a single `GalleryImageRecord` list to a union (`GalleryImageRecord | PostRecord`). Schema + gql.tada types regenerated from `acacia-2026`; every `gallery` selection is now union-aware (`__typename` + `... on GalleryImageRecord`) across the district index, district detail, and apartment detail pages. This fixes the runtime crash on the districts index — the build was green only because the local `schema.graphql` was stale.
+- **Unified content masonry**: The district detail's three separate sections (apartments grid, photo lightbox, Magazine) became one round-robin masonry (mood-style columns, 1/2/3 responsive). Gallery photos render as cards that open a shared inline lightbox; posts render as `PostCard`; apartments use `ApartmentCard`. Single `listing.discoverArea` heading.
+- **Seeded shuffle**: Apartments, photos, and posts are shuffled together via a deterministic Fisher–Yates shuffle seeded by the district id (`src/lib/seededShuffle.ts`). Deterministic so SSR and client agree — no hydration mismatch, no reorder flash — and stable per district.
+- **Sharper photo cards**: `GalleryImageFragment`'s card crop went from `400×300` to `1000×750`, so the `srcSet` offers candidates up to 1000px; with `sizes="auto"` the browser serves the right one per rendered width.
+- **Translations**: Added `district.storiesLabel` / `district.storiesTitle` (from the earlier dedicated-Magazine-section iteration; the final masonry uses one `listing.discoverArea` heading, so these are currently unused).
+- **Cleanup**: Removed the now-unused `ImageGallery` grid component (`src/components/ImageGallery/index.tsx`); its `GalleryImageFragment` stays (district masonry + WhatWeLove).
+
+gql.tada note: calling `readFragment` directly on a narrowed union member returns `never` (the added `__typename` mismatches the overload). Coerce the branch back to a plain `FragmentOf` via a return-type annotation before unmasking.
+
+---
+
 ## v1.0.1 — 2026-06-25 — JSON-LD structured data + real 404 on detail pages
 
 Added structured data across the site and fixed detail pages returning a soft-404 (HTTP 200) for non-existent slugs.
