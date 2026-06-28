@@ -7,7 +7,7 @@ export const GalleryImageFragment = graphql(
       id
       description(locale: $locale)
       image {
-        responsiveImage(imgixParams: { w: 400, h: 300, fit: crop }) {
+        responsiveImage(imgixParams: { w: 1000, h: 750, fit: crop }) {
           ...ResponsiveImageFragment
         }
         full: responsiveImage(imgixParams: { w: 1200, fit: max }) {
