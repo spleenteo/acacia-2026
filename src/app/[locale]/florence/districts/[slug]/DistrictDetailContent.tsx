@@ -100,17 +100,20 @@ export default function DistrictDetailContent({
     }
   }
 
-  // One masonry of apartments + gallery images + posts. Apartments always lead
-  // (the district's core "where to stay"); the gallery blocks (photos + posts)
-  // follow in a random-looking mix. The shuffle is seeded by the district id so
-  // server and client agree (no hydration mismatch) and it's stable per district.
-  const cards = [
-    ...allApartments.map((apartment) => ({
-      id: `apt-${apartment.id}`,
-      node: <ApartmentCard data={apartment} locale={locale} />,
-    })),
-    ...seededShuffle(galleryCards, district.id),
-  ];
+  // One masonry of apartments + gallery images + posts, all shuffled together
+  // into a random-looking mix (apartments are not pinned). The shuffle is seeded
+  // by the district id so server and client agree (no hydration mismatch) and
+  // the order stays stable per district.
+  const cards = seededShuffle(
+    [
+      ...allApartments.map((apartment) => ({
+        id: `apt-${apartment.id}`,
+        node: <ApartmentCard data={apartment} locale={locale} />,
+      })),
+      ...galleryCards,
+    ],
+    district.id,
+  );
 
   // Round-robin into N columns so the reading order flows left→right; natural
   // card heights fill the space, the per-column gap separates items.
