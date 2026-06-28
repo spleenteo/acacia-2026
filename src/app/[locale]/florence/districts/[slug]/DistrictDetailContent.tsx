@@ -16,6 +16,7 @@ import PostCard from '@/components/PostCard';
 import { DistrictCardFragment } from '@/components/DistrictCard/fragment';
 import RelatedList from '@/components/RelatedList';
 import { readFragment } from '@/lib/datocms/graphql';
+import { seededShuffle } from '@/lib/seededShuffle';
 import type { FragmentOf, ResultOf } from 'gql.tada';
 import type { query as districtDetailQuery, apartmentsInDistrictQuery } from './page';
 
@@ -99,14 +100,16 @@ export default function DistrictDetailContent({
     }
   }
 
-  // One masonry of apartments + gallery images + posts. Apartments lead (the
-  // district's core "where to stay"), then the curated gallery in CMS order.
+  // One masonry of apartments + gallery images + posts. Apartments always lead
+  // (the district's core "where to stay"); the gallery blocks (photos + posts)
+  // follow in a random-looking mix. The shuffle is seeded by the district id so
+  // server and client agree (no hydration mismatch) and it's stable per district.
   const cards = [
     ...allApartments.map((apartment) => ({
       id: `apt-${apartment.id}`,
       node: <ApartmentCard data={apartment} locale={locale} />,
     })),
-    ...galleryCards,
+    ...seededShuffle(galleryCards, district.id),
   ];
 
   // Round-robin into N columns so the reading order flows left→right; natural
