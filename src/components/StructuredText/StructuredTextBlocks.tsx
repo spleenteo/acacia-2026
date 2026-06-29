@@ -75,6 +75,7 @@ export function makeStructuredTextBlockRenderer(
           CtaBlogPostFragment,
           record as unknown as FragmentOf<typeof CtaBlogPostFragment>,
         );
+        if (!block.post) return null;
         return <CtaBlogPost post={block.post} locale={locale} />;
       }
 
@@ -149,7 +150,7 @@ function CtaBlogPost({
     title: string;
     slug: string;
     abstract: string | null;
-    featuredImage: { responsiveImage: FragmentOf<typeof ResponsiveImageFragment> | null };
+    featuredImage: { responsiveImage: FragmentOf<typeof ResponsiveImageFragment> | null } | null;
   };
   locale: Locale;
 }) {

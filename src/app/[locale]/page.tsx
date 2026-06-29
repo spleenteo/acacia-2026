@@ -50,8 +50,7 @@ export const query = graphql(
     query HomeQuery($locale: SiteLocale!) {
       homePage(locale: $locale) {
         title(locale: $locale, markdown: true)
-        subtitle(locale: $locale, markdown: true)
-        claim(locale: $locale)
+        subtitle(locale: $locale)
         beddyId
         buttons {
           ...ButtonBlockFragment
@@ -59,7 +58,6 @@ export const query = graphql(
         moodsHeader(locale: $locale) {
           ...SectionHeaderFragment
         }
-        moodsTitle(locale: $locale)
         moods {
           id
           ...MoodCardFragment

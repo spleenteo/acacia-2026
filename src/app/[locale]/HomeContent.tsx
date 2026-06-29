@@ -67,7 +67,7 @@ export default function HomeContent({
       <div id="home-top">
         {/* The hero CTAs are replaced by the search entry point (above the
             fold). `homePage.buttons` stays in the CMS, just not rendered here. */}
-        <Hero title={homePage?.title ?? ''} subtitle={homePage?.claim} locale={locale} priority>
+        <Hero title={homePage?.title ?? ''} subtitle={homePage?.subtitle} locale={locale} priority>
           <SearchBox locale={locale} />
         </Hero>
       </div>

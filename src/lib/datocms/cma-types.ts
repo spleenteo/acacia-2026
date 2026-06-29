@@ -278,65 +278,6 @@ export const Mood = {
   REF: { type: 'item_type', id: '2738' },
 } as const;
 
-export type PostOld = ItemTypeDefinition<
-  EnvironmentSettings,
-  '2762',
-  {
-    published: {
-      type: 'boolean';
-    };
-    slug: {
-      type: 'slug';
-    };
-    seo: {
-      type: 'seo';
-    };
-    title: {
-      type: 'string';
-    };
-    language: {
-      type: 'string';
-    };
-    sticky: {
-      type: 'boolean';
-    };
-    category: {
-      type: 'link';
-    };
-    featured_image: {
-      type: 'file';
-    };
-    abstract: {
-      type: 'text';
-    };
-    content: {
-      type: 'links';
-    };
-    cta: {
-      type: 'link';
-    };
-    related_posts: {
-      type: 'links';
-    };
-    related_apartments: {
-      type: 'links';
-    };
-    related_services: {
-      type: 'links';
-    };
-    related_districts: {
-      type: 'links';
-    };
-    published_at: {
-      type: 'date';
-    };
-  }
->;
-export const PostOld = {
-  ID: '2762',
-  REF: { type: 'item_type', id: '2762' },
-} as const;
-
 export type BlogCategory = ItemTypeDefinition<
   EnvironmentSettings,
   '2763',
@@ -487,12 +428,12 @@ export type HomePage = ItemTypeDefinition<
     };
     highlights_header: {
       type: 'single_block';
-      blocks: SectionHeader;
+      blocks: SectionHeaderBlock;
       localized: true;
     };
     moods_header: {
       type: 'single_block';
-      blocks: SectionHeader;
+      blocks: SectionHeaderBlock;
       localized: true;
     };
     seo: {
@@ -506,9 +447,8 @@ export type HomePage = ItemTypeDefinition<
     highlighted_apartments: {
       type: 'links';
     };
-    moods_title: {
-      type: 'string';
-      localized: true;
+    moods: {
+      type: 'links';
     };
     subtitle: {
       type: 'text';
@@ -517,13 +457,6 @@ export type HomePage = ItemTypeDefinition<
     buttons: {
       type: 'rich_text';
       blocks: ButtonBlock;
-    };
-    claim: {
-      type: 'string';
-      localized: true;
-    };
-    moods: {
-      type: 'links';
     };
     stay_text: {
       type: 'text';
@@ -1071,7 +1004,7 @@ export type HeroBlock = ItemTypeDefinition<
   {
     hero_header: {
       type: 'single_block';
-      blocks: SectionHeader;
+      blocks: SectionHeaderBlock;
     };
     hero_image: {
       type: 'file';
@@ -1338,7 +1271,7 @@ export const Comfort = {
   REF: { type: 'item_type', id: 'dX-XZIRRRqKPsbO3gBn0rA' },
 } as const;
 
-export type SectionHeader = ItemTypeDefinition<
+export type SectionHeaderBlock = ItemTypeDefinition<
   EnvironmentSettings,
   'fohy5eWKQ8-3vZFwvn_r0w',
   {
@@ -1353,7 +1286,7 @@ export type SectionHeader = ItemTypeDefinition<
     };
   }
 >;
-export const SectionHeader = {
+export const SectionHeaderBlock = {
   ID: 'fohy5eWKQ8-3vZFwvn_r0w',
   REF: { type: 'item_type', id: 'fohy5eWKQ8-3vZFwvn_r0w' },
 } as const;
@@ -1375,7 +1308,7 @@ export type AnyBlock =
   | SocialLink
   | CtaBlogPost
   | CtaFaq
-  | SectionHeader;
+  | SectionHeaderBlock;
 export type AnyModel =
   | Apartment
   | GalleryImage
@@ -1383,7 +1316,6 @@ export type AnyModel =
   | Service
   | ServiceCategories
   | Mood
-  | PostOld
   | BlogCategory
   | Paragraph
   | Image

@@ -450,36 +450,6 @@ type ApartmentRecord implements RecordInterface {
     locale: SiteLocale
     filter: MoodModelFilter
   ): CollectionMetadata!
-  _allReferencingPostOlds(
-    """Specifies how to filter linking records"""
-    through: InverseRelationshipFilterBetweenPostOldAndApartment
-
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
-    """
-    If you want to fallback to a default translation when a translation has not been found
-    """
-    fallbackLocales: [SiteLocale!]
-
-    """Skip the first results"""
-    skip: IntType
-
-    """Limit the number of results"""
-    first: IntType = 20
-    filter: PostOldModelFilter
-    orderBy: [PostOldModelOrderBy] = [_updatedAt_DESC]
-  ): [PostOldRecord!]!
-
-  """Returns meta information regarding a record collection"""
-  _allReferencingPostOldsMeta(
-    """Specifies how to filter linking records"""
-    through: InverseRelationshipFilterBetweenPostOldAndApartment
-
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-    filter: PostOldModelFilter
-  ): CollectionMetadata!
   _allReferencingPosts(
     """Specifies how to filter linking records"""
     through: InverseRelationshipFilterBetweenPostAndApartment
@@ -784,36 +754,6 @@ type BlogCategoryRecord implements RecordInterface {
     """
     fallbackLocales: [SiteLocale!]
   ): [StringNonNullMultiLocaleField!]
-  _allReferencingPostOlds(
-    """Specifies how to filter linking records"""
-    through: InverseRelationshipFilterBetweenPostOldAndBlogCategory
-
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
-    """
-    If you want to fallback to a default translation when a translation has not been found
-    """
-    fallbackLocales: [SiteLocale!]
-
-    """Skip the first results"""
-    skip: IntType
-
-    """Limit the number of results"""
-    first: IntType = 20
-    filter: PostOldModelFilter
-    orderBy: [PostOldModelOrderBy] = [_updatedAt_DESC]
-  ): [PostOldRecord!]!
-
-  """Returns meta information regarding a record collection"""
-  _allReferencingPostOldsMeta(
-    """Specifies how to filter linking records"""
-    through: InverseRelationshipFilterBetweenPostOldAndBlogCategory
-
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-    filter: PostOldModelFilter
-  ): CollectionMetadata!
   _allReferencingPosts(
     """Specifies how to filter linking records"""
     through: InverseRelationshipFilterBetweenPostAndBlogCategory
@@ -1237,7 +1177,7 @@ type CtaBlogPostRecord implements RecordInterface {
   _updatedAt: DateTime!
   createdAt: DateTime!
   id: ItemId!
-  post: PostOldRecord!
+  post: PostRecord!
   updatedAt: DateTime!
 }
 
@@ -1478,36 +1418,6 @@ type DistrictRecord implements RecordInterface {
     """The locale to use to fetch the field's content"""
     locale: SiteLocale
     filter: MoodModelFilter
-  ): CollectionMetadata!
-  _allReferencingPostOlds(
-    """Specifies how to filter linking records"""
-    through: InverseRelationshipFilterBetweenPostOldAndDistrict
-
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
-    """
-    If you want to fallback to a default translation when a translation has not been found
-    """
-    fallbackLocales: [SiteLocale!]
-
-    """Skip the first results"""
-    skip: IntType
-
-    """Limit the number of results"""
-    first: IntType = 20
-    filter: PostOldModelFilter
-    orderBy: [PostOldModelOrderBy] = [_updatedAt_DESC]
-  ): [PostOldRecord!]!
-
-  """Returns meta information regarding a record collection"""
-  _allReferencingPostOldsMeta(
-    """Specifies how to filter linking records"""
-    through: InverseRelationshipFilterBetweenPostOldAndDistrict
-
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-    filter: PostOldModelFilter
   ): CollectionMetadata!
   _allReferencingPosts(
     """Specifies how to filter linking records"""
@@ -1755,7 +1665,7 @@ type FaqModelLongAnswerFieldMultiLocaleField {
   value: FaqModelLongAnswerField
 }
 
-union FaqModelLongAnswerLinksField = FaqRecord | LandingPageRecord | PostOldRecord
+union FaqModelLongAnswerLinksField = FaqRecord | LandingPageRecord
 
 enum FaqModelOrderBy {
   _createdAt_ASC
@@ -1800,7 +1710,7 @@ type FaqModelShortAnswerFieldMultiLocaleField {
   value: FaqModelShortAnswerField
 }
 
-union FaqModelShortAnswerLinksField = FaqRecord | LandingPageRecord | PostOldRecord
+union FaqModelShortAnswerLinksField = FaqRecord | LandingPageRecord
 
 """Record of type ⁉️ Faq (faq)"""
 type FaqRecord implements RecordInterface {
@@ -1867,7 +1777,7 @@ type FaqRecord implements RecordInterface {
   ): FaqModelLongAnswerField
   parent: FaqRecord
   position: IntType
-  posts: [PostOldRecord!]!
+  posts: [String!]!
   question(
     """The locale to use to fetch the field's content"""
     locale: SiteLocale
@@ -2498,7 +2408,7 @@ type HeroBlockRecord implements RecordInterface {
   _updatedAt: DateTime!
   buttons: [ButtonBlockRecord!]!
   createdAt: DateTime!
-  heroHeader: SectionHeaderRecord!
+  heroHeader: SectionHeaderBlockRecord!
   heroImage: FileField
   id: ItemId!
   updatedAt: DateTime!
@@ -2566,11 +2476,9 @@ input HomePageModelFilter {
   updatedAt: UpdatedAtFilter
   _isValid: BooleanFilter
   beddyId: StringFilter
-  claim: StringFilter
   doText: TextFilter
   highlightedApartments: LinksFilter
   moods: LinksFilter
-  moodsTitle: StringFilter
   seo: SeoFilter
   stayText: TextFilter
   subtitle: TextFilter
@@ -2604,20 +2512,10 @@ enum HomePageModelOrderBy {
   _isValid_DESC
   beddyId_ASC
   beddyId_DESC
-  claim_ASC
-  claim_DESC
-  moodsTitle_ASC
-  moodsTitle_DESC
 }
 
 """Record of type 🏡 Home page (home_page)"""
 type HomePageRecord implements RecordInterface {
-  _allClaimLocales(
-    """
-    If you want to fallback to a default translation when a translation has not been found
-    """
-    fallbackLocales: [SiteLocale!]
-  ): [StringMultiLocaleField!]
   _allDoTextLocales(
     """Process content as markdown"""
     markdown: Boolean
@@ -2632,19 +2530,13 @@ type HomePageRecord implements RecordInterface {
     If you want to fallback to a default translation when a translation has not been found
     """
     fallbackLocales: [SiteLocale!]
-  ): [SectionHeaderRecordNonNullMultiLocaleField!]
+  ): [SectionHeaderBlockRecordNonNullMultiLocaleField!]
   _allMoodsHeaderLocales(
     """
     If you want to fallback to a default translation when a translation has not been found
     """
     fallbackLocales: [SiteLocale!]
-  ): [SectionHeaderRecordNonNullMultiLocaleField!]
-  _allMoodsTitleLocales(
-    """
-    If you want to fallback to a default translation when a translation has not been found
-    """
-    fallbackLocales: [SiteLocale!]
-  ): [StringNonNullMultiLocaleField!]
+  ): [SectionHeaderBlockRecordNonNullMultiLocaleField!]
   _allSeoLocales(
     """
     If you want to fallback to a default translation when a translation has not been found
@@ -2698,15 +2590,6 @@ type HomePageRecord implements RecordInterface {
   _updatedAt: DateTime!
   beddyId: String
   buttons: [ButtonBlockRecord!]!
-  claim(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
-    """
-    If you want to fallback to a default translation when a translation has not been found
-    """
-    fallbackLocales: [SiteLocale!]
-  ): String
   createdAt: DateTime!
   doText(
     """Process content as markdown"""
@@ -2729,7 +2612,7 @@ type HomePageRecord implements RecordInterface {
     If you want to fallback to a default translation when a translation has not been found
     """
     fallbackLocales: [SiteLocale!]
-  ): SectionHeaderRecord!
+  ): SectionHeaderBlockRecord!
   id: ItemId!
   moods: [MoodRecord!]!
   moodsHeader(
@@ -2740,16 +2623,7 @@ type HomePageRecord implements RecordInterface {
     If you want to fallback to a default translation when a translation has not been found
     """
     fallbackLocales: [SiteLocale!]
-  ): SectionHeaderRecord!
-  moodsTitle(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
-    """
-    If you want to fallback to a default translation when a translation has not been found
-    """
-    fallbackLocales: [SiteLocale!]
-  ): String!
+  ): SectionHeaderBlockRecord!
   seo(
     """The locale to use to fetch the field's content"""
     locale: SiteLocale
@@ -5739,45 +5613,6 @@ input InverseRelationshipFieldFilterBetweenPostAndMood {
   notIn: [PostModelFieldsReferencingMoodModel!]
 }
 
-"""Specifies how to filter by linking fields"""
-input InverseRelationshipFieldFilterBetweenPostOldAndApartment {
-  """
-  Filter linking records that reference current record in at least one of the specified fields
-  """
-  anyIn: [PostOldModelFieldsReferencingApartmentModel!]
-
-  """
-  Filter linking records that do not reference current record in any of the specified fields
-  """
-  notIn: [PostOldModelFieldsReferencingApartmentModel!]
-}
-
-"""Specifies how to filter by linking fields"""
-input InverseRelationshipFieldFilterBetweenPostOldAndBlogCategory {
-  """
-  Filter linking records that reference current record in at least one of the specified fields
-  """
-  anyIn: [PostOldModelFieldsReferencingBlogCategoryModel!]
-
-  """
-  Filter linking records that do not reference current record in any of the specified fields
-  """
-  notIn: [PostOldModelFieldsReferencingBlogCategoryModel!]
-}
-
-"""Specifies how to filter by linking fields"""
-input InverseRelationshipFieldFilterBetweenPostOldAndDistrict {
-  """
-  Filter linking records that reference current record in at least one of the specified fields
-  """
-  anyIn: [PostOldModelFieldsReferencingDistrictModel!]
-
-  """
-  Filter linking records that do not reference current record in any of the specified fields
-  """
-  notIn: [PostOldModelFieldsReferencingDistrictModel!]
-}
-
 """Specifies how to filter linking records"""
 input InverseRelationshipFilterBetweenApartmentAndDistrict {
   """Specifies how to filter by linking fields"""
@@ -5881,33 +5716,6 @@ input InverseRelationshipFilterBetweenPostAndDistrict {
 input InverseRelationshipFilterBetweenPostAndMood {
   """Specifies how to filter by linking fields"""
   fields: InverseRelationshipFieldFilterBetweenPostAndMood
-
-  """Specifies how to filter by linking locales"""
-  locales: LinkingLocalesFilter
-}
-
-"""Specifies how to filter linking records"""
-input InverseRelationshipFilterBetweenPostOldAndApartment {
-  """Specifies how to filter by linking fields"""
-  fields: InverseRelationshipFieldFilterBetweenPostOldAndApartment
-
-  """Specifies how to filter by linking locales"""
-  locales: LinkingLocalesFilter
-}
-
-"""Specifies how to filter linking records"""
-input InverseRelationshipFilterBetweenPostOldAndBlogCategory {
-  """Specifies how to filter by linking fields"""
-  fields: InverseRelationshipFieldFilterBetweenPostOldAndBlogCategory
-
-  """Specifies how to filter by linking locales"""
-  locales: LinkingLocalesFilter
-}
-
-"""Specifies how to filter linking records"""
-input InverseRelationshipFilterBetweenPostOldAndDistrict {
-  """Specifies how to filter by linking fields"""
-  fields: InverseRelationshipFieldFilterBetweenPostOldAndDistrict
 
   """Specifies how to filter by linking locales"""
   locales: LinkingLocalesFilter
@@ -6313,7 +6121,7 @@ input MoodItemModelFilter {
   AND: [MoodItemModelFilter]
 }
 
-union MoodItemModelObjectField = ApartmentRecord | PostOldRecord | ServiceRecord | TipRecord
+union MoodItemModelObjectField = ApartmentRecord | ServiceRecord | TipRecord
 
 enum MoodItemModelOrderBy {
   _createdAt_ASC
@@ -7103,134 +6911,6 @@ enum PostModelOrderBy {
   title_DESC
 }
 
-union PostOldModelContentField = GalleryImageRecord | GuestPostRecord | ImageRecord | ParagraphRecord
-
-"""Linking fields"""
-enum PostOldModelFieldsReferencingApartmentModel {
-  postOld_relatedApartments
-}
-
-"""Linking fields"""
-enum PostOldModelFieldsReferencingBlogCategoryModel {
-  postOld_category
-}
-
-"""Linking fields"""
-enum PostOldModelFieldsReferencingDistrictModel {
-  postOld_relatedDistricts
-}
-
-input PostOldModelFilter {
-  _createdAt: CreatedAtFilter
-  createdAt: CreatedAtFilter
-  id: ItemIdFilter
-  _firstPublishedAt: PublishedAtFilter
-  _publicationScheduledAt: PublishedAtFilter
-  _unpublishingScheduledAt: PublishedAtFilter
-  _publishedAt: PublishedAtFilter
-  _status: StatusFilter
-  _updatedAt: UpdatedAtFilter
-  updatedAt: UpdatedAtFilter
-  _isValid: BooleanFilter
-  abstract: TextFilter
-  category: LinkFilter
-  content: LinksFilter
-  cta: LinkFilter
-  featuredImage: FileFilter
-  language: StringFilter
-  published: BooleanFilter
-  publishedAt: DateFilter
-  relatedApartments: LinksFilter
-  relatedDistricts: LinksFilter
-  relatedPosts: LinksFilter
-  relatedServices: LinksFilter
-  seo: SeoFilter
-  slug: SlugFilter
-  sticky: BooleanFilter
-  title: StringFilter
-  OR: [PostOldModelFilter]
-  AND: [PostOldModelFilter]
-}
-
-enum PostOldModelOrderBy {
-  _createdAt_ASC
-  _createdAt_DESC
-  createdAt_ASC
-  createdAt_DESC
-  id_ASC
-  id_DESC
-  _firstPublishedAt_ASC
-  _firstPublishedAt_DESC
-  _publicationScheduledAt_ASC
-  _publicationScheduledAt_DESC
-  _unpublishingScheduledAt_ASC
-  _unpublishingScheduledAt_DESC
-  _publishedAt_ASC
-  _publishedAt_DESC
-  _status_ASC
-  _status_DESC
-  _updatedAt_ASC
-  _updatedAt_DESC
-  updatedAt_ASC
-  updatedAt_DESC
-  _isValid_ASC
-  _isValid_DESC
-  language_ASC
-  language_DESC
-  published_ASC
-  published_DESC
-  publishedAt_ASC
-  publishedAt_DESC
-  sticky_ASC
-  sticky_DESC
-  title_ASC
-  title_DESC
-}
-
-"""Record of type Posts_OLD (post_old)"""
-type PostOldRecord implements RecordInterface {
-  _createdAt: DateTime!
-
-  """Editing URL"""
-  _editingUrl: String
-  _firstPublishedAt: DateTime!
-  _isValid: BooleanType!
-  _modelApiKey: String!
-  _publicationScheduledAt: DateTime
-  _publishedAt: DateTime!
-
-  """Generates SEO and Social card meta tags to be used in your frontend"""
-  _seoMetaTags(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-  ): [Tag!]!
-  _status: ItemStatus!
-  _unpublishingScheduledAt: DateTime
-  _updatedAt: DateTime!
-  abstract(
-    """Process content as markdown"""
-    markdown: Boolean
-  ): String
-  category: BlogCategoryRecord!
-  content: [PostOldModelContentField!]!
-  createdAt: DateTime!
-  cta: CallToActionRecord
-  featuredImage: FileField!
-  id: ItemId!
-  language: String!
-  published: BooleanType!
-  publishedAt: Date!
-  relatedApartments: [ApartmentRecord!]!
-  relatedDistricts: [DistrictRecord!]!
-  relatedPosts: [PostOldRecord!]!
-  relatedServices: [ServiceRecord!]!
-  seo: SeoField
-  slug: String!
-  sticky: BooleanType!
-  title: String!
-  updatedAt: DateTime!
-}
-
 """Record of type Post (post)"""
 type PostRecord implements RecordInterface {
   _allAbstractLocales(
@@ -7525,13 +7205,6 @@ type Query {
     """The locale to use to fetch the field's content"""
     locale: SiteLocale
     filter: ParagraphModelFilter
-  ): CollectionMetadata!
-
-  """Returns meta information regarding a record collection"""
-  _allPostOldsMeta(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-    filter: PostOldModelFilter
   ): CollectionMetadata!
 
   """Returns meta information regarding a record collection"""
@@ -8006,25 +7679,6 @@ type Query {
     filter: ParagraphModelFilter
     orderBy: [ParagraphModelOrderBy] = [position_ASC]
   ): [ParagraphRecord!]!
-
-  """Returns a collection of records"""
-  allPostOlds(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
-    """
-    If you want to fallback to a default translation when a translation has not been found
-    """
-    fallbackLocales: [SiteLocale!]
-
-    """Skip the first results"""
-    skip: IntType
-
-    """Limit the number of results"""
-    first: IntType = 20
-    filter: PostOldModelFilter
-    orderBy: [PostOldModelOrderBy] = [_updatedAt_DESC]
-  ): [PostOldRecord!]!
 
   """Returns a collection of records"""
   allPosts(
@@ -8517,19 +8171,6 @@ type Query {
   ): PostRecord
 
   """Returns a specific record"""
-  postOld(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
-    """
-    If you want to fallback to a default translation when a translation has not been found
-    """
-    fallbackLocales: [SiteLocale!]
-    filter: PostOldModelFilter
-    orderBy: [PostOldModelOrderBy] = [_updatedAt_DESC]
-  ): PostOldRecord
-
-  """Returns a specific record"""
   recordBin(
     """The locale to use to fetch the field's content"""
     locale: SiteLocale
@@ -8920,8 +8561,8 @@ type SchemaMigrationRecord implements RecordInterface {
   updatedAt: DateTime!
 }
 
-"""Block of type 🔝 Section header (section_header)"""
-type SectionHeaderRecord implements RecordInterface {
+"""Block of type 🔝 Section header (section_header_block)"""
+type SectionHeaderBlockRecord implements RecordInterface {
   _createdAt: DateTime!
 
   """Editing URL"""
@@ -8951,9 +8592,9 @@ type SectionHeaderRecord implements RecordInterface {
   updatedAt: DateTime!
 }
 
-type SectionHeaderRecordNonNullMultiLocaleField {
+type SectionHeaderBlockRecordNonNullMultiLocaleField {
   locale: SiteLocale
-  value: SectionHeaderRecord!
+  value: SectionHeaderBlockRecord!
 }
 
 type SeoField {

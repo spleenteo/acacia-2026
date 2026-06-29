@@ -2,7 +2,7 @@ import { type FragmentOf, graphql, readFragment } from '@/lib/datocms/graphql';
 import InViewSection from '@/components/InViewSection';
 
 export const SectionHeaderFragment = graphql(`
-  fragment SectionHeaderFragment on SectionHeaderRecord {
+  fragment SectionHeaderFragment on SectionHeaderBlockRecord {
     id
     label
     title(markdown: true)
