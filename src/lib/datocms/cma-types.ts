@@ -565,26 +565,6 @@ export const Tip = {
   REF: { type: 'item_type', id: '3599' },
 } as const;
 
-export type Redirect = ItemTypeDefinition<
-  EnvironmentSettings,
-  '66155',
-  {
-    original_url: {
-      type: 'string';
-    };
-    destination_url: {
-      type: 'string';
-    };
-    codice_redirect: {
-      type: 'string';
-    };
-  }
->;
-export const Redirect = {
-  ID: '66155',
-  REF: { type: 'item_type', id: '66155' },
-} as const;
-
 export type Essential = ItemTypeDefinition<
   EnvironmentSettings,
   '110157',
@@ -1206,7 +1186,6 @@ export type AnyModel =
   | ApartmentCategory
   | IndexAcacialife
   | Tip
-  | Redirect
   | Essential
   | Amenity
   | InfoLabel
