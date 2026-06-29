@@ -236,7 +236,6 @@ input ApartmentModelFilter {
   featuredSlideshow: GalleryFilter
   houseBadge: LinkFilter
   name: StringFilter
-  notes: JsonFilter
   price: StringFilter
   seo: SeoFilter
   sleeps: IntegerFilter
@@ -556,7 +555,6 @@ type ApartmentRecord implements RecordInterface {
     fallbackLocales: [SiteLocale!]
   ): [ApartmentModelInfoDetailField!]!
   name: String!
-  notes: JsonField
   price: String
   seo(
     """The locale to use to fetch the field's content"""

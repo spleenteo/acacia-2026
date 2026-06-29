@@ -11,16 +11,13 @@ export type Apartment = ItemTypeDefinition<
     beddy_id: {
       type: 'string';
     };
-    notes: {
-      type: 'json';
+    name: {
+      type: 'string';
     };
     category: {
       type: 'link';
     };
     cin: {
-      type: 'string';
-    };
-    name: {
       type: 'string';
     };
     description: {
@@ -46,11 +43,11 @@ export type Apartment = ItemTypeDefinition<
       type: 'string';
       localized: true;
     };
-    featured_slideshow: {
-      type: 'gallery';
-    };
     house_badge: {
       type: 'link';
+    };
+    featured_slideshow: {
+      type: 'gallery';
     };
     wwl_gallery: {
       type: 'links';
