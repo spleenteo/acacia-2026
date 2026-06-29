@@ -1061,17 +1061,14 @@ export type App = ItemTypeDefinition<
   EnvironmentSettings,
   'c6zF9LTeRrSc71p8FnBSYQ',
   {
-    footer_text: {
-      type: 'structured_text';
+    footer_links: {
+      type: 'rich_text';
+      blocks: FooterMenuBlock;
+      localized: true;
     };
     nav_items: {
       type: 'rich_text';
       blocks: MenuDropdownBlock | MenuItemBlock | MenuExternalItemBlock;
-      localized: true;
-    };
-    footer_links: {
-      type: 'rich_text';
-      blocks: FooterMenuBlock;
       localized: true;
     };
     social_links: {
