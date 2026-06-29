@@ -101,9 +101,10 @@ export default function Hero({
                 'text-[1.25rem] md:text-[1.5rem]',
                 hasImage ? 'text-white/90' : 'text-muted',
               ].join(' ')}
-            >
-              {subtitle}
-            </p>
+              // subtitle is an HTML field (legacy WYSIWYG) → unwrap the outer <p>
+              // and render as HTML, mirroring how the title is handled above.
+              dangerouslySetInnerHTML={{ __html: unwrapParagraph(subtitle) }}
+            />
           )}
 
           {buttons && buttons.length > 0 && (
