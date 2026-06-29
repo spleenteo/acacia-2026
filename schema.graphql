@@ -571,13 +571,6 @@ type ApartmentRecord implements RecordInterface {
   wwlGallery: [GalleryImageRecord!]!
 }
 
-type AppModelFooterTextField {
-  blocks: [String!]!
-  inlineBlocks: [String!]!
-  links: [String!]!
-  value: JsonField!
-}
-
 type AppModelLegalTextField {
   blocks: [String!]!
   inlineBlocks: [String!]!
@@ -646,7 +639,6 @@ type AppRecord implements RecordInterface {
     """
     fallbackLocales: [SiteLocale!]
   ): [FooterMenuBlockRecord!]!
-  footerText: AppModelFooterTextField
   id: ItemId!
   legalText(
     """The locale to use to fetch the field's content"""
