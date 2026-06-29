@@ -300,48 +300,6 @@ export const BlogCategory = {
   REF: { type: 'item_type', id: '2763' },
 } as const;
 
-export type Paragraph = ItemTypeDefinition<
-  EnvironmentSettings,
-  '2764',
-  {
-    body: {
-      type: 'text';
-    };
-    position: {
-      type: 'integer';
-    };
-  }
->;
-export const Paragraph = {
-  ID: '2764',
-  REF: { type: 'item_type', id: '2764' },
-} as const;
-
-export type Image = ItemTypeDefinition<
-  EnvironmentSettings,
-  '2765',
-  {
-    image: {
-      type: 'file';
-    };
-    description: {
-      type: 'string';
-      localized: true;
-    };
-    url: {
-      type: 'string';
-      localized: true;
-    };
-    position: {
-      type: 'integer';
-    };
-  }
->;
-export const Image = {
-  ID: '2765',
-  REF: { type: 'item_type', id: '2765' },
-} as const;
-
 export type Faq = ItemTypeDefinition<
   EnvironmentSettings,
   '2803',
@@ -1263,8 +1221,6 @@ export type AnyModel =
   | ServiceCategories
   | Mood
   | BlogCategory
-  | Paragraph
-  | Image
   | Faq
   | Guestbook
   | HomePage

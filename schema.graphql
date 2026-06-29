@@ -2858,114 +2858,6 @@ type ImageGalleryBlockRecord implements RecordInterface {
   updatedAt: DateTime!
 }
 
-input ImageModelFilter {
-  _createdAt: CreatedAtFilter
-  createdAt: CreatedAtFilter
-  id: ItemIdFilter
-  _firstPublishedAt: PublishedAtFilter
-  position: PositionFilter
-  _publicationScheduledAt: PublishedAtFilter
-  _unpublishingScheduledAt: PublishedAtFilter
-  _publishedAt: PublishedAtFilter
-  _status: StatusFilter
-  _updatedAt: UpdatedAtFilter
-  updatedAt: UpdatedAtFilter
-  _isValid: BooleanFilter
-  description: StringFilter
-  image: FileFilter
-  url: StringFilter
-  OR: [ImageModelFilter]
-  AND: [ImageModelFilter]
-}
-
-enum ImageModelOrderBy {
-  _createdAt_ASC
-  _createdAt_DESC
-  createdAt_ASC
-  createdAt_DESC
-  id_ASC
-  id_DESC
-  _firstPublishedAt_ASC
-  _firstPublishedAt_DESC
-  position_ASC
-  position_DESC
-  _publicationScheduledAt_ASC
-  _publicationScheduledAt_DESC
-  _unpublishingScheduledAt_ASC
-  _unpublishingScheduledAt_DESC
-  _publishedAt_ASC
-  _publishedAt_DESC
-  _status_ASC
-  _status_DESC
-  _updatedAt_ASC
-  _updatedAt_DESC
-  updatedAt_ASC
-  updatedAt_DESC
-  _isValid_ASC
-  _isValid_DESC
-  description_ASC
-  description_DESC
-  url_ASC
-  url_DESC
-}
-
-"""Record of type Image (image)"""
-type ImageRecord implements RecordInterface {
-  _allDescriptionLocales(
-    """
-    If you want to fallback to a default translation when a translation has not been found
-    """
-    fallbackLocales: [SiteLocale!]
-  ): [StringMultiLocaleField!]
-  _allUrlLocales(
-    """
-    If you want to fallback to a default translation when a translation has not been found
-    """
-    fallbackLocales: [SiteLocale!]
-  ): [StringMultiLocaleField!]
-  _createdAt: DateTime!
-
-  """Editing URL"""
-  _editingUrl: String
-  _firstPublishedAt: DateTime!
-  _isValid: BooleanType!
-  _modelApiKey: String!
-  _publicationScheduledAt: DateTime
-  _publishedAt: DateTime!
-
-  """Generates SEO and Social card meta tags to be used in your frontend"""
-  _seoMetaTags(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-  ): [Tag!]!
-  _status: ItemStatus!
-  _unpublishingScheduledAt: DateTime
-  _updatedAt: DateTime!
-  createdAt: DateTime!
-  description(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
-    """
-    If you want to fallback to a default translation when a translation has not been found
-    """
-    fallbackLocales: [SiteLocale!]
-  ): String
-  id: ItemId!
-  image: FileField
-  position: IntType
-  updatedAt: DateTime!
-  url(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
-    """
-    If you want to fallback to a default translation when a translation has not been found
-    """
-    fallbackLocales: [SiteLocale!]
-  ): String
-}
-
 input ImgixParams {
   """
   Aspect Ratio
@@ -6460,81 +6352,6 @@ input OrientationFilter {
   neq: UploadOrientation
 }
 
-input ParagraphModelFilter {
-  _createdAt: CreatedAtFilter
-  createdAt: CreatedAtFilter
-  id: ItemIdFilter
-  _firstPublishedAt: PublishedAtFilter
-  position: PositionFilter
-  _publicationScheduledAt: PublishedAtFilter
-  _unpublishingScheduledAt: PublishedAtFilter
-  _publishedAt: PublishedAtFilter
-  _status: StatusFilter
-  _updatedAt: UpdatedAtFilter
-  updatedAt: UpdatedAtFilter
-  _isValid: BooleanFilter
-  body: TextFilter
-  OR: [ParagraphModelFilter]
-  AND: [ParagraphModelFilter]
-}
-
-enum ParagraphModelOrderBy {
-  _createdAt_ASC
-  _createdAt_DESC
-  createdAt_ASC
-  createdAt_DESC
-  id_ASC
-  id_DESC
-  _firstPublishedAt_ASC
-  _firstPublishedAt_DESC
-  position_ASC
-  position_DESC
-  _publicationScheduledAt_ASC
-  _publicationScheduledAt_DESC
-  _unpublishingScheduledAt_ASC
-  _unpublishingScheduledAt_DESC
-  _publishedAt_ASC
-  _publishedAt_DESC
-  _status_ASC
-  _status_DESC
-  _updatedAt_ASC
-  _updatedAt_DESC
-  updatedAt_ASC
-  updatedAt_DESC
-  _isValid_ASC
-  _isValid_DESC
-}
-
-"""Record of type Paragraph (paragraph)"""
-type ParagraphRecord implements RecordInterface {
-  _createdAt: DateTime!
-
-  """Editing URL"""
-  _editingUrl: String
-  _firstPublishedAt: DateTime!
-  _isValid: BooleanType!
-  _modelApiKey: String!
-  _publicationScheduledAt: DateTime
-  _publishedAt: DateTime!
-
-  """Generates SEO and Social card meta tags to be used in your frontend"""
-  _seoMetaTags(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-  ): [Tag!]!
-  _status: ItemStatus!
-  _unpublishingScheduledAt: DateTime
-  _updatedAt: DateTime!
-  body(
-    """Process content as markdown"""
-    markdown: Boolean
-  ): String
-  createdAt: DateTime!
-  id: ItemId!
-  position: IntType
-  updatedAt: DateTime!
-}
-
 """Specifies how to filter by parent (tree-like collections only)"""
 input ParentFilter {
   """
@@ -6894,13 +6711,6 @@ type Query {
   ): CollectionMetadata!
 
   """Returns meta information regarding a record collection"""
-  _allImagesMeta(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-    filter: ImageModelFilter
-  ): CollectionMetadata!
-
-  """Returns meta information regarding a record collection"""
   _allIndexPagesMeta(
     """The locale to use to fetch the field's content"""
     locale: SiteLocale
@@ -6933,13 +6743,6 @@ type Query {
     """The locale to use to fetch the field's content"""
     locale: SiteLocale
     filter: MoodModelFilter
-  ): CollectionMetadata!
-
-  """Returns meta information regarding a record collection"""
-  _allParagraphsMeta(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-    filter: ParagraphModelFilter
   ): CollectionMetadata!
 
   """Returns meta information regarding a record collection"""
@@ -7245,25 +7048,6 @@ type Query {
   ): [HouseBadgeRecord!]!
 
   """Returns a collection of records"""
-  allImages(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
-    """
-    If you want to fallback to a default translation when a translation has not been found
-    """
-    fallbackLocales: [SiteLocale!]
-
-    """Skip the first results"""
-    skip: IntType
-
-    """Limit the number of results"""
-    first: IntType = 20
-    filter: ImageModelFilter
-    orderBy: [ImageModelOrderBy] = [position_ASC]
-  ): [ImageRecord!]!
-
-  """Returns a collection of records"""
   allIndexPages(
     """The locale to use to fetch the field's content"""
     locale: SiteLocale
@@ -7357,25 +7141,6 @@ type Query {
     filter: MoodModelFilter
     orderBy: [MoodModelOrderBy] = [position_ASC]
   ): [MoodRecord!]!
-
-  """Returns a collection of records"""
-  allParagraphs(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
-    """
-    If you want to fallback to a default translation when a translation has not been found
-    """
-    fallbackLocales: [SiteLocale!]
-
-    """Skip the first results"""
-    skip: IntType
-
-    """Limit the number of results"""
-    first: IntType = 20
-    filter: ParagraphModelFilter
-    orderBy: [ParagraphModelOrderBy] = [position_ASC]
-  ): [ParagraphRecord!]!
 
   """Returns a collection of records"""
   allPosts(
@@ -7726,19 +7491,6 @@ type Query {
     orderBy: [HouseBadgeModelOrderBy] = [_updatedAt_DESC]
   ): HouseBadgeRecord
 
-  """Returns a specific record"""
-  image(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
-    """
-    If you want to fallback to a default translation when a translation has not been found
-    """
-    fallbackLocales: [SiteLocale!]
-    filter: ImageModelFilter
-    orderBy: [ImageModelOrderBy] = [position_ASC]
-  ): ImageRecord
-
   """Returns the single instance record"""
   indexAcacialife(
     """The locale to use to fetch the field's content"""
@@ -7814,19 +7566,6 @@ type Query {
     filter: MoodItemModelFilter
     orderBy: [MoodItemModelOrderBy] = [position_ASC]
   ): MoodItemRecord
-
-  """Returns a specific record"""
-  paragraph(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
-    """
-    If you want to fallback to a default translation when a translation has not been found
-    """
-    fallbackLocales: [SiteLocale!]
-    filter: ParagraphModelFilter
-    orderBy: [ParagraphModelOrderBy] = [position_ASC]
-  ): ParagraphRecord
 
   """Returns a specific record"""
   post(
