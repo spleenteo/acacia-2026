@@ -1,0 +1,34 @@
+name: Re-index DatoCMS Site Search
+
+# The DatoCMS Site Search index ("website", id 38576) isn't tied to a build
+# trigger and DatoCMS has no native scheduler, so its crawler never re-runs on
+# its own — the index goes stale. This job re-crawls the site once a day by
+# calling the Site Search "trigger" endpoint. Vercel Cron is paid-tier only, so
+# we schedule it here on GitHub Actions instead (free).
+#
+# Requires a repository secret `DATOCMS_CMA_TOKEN` (a CMA token allowed to
+# manage search indexes). Add it under Settings → Secrets and variables →
+# Actions. You can also run it on demand from the Actions tab.
+
+on:
+  schedule:
+    - cron: '0 4 * * *' # every day at 04:00 UTC
+  workflow_dispatch: {}
+
+jobs:
+  reindex:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger Site Search crawl
+        env:
+          DATOCMS_CMA_TOKEN: ${{ secrets.DATOCMS_CMA_TOKEN }}
+          # Keep in sync with the DATOCMS_SITE_SEARCH_INDEX_ID env var.
+          SEARCH_INDEX_ID: '38576'
+        run: |
+          code=$(curl -sS -o /dev/null -w '%{http_code}' \
+            -X POST "https://site-api.datocms.com/search-indexes/${SEARCH_INDEX_ID}/trigger" \
+            -H "Authorization: Bearer ${DATOCMS_CMA_TOKEN}" \
+            -H "Accept: application/json" \
+            -H "X-Api-Version: 3")
+          echo "Site Search trigger → HTTP $code"
+          test "$code" = "204"

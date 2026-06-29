@@ -7,6 +7,15 @@ import { fetchFaqTree, pathSlugsForNode } from '@/lib/faq/faqTree';
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000';
 
+/**
+ * Regenerate the sitemap at most hourly. This route is statically rendered and
+ * served from Vercel's edge CDN; `revalidateTag('datocms')` (fired by the
+ * cache-invalidation webhook) refreshes the underlying Data Cache but does not
+ * purge the edge copy of a static route, so without a TTL the sitemap could lag
+ * far behind content changes. An hour bounds that staleness.
+ */
+export const revalidate = 3600;
+
 const slugsQuery = graphql(`
   query SitemapSlugsQuery {
     allApartments(first: 100) {
