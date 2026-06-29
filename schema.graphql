@@ -238,7 +238,6 @@ input ApartmentModelFilter {
   name: StringFilter
   notes: JsonFilter
   price: StringFilter
-  propertyId: StringFilter
   seo: SeoFilter
   sleeps: IntegerFilter
   slug: SlugFilter
@@ -295,8 +294,6 @@ enum ApartmentModelOrderBy {
   name_DESC
   price_ASC
   price_DESC
-  propertyId_ASC
-  propertyId_DESC
   sleeps_ASC
   sleeps_DESC
 }
@@ -561,7 +558,6 @@ type ApartmentRecord implements RecordInterface {
   name: String!
   notes: JsonField
   price: String
-  propertyId: String
   seo(
     """The locale to use to fetch the field's content"""
     locale: SiteLocale
@@ -605,15 +601,6 @@ type AppModelNavItemsFieldListListNonNullMultiLocaleField {
 
 """Record of type ⚙️ App (app)"""
 type AppRecord implements RecordInterface {
-  _allCalloutTextLocales(
-    """Process content as markdown"""
-    markdown: Boolean
-
-    """
-    If you want to fallback to a default translation when a translation has not been found
-    """
-    fallbackLocales: [SiteLocale!]
-  ): [StringMultiLocaleField!]
   _allFooterLinksLocales(
     """
     If you want to fallback to a default translation when a translation has not been found
@@ -651,19 +638,6 @@ type AppRecord implements RecordInterface {
   _status: ItemStatus!
   _unpublishingScheduledAt: DateTime
   _updatedAt: DateTime!
-  calloutBackground: ColorField!
-  calloutText(
-    """Process content as markdown"""
-    markdown: Boolean
-
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
-    """
-    If you want to fallback to a default translation when a translation has not been found
-    """
-    fallbackLocales: [SiteLocale!]
-  ): String
   createdAt: DateTime!
   footerLinks(
     """The locale to use to fetch the field's content"""
@@ -6090,7 +6064,6 @@ input MoodModelFilter {
   boxes: LinksFilter
   claim: StringFilter
   description: StructuredTextFilter
-  descriptionOld: TextFilter
   image: FileFilter
   name: StringFilter
   relatedContent: LinksFilter
@@ -6147,15 +6120,6 @@ type MoodRecord implements RecordInterface {
     """
     fallbackLocales: [SiteLocale!]
   ): [MoodModelDescriptionFieldMultiLocaleField!]
-  _allDescriptionOldLocales(
-    """Process content as markdown"""
-    markdown: Boolean
-
-    """
-    If you want to fallback to a default translation when a translation has not been found
-    """
-    fallbackLocales: [SiteLocale!]
-  ): [StringMultiLocaleField!]
   _allNameLocales(
     """
     If you want to fallback to a default translation when a translation has not been found
@@ -6272,18 +6236,6 @@ type MoodRecord implements RecordInterface {
     """
     fallbackLocales: [SiteLocale!]
   ): MoodModelDescriptionField
-  descriptionOld(
-    """Process content as markdown"""
-    markdown: Boolean
-
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
-    """
-    If you want to fallback to a default translation when a translation has not been found
-    """
-    fallbackLocales: [SiteLocale!]
-  ): String
   id: ItemId!
   image: FileField!
   name(
@@ -8155,9 +8107,7 @@ input ServiceModelFilter {
   price: StringFilter
   published: BooleanFilter
   seo: SeoFilter
-  shopItem: BooleanFilter
   slug: SlugFilter
-  trekksoftId: IntegerFilter
   OR: [ServiceModelFilter]
   AND: [ServiceModelFilter]
 }
@@ -8195,10 +8145,6 @@ enum ServiceModelOrderBy {
   price_DESC
   published_ASC
   published_DESC
-  shopItem_ASC
-  shopItem_DESC
-  trekksoftId_ASC
-  trekksoftId_DESC
 }
 
 """Record of type Services (service)"""
@@ -8322,7 +8268,6 @@ type ServiceRecord implements RecordInterface {
     """
     fallbackLocales: [SiteLocale!]
   ): SeoField
-  shopItem: BooleanType!
   slug(
     """The locale to use to fetch the field's content"""
     locale: SiteLocale
@@ -8332,7 +8277,6 @@ type ServiceRecord implements RecordInterface {
     """
     fallbackLocales: [SiteLocale!]
   ): String!
-  trekksoftId: IntType
   updatedAt: DateTime!
 }
 
@@ -8537,7 +8481,6 @@ input TipModelFilter {
   updatedAt: UpdatedAtFilter
   _isValid: BooleanFilter
   description: TextFilter
-  expiryDate: DateFilter
   featuredImage: FileFilter
   published: BooleanFilter
   title: StringFilter
@@ -8569,8 +8512,6 @@ enum TipModelOrderBy {
   updatedAt_DESC
   _isValid_ASC
   _isValid_DESC
-  expiryDate_ASC
-  expiryDate_DESC
   published_ASC
   published_DESC
   title_ASC
@@ -8639,7 +8580,6 @@ type TipRecord implements RecordInterface {
     """
     fallbackLocales: [SiteLocale!]
   ): String
-  expiryDate: Date
   featuredImage: FileField!
   id: ItemId!
   published(

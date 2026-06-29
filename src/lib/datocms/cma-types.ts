@@ -36,11 +36,11 @@ export type Apartment = ItemTypeDefinition<
     amenities: {
       type: 'links';
     };
+    ape: {
+      type: 'string';
+    };
     sleeps: {
       type: 'integer';
-    };
-    property_id: {
-      type: 'string';
     };
     claim: {
       type: 'string';
@@ -62,9 +62,6 @@ export type Apartment = ItemTypeDefinition<
     };
     bedrooms: {
       type: 'integer';
-    };
-    ape: {
-      type: 'string';
     };
     acacia_reward: {
       type: 'boolean';
@@ -193,12 +190,6 @@ export type Service = ItemTypeDefinition<
       type: 'seo';
       localized: true;
     };
-    trekksoft_id: {
-      type: 'integer';
-    };
-    shop_item: {
-      type: 'boolean';
-    };
     position: {
       type: 'integer';
     };
@@ -235,9 +226,8 @@ export type Mood = ItemTypeDefinition<
   EnvironmentSettings,
   '2738',
   {
-    description_old: {
-      type: 'text';
-      localized: true;
+    boxes: {
+      type: 'links';
     };
     name: {
       type: 'string';
@@ -246,9 +236,6 @@ export type Mood = ItemTypeDefinition<
     slug: {
       type: 'slug';
       localized: true;
-    };
-    boxes: {
-      type: 'links';
     };
     claim: {
       type: 'string';
@@ -570,9 +557,6 @@ export type Tip = ItemTypeDefinition<
     url: {
       type: 'string';
       localized: true;
-    };
-    expiry_date: {
-      type: 'date';
     };
   }
 >;
@@ -1100,19 +1084,12 @@ export type App = ItemTypeDefinition<
   EnvironmentSettings,
   'c6zF9LTeRrSc71p8FnBSYQ',
   {
-    callout_background: {
-      type: 'color';
-    };
     footer_text: {
       type: 'structured_text';
     };
     nav_items: {
       type: 'rich_text';
       blocks: MenuDropdownBlock | MenuItemBlock | MenuExternalItemBlock;
-      localized: true;
-    };
-    callout_text: {
-      type: 'text';
       localized: true;
     };
     footer_links: {
