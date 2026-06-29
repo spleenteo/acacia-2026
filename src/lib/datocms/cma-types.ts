@@ -590,66 +590,6 @@ export const IndexAcacialife = {
   REF: { type: 'item_type', id: '3125' },
 } as const;
 
-export type Offer = ItemTypeDefinition<
-  EnvironmentSettings,
-  '3389',
-  {
-    published: {
-      type: 'boolean';
-    };
-    title: {
-      type: 'string';
-      localized: true;
-    };
-    featured_image: {
-      type: 'file';
-    };
-    abstract: {
-      type: 'text';
-      localized: true;
-    };
-    terms: {
-      type: 'text';
-      localized: true;
-    };
-    validity: {
-      type: 'string';
-      localized: true;
-    };
-    cta: {
-      type: 'link';
-      localized: true;
-    };
-    position: {
-      type: 'integer';
-    };
-  }
->;
-export const Offer = {
-  ID: '3389',
-  REF: { type: 'item_type', id: '3389' },
-} as const;
-
-export type GuestPost = ItemTypeDefinition<
-  EnvironmentSettings,
-  '3578',
-  {
-    text: {
-      type: 'text';
-    };
-    guest_name: {
-      type: 'string';
-    };
-    url: {
-      type: 'string';
-    };
-  }
->;
-export const GuestPost = {
-  ID: '3578',
-  REF: { type: 'item_type', id: '3578' },
-} as const;
-
 export type Tip = ItemTypeDefinition<
   EnvironmentSettings,
   '3599',
@@ -1332,8 +1272,6 @@ export type AnyModel =
   | CallToAction
   | ApartmentCategory
   | IndexAcacialife
-  | Offer
-  | GuestPost
   | Tip
   | Redirect
   | Essential
