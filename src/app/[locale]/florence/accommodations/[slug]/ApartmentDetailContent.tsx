@@ -326,7 +326,9 @@ export default function ApartmentDetailContent({
                 <div className="break-inside-avoid">
                   <InfoDetail
                     data={apartment.infoDetail.map((item) => ({
-                      __typename: item.__typename as 'InfoTextRecord' | 'InfoAddressRecord',
+                      __typename: item.__typename as
+                        | 'InfoTextBlockRecord'
+                        | 'InfoAddressBlockRecord',
                       fragment: item as never,
                     }))}
                     title={t('info')}

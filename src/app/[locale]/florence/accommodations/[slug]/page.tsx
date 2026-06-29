@@ -123,10 +123,10 @@ export const query = graphql(
         }
         infoDetail(locale: $locale) {
           __typename
-          ... on InfoTextRecord {
+          ... on InfoTextBlockRecord {
             ...InfoTextFragment
           }
-          ... on InfoAddressRecord {
+          ... on InfoAddressBlockRecord {
             ...InfoAddressFragment
           }
         }
@@ -252,7 +252,7 @@ function buildApartmentJsonLd(
     .map((f) => stripStega(f.name ?? ''))
     .filter(Boolean);
 
-  const addressItem = apartment.infoDetail.find((i) => i.__typename === 'InfoAddressRecord');
+  const addressItem = apartment.infoDetail.find((i) => i.__typename === 'InfoAddressBlockRecord');
   const address = addressItem
     ? readFragment(InfoAddressFragment, addressItem as FragmentOf<typeof InfoAddressFragment>)
     : null;

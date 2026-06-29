@@ -4,7 +4,7 @@ import WidgetTitle from '@/components/WidgetTitle';
 import DistrictAnchor from '@/components/DistrictAnchor';
 
 export const InfoTextFragment = graphql(`
-  fragment InfoTextFragment on InfoTextRecord {
+  fragment InfoTextFragment on InfoTextBlockRecord {
     id
     detailsLabel {
       name(locale: $locale)
@@ -14,7 +14,7 @@ export const InfoTextFragment = graphql(`
 `);
 
 export const InfoAddressFragment = graphql(`
-  fragment InfoAddressFragment on InfoAddressRecord {
+  fragment InfoAddressFragment on InfoAddressBlockRecord {
     id
     detailsLabel {
       name(locale: $locale)
@@ -28,12 +28,12 @@ export const InfoAddressFragment = graphql(`
 `);
 
 type InfoTextItem = {
-  __typename: 'InfoTextRecord';
+  __typename: 'InfoTextBlockRecord';
   fragment: FragmentOf<typeof InfoTextFragment>;
 };
 
 type InfoAddressItem = {
-  __typename: 'InfoAddressRecord';
+  __typename: 'InfoAddressBlockRecord';
   fragment: FragmentOf<typeof InfoAddressFragment>;
 };
 
@@ -57,7 +57,7 @@ export default function InfoDetail({ data, title, district }: Props) {
       <WidgetTitle tone="slate" label={title} />
       <dl>
         {data.map((item) => {
-          if (item.__typename === 'InfoTextRecord') {
+          if (item.__typename === 'InfoTextBlockRecord') {
             const info = readFragment(InfoTextFragment, item.fragment);
             return (
               <div
@@ -72,7 +72,7 @@ export default function InfoDetail({ data, title, district }: Props) {
             );
           }
 
-          if (item.__typename === 'InfoAddressRecord') {
+          if (item.__typename === 'InfoAddressBlockRecord') {
             const info = readFragment(InfoAddressFragment, item.fragment);
             const mapsUrl = info.addressMap
               ? `https://www.google.com/maps?q=${info.addressMap.latitude},${info.addressMap.longitude}`

@@ -70,7 +70,7 @@ export function makeStructuredTextBlockRenderer(
         return <VideoEmbed video={block.embeddedVideo} />;
       }
 
-      case 'CtaBlogPostRecord': {
+      case 'CtaBlogPostBlockRecord': {
         const block = readFragment(
           CtaBlogPostFragment,
           record as unknown as FragmentOf<typeof CtaBlogPostFragment>,
@@ -79,7 +79,7 @@ export function makeStructuredTextBlockRenderer(
         return <CtaBlogPost post={block.post} locale={locale} />;
       }
 
-      case 'CtaFaqRecord': {
+      case 'CtaFaqBlockRecord': {
         const block = readFragment(
           CtaFaqFragment,
           record as unknown as FragmentOf<typeof CtaFaqFragment>,

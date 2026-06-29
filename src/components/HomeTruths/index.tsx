@@ -4,7 +4,7 @@ import WidgetTitle from '@/components/WidgetTitle';
 import { TONES } from '@/components/WidgetLabel';
 
 export const TruthFragment = graphql(`
-  fragment TruthFragment on TruthRecord {
+  fragment TruthFragment on TruthBlockRecord {
     id
     body(markdown: true)
   }

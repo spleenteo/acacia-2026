@@ -57,7 +57,7 @@ export type Apartment = ItemTypeDefinition<
     };
     home_truth: {
       type: 'rich_text';
-      blocks: Truth;
+      blocks: TruthBlock;
       localized: true;
     };
     bedrooms: {
@@ -77,7 +77,7 @@ export type Apartment = ItemTypeDefinition<
     };
     info_detail: {
       type: 'rich_text';
-      blocks: InfoText | InfoAddress;
+      blocks: InfoTextBlock | InfoAddressBlock;
       localized: true;
     };
     comforts: {
@@ -366,12 +366,12 @@ export type Faq = ItemTypeDefinition<
     };
     short_answer: {
       type: 'structured_text';
-      blocks: VideoBlock | ImageBlock | ImageGalleryBlock | CtaBlogPost;
+      blocks: VideoBlock | ImageBlock | ImageGalleryBlock | CtaBlogPostBlock;
       localized: true;
     };
     long_answer: {
       type: 'structured_text';
-      blocks: VideoBlock | ImageBlock | ImageGalleryBlock | CtaBlogPost;
+      blocks: VideoBlock | ImageBlock | ImageGalleryBlock | CtaBlogPostBlock;
       localized: true;
     };
     position: {
@@ -580,7 +580,7 @@ export type IndexAcacialife = ItemTypeDefinition<
     };
     hero: {
       type: 'single_block';
-      blocks: HeroIndex;
+      blocks: HeroIndexBlock;
       localized: true;
     };
   }
@@ -728,7 +728,7 @@ export const Essential = {
   REF: { type: 'item_type', id: '110157' },
 } as const;
 
-export type Truth = ItemTypeDefinition<
+export type TruthBlock = ItemTypeDefinition<
   EnvironmentSettings,
   '110472',
   {
@@ -737,7 +737,7 @@ export type Truth = ItemTypeDefinition<
     };
   }
 >;
-export const Truth = {
+export const TruthBlock = {
   ID: '110472',
   REF: { type: 'item_type', id: '110472' },
 } as const;
@@ -782,7 +782,7 @@ export const InfoLabel = {
   REF: { type: 'item_type', id: '326819' },
 } as const;
 
-export type InfoText = ItemTypeDefinition<
+export type InfoTextBlock = ItemTypeDefinition<
   EnvironmentSettings,
   '326825',
   {
@@ -794,12 +794,12 @@ export type InfoText = ItemTypeDefinition<
     };
   }
 >;
-export const InfoText = {
+export const InfoTextBlock = {
   ID: '326825',
   REF: { type: 'item_type', id: '326825' },
 } as const;
 
-export type InfoAddress = ItemTypeDefinition<
+export type InfoAddressBlock = ItemTypeDefinition<
   EnvironmentSettings,
   '326828',
   {
@@ -814,7 +814,7 @@ export type InfoAddress = ItemTypeDefinition<
     };
   }
 >;
-export const InfoAddress = {
+export const InfoAddressBlock = {
   ID: '326828',
   REF: { type: 'item_type', id: '326828' },
 } as const;
@@ -828,7 +828,7 @@ export type FooterMenuBlock = ItemTypeDefinition<
     };
     nav_links: {
       type: 'rich_text';
-      blocks: MenuItem | MenuExternalItem;
+      blocks: MenuItemBlock | MenuExternalItemBlock;
     };
   }
 >;
@@ -865,7 +865,7 @@ export const ButtonBlock = {
   REF: { type: 'item_type', id: 'D6Mq0lExTdaSzsqpy02N0g' },
 } as const;
 
-export type HeroIndex = ItemTypeDefinition<
+export type HeroIndexBlock = ItemTypeDefinition<
   EnvironmentSettings,
   'EYk_5XZGRsatdHYno4e7-g',
   {
@@ -883,7 +883,7 @@ export type HeroIndex = ItemTypeDefinition<
     };
   }
 >;
-export const HeroIndex = {
+export const HeroIndexBlock = {
   ID: 'EYk_5XZGRsatdHYno4e7-g',
   REF: { type: 'item_type', id: 'EYk_5XZGRsatdHYno4e7-g' },
 } as const;
@@ -902,7 +902,7 @@ export const ImageBlock = {
   REF: { type: 'item_type', id: 'GEcAJMbwRta4jX1Kfz1kLQ' },
 } as const;
 
-export type MenuDropdown = ItemTypeDefinition<
+export type MenuDropdownBlock = ItemTypeDefinition<
   EnvironmentSettings,
   'JQeKJz2cRJ6tXjeGw9dQTw',
   {
@@ -911,11 +911,11 @@ export type MenuDropdown = ItemTypeDefinition<
     };
     pages: {
       type: 'rich_text';
-      blocks: MenuItem;
+      blocks: MenuItemBlock;
     };
   }
 >;
-export const MenuDropdown = {
+export const MenuDropdownBlock = {
   ID: 'JQeKJz2cRJ6tXjeGw9dQTw',
   REF: { type: 'item_type', id: 'JQeKJz2cRJ6tXjeGw9dQTw' },
 } as const;
@@ -942,7 +942,13 @@ export type Post = ItemTypeDefinition<
     };
     content: {
       type: 'structured_text';
-      blocks: VideoBlock | ButtonBlock | ImageBlock | ImageGalleryBlock | CtaBlogPost | CtaFaq;
+      blocks:
+        | VideoBlock
+        | ButtonBlock
+        | ImageBlock
+        | ImageGalleryBlock
+        | CtaBlogPostBlock
+        | CtaFaqBlock;
       localized: true;
     };
     featured_image: {
@@ -981,7 +987,7 @@ export const RecordBin = {
   REF: { type: 'item_type', id: 'PEvhd5OVRc6mRQtWfFt8JQ' },
 } as const;
 
-export type MenuItem = ItemTypeDefinition<
+export type MenuItemBlock = ItemTypeDefinition<
   EnvironmentSettings,
   'QvVizRpcSBioYs3t8o5vDQ',
   {
@@ -993,7 +999,7 @@ export type MenuItem = ItemTypeDefinition<
     };
   }
 >;
-export const MenuItem = {
+export const MenuItemBlock = {
   ID: 'QvVizRpcSBioYs3t8o5vDQ',
   REF: { type: 'item_type', id: 'QvVizRpcSBioYs3t8o5vDQ' },
 } as const;
@@ -1038,7 +1044,7 @@ export const Translation = {
   REF: { type: 'item_type', id: 'SEhOnKQrTeqJFN2XzZZBOg' },
 } as const;
 
-export type MenuExternalItem = ItemTypeDefinition<
+export type MenuExternalItemBlock = ItemTypeDefinition<
   EnvironmentSettings,
   'S-IlPzGxRNy5H1eByC2yXQ',
   {
@@ -1050,7 +1056,7 @@ export type MenuExternalItem = ItemTypeDefinition<
     };
   }
 >;
-export const MenuExternalItem = {
+export const MenuExternalItemBlock = {
   ID: 'S-IlPzGxRNy5H1eByC2yXQ',
   REF: { type: 'item_type', id: 'S-IlPzGxRNy5H1eByC2yXQ' },
 } as const;
@@ -1078,7 +1084,7 @@ export type LandingPage = ItemTypeDefinition<
     };
     structured_text: {
       type: 'structured_text';
-      blocks: VideoBlock | ImageBlock | ImageGalleryBlock | CtaFaq;
+      blocks: VideoBlock | ImageBlock | ImageGalleryBlock | CtaFaqBlock;
       localized: true;
     };
   }
@@ -1102,7 +1108,7 @@ export const ImageGalleryBlock = {
   REF: { type: 'item_type', id: 'VKlYOF--Q0ap0Ca4rsYkqA' },
 } as const;
 
-export type SocialLink = ItemTypeDefinition<
+export type SocialLinkBlock = ItemTypeDefinition<
   EnvironmentSettings,
   'WiMHjAJsQqmSl0NMPGkSeA',
   {
@@ -1117,7 +1123,7 @@ export type SocialLink = ItemTypeDefinition<
     };
   }
 >;
-export const SocialLink = {
+export const SocialLinkBlock = {
   ID: 'WiMHjAJsQqmSl0NMPGkSeA',
   REF: { type: 'item_type', id: 'WiMHjAJsQqmSl0NMPGkSeA' },
 } as const;
@@ -1142,7 +1148,7 @@ export type IndexPage = ItemTypeDefinition<
   {
     hero: {
       type: 'single_block';
-      blocks: HeroIndex;
+      blocks: HeroIndexBlock;
       localized: true;
     };
     seo: {
@@ -1164,7 +1170,7 @@ export const IndexPage = {
   REF: { type: 'item_type', id: 'ZOa9QihDSZ2Fi8kBsrv0jg' },
 } as const;
 
-export type CtaBlogPost = ItemTypeDefinition<
+export type CtaBlogPostBlock = ItemTypeDefinition<
   EnvironmentSettings,
   'bb9IfZPPRQWgoPCDbdkdeg',
   {
@@ -1173,12 +1179,12 @@ export type CtaBlogPost = ItemTypeDefinition<
     };
   }
 >;
-export const CtaBlogPost = {
+export const CtaBlogPostBlock = {
   ID: 'bb9IfZPPRQWgoPCDbdkdeg',
   REF: { type: 'item_type', id: 'bb9IfZPPRQWgoPCDbdkdeg' },
 } as const;
 
-export type CtaFaq = ItemTypeDefinition<
+export type CtaFaqBlock = ItemTypeDefinition<
   EnvironmentSettings,
   'cAZ0WadJTNaKprh6welhew',
   {
@@ -1187,7 +1193,7 @@ export type CtaFaq = ItemTypeDefinition<
     };
   }
 >;
-export const CtaFaq = {
+export const CtaFaqBlock = {
   ID: 'cAZ0WadJTNaKprh6welhew',
   REF: { type: 'item_type', id: 'cAZ0WadJTNaKprh6welhew' },
 } as const;
@@ -1204,7 +1210,7 @@ export type App = ItemTypeDefinition<
     };
     nav_items: {
       type: 'rich_text';
-      blocks: MenuDropdown | MenuItem | MenuExternalItem;
+      blocks: MenuDropdownBlock | MenuItemBlock | MenuExternalItemBlock;
       localized: true;
     };
     callout_text: {
@@ -1218,7 +1224,7 @@ export type App = ItemTypeDefinition<
     };
     social_links: {
       type: 'rich_text';
-      blocks: SocialLink;
+      blocks: SocialLinkBlock;
     };
     legal_text: {
       type: 'structured_text';
@@ -1292,22 +1298,22 @@ export const SectionHeaderBlock = {
 } as const;
 
 export type AnyBlock =
-  | Truth
-  | InfoText
-  | InfoAddress
+  | TruthBlock
+  | InfoTextBlock
+  | InfoAddressBlock
   | FooterMenuBlock
   | VideoBlock
   | ButtonBlock
-  | HeroIndex
+  | HeroIndexBlock
   | ImageBlock
-  | MenuDropdown
-  | MenuItem
+  | MenuDropdownBlock
+  | MenuItemBlock
   | HeroBlock
-  | MenuExternalItem
+  | MenuExternalItemBlock
   | ImageGalleryBlock
-  | SocialLink
-  | CtaBlogPost
-  | CtaFaq
+  | SocialLinkBlock
+  | CtaBlogPostBlock
+  | CtaFaqBlock
   | SectionHeaderBlock;
 export type AnyModel =
   | Apartment

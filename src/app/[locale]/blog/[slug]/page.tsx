@@ -97,7 +97,7 @@ export const query = graphql(
             __typename
             # Unmasked faq id (for the cta_faq block) so the page can resolve
             # the FAQ URLs from the tree before rendering.
-            ... on CtaFaqRecord {
+            ... on CtaFaqBlockRecord {
               faq {
                 id
               }
@@ -224,7 +224,7 @@ export default async function BlogPostPage({
     locale as Locale,
     isDraftModeEnabled,
     (data.post.content?.blocks ?? []).flatMap((b) =>
-      b.__typename === 'CtaFaqRecord' && b.faq ? [b.faq.id] : [],
+      b.__typename === 'CtaFaqBlockRecord' && b.faq ? [b.faq.id] : [],
     ),
   );
 

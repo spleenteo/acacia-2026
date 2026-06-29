@@ -247,7 +247,7 @@ input ApartmentModelFilter {
   AND: [ApartmentModelFilter]
 }
 
-union ApartmentModelInfoDetailField = InfoAddressRecord | InfoTextRecord
+union ApartmentModelInfoDetailField = InfoAddressBlockRecord | InfoTextBlockRecord
 
 type ApartmentModelInfoDetailFieldListListNonNullMultiLocaleField {
   locale: SiteLocale
@@ -323,7 +323,7 @@ type ApartmentRecord implements RecordInterface {
     If you want to fallback to a default translation when a translation has not been found
     """
     fallbackLocales: [SiteLocale!]
-  ): [TruthRecordListListNonNullMultiLocaleField!]
+  ): [TruthBlockRecordListListNonNullMultiLocaleField!]
   _allInfoDetailLocales(
     """
     If you want to fallback to a default translation when a translation has not been found
@@ -546,7 +546,7 @@ type ApartmentRecord implements RecordInterface {
     If you want to fallback to a default translation when a translation has not been found
     """
     fallbackLocales: [SiteLocale!]
-  ): [TruthRecord!]!
+  ): [TruthBlockRecord!]!
   houseBadge: HouseBadgeRecord
   id: ItemId!
   infoDetail(
@@ -596,7 +596,7 @@ type AppModelLegalTextFieldNonNullMultiLocaleField {
   value: AppModelLegalTextField!
 }
 
-union AppModelNavItemsField = MenuDropdownRecord | MenuExternalItemRecord | MenuItemRecord
+union AppModelNavItemsField = MenuDropdownBlockRecord | MenuExternalItemBlockRecord | MenuItemBlockRecord
 
 type AppModelNavItemsFieldListListNonNullMultiLocaleField {
   locale: SiteLocale
@@ -694,7 +694,7 @@ type AppRecord implements RecordInterface {
     """
     fallbackLocales: [SiteLocale!]
   ): [AppModelNavItemsField!]!
-  socialLinks: [SocialLinkRecord!]!
+  socialLinks: [SocialLinkBlockRecord!]!
   updatedAt: DateTime!
 }
 
@@ -1155,8 +1155,8 @@ input CreatedAtFilter {
   exists: BooleanType
 }
 
-"""Block of type 🌆 CTA blog post (cta_blog_post)"""
-type CtaBlogPostRecord implements RecordInterface {
+"""Block of type 🌆 CTA blog post (cta_blog_post_block)"""
+type CtaBlogPostBlockRecord implements RecordInterface {
   _createdAt: DateTime!
 
   """Editing URL"""
@@ -1181,8 +1181,8 @@ type CtaBlogPostRecord implements RecordInterface {
   updatedAt: DateTime!
 }
 
-"""Block of type CTA FAQ (cta_faq)"""
-type CtaFaqRecord implements RecordInterface {
+"""Block of type CTA FAQ (cta_faq_block)"""
+type CtaFaqBlockRecord implements RecordInterface {
   _createdAt: DateTime!
 
   """Editing URL"""
@@ -1651,7 +1651,7 @@ input FaqModelFilter {
   AND: [FaqModelFilter]
 }
 
-union FaqModelLongAnswerBlocksField = CtaBlogPostRecord | ImageBlockRecord | ImageGalleryBlockRecord | VideoBlockRecord
+union FaqModelLongAnswerBlocksField = CtaBlogPostBlockRecord | ImageBlockRecord | ImageGalleryBlockRecord | VideoBlockRecord
 
 type FaqModelLongAnswerField {
   blocks: [FaqModelLongAnswerBlocksField!]!
@@ -1696,7 +1696,7 @@ enum FaqModelOrderBy {
   question_DESC
 }
 
-union FaqModelShortAnswerBlocksField = CtaBlogPostRecord | ImageBlockRecord | ImageGalleryBlockRecord | VideoBlockRecord
+union FaqModelShortAnswerBlocksField = CtaBlogPostBlockRecord | ImageBlockRecord | ImageGalleryBlockRecord | VideoBlockRecord
 
 type FaqModelShortAnswerField {
   blocks: [FaqModelShortAnswerBlocksField!]!
@@ -2051,7 +2051,7 @@ Represents signed double-precision fractional values as specified by [IEEE 754](
 """
 scalar FloatType
 
-union FooterMenuBlockModelNavLinksField = MenuExternalItemRecord | MenuItemRecord
+union FooterMenuBlockModelNavLinksField = MenuExternalItemBlockRecord | MenuItemBlockRecord
 
 """Block of type 👣 Footer Menu Widget (footer_menu_block)"""
 type FooterMenuBlockRecord implements RecordInterface {
@@ -2419,8 +2419,8 @@ type HeroBlockRecordListListNonNullMultiLocaleField {
   value: [HeroBlockRecord!]!
 }
 
-"""Block of type 🔝 Hero Index (hero_index)"""
-type HeroIndexRecord implements RecordInterface {
+"""Block of type 🔝 Hero Index (hero_index_block)"""
+type HeroIndexBlockRecord implements RecordInterface {
   _createdAt: DateTime!
 
   """Editing URL"""
@@ -2448,9 +2448,9 @@ type HeroIndexRecord implements RecordInterface {
   updatedAt: DateTime!
 }
 
-type HeroIndexRecordNonNullMultiLocaleField {
+type HeroIndexBlockRecordNonNullMultiLocaleField {
   locale: SiteLocale
-  value: HeroIndexRecord!
+  value: HeroIndexBlockRecord!
 }
 
 """Linking fields"""
@@ -5039,7 +5039,7 @@ type IndexAcacialifeRecord implements RecordInterface {
     If you want to fallback to a default translation when a translation has not been found
     """
     fallbackLocales: [SiteLocale!]
-  ): [HeroIndexRecordNonNullMultiLocaleField!]
+  ): [HeroIndexBlockRecordNonNullMultiLocaleField!]
   _allSeoLocales(
     """
     If you want to fallback to a default translation when a translation has not been found
@@ -5108,7 +5108,7 @@ type IndexAcacialifeRecord implements RecordInterface {
     If you want to fallback to a default translation when a translation has not been found
     """
     fallbackLocales: [SiteLocale!]
-  ): HeroIndexRecord!
+  ): HeroIndexBlockRecord!
   id: ItemId!
   seo(
     """The locale to use to fetch the field's content"""
@@ -5209,7 +5209,7 @@ type IndexPageRecord implements RecordInterface {
     If you want to fallback to a default translation when a translation has not been found
     """
     fallbackLocales: [SiteLocale!]
-  ): [HeroIndexRecordNonNullMultiLocaleField!]
+  ): [HeroIndexBlockRecordNonNullMultiLocaleField!]
   _allSeoLocales(
     """
     If you want to fallback to a default translation when a translation has not been found
@@ -5258,7 +5258,7 @@ type IndexPageRecord implements RecordInterface {
     If you want to fallback to a default translation when a translation has not been found
     """
     fallbackLocales: [SiteLocale!]
-  ): HeroIndexRecord!
+  ): HeroIndexBlockRecord!
   id: ItemId!
   seo(
     """The locale to use to fetch the field's content"""
@@ -5281,8 +5281,8 @@ type IndexPageRecord implements RecordInterface {
   updatedAt: DateTime!
 }
 
-"""Block of type Info address (info_address)"""
-type InfoAddressRecord implements RecordInterface {
+"""Block of type Info address (info_address_block)"""
+type InfoAddressBlockRecord implements RecordInterface {
   _createdAt: DateTime!
 
   """Editing URL"""
@@ -5393,8 +5393,8 @@ type InfoLabelRecord implements RecordInterface {
   updatedAt: DateTime!
 }
 
-"""Block of type Info text (info_text)"""
-type InfoTextRecord implements RecordInterface {
+"""Block of type Info text (info_text_block)"""
+type InfoTextBlockRecord implements RecordInterface {
   _createdAt: DateTime!
 
   """Editing URL"""
@@ -5802,7 +5802,7 @@ enum LandingPageModelOrderBy {
   title_DESC
 }
 
-union LandingPageModelStructuredTextBlocksField = CtaFaqRecord | ImageBlockRecord | ImageGalleryBlockRecord | VideoBlockRecord
+union LandingPageModelStructuredTextBlocksField = CtaFaqBlockRecord | ImageBlockRecord | ImageGalleryBlockRecord | VideoBlockRecord
 
 type LandingPageModelStructuredTextField {
   blocks: [LandingPageModelStructuredTextBlocksField!]!
@@ -6008,8 +6008,8 @@ input LocalesFilter {
   notIn: [SiteLocale!]
 }
 
-"""Block of type 🔽 Menu Dropdown (menu_dropdown)"""
-type MenuDropdownRecord implements RecordInterface {
+"""Block of type 🔽 Menu Dropdown (menu_dropdown_block)"""
+type MenuDropdownBlockRecord implements RecordInterface {
   _createdAt: DateTime!
 
   """Editing URL"""
@@ -6030,13 +6030,13 @@ type MenuDropdownRecord implements RecordInterface {
   _updatedAt: DateTime!
   createdAt: DateTime!
   id: ItemId!
-  pages: [MenuItemRecord!]!
+  pages: [MenuItemBlockRecord!]!
   staticLabel: String!
   updatedAt: DateTime!
 }
 
-"""Block of type 🌐 Menu External Item (menu_external_item)"""
-type MenuExternalItemRecord implements RecordInterface {
+"""Block of type 🌐 Menu External Item (menu_external_item_block)"""
+type MenuExternalItemBlockRecord implements RecordInterface {
   _createdAt: DateTime!
 
   """Editing URL"""
@@ -6062,10 +6062,10 @@ type MenuExternalItemRecord implements RecordInterface {
   url: String!
 }
 
-union MenuItemModelPageField = HomePageRecord | IndexPageRecord
+union MenuItemBlockModelPageField = HomePageRecord | IndexPageRecord
 
-"""Block of type 🔗 Menu Item (menu_item)"""
-type MenuItemRecord implements RecordInterface {
+"""Block of type 🔗 Menu Item (menu_item_block)"""
+type MenuItemBlockRecord implements RecordInterface {
   _createdAt: DateTime!
 
   """Editing URL"""
@@ -6087,7 +6087,7 @@ type MenuItemRecord implements RecordInterface {
   createdAt: DateTime!
   id: ItemId!
   label: String
-  page: MenuItemModelPageField!
+  page: MenuItemBlockModelPageField!
   updatedAt: DateTime!
 }
 
@@ -6824,7 +6824,7 @@ input PositionFilter {
   neq: IntType
 }
 
-union PostModelContentBlocksField = ButtonBlockRecord | CtaBlogPostRecord | CtaFaqRecord | ImageBlockRecord | ImageGalleryBlockRecord | VideoBlockRecord
+union PostModelContentBlocksField = ButtonBlockRecord | CtaBlogPostBlockRecord | CtaFaqBlockRecord | ImageBlockRecord | ImageGalleryBlockRecord | VideoBlockRecord
 
 type PostModelContentField {
   blocks: [PostModelContentBlocksField!]!
@@ -8965,8 +8965,8 @@ input SlugFilter {
   notIn: [String]
 }
 
-"""Block of type 🐦 Social Link (social_link)"""
-type SocialLinkRecord implements RecordInterface {
+"""Block of type 🐦 Social Link (social_link_block)"""
+type SocialLinkBlockRecord implements RecordInterface {
   _createdAt: DateTime!
 
   """Editing URL"""
@@ -9350,8 +9350,8 @@ type TranslationRecord implements RecordInterface {
   ): String!
 }
 
-"""Block of type Truth (truth)"""
-type TruthRecord implements RecordInterface {
+"""Block of type Truth (truth_block)"""
+type TruthBlockRecord implements RecordInterface {
   _createdAt: DateTime!
 
   """Editing URL"""
@@ -9379,9 +9379,9 @@ type TruthRecord implements RecordInterface {
   updatedAt: DateTime!
 }
 
-type TruthRecordListListNonNullMultiLocaleField {
+type TruthBlockRecordListListNonNullMultiLocaleField {
   locale: SiteLocale
-  value: [TruthRecord!]!
+  value: [TruthBlockRecord!]!
 }
 
 """Specifies how to filter by upload type"""

@@ -62,7 +62,7 @@ export const VideoBlockFragment = graphql(`
 // has an `abstract`), not the new `PostRecord`. Keep `abstract` here.
 export const CtaBlogPostFragment = graphql(
   `
-    fragment CtaBlogPostFields on CtaBlogPostRecord {
+    fragment CtaBlogPostFields on CtaBlogPostBlockRecord {
       __typename
       id
       post {
@@ -87,7 +87,7 @@ export const CtaBlogPostFragment = graphql(
  */
 export const CtaFaqFragment = graphql(
   `
-    fragment CtaFaqFields on CtaFaqRecord {
+    fragment CtaFaqFields on CtaFaqBlockRecord {
       __typename
       id
       faq {

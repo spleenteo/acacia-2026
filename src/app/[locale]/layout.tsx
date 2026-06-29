@@ -30,7 +30,7 @@ const query = graphql(
       }
       app {
         navItems(locale: $locale) {
-          ... on MenuItemRecord {
+          ... on MenuItemBlockRecord {
             __typename
             id
             label
@@ -47,7 +47,7 @@ const query = graphql(
               }
             }
           }
-          ... on MenuExternalItemRecord {
+          ... on MenuExternalItemBlockRecord {
             __typename
             id
             label
@@ -58,7 +58,7 @@ const query = graphql(
           id
           widgetLabel
           navLinks {
-            ... on MenuItemRecord {
+            ... on MenuItemBlockRecord {
               __typename
               id
               label
@@ -73,7 +73,7 @@ const query = graphql(
                 }
               }
             }
-            ... on MenuExternalItemRecord {
+            ... on MenuExternalItemBlockRecord {
               __typename
               id
               label
@@ -127,7 +127,7 @@ function resolveMenuLink(
   },
   locale: Locale,
 ): NavItem | null {
-  if (item.__typename === 'MenuItemRecord') {
+  if (item.__typename === 'MenuItemBlockRecord') {
     if (!item.page || !item.label) return null;
     // `index_page` records carry a slug that selects the index route; legacy
     // singleton targets ignore the slug (fixed path).
@@ -135,11 +135,11 @@ function resolveMenuLink(
     if (!href) return null;
     return { label: item.label, href, isExternal: false };
   }
-  if (item.__typename === 'MenuExternalItemRecord') {
+  if (item.__typename === 'MenuExternalItemBlockRecord') {
     if (!item.label || !item.url) return null;
     return { label: item.label, href: item.url, isExternal: true };
   }
-  // MenuDropdownRecord and others — skipped
+  // MenuDropdownBlockRecord and others — skipped
   return null;
 }
 
