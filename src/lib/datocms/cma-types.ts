@@ -863,28 +863,6 @@ export const MenuItemBlock = {
   REF: { type: 'item_type', id: 'QvVizRpcSBioYs3t8o5vDQ' },
 } as const;
 
-export type HeroBlock = ItemTypeDefinition<
-  EnvironmentSettings,
-  'R3X0bbNgQ0-6m1e4ydu9QA',
-  {
-    hero_header: {
-      type: 'single_block';
-      blocks: SectionHeaderBlock;
-    };
-    hero_image: {
-      type: 'file';
-    };
-    buttons: {
-      type: 'rich_text';
-      blocks: ButtonBlock;
-    };
-  }
->;
-export const HeroBlock = {
-  ID: 'R3X0bbNgQ0-6m1e4ydu9QA',
-  REF: { type: 'item_type', id: 'R3X0bbNgQ0-6m1e4ydu9QA' },
-} as const;
-
 export type Translation = ItemTypeDefinition<
   EnvironmentSettings,
   'SEhOnKQrTeqJFN2XzZZBOg',
@@ -918,39 +896,6 @@ export type MenuExternalItemBlock = ItemTypeDefinition<
 export const MenuExternalItemBlock = {
   ID: 'S-IlPzGxRNy5H1eByC2yXQ',
   REF: { type: 'item_type', id: 'S-IlPzGxRNy5H1eByC2yXQ' },
-} as const;
-
-export type LandingPage = ItemTypeDefinition<
-  EnvironmentSettings,
-  'U_D3IZZUTcOj76Aaxqk73g',
-  {
-    slug: {
-      type: 'slug';
-      localized: true;
-    };
-    seo_settings_social: {
-      type: 'seo';
-      localized: true;
-    };
-    title: {
-      type: 'string';
-      localized: true;
-    };
-    sections: {
-      type: 'rich_text';
-      blocks: HeroBlock;
-      localized: true;
-    };
-    structured_text: {
-      type: 'structured_text';
-      blocks: VideoBlock | ImageBlock | ImageGalleryBlock | CtaFaqBlock;
-      localized: true;
-    };
-  }
->;
-export const LandingPage = {
-  ID: 'U_D3IZZUTcOj76Aaxqk73g',
-  REF: { type: 'item_type', id: 'U_D3IZZUTcOj76Aaxqk73g' },
 } as const;
 
 export type ImageGalleryBlock = ItemTypeDefinition<
@@ -1157,7 +1102,6 @@ export type AnyBlock =
   | ImageBlock
   | MenuDropdownBlock
   | MenuItemBlock
-  | HeroBlock
   | MenuExternalItemBlock
   | ImageGalleryBlock
   | SocialLinkBlock
@@ -1186,7 +1130,6 @@ export type AnyModel =
   | Post
   | RecordBin
   | Translation
-  | LandingPage
   | SchemaMigration
   | IndexPage
   | App

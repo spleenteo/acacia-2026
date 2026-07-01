@@ -1620,7 +1620,7 @@ union FaqModelLongAnswerBlocksField = CtaBlogPostBlockRecord | ImageBlockRecord 
 type FaqModelLongAnswerField {
   blocks: [FaqModelLongAnswerBlocksField!]!
   inlineBlocks: [String!]!
-  links: [FaqModelLongAnswerLinksField!]!
+  links: [FaqRecord!]!
   value: JsonField!
 }
 
@@ -1628,8 +1628,6 @@ type FaqModelLongAnswerFieldMultiLocaleField {
   locale: SiteLocale
   value: FaqModelLongAnswerField
 }
-
-union FaqModelLongAnswerLinksField = FaqRecord | LandingPageRecord
 
 enum FaqModelOrderBy {
   _createdAt_ASC
@@ -1665,7 +1663,7 @@ union FaqModelShortAnswerBlocksField = CtaBlogPostBlockRecord | ImageBlockRecord
 type FaqModelShortAnswerField {
   blocks: [FaqModelShortAnswerBlocksField!]!
   inlineBlocks: [String!]!
-  links: [FaqModelShortAnswerLinksField!]!
+  links: [FaqRecord!]!
   value: JsonField!
 }
 
@@ -1673,8 +1671,6 @@ type FaqModelShortAnswerFieldMultiLocaleField {
   locale: SiteLocale
   value: FaqModelShortAnswerField
 }
-
-union FaqModelShortAnswerLinksField = FaqRecord | LandingPageRecord
 
 """Record of type ⁉️ Faq (faq)"""
 type FaqRecord implements RecordInterface {
@@ -2269,39 +2265,6 @@ type GuestbookRecord implements RecordInterface {
   service: ServiceRecord
   title: String
   updatedAt: DateTime!
-}
-
-"""Block of type 🚀 Hero section (hero_block)"""
-type HeroBlockRecord implements RecordInterface {
-  _createdAt: DateTime!
-
-  """Editing URL"""
-  _editingUrl: String
-  _firstPublishedAt: DateTime!
-  _isValid: BooleanType!
-  _modelApiKey: String!
-  _publicationScheduledAt: DateTime
-  _publishedAt: DateTime!
-
-  """Generates SEO and Social card meta tags to be used in your frontend"""
-  _seoMetaTags(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-  ): [Tag!]!
-  _status: ItemStatus!
-  _unpublishingScheduledAt: DateTime
-  _updatedAt: DateTime!
-  buttons: [ButtonBlockRecord!]!
-  createdAt: DateTime!
-  heroHeader: SectionHeaderBlockRecord!
-  heroImage: FileField
-  id: ItemId!
-  updatedAt: DateTime!
-}
-
-type HeroBlockRecordListListNonNullMultiLocaleField {
-  locale: SiteLocale
-  value: [HeroBlockRecord!]!
 }
 
 """Block of type 🔝 Hero Index (hero_index_block)"""
@@ -5531,169 +5494,6 @@ input JsonFilter {
   exists: BooleanType
 }
 
-input LandingPageModelFilter {
-  _createdAt: CreatedAtFilter
-  createdAt: CreatedAtFilter
-  id: ItemIdFilter
-  _firstPublishedAt: PublishedAtFilter
-  _publicationScheduledAt: PublishedAtFilter
-  _unpublishingScheduledAt: PublishedAtFilter
-  _publishedAt: PublishedAtFilter
-  _status: StatusFilter
-  _updatedAt: UpdatedAtFilter
-  updatedAt: UpdatedAtFilter
-  _isValid: BooleanFilter
-  _locales: LocalesFilter
-  seoSettingsSocial: SeoFilter
-  slug: SlugFilter
-  structuredText: StructuredTextFilter
-  title: StringFilter
-  OR: [LandingPageModelFilter]
-  AND: [LandingPageModelFilter]
-}
-
-enum LandingPageModelOrderBy {
-  _createdAt_ASC
-  _createdAt_DESC
-  createdAt_ASC
-  createdAt_DESC
-  id_ASC
-  id_DESC
-  _firstPublishedAt_ASC
-  _firstPublishedAt_DESC
-  _publicationScheduledAt_ASC
-  _publicationScheduledAt_DESC
-  _unpublishingScheduledAt_ASC
-  _unpublishingScheduledAt_DESC
-  _publishedAt_ASC
-  _publishedAt_DESC
-  _status_ASC
-  _status_DESC
-  _updatedAt_ASC
-  _updatedAt_DESC
-  updatedAt_ASC
-  updatedAt_DESC
-  _isValid_ASC
-  _isValid_DESC
-  title_ASC
-  title_DESC
-}
-
-union LandingPageModelStructuredTextBlocksField = CtaFaqBlockRecord | ImageBlockRecord | ImageGalleryBlockRecord | VideoBlockRecord
-
-type LandingPageModelStructuredTextField {
-  blocks: [LandingPageModelStructuredTextBlocksField!]!
-  inlineBlocks: [String!]!
-  links: [String!]!
-  value: JsonField!
-}
-
-type LandingPageModelStructuredTextFieldNonNullMultiLocaleField {
-  locale: SiteLocale
-  value: LandingPageModelStructuredTextField!
-}
-
-"""Record of type 📝 Landing Page (landing_page)"""
-type LandingPageRecord implements RecordInterface {
-  _allSectionsLocales(
-    """
-    If you want to fallback to a default translation when a translation has not been found
-    """
-    fallbackLocales: [SiteLocale!]
-  ): [HeroBlockRecordListListNonNullMultiLocaleField!]
-  _allSeoSettingsSocialLocales(
-    """
-    If you want to fallback to a default translation when a translation has not been found
-    """
-    fallbackLocales: [SiteLocale!]
-  ): [SeoFieldMultiLocaleField!]
-  _allSlugLocales(
-    """
-    If you want to fallback to a default translation when a translation has not been found
-    """
-    fallbackLocales: [SiteLocale!]
-  ): [StringNonNullMultiLocaleField!]
-  _allStructuredTextLocales(
-    """
-    If you want to fallback to a default translation when a translation has not been found
-    """
-    fallbackLocales: [SiteLocale!]
-  ): [LandingPageModelStructuredTextFieldNonNullMultiLocaleField!]
-  _allTitleLocales(
-    """
-    If you want to fallback to a default translation when a translation has not been found
-    """
-    fallbackLocales: [SiteLocale!]
-  ): [StringNonNullMultiLocaleField!]
-  _createdAt: DateTime!
-
-  """Editing URL"""
-  _editingUrl: String
-  _firstPublishedAt: DateTime!
-  _isValid: BooleanType!
-  _locales: [SiteLocale!]!
-  _modelApiKey: String!
-  _publicationScheduledAt: DateTime
-  _publishedAt: DateTime!
-
-  """Generates SEO and Social card meta tags to be used in your frontend"""
-  _seoMetaTags(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-  ): [Tag!]!
-  _status: ItemStatus!
-  _unpublishingScheduledAt: DateTime
-  _updatedAt: DateTime!
-  createdAt: DateTime!
-  id: ItemId!
-  sections(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
-    """
-    If you want to fallback to a default translation when a translation has not been found
-    """
-    fallbackLocales: [SiteLocale!]
-  ): [HeroBlockRecord!]!
-  seoSettingsSocial(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
-    """
-    If you want to fallback to a default translation when a translation has not been found
-    """
-    fallbackLocales: [SiteLocale!]
-  ): SeoField
-  slug(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
-    """
-    If you want to fallback to a default translation when a translation has not been found
-    """
-    fallbackLocales: [SiteLocale!]
-  ): String!
-  structuredText(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
-    """
-    If you want to fallback to a default translation when a translation has not been found
-    """
-    fallbackLocales: [SiteLocale!]
-  ): LandingPageModelStructuredTextField!
-  title(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
-    """
-    If you want to fallback to a default translation when a translation has not been found
-    """
-    fallbackLocales: [SiteLocale!]
-  ): String!
-  updatedAt: DateTime!
-}
-
 type LatLonField {
   latitude: FloatType!
   longitude: FloatType!
@@ -6016,7 +5816,7 @@ type MoodItemRecord implements RecordInterface {
 type MoodModelDescriptionField {
   blocks: [String!]!
   inlineBlocks: [String!]!
-  links: [MoodModelDescriptionLinksField!]!
+  links: [DistrictRecord!]!
   value: JsonField!
 }
 
@@ -6024,8 +5824,6 @@ type MoodModelDescriptionFieldMultiLocaleField {
   locale: SiteLocale
   value: MoodModelDescriptionField
 }
-
-union MoodModelDescriptionLinksField = DistrictRecord | LandingPageRecord
 
 """Linking fields"""
 enum MoodModelFieldsReferencingApartmentModel {
@@ -6346,7 +6144,7 @@ type PostModelContentFieldMultiLocaleField {
   value: PostModelContentField
 }
 
-union PostModelContentLinksField = ApartmentRecord | DistrictRecord | FaqRecord | LandingPageRecord | MoodRecord
+union PostModelContentLinksField = ApartmentRecord | DistrictRecord | FaqRecord | MoodRecord
 
 """Linking fields"""
 enum PostModelFieldsReferencingApartmentModel {
@@ -6664,13 +6462,6 @@ type Query {
     """The locale to use to fetch the field's content"""
     locale: SiteLocale
     filter: InfoLabelModelFilter
-  ): CollectionMetadata!
-
-  """Returns meta information regarding a record collection"""
-  _allLandingPagesMeta(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-    filter: LandingPageModelFilter
   ): CollectionMetadata!
 
   """Returns meta information regarding a record collection"""
@@ -7019,25 +6810,6 @@ type Query {
     filter: InfoLabelModelFilter
     orderBy: [InfoLabelModelOrderBy] = [_updatedAt_DESC]
   ): [InfoLabelRecord!]!
-
-  """Returns a collection of records"""
-  allLandingPages(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
-    """
-    If you want to fallback to a default translation when a translation has not been found
-    """
-    fallbackLocales: [SiteLocale!]
-
-    """Skip the first results"""
-    skip: IntType
-
-    """Limit the number of results"""
-    first: IntType = 20
-    filter: LandingPageModelFilter
-    orderBy: [LandingPageModelOrderBy] = [_updatedAt_DESC]
-  ): [LandingPageRecord!]!
 
   """Returns a collection of records"""
   allMoodItems(
@@ -7443,19 +7215,6 @@ type Query {
     filter: InfoLabelModelFilter
     orderBy: [InfoLabelModelOrderBy] = [_updatedAt_DESC]
   ): InfoLabelRecord
-
-  """Returns a specific record"""
-  landingPage(
-    """The locale to use to fetch the field's content"""
-    locale: SiteLocale
-
-    """
-    If you want to fallback to a default translation when a translation has not been found
-    """
-    fallbackLocales: [SiteLocale!]
-    filter: LandingPageModelFilter
-    orderBy: [LandingPageModelOrderBy] = [_updatedAt_DESC]
-  ): LandingPageRecord
 
   """Returns a specific record"""
   mood(
