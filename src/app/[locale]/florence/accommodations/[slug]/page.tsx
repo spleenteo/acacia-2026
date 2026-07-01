@@ -178,12 +178,10 @@ const moodsQuery = graphql(
     query RelatedMoods($locale: SiteLocale!) {
       allMoods(locale: $locale, first: 100) {
         ...MoodCardFragment
-        boxes {
-          object {
-            __typename
-            ... on ApartmentRecord {
-              id
-            }
+        relatedContent {
+          __typename
+          ... on ApartmentRecord {
+            id
           }
         }
       }
@@ -351,10 +349,9 @@ export default async function ApartmentDetailPage({
 
   // Related moods (those that link to this apartment)
   const relatedMoods = moodsData.allMoods.filter((mood) =>
-    mood.boxes.some((box) => {
-      const objects = box.object as { __typename: string; id?: string }[];
-      return objects.some((obj) => obj.__typename === 'ApartmentRecord' && obj.id === apartment.id);
-    }),
+    mood.relatedContent.some(
+      (item) => item.__typename === 'ApartmentRecord' && item.id === apartment.id,
+    ),
   );
 
   const resolvedProps: ApartmentDetailProps = {

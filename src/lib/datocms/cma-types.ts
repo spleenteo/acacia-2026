@@ -144,88 +144,10 @@ export const District = {
   REF: { type: 'item_type', id: '2735' },
 } as const;
 
-export type Service = ItemTypeDefinition<
-  EnvironmentSettings,
-  '2736',
-  {
-    published: {
-      type: 'boolean';
-    };
-    name: {
-      type: 'string';
-      localized: true;
-    };
-    abstract: {
-      type: 'text';
-      localized: true;
-    };
-    description: {
-      type: 'text';
-      localized: true;
-    };
-    featured_image: {
-      type: 'file';
-    };
-    price: {
-      type: 'string';
-    };
-    highlight: {
-      type: 'string';
-      localized: true;
-    };
-    category: {
-      type: 'link';
-    };
-    gallery: {
-      type: 'links';
-    };
-    slug: {
-      type: 'slug';
-      localized: true;
-    };
-    seo: {
-      type: 'seo';
-      localized: true;
-    };
-    position: {
-      type: 'integer';
-    };
-  }
->;
-export const Service = {
-  ID: '2736',
-  REF: { type: 'item_type', id: '2736' },
-} as const;
-
-export type ServiceCategories = ItemTypeDefinition<
-  EnvironmentSettings,
-  '2737',
-  {
-    name: {
-      type: 'string';
-      localized: true;
-    };
-    slug: {
-      type: 'slug';
-      localized: true;
-    };
-    position: {
-      type: 'integer';
-    };
-  }
->;
-export const ServiceCategories = {
-  ID: '2737',
-  REF: { type: 'item_type', id: '2737' },
-} as const;
-
 export type Mood = ItemTypeDefinition<
   EnvironmentSettings,
   '2738',
   {
-    boxes: {
-      type: 'links';
-    };
     name: {
       type: 'string';
       localized: true;
@@ -415,41 +337,6 @@ export const HomePage = {
   REF: { type: 'item_type', id: '2831' },
 } as const;
 
-export type MoodItem = ItemTypeDefinition<
-  EnvironmentSettings,
-  '2903',
-  {
-    name: {
-      type: 'string';
-    };
-    label: {
-      type: 'string';
-      localized: true;
-    };
-    object: {
-      type: 'links';
-    };
-    image: {
-      type: 'file';
-    };
-    description: {
-      type: 'text';
-      localized: true;
-    };
-    url: {
-      type: 'string';
-      localized: true;
-    };
-    position: {
-      type: 'integer';
-    };
-  }
->;
-export const MoodItem = {
-  ID: '2903',
-  REF: { type: 'item_type', id: '2903' },
-} as const;
-
 export type CallToAction = ItemTypeDefinition<
   EnvironmentSettings,
   '2905',
@@ -488,48 +375,6 @@ export type ApartmentCategory = ItemTypeDefinition<
 export const ApartmentCategory = {
   ID: '2971',
   REF: { type: 'item_type', id: '2971' },
-} as const;
-
-export type IndexAcacialife = ItemTypeDefinition<
-  EnvironmentSettings,
-  '3125',
-  {
-    title: {
-      type: 'string';
-      localized: true;
-    };
-    subtitle: {
-      type: 'string';
-      localized: true;
-    };
-    description: {
-      type: 'text';
-      localized: true;
-    };
-    featured_image: {
-      type: 'file';
-    };
-    cta: {
-      type: 'link';
-      localized: true;
-    };
-    seo: {
-      type: 'seo';
-      localized: true;
-    };
-    boxes: {
-      type: 'links';
-    };
-    hero: {
-      type: 'single_block';
-      blocks: HeroIndexBlock;
-      localized: true;
-    };
-  }
->;
-export const IndexAcacialife = {
-  ID: '3125',
-  REF: { type: 'item_type', id: '3125' },
 } as const;
 
 export type Tip = ItemTypeDefinition<
@@ -1112,17 +957,13 @@ export type AnyModel =
   | Apartment
   | GalleryImage
   | District
-  | Service
-  | ServiceCategories
   | Mood
   | BlogCategory
   | Faq
   | Guestbook
   | HomePage
-  | MoodItem
   | CallToAction
   | ApartmentCategory
-  | IndexAcacialife
   | Tip
   | Essential
   | Amenity

@@ -53,7 +53,7 @@ Two type generation systems work together:
 
 **Localized path segments**: URL path segments are translated per locale (`florence` → `firenze`, `accommodations` → `appartamenti`, `districts` → `quartieri`). The translation map and utilities live in `src/i18n/paths.ts`. The proxy rewrites incoming translated paths to canonical (English) filesystem routes. All components use `modelPath()` or `localizedPath()` to generate locale-aware hrefs. To add a new translated section: add the segment to `pathSegments`, then add the model to `modelPrefixes` (detail) or `indexPaths` (singleton) in `paths.ts`.
 
-**Mood apartments (union type)**: Moods link to apartments via `boxes` → `MoodItemsRecord[]` → `object` (union: `ApartmentRecord | PostRecord | ServiceRecord | TipRecord`). Apartments are extracted inline with `__typename === 'ApartmentRecord'` filtering.
+**Mood apartments (union type)**: Moods link to related content directly via `relatedContent` (union: `ApartmentRecord | DistrictRecord | FaqRecord | PostRecord`). Apartments are extracted inline with `__typename === 'ApartmentRecord'` filtering.
 
 **HTML content from DatoCMS**: Legacy text fields (description, abstract, claim) are queried with `markdown: true` and rendered via the `<HtmlContent>` component (`dangerouslySetInnerHTML`). This will be replaced with a Structured Text renderer when DatoCMS schema migrates.
 
