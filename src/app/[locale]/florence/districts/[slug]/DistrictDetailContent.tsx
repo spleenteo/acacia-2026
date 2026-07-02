@@ -16,6 +16,12 @@ import PostCard from '@/components/PostCard';
 import PoiCard from '@/components/PoiCard';
 import { DistrictCardFragment } from '@/components/DistrictCard/fragment';
 import RelatedList from '@/components/RelatedList';
+import FilterBar from '@/components/FilterBar';
+import {
+  type CardKind,
+  FILTER_KIND_ORDER,
+  FILTER_KIND_TKEY,
+} from '@/components/FilterBar/masonryFilters';
 import { readFragment } from '@/lib/datocms/graphql';
 import { seededShuffle } from '@/lib/seededShuffle';
 import type { FragmentOf, ResultOf } from 'gql.tada';
@@ -39,7 +45,9 @@ export default function DistrictDetailContent({
   data,
 }: DistrictDetailProps & { data: DistrictDetailData }) {
   const tListing = useTranslations('listing');
+  const tFilters = useTranslations('filters');
   const lightbox = useLightbox();
+  const [activeFilter, setActiveFilter] = useState('all');
 
   // Masonry column count: 1 below sm, 2 from sm up (two columns on desktop too).
   // Default 2 for SSR (matches the desktop-first markup), then adjust on client.
@@ -67,7 +75,7 @@ export default function DistrictDetailContent({
   // Post → PostCard. The narrowed branches already satisfy the components' props
   // (image blocks are coerced to a plain `FragmentOf` so readFragment can unmask).
   const slides: LightboxSlide[] = [];
-  const galleryCards: { id: string; node: ReactNode }[] = [];
+  const galleryCards: { id: string; kind: CardKind; node: ReactNode }[] = [];
   for (const block of district.gallery) {
     if (block.__typename === 'GalleryImageRecord') {
       const imageBlock: FragmentOf<typeof GalleryImageFragment> = block;
@@ -81,6 +89,7 @@ export default function DistrictDetailContent({
       // the apartment/post cards (same component as the mood detail page).
       galleryCards.push({
         id: `img-${img.id}`,
+        kind: 'image',
         node: (
           <PolaroidImageCard
             data={thumb}
@@ -93,6 +102,7 @@ export default function DistrictDetailContent({
     } else if (block.__typename === 'PostRecord') {
       galleryCards.push({
         id: `post-${block.id}`,
+        kind: 'post',
         node: <PostCard data={block} locale={locale} />,
       });
     }
@@ -106,10 +116,12 @@ export default function DistrictDetailContent({
     [
       ...allApartments.map((apartment) => ({
         id: `apt-${apartment.id}`,
+        kind: 'apartment' as const,
         node: <ApartmentCard data={apartment} locale={locale} />,
       })),
       ...allPois.map((poi) => ({
         id: `poi-${poi.id}`,
+        kind: 'poi' as const,
         node: <PoiCard data={poi} />,
       })),
       ...galleryCards,
@@ -117,10 +129,22 @@ export default function DistrictDetailContent({
     district.id,
   );
 
-  // Round-robin into N columns so the reading order flows left→right; natural
-  // card heights fill the space, the per-column gap separates items.
+  // Type filters — only the kinds actually present, in canonical order, plus "All".
+  const kindsPresent = new Set(cards.map((c) => c.kind));
+  const filterOptions = [
+    { key: 'all', label: tFilters('all') },
+    ...FILTER_KIND_ORDER.filter((k) => kindsPresent.has(k)).map((k) => ({
+      key: k,
+      label: tFilters(FILTER_KIND_TKEY[k]),
+    })),
+  ];
+  const visibleCards =
+    activeFilter === 'all' ? cards : cards.filter((c) => c.kind === activeFilter);
+
+  // Round-robin the visible cards into N columns so the reading order flows
+  // left→right; natural card heights fill the space, the gap separates items.
   const columns = Array.from({ length: columnCount }, (_, c) =>
-    cards.filter((_card, i) => i % columnCount === c),
+    visibleCards.filter((_card, i) => i % columnCount === c),
   );
 
   // Other published districts for the "you might also be interested in" block.
@@ -158,6 +182,9 @@ export default function DistrictDetailContent({
             <h2 className="mb-8 font-heading font-normal text-h2 text-dark tracking-[-0.02em]">
               {district.name}
             </h2>
+            {filterOptions.length > 2 && (
+              <FilterBar options={filterOptions} active={activeFilter} onChange={setActiveFilter} />
+            )}
             {/* Masonry — natural-height cards in N ordered columns. */}
             <div className="flex gap-6">
               {columns.map((col, ci) => (

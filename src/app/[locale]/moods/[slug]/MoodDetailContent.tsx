@@ -18,6 +18,12 @@ import Lightbox, { useLightbox, type LightboxSlide } from '@/components/Lightbox
 import { toSlide } from '@/components/Lightbox/toSlide';
 import { MoodCardFragment } from '@/components/MoodCard';
 import RelatedList from '@/components/RelatedList';
+import FilterBar from '@/components/FilterBar';
+import {
+  type CardKind,
+  FILTER_KIND_ORDER,
+  FILTER_KIND_TKEY,
+} from '@/components/FilterBar/masonryFilters';
 import { readFragment } from '@/lib/datocms/graphql';
 import type { FragmentOf, ResultOf } from 'gql.tada';
 import type { query } from './page';
@@ -36,7 +42,9 @@ export default function MoodDetailContent({
 }: MoodDetailProps & { data: MoodDetailData }) {
   const tMoods = useTranslations('moods');
   const tListing = useTranslations('listing');
+  const tFilters = useTranslations('filters');
   const lightbox = useLightbox();
+  const [activeFilter, setActiveFilter] = useState('all');
 
   // Masonry column count: 1 below sm, 2 from sm up (two columns on desktop too).
   // Default 2 for SSR (matches the desktop-first markup), then adjust on client.
@@ -58,26 +66,35 @@ export default function MoodDetailContent({
   const related = mood.relatedContent;
 
   const slides: LightboxSlide[] = [];
-  const cards: { id: string; node: ReactNode }[] = [];
+  const cards: { id: string; kind: CardKind; node: ReactNode }[] = [];
   for (const item of related) {
     switch (item.__typename) {
       case 'ApartmentRecord':
-        cards.push({ id: item.id, node: <ApartmentCard data={item} locale={locale} /> });
+        cards.push({
+          id: item.id,
+          kind: 'apartment',
+          node: <ApartmentCard data={item} locale={locale} />,
+        });
         break;
       case 'PostRecord':
-        cards.push({ id: item.id, node: <PostCard data={item} locale={locale} /> });
+        cards.push({ id: item.id, kind: 'post', node: <PostCard data={item} locale={locale} /> });
         break;
       case 'DistrictRecord':
-        cards.push({ id: item.id, node: <DistrictCard data={item} locale={locale} /> });
+        cards.push({
+          id: item.id,
+          kind: 'district',
+          node: <DistrictCard data={item} locale={locale} />,
+        });
         break;
       case 'FaqRecord':
         cards.push({
           id: item.id,
+          kind: 'faq',
           node: <RelatedFaqCard data={item} href={faqHrefById[item.id] ?? '#'} />,
         });
         break;
       case 'PoiRecord':
-        cards.push({ id: item.id, node: <PoiCard data={item} /> });
+        cards.push({ id: item.id, kind: 'poi', node: <PoiCard data={item} /> });
         break;
       case 'GalleryImageRecord': {
         // Coerce the narrowed union member back to a plain FragmentOf so
@@ -91,6 +108,7 @@ export default function MoodDetailContent({
         slides.push(toSlide(full, img.description));
         cards.push({
           id: item.id,
+          kind: 'image',
           node: (
             <PolaroidImageCard
               data={thumb}
@@ -105,11 +123,23 @@ export default function MoodDetailContent({
     }
   }
 
-  // Masonry that keeps the CMS reading order left→right: round-robin the cards
-  // into N columns (item 0 → col 0, item 1 → col 1, …), natural heights fill
-  // the space, and the per-column gap gives a clear separation between items.
+  // Type filters — only the kinds actually present, in canonical order, plus "All".
+  const kindsPresent = new Set(cards.map((c) => c.kind));
+  const filterOptions = [
+    { key: 'all', label: tFilters('all') },
+    ...FILTER_KIND_ORDER.filter((k) => kindsPresent.has(k)).map((k) => ({
+      key: k,
+      label: tFilters(FILTER_KIND_TKEY[k]),
+    })),
+  ];
+  const visibleCards =
+    activeFilter === 'all' ? cards : cards.filter((c) => c.kind === activeFilter);
+
+  // Masonry that keeps the CMS reading order left→right: round-robin the visible
+  // cards into N columns (item 0 → col 0, item 1 → col 1, …), natural heights
+  // fill the space, and the per-column gap gives a clear separation between items.
   const columns = Array.from({ length: columnCount }, (_, c) =>
-    cards.filter((_card, i) => i % columnCount === c),
+    visibleCards.filter((_card, i) => i % columnCount === c),
   );
 
   const description = mood.description?.value ? (
@@ -151,6 +181,9 @@ export default function MoodDetailContent({
             <h2 className="mb-8 font-heading font-normal text-h2 text-dark tracking-[-0.02em]">
               {tMoods('relatedTitle')}
             </h2>
+            {filterOptions.length > 2 && (
+              <FilterBar options={filterOptions} active={activeFilter} onChange={setActiveFilter} />
+            )}
             {/* Masonry — natural-height cards in N ordered columns (see above),
                 so the very different block heights fill the space with no gaps. */}
             <div className="flex gap-6">
