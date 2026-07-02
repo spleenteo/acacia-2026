@@ -34,19 +34,15 @@ export default function DistrictDetailContent({
   const tListing = useTranslations('listing');
   const lightbox = useLightbox();
 
-  // Masonry column count: 1 (<sm), 2 (sm–xl), 3 (xl+). Default 2 for SSR.
+  // Masonry column count: 1 below sm, 2 from sm up (two columns on desktop too).
+  // Default 2 for SSR (matches the desktop-first markup), then adjust on client.
   const [columnCount, setColumnCount] = useState(2);
   useEffect(() => {
     const sm = window.matchMedia('(min-width: 640px)');
-    const xl = window.matchMedia('(min-width: 1280px)');
-    const apply = () => setColumnCount(xl.matches ? 3 : sm.matches ? 2 : 1);
+    const apply = () => setColumnCount(sm.matches ? 2 : 1);
     apply();
     sm.addEventListener('change', apply);
-    xl.addEventListener('change', apply);
-    return () => {
-      sm.removeEventListener('change', apply);
-      xl.removeEventListener('change', apply);
-    };
+    return () => sm.removeEventListener('change', apply);
   }, []);
 
   const { district } = data;
@@ -147,7 +143,9 @@ export default function DistrictDetailContent({
       {/* Tucks under the hero diagonal on mobile; desktop overlap via the layout. */}
       <div className="relative z-0 -mt-8 lg:mt-0">
         {cards.length > 0 ? (
-          <EditorialListingLayout body={description && <ReadMore>{description}</ReadMore>}>
+          <EditorialListingLayout
+            body={description && <ReadMore desktopExpanded>{description}</ReadMore>}
+          >
             <p className="mb-3 font-body text-label uppercase tracking-[0.22em] text-primary font-medium">
               {tListing('discoverArea')}
             </p>
