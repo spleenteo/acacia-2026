@@ -108,7 +108,10 @@ export default function PoiCard({ data }: Props) {
   const thumb = image?.responsiveImage;
   const focal = image?.focalPoint;
   const objectPosition = focal ? `${focal.x * 100}% ${focal.y * 100}%` : undefined;
-  const category = poi.category?.name;
+  // `category` is now a multi-link: a POI can sit in several categories. Join
+  // their names for the "Acacia map for …" label.
+  const categoryNames = (poi.category ?? []).map((c) => c.name).filter(Boolean);
+  const category = categoryNames.length > 0 ? categoryNames.join(', ') : undefined;
   const moment = stripStega(poi.nightDay ?? 'anytime');
 
   const sunActive = moment === 'day' || moment === 'anytime';

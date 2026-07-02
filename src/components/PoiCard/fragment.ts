@@ -3,8 +3,9 @@ import { ResponsiveImageFragment } from '@/components/ResponsiveImage';
 
 /**
  * POI card data. Kept in its own file (not the component) so server components
- * can spread it into queries without gql.tada build errors. Only `name` and
- * `category` are guaranteed; image / instagram / description are optional.
+ * can spread it into queries without gql.tada build errors. `name` is guaranteed;
+ * `category` is a multi-link list (a POI may sit in several categories); image /
+ * instagram / description are optional.
  */
 export const PoiCardFragment = graphql(
   `

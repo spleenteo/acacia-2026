@@ -6233,7 +6233,7 @@ input PoiModelFilter {
   _updatedAt: UpdatedAtFilter
   updatedAt: UpdatedAtFilter
   _isValid: BooleanFilter
-  category: LinkFilter
+  category: LinksFilter
   description: StringFilter
   featuredImage: FileFilter
   instagram: StringFilter
@@ -6300,7 +6300,7 @@ type PoiRecord implements RecordInterface {
   _status: ItemStatus!
   _unpublishingScheduledAt: DateTime
   _updatedAt: DateTime!
-  category: PoiCategoryRecord!
+  category: [PoiCategoryRecord!]!
   createdAt: DateTime!
   description: String
   featuredImage: FileField
