@@ -69,22 +69,33 @@ export default function DistrictDetailContent({
       if (!thumb || !full) continue;
       const slideIndex = slides.length;
       slides.push(toSlide(full, img.description));
+      // Polaroid treatment sets the caption images apart from the apartment/post
+      // cards: a warm-sand mount (visible against the white section), a thicker
+      // bottom margin, a subtle alternating tilt that straightens + lifts on hover,
+      // and an enlarged, centred handwritten-feel caption.
+      const tilt = slideIndex % 2 === 0 ? '-rotate-1' : 'rotate-1';
       galleryCards.push({
         id: `img-${img.id}`,
         node: (
           <button
             type="button"
             onClick={() => lightbox.openAt(slideIndex)}
-            className="group block w-full text-left cursor-pointer"
+            className="group block w-full cursor-pointer text-left"
           >
-            <div className="overflow-hidden rounded-sm">
-              <div className="transition-transform duration-700 ease-card group-hover:scale-[1.03]">
-                <ResponsiveImage data={thumb} />
+            <div
+              className={`rounded-card bg-surface-warm p-3 pb-6 shadow-card-hover ${tilt} transition-all duration-500 ease-card group-hover:-translate-y-1 group-hover:rotate-0`}
+            >
+              <div className="overflow-hidden">
+                <div className="transition-transform duration-700 ease-card group-hover:scale-[1.03]">
+                  <ResponsiveImage data={thumb} />
+                </div>
               </div>
+              {img.description && (
+                <p className="pt-4 text-center font-heading italic text-body-lg text-muted">
+                  {img.description}
+                </p>
+              )}
             </div>
-            {img.description && (
-              <p className="pt-3 font-heading italic text-body-sm text-muted">{img.description}</p>
-            )}
           </button>
         ),
       });
