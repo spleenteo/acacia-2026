@@ -13,22 +13,29 @@ import Lightbox, { useLightbox, type LightboxSlide } from '@/components/Lightbox
 import { toSlide } from '@/components/Lightbox/toSlide';
 import ApartmentCard from '@/components/ApartmentCard';
 import PostCard from '@/components/PostCard';
+import PoiCard from '@/components/PoiCard';
 import { DistrictCardFragment } from '@/components/DistrictCard/fragment';
 import RelatedList from '@/components/RelatedList';
 import { readFragment } from '@/lib/datocms/graphql';
 import { seededShuffle } from '@/lib/seededShuffle';
 import type { FragmentOf, ResultOf } from 'gql.tada';
-import type { query as districtDetailQuery, apartmentsInDistrictQuery } from './page';
+import type {
+  query as districtDetailQuery,
+  apartmentsInDistrictQuery,
+  poisInDistrictQuery,
+} from './page';
 
 export type DistrictDetailProps = {
   locale: Locale;
   apartmentsData: ResultOf<typeof apartmentsInDistrictQuery>;
+  poisData: ResultOf<typeof poisInDistrictQuery>;
 };
 type DistrictDetailData = ResultOf<typeof districtDetailQuery>;
 
 export default function DistrictDetailContent({
   locale,
   apartmentsData,
+  poisData,
   data,
 }: DistrictDetailProps & { data: DistrictDetailData }) {
   const tListing = useTranslations('listing');
@@ -49,6 +56,7 @@ export default function DistrictDetailContent({
   if (!district) return null;
 
   const { allApartments } = apartmentsData;
+  const { allPois } = poisData;
 
   const description = district.description ? (
     <HtmlContent html={district.description} className="font-body text-body text-dark" />
@@ -90,8 +98,8 @@ export default function DistrictDetailContent({
     }
   }
 
-  // One masonry of apartments + gallery images + posts, all shuffled together
-  // into a random-looking mix (apartments are not pinned). The shuffle is seeded
+  // One masonry of apartments + POIs + gallery images + posts, all shuffled
+  // together into a random-looking mix (nothing is pinned). The shuffle is seeded
   // by the district id so server and client agree (no hydration mismatch) and
   // the order stays stable per district.
   const cards = seededShuffle(
@@ -99,6 +107,10 @@ export default function DistrictDetailContent({
       ...allApartments.map((apartment) => ({
         id: `apt-${apartment.id}`,
         node: <ApartmentCard data={apartment} locale={locale} />,
+      })),
+      ...allPois.map((poi) => ({
+        id: `poi-${poi.id}`,
+        node: <PoiCard data={poi} />,
       })),
       ...galleryCards,
     ],

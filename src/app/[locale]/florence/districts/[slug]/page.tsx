@@ -14,6 +14,7 @@ import { GalleryImageFragment } from '@/components/ImageGallery/fragment';
 import { ApartmentCardFragment } from '@/components/ApartmentCard';
 import { PostCardFragment } from '@/components/PostCard/fragment';
 import { DistrictCardFragment } from '@/components/DistrictCard/fragment';
+import { PoiCardFragment } from '@/components/PoiCard/fragment';
 import RealtimeWrapper from '@/lib/datocms/realtime/RealtimeWrapper';
 import { getDraftRealtimeOptions } from '@/lib/datocms/realtime/getDraftRealtimeOptions';
 import DistrictDetailContent, { type DistrictDetailProps } from './DistrictDetailContent';
@@ -94,6 +95,25 @@ export const apartmentsInDistrictQuery = graphql(
   [ApartmentCardFragment],
 );
 
+// POIs that reference this district in their own `related_content` (inverse
+// lookup — poi links to district, not the other way around).
+export const poisInDistrictQuery = graphql(
+  `
+    query DistrictPoisQuery($locale: SiteLocale!, $districtId: ItemId!) {
+      allPois(
+        locale: $locale
+        first: 100
+        filter: { relatedContent: { anyIn: [$districtId] } }
+        orderBy: [name_ASC]
+      ) {
+        id
+        ...PoiCardFragment
+      }
+    }
+  `,
+  [PoiCardFragment],
+);
+
 const allSlugsQuery = graphql(`
   query AllDistrictSlugs {
     allDistricts(first: 100) {
@@ -124,14 +144,21 @@ export default async function DistrictDetailPage({
 
   if (!data.district) notFound();
 
-  const apartmentsData = await executeQuery(apartmentsInDistrictQuery, {
-    variables: { locale: locale as Locale, districtId: data.district.id },
-    includeDrafts: isDraftModeEnabled,
-  });
+  const [apartmentsData, poisData] = await Promise.all([
+    executeQuery(apartmentsInDistrictQuery, {
+      variables: { locale: locale as Locale, districtId: data.district.id },
+      includeDrafts: isDraftModeEnabled,
+    }),
+    executeQuery(poisInDistrictQuery, {
+      variables: { locale: locale as Locale, districtId: data.district.id },
+      includeDrafts: isDraftModeEnabled,
+    }),
+  ]);
 
   const resolvedProps: DistrictDetailProps = {
     locale: locale as Locale,
     apartmentsData,
+    poisData,
   };
 
   const breadcrumbJsonLd = detailBreadcrumbJsonLd({
