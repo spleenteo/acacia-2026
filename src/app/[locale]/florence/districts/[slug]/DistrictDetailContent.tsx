@@ -7,7 +7,7 @@ import EditorialHero from '@/components/EditorialHero';
 import EditorialListingLayout from '@/components/EditorialListingLayout';
 import HtmlContent from '@/components/HtmlContent';
 import ReadMore from '@/components/ReadMore';
-import ResponsiveImage from '@/components/ResponsiveImage';
+import PolaroidImageCard from '@/components/PolaroidImageCard';
 import { GalleryImageFragment } from '@/components/ImageGallery/fragment';
 import Lightbox, { useLightbox, type LightboxSlide } from '@/components/Lightbox';
 import { toSlide } from '@/components/Lightbox/toSlide';
@@ -69,34 +69,17 @@ export default function DistrictDetailContent({
       if (!thumb || !full) continue;
       const slideIndex = slides.length;
       slides.push(toSlide(full, img.description));
-      // Polaroid treatment sets the caption images apart from the apartment/post
-      // cards: a warm-sand mount (visible against the white section), a thicker
-      // bottom margin, a subtle alternating tilt that straightens + lifts on hover,
-      // and an enlarged, centred handwritten-feel caption.
-      const tilt = slideIndex % 2 === 0 ? '-rotate-1' : 'rotate-1';
+      // Caption images get the shared polaroid treatment so they stand apart from
+      // the apartment/post cards (same component as the mood detail page).
       galleryCards.push({
         id: `img-${img.id}`,
         node: (
-          <button
-            type="button"
+          <PolaroidImageCard
+            data={thumb}
+            caption={img.description}
+            index={slideIndex}
             onClick={() => lightbox.openAt(slideIndex)}
-            className="group block w-full cursor-pointer text-left"
-          >
-            <div
-              className={`rounded-card bg-surface-warm p-3 pb-6 shadow-card-hover ${tilt} transition-all duration-500 ease-card group-hover:-translate-y-1 group-hover:rotate-0`}
-            >
-              <div className="overflow-hidden">
-                <div className="transition-transform duration-700 ease-card group-hover:scale-[1.03]">
-                  <ResponsiveImage data={thumb} />
-                </div>
-              </div>
-              {img.description && (
-                <p className="pt-4 text-center font-heading italic text-body-lg text-muted">
-                  {img.description}
-                </p>
-              )}
-            </div>
-          </button>
+          />
         ),
       });
     } else if (block.__typename === 'PostRecord') {

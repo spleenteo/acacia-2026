@@ -11,10 +11,14 @@ import ApartmentCard from '@/components/ApartmentCard';
 import PostCard from '@/components/PostCard';
 import DistrictCard from '@/components/DistrictCard';
 import RelatedFaqCard from '@/components/RelatedFaqCard';
+import PolaroidImageCard from '@/components/PolaroidImageCard';
+import { GalleryImageFragment } from '@/components/ImageGallery/fragment';
+import Lightbox, { useLightbox, type LightboxSlide } from '@/components/Lightbox';
+import { toSlide } from '@/components/Lightbox/toSlide';
 import { MoodCardFragment } from '@/components/MoodCard';
 import RelatedList from '@/components/RelatedList';
 import { readFragment } from '@/lib/datocms/graphql';
-import type { ResultOf } from 'gql.tada';
+import type { FragmentOf, ResultOf } from 'gql.tada';
 import type { query } from './page';
 
 export type MoodDetailProps = {
@@ -31,6 +35,7 @@ export default function MoodDetailContent({
 }: MoodDetailProps & { data: MoodDetailData }) {
   const tMoods = useTranslations('moods');
   const tListing = useTranslations('listing');
+  const lightbox = useLightbox();
 
   // Masonry column count: 1 below sm, 2 from sm up (two columns on desktop too).
   // Default 2 for SSR (matches the desktop-first markup), then adjust on client.
@@ -46,28 +51,55 @@ export default function MoodDetailContent({
   const { mood } = data;
   if (!mood) return null;
 
-  // `relatedContent` is a union of apartment | post | faq | district links.
-  // Each record type renders with its own card, in the order set in the CMS.
+  // `relatedContent` is a union of apartment | post | faq | district | gallery-image
+  // links. Each renders with its own card, in the CMS order; gallery images get the
+  // shared polaroid treatment and feed a lightbox (slides built alongside the cards).
   const related = mood.relatedContent;
 
-  // Pre-render each item to its model-specific card (dropping unknown types).
-  const renderCard = (item: (typeof related)[number]): ReactNode => {
+  const slides: LightboxSlide[] = [];
+  const cards: { id: string; node: ReactNode }[] = [];
+  for (const item of related) {
     switch (item.__typename) {
       case 'ApartmentRecord':
-        return <ApartmentCard data={item} locale={locale} />;
+        cards.push({ id: item.id, node: <ApartmentCard data={item} locale={locale} /> });
+        break;
       case 'PostRecord':
-        return <PostCard data={item} locale={locale} />;
+        cards.push({ id: item.id, node: <PostCard data={item} locale={locale} /> });
+        break;
       case 'DistrictRecord':
-        return <DistrictCard data={item} locale={locale} />;
+        cards.push({ id: item.id, node: <DistrictCard data={item} locale={locale} /> });
+        break;
       case 'FaqRecord':
-        return <RelatedFaqCard data={item} href={faqHrefById[item.id] ?? '#'} />;
-      default:
-        return null;
+        cards.push({
+          id: item.id,
+          node: <RelatedFaqCard data={item} href={faqHrefById[item.id] ?? '#'} />,
+        });
+        break;
+      case 'GalleryImageRecord': {
+        // Coerce the narrowed union member back to a plain FragmentOf so
+        // readFragment unmasks it (narrowed members otherwise infer `never`).
+        const imageRecord: FragmentOf<typeof GalleryImageFragment> = item;
+        const img = readFragment(GalleryImageFragment, imageRecord);
+        const thumb = img.image?.responsiveImage;
+        const full = img.image?.full;
+        if (!thumb || !full) break;
+        const slideIndex = slides.length;
+        slides.push(toSlide(full, img.description));
+        cards.push({
+          id: item.id,
+          node: (
+            <PolaroidImageCard
+              data={thumb}
+              caption={img.description}
+              index={slideIndex}
+              onClick={() => lightbox.openAt(slideIndex)}
+            />
+          ),
+        });
+        break;
+      }
     }
-  };
-  const cards = related
-    .map((item) => ({ id: item.id, node: renderCard(item) }))
-    .filter((c): c is { id: string; node: ReactNode } => c.node !== null);
+  }
 
   // Masonry that keeps the CMS reading order left→right: round-robin the cards
   // into N columns (item 0 → col 0, item 1 → col 1, …), natural heights fill
@@ -135,6 +167,15 @@ export default function MoodDetailContent({
           )
         )}
       </div>
+
+      {slides.length > 0 && (
+        <Lightbox
+          slides={slides}
+          open={lightbox.open}
+          index={lightbox.index}
+          onClose={lightbox.close}
+        />
+      )}
 
       <RelatedList
         title={tListing('alsoInterested')}

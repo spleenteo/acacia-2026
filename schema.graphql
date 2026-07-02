@@ -204,6 +204,11 @@ enum ApartmentModelFieldsReferencingDistrictModel {
 }
 
 """Linking fields"""
+enum ApartmentModelFieldsReferencingGalleryImageModel {
+  apartment_wwlGallery
+}
+
+"""Linking fields"""
 enum ApartmentModelFieldsReferencingHouseBadgeModel {
   apartment_houseBadge
 }
@@ -1214,6 +1219,11 @@ input DateTimeFilter {
   exists: BooleanType
 }
 
+"""Linking fields"""
+enum DistrictModelFieldsReferencingGalleryImageModel {
+  district_gallery
+}
+
 input DistrictModelFilter {
   _createdAt: CreatedAtFilter
   createdAt: CreatedAtFilter
@@ -2092,6 +2102,96 @@ type GalleryImageRecord implements RecordInterface {
     """
     fallbackLocales: [SiteLocale!]
   ): [StringMultiLocaleField!]
+  _allReferencingApartments(
+    """Specifies how to filter linking records"""
+    through: InverseRelationshipFilterBetweenApartmentAndGalleryImage
+
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+
+    """Skip the first results"""
+    skip: IntType
+
+    """Limit the number of results"""
+    first: IntType = 20
+    filter: ApartmentModelFilter
+    orderBy: [ApartmentModelOrderBy] = [_updatedAt_DESC]
+  ): [ApartmentRecord!]!
+
+  """Returns meta information regarding a record collection"""
+  _allReferencingApartmentsMeta(
+    """Specifies how to filter linking records"""
+    through: InverseRelationshipFilterBetweenApartmentAndGalleryImage
+
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+    filter: ApartmentModelFilter
+  ): CollectionMetadata!
+  _allReferencingDistricts(
+    """Specifies how to filter linking records"""
+    through: InverseRelationshipFilterBetweenDistrictAndGalleryImage
+
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+
+    """Skip the first results"""
+    skip: IntType
+
+    """Limit the number of results"""
+    first: IntType = 20
+    filter: DistrictModelFilter
+    orderBy: [DistrictModelOrderBy] = [position_ASC]
+  ): [DistrictRecord!]!
+
+  """Returns meta information regarding a record collection"""
+  _allReferencingDistrictsMeta(
+    """Specifies how to filter linking records"""
+    through: InverseRelationshipFilterBetweenDistrictAndGalleryImage
+
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+    filter: DistrictModelFilter
+  ): CollectionMetadata!
+  _allReferencingMoods(
+    """Specifies how to filter linking records"""
+    through: InverseRelationshipFilterBetweenMoodAndGalleryImage
+
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+
+    """Skip the first results"""
+    skip: IntType
+
+    """Limit the number of results"""
+    first: IntType = 20
+    filter: MoodModelFilter
+    orderBy: [MoodModelOrderBy] = [position_ASC]
+  ): [MoodRecord!]!
+
+  """Returns meta information regarding a record collection"""
+  _allReferencingMoodsMeta(
+    """Specifies how to filter linking records"""
+    through: InverseRelationshipFilterBetweenMoodAndGalleryImage
+
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+    filter: MoodModelFilter
+  ): CollectionMetadata!
   _createdAt: DateTime!
 
   """Editing URL"""
@@ -5053,6 +5153,19 @@ input InverseRelationshipFieldFilterBetweenApartmentAndDistrict {
 }
 
 """Specifies how to filter by linking fields"""
+input InverseRelationshipFieldFilterBetweenApartmentAndGalleryImage {
+  """
+  Filter linking records that reference current record in at least one of the specified fields
+  """
+  anyIn: [ApartmentModelFieldsReferencingGalleryImageModel!]
+
+  """
+  Filter linking records that do not reference current record in any of the specified fields
+  """
+  notIn: [ApartmentModelFieldsReferencingGalleryImageModel!]
+}
+
+"""Specifies how to filter by linking fields"""
 input InverseRelationshipFieldFilterBetweenApartmentAndHouseBadge {
   """
   Filter linking records that reference current record in at least one of the specified fields
@@ -5063,6 +5176,19 @@ input InverseRelationshipFieldFilterBetweenApartmentAndHouseBadge {
   Filter linking records that do not reference current record in any of the specified fields
   """
   notIn: [ApartmentModelFieldsReferencingHouseBadgeModel!]
+}
+
+"""Specifies how to filter by linking fields"""
+input InverseRelationshipFieldFilterBetweenDistrictAndGalleryImage {
+  """
+  Filter linking records that reference current record in at least one of the specified fields
+  """
+  anyIn: [DistrictModelFieldsReferencingGalleryImageModel!]
+
+  """
+  Filter linking records that do not reference current record in any of the specified fields
+  """
+  notIn: [DistrictModelFieldsReferencingGalleryImageModel!]
 }
 
 """Specifies how to filter by linking fields"""
@@ -5131,6 +5257,19 @@ input InverseRelationshipFieldFilterBetweenMoodAndDistrict {
 }
 
 """Specifies how to filter by linking fields"""
+input InverseRelationshipFieldFilterBetweenMoodAndGalleryImage {
+  """
+  Filter linking records that reference current record in at least one of the specified fields
+  """
+  anyIn: [MoodModelFieldsReferencingGalleryImageModel!]
+
+  """
+  Filter linking records that do not reference current record in any of the specified fields
+  """
+  notIn: [MoodModelFieldsReferencingGalleryImageModel!]
+}
+
+"""Specifies how to filter by linking fields"""
 input InverseRelationshipFieldFilterBetweenPostAndApartment {
   """
   Filter linking records that reference current record in at least one of the specified fields
@@ -5192,9 +5331,27 @@ input InverseRelationshipFilterBetweenApartmentAndDistrict {
 }
 
 """Specifies how to filter linking records"""
+input InverseRelationshipFilterBetweenApartmentAndGalleryImage {
+  """Specifies how to filter by linking fields"""
+  fields: InverseRelationshipFieldFilterBetweenApartmentAndGalleryImage
+
+  """Specifies how to filter by linking locales"""
+  locales: LinkingLocalesFilter
+}
+
+"""Specifies how to filter linking records"""
 input InverseRelationshipFilterBetweenApartmentAndHouseBadge {
   """Specifies how to filter by linking fields"""
   fields: InverseRelationshipFieldFilterBetweenApartmentAndHouseBadge
+
+  """Specifies how to filter by linking locales"""
+  locales: LinkingLocalesFilter
+}
+
+"""Specifies how to filter linking records"""
+input InverseRelationshipFilterBetweenDistrictAndGalleryImage {
+  """Specifies how to filter by linking fields"""
+  fields: InverseRelationshipFieldFilterBetweenDistrictAndGalleryImage
 
   """Specifies how to filter by linking locales"""
   locales: LinkingLocalesFilter
@@ -5240,6 +5397,15 @@ input InverseRelationshipFilterBetweenMoodAndApartment {
 input InverseRelationshipFilterBetweenMoodAndDistrict {
   """Specifies how to filter by linking fields"""
   fields: InverseRelationshipFieldFilterBetweenMoodAndDistrict
+
+  """Specifies how to filter by linking locales"""
+  locales: LinkingLocalesFilter
+}
+
+"""Specifies how to filter linking records"""
+input InverseRelationshipFilterBetweenMoodAndGalleryImage {
+  """Specifies how to filter by linking fields"""
+  fields: InverseRelationshipFieldFilterBetweenMoodAndGalleryImage
 
   """Specifies how to filter by linking locales"""
   locales: LinkingLocalesFilter
@@ -5513,6 +5679,11 @@ enum MoodModelFieldsReferencingDistrictModel {
   mood_relatedContent
 }
 
+"""Linking fields"""
+enum MoodModelFieldsReferencingGalleryImageModel {
+  mood_relatedContent
+}
+
 input MoodModelFilter {
   _createdAt: CreatedAtFilter
   createdAt: CreatedAtFilter
@@ -5568,7 +5739,7 @@ enum MoodModelOrderBy {
   name_DESC
 }
 
-union MoodModelRelatedContentField = ApartmentRecord | DistrictRecord | FaqRecord | PostRecord
+union MoodModelRelatedContentField = ApartmentRecord | DistrictRecord | FaqRecord | GalleryImageRecord | PostRecord
 
 """Record of type 😊 Moods (mood)"""
 type MoodRecord implements RecordInterface {
