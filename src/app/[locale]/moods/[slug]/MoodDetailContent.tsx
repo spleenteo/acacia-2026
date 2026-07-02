@@ -12,6 +12,7 @@ import PostCard from '@/components/PostCard';
 import DistrictCard from '@/components/DistrictCard';
 import RelatedFaqCard from '@/components/RelatedFaqCard';
 import PolaroidImageCard from '@/components/PolaroidImageCard';
+import PoiCard from '@/components/PoiCard';
 import { GalleryImageFragment } from '@/components/ImageGallery/fragment';
 import Lightbox, { useLightbox, type LightboxSlide } from '@/components/Lightbox';
 import { toSlide } from '@/components/Lightbox/toSlide';
@@ -52,8 +53,8 @@ export default function MoodDetailContent({
   if (!mood) return null;
 
   // `relatedContent` is a union of apartment | post | faq | district | gallery-image
-  // links. Each renders with its own card, in the CMS order; gallery images get the
-  // shared polaroid treatment and feed a lightbox (slides built alongside the cards).
+  // | poi links. Each renders with its own card, in the CMS order; gallery images get
+  // the shared polaroid treatment and feed a lightbox (slides built alongside the cards).
   const related = mood.relatedContent;
 
   const slides: LightboxSlide[] = [];
@@ -74,6 +75,9 @@ export default function MoodDetailContent({
           id: item.id,
           node: <RelatedFaqCard data={item} href={faqHrefById[item.id] ?? '#'} />,
         });
+        break;
+      case 'PoiRecord':
+        cards.push({ id: item.id, node: <PoiCard data={item} /> });
         break;
       case 'GalleryImageRecord': {
         // Coerce the narrowed union member back to a plain FragmentOf so

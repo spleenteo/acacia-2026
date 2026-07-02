@@ -16,6 +16,7 @@ import { PostCardFragment } from '@/components/PostCard/fragment';
 import { DistrictCardFragment } from '@/components/DistrictCard/fragment';
 import { RelatedFaqCardFragment } from '@/components/RelatedFaqCard';
 import { GalleryImageFragment } from '@/components/ImageGallery/fragment';
+import { PoiCardFragment } from '@/components/PoiCard/fragment';
 import { MoodCardFragment } from '@/components/MoodCard';
 import { faqHrefMap } from '@/lib/faq/faqTree';
 import RealtimeWrapper from '@/lib/datocms/realtime/RealtimeWrapper';
@@ -105,6 +106,10 @@ export const query = graphql(
             id
             ...GalleryImageFragment
           }
+          ... on PoiRecord {
+            id
+            ...PoiCardFragment
+          }
         }
       }
       allMoods(
@@ -124,6 +129,7 @@ export const query = graphql(
     DistrictCardFragment,
     RelatedFaqCardFragment,
     GalleryImageFragment,
+    PoiCardFragment,
     MoodCardFragment,
   ],
 );

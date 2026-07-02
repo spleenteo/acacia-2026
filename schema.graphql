@@ -1358,6 +1358,36 @@ type DistrictRecord implements RecordInterface {
     locale: SiteLocale
     filter: MoodModelFilter
   ): CollectionMetadata!
+  _allReferencingPois(
+    """Specifies how to filter linking records"""
+    through: InverseRelationshipFilterBetweenPoiAndDistrict
+
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+
+    """Skip the first results"""
+    skip: IntType
+
+    """Limit the number of results"""
+    first: IntType = 20
+    filter: PoiModelFilter
+    orderBy: [PoiModelOrderBy] = [_updatedAt_DESC]
+  ): [PoiRecord!]!
+
+  """Returns meta information regarding a record collection"""
+  _allReferencingPoisMeta(
+    """Specifies how to filter linking records"""
+    through: InverseRelationshipFilterBetweenPoiAndDistrict
+
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+    filter: PoiModelFilter
+  ): CollectionMetadata!
   _allReferencingPosts(
     """Specifies how to filter linking records"""
     through: InverseRelationshipFilterBetweenPostAndDistrict
@@ -5270,6 +5300,45 @@ input InverseRelationshipFieldFilterBetweenMoodAndGalleryImage {
 }
 
 """Specifies how to filter by linking fields"""
+input InverseRelationshipFieldFilterBetweenPoiAndDistrict {
+  """
+  Filter linking records that reference current record in at least one of the specified fields
+  """
+  anyIn: [PoiModelFieldsReferencingDistrictModel!]
+
+  """
+  Filter linking records that do not reference current record in any of the specified fields
+  """
+  notIn: [PoiModelFieldsReferencingDistrictModel!]
+}
+
+"""Specifies how to filter by linking fields"""
+input InverseRelationshipFieldFilterBetweenPoiAndMood {
+  """
+  Filter linking records that reference current record in at least one of the specified fields
+  """
+  anyIn: [PoiModelFieldsReferencingMoodModel!]
+
+  """
+  Filter linking records that do not reference current record in any of the specified fields
+  """
+  notIn: [PoiModelFieldsReferencingMoodModel!]
+}
+
+"""Specifies how to filter by linking fields"""
+input InverseRelationshipFieldFilterBetweenPoiAndPoiCategory {
+  """
+  Filter linking records that reference current record in at least one of the specified fields
+  """
+  anyIn: [PoiModelFieldsReferencingPoiCategoryModel!]
+
+  """
+  Filter linking records that do not reference current record in any of the specified fields
+  """
+  notIn: [PoiModelFieldsReferencingPoiCategoryModel!]
+}
+
+"""Specifies how to filter by linking fields"""
 input InverseRelationshipFieldFilterBetweenPostAndApartment {
   """
   Filter linking records that reference current record in at least one of the specified fields
@@ -5412,6 +5481,33 @@ input InverseRelationshipFilterBetweenMoodAndGalleryImage {
 }
 
 """Specifies how to filter linking records"""
+input InverseRelationshipFilterBetweenPoiAndDistrict {
+  """Specifies how to filter by linking fields"""
+  fields: InverseRelationshipFieldFilterBetweenPoiAndDistrict
+
+  """Specifies how to filter by linking locales"""
+  locales: LinkingLocalesFilter
+}
+
+"""Specifies how to filter linking records"""
+input InverseRelationshipFilterBetweenPoiAndMood {
+  """Specifies how to filter by linking fields"""
+  fields: InverseRelationshipFieldFilterBetweenPoiAndMood
+
+  """Specifies how to filter by linking locales"""
+  locales: LinkingLocalesFilter
+}
+
+"""Specifies how to filter linking records"""
+input InverseRelationshipFilterBetweenPoiAndPoiCategory {
+  """Specifies how to filter by linking fields"""
+  fields: InverseRelationshipFieldFilterBetweenPoiAndPoiCategory
+
+  """Specifies how to filter by linking locales"""
+  locales: LinkingLocalesFilter
+}
+
+"""Specifies how to filter linking records"""
 input InverseRelationshipFilterBetweenPostAndApartment {
   """Specifies how to filter by linking fields"""
   fields: InverseRelationshipFieldFilterBetweenPostAndApartment
@@ -5483,6 +5579,23 @@ input JsonFilter {
 type LatLonField {
   latitude: FloatType!
   longitude: FloatType!
+}
+
+"""Specifies how to filter Geolocation fields"""
+input LatLonFilter {
+  """Filter records within the specified radius in meters"""
+  near: LatLonNearFilter
+
+  """
+  Filter records with the specified field defined (i.e. with any value) or not
+  """
+  exists: BooleanType
+}
+
+input LatLonNearFilter {
+  latitude: FloatType!
+  longitude: FloatType!
+  radius: FloatType!
 }
 
 """Specifies how to filter Single-link fields"""
@@ -5739,7 +5852,7 @@ enum MoodModelOrderBy {
   name_DESC
 }
 
-union MoodModelRelatedContentField = ApartmentRecord | DistrictRecord | FaqRecord | GalleryImageRecord | PostRecord
+union MoodModelRelatedContentField = ApartmentRecord | DistrictRecord | FaqRecord | GalleryImageRecord | PoiRecord | PostRecord
 
 """Record of type 😊 Moods (mood)"""
 type MoodRecord implements RecordInterface {
@@ -5790,6 +5903,36 @@ type MoodRecord implements RecordInterface {
     """The locale to use to fetch the field's content"""
     locale: SiteLocale
     filter: HomePageModelFilter
+  ): CollectionMetadata!
+  _allReferencingPois(
+    """Specifies how to filter linking records"""
+    through: InverseRelationshipFilterBetweenPoiAndMood
+
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+
+    """Skip the first results"""
+    skip: IntType
+
+    """Limit the number of results"""
+    first: IntType = 20
+    filter: PoiModelFilter
+    orderBy: [PoiModelOrderBy] = [_updatedAt_DESC]
+  ): [PoiRecord!]!
+
+  """Returns meta information regarding a record collection"""
+  _allReferencingPoisMeta(
+    """Specifies how to filter linking records"""
+    through: InverseRelationshipFilterBetweenPoiAndMood
+
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+    filter: PoiModelFilter
   ): CollectionMetadata!
   _allReferencingPosts(
     """Specifies how to filter linking records"""
@@ -5947,6 +6090,227 @@ input ParentFilter {
 
   """Filter records with a parent record or not"""
   exists: BooleanType
+}
+
+input PoiCategoryModelFilter {
+  _createdAt: CreatedAtFilter
+  createdAt: CreatedAtFilter
+  id: ItemIdFilter
+  _firstPublishedAt: PublishedAtFilter
+  _publicationScheduledAt: PublishedAtFilter
+  _unpublishingScheduledAt: PublishedAtFilter
+  _publishedAt: PublishedAtFilter
+  _status: StatusFilter
+  _updatedAt: UpdatedAtFilter
+  updatedAt: UpdatedAtFilter
+  _isValid: BooleanFilter
+  name: StringFilter
+  OR: [PoiCategoryModelFilter]
+  AND: [PoiCategoryModelFilter]
+}
+
+enum PoiCategoryModelOrderBy {
+  _createdAt_ASC
+  _createdAt_DESC
+  createdAt_ASC
+  createdAt_DESC
+  id_ASC
+  id_DESC
+  _firstPublishedAt_ASC
+  _firstPublishedAt_DESC
+  _publicationScheduledAt_ASC
+  _publicationScheduledAt_DESC
+  _unpublishingScheduledAt_ASC
+  _unpublishingScheduledAt_DESC
+  _publishedAt_ASC
+  _publishedAt_DESC
+  _status_ASC
+  _status_DESC
+  _updatedAt_ASC
+  _updatedAt_DESC
+  updatedAt_ASC
+  updatedAt_DESC
+  _isValid_ASC
+  _isValid_DESC
+  name_ASC
+  name_DESC
+}
+
+"""Record of type 🔖 POI category (poi_category)"""
+type PoiCategoryRecord implements RecordInterface {
+  _allNameLocales(
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): [StringMultiLocaleField!]
+  _allReferencingPois(
+    """Specifies how to filter linking records"""
+    through: InverseRelationshipFilterBetweenPoiAndPoiCategory
+
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+
+    """Skip the first results"""
+    skip: IntType
+
+    """Limit the number of results"""
+    first: IntType = 20
+    filter: PoiModelFilter
+    orderBy: [PoiModelOrderBy] = [_updatedAt_DESC]
+  ): [PoiRecord!]!
+
+  """Returns meta information regarding a record collection"""
+  _allReferencingPoisMeta(
+    """Specifies how to filter linking records"""
+    through: InverseRelationshipFilterBetweenPoiAndPoiCategory
+
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+    filter: PoiModelFilter
+  ): CollectionMetadata!
+  _createdAt: DateTime!
+
+  """Editing URL"""
+  _editingUrl: String
+  _firstPublishedAt: DateTime!
+  _isValid: BooleanType!
+  _modelApiKey: String!
+  _publicationScheduledAt: DateTime
+  _publishedAt: DateTime!
+
+  """Generates SEO and Social card meta tags to be used in your frontend"""
+  _seoMetaTags(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+  ): [Tag!]!
+  _status: ItemStatus!
+  _unpublishingScheduledAt: DateTime
+  _updatedAt: DateTime!
+  createdAt: DateTime!
+  id: ItemId!
+  name(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+  ): String
+  updatedAt: DateTime!
+}
+
+"""Linking fields"""
+enum PoiModelFieldsReferencingDistrictModel {
+  poi_relatedContent
+}
+
+"""Linking fields"""
+enum PoiModelFieldsReferencingMoodModel {
+  poi_relatedContent
+}
+
+"""Linking fields"""
+enum PoiModelFieldsReferencingPoiCategoryModel {
+  poi_category
+}
+
+input PoiModelFilter {
+  _createdAt: CreatedAtFilter
+  createdAt: CreatedAtFilter
+  id: ItemIdFilter
+  _firstPublishedAt: PublishedAtFilter
+  _publicationScheduledAt: PublishedAtFilter
+  _unpublishingScheduledAt: PublishedAtFilter
+  _publishedAt: PublishedAtFilter
+  _status: StatusFilter
+  _updatedAt: UpdatedAtFilter
+  updatedAt: UpdatedAtFilter
+  _isValid: BooleanFilter
+  category: LinkFilter
+  description: StringFilter
+  featuredImage: FileFilter
+  instagram: StringFilter
+  location: LatLonFilter
+  name: StringFilter
+  nightDay: StringFilter
+  relatedContent: LinksFilter
+  OR: [PoiModelFilter]
+  AND: [PoiModelFilter]
+}
+
+enum PoiModelOrderBy {
+  _createdAt_ASC
+  _createdAt_DESC
+  createdAt_ASC
+  createdAt_DESC
+  id_ASC
+  id_DESC
+  _firstPublishedAt_ASC
+  _firstPublishedAt_DESC
+  _publicationScheduledAt_ASC
+  _publicationScheduledAt_DESC
+  _unpublishingScheduledAt_ASC
+  _unpublishingScheduledAt_DESC
+  _publishedAt_ASC
+  _publishedAt_DESC
+  _status_ASC
+  _status_DESC
+  _updatedAt_ASC
+  _updatedAt_DESC
+  updatedAt_ASC
+  updatedAt_DESC
+  _isValid_ASC
+  _isValid_DESC
+  description_ASC
+  description_DESC
+  instagram_ASC
+  instagram_DESC
+  name_ASC
+  name_DESC
+  nightDay_ASC
+  nightDay_DESC
+}
+
+union PoiModelRelatedContentField = DistrictRecord | MoodRecord
+
+"""Record of type 📍 POI (poi)"""
+type PoiRecord implements RecordInterface {
+  _createdAt: DateTime!
+
+  """Editing URL"""
+  _editingUrl: String
+  _firstPublishedAt: DateTime!
+  _isValid: BooleanType!
+  _modelApiKey: String!
+  _publicationScheduledAt: DateTime
+  _publishedAt: DateTime!
+
+  """Generates SEO and Social card meta tags to be used in your frontend"""
+  _seoMetaTags(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+  ): [Tag!]!
+  _status: ItemStatus!
+  _unpublishingScheduledAt: DateTime
+  _updatedAt: DateTime!
+  category: PoiCategoryRecord!
+  createdAt: DateTime!
+  description: String
+  featuredImage: FileField
+  id: ItemId!
+  instagram: String
+  location: LatLonField
+  name: String!
+  nightDay: String!
+  relatedContent: [PoiModelRelatedContentField!]!
+  updatedAt: DateTime!
 }
 
 """Specifies how to filter by position (sorted and tree-like collections)"""
@@ -6318,6 +6682,20 @@ type Query {
   ): CollectionMetadata!
 
   """Returns meta information regarding a record collection"""
+  _allPoiCategoriesMeta(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+    filter: PoiCategoryModelFilter
+  ): CollectionMetadata!
+
+  """Returns meta information regarding a record collection"""
+  _allPoisMeta(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+    filter: PoiModelFilter
+  ): CollectionMetadata!
+
+  """Returns meta information regarding a record collection"""
   _allPostsMeta(
     """The locale to use to fetch the field's content"""
     locale: SiteLocale
@@ -6656,6 +7034,44 @@ type Query {
   ): [MoodRecord!]!
 
   """Returns a collection of records"""
+  allPoiCategories(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+
+    """Skip the first results"""
+    skip: IntType
+
+    """Limit the number of results"""
+    first: IntType = 20
+    filter: PoiCategoryModelFilter
+    orderBy: [PoiCategoryModelOrderBy] = [_updatedAt_DESC]
+  ): [PoiCategoryRecord!]!
+
+  """Returns a collection of records"""
+  allPois(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+
+    """Skip the first results"""
+    skip: IntType
+
+    """Limit the number of results"""
+    first: IntType = 20
+    filter: PoiModelFilter
+    orderBy: [PoiModelOrderBy] = [_updatedAt_DESC]
+  ): [PoiRecord!]!
+
+  """Returns a collection of records"""
   allPosts(
     """The locale to use to fetch the field's content"""
     locale: SiteLocale
@@ -6985,6 +7401,32 @@ type Query {
     filter: MoodModelFilter
     orderBy: [MoodModelOrderBy] = [position_ASC]
   ): MoodRecord
+
+  """Returns a specific record"""
+  poi(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+    filter: PoiModelFilter
+    orderBy: [PoiModelOrderBy] = [_updatedAt_DESC]
+  ): PoiRecord
+
+  """Returns a specific record"""
+  poiCategory(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+    filter: PoiCategoryModelFilter
+    orderBy: [PoiCategoryModelOrderBy] = [_updatedAt_DESC]
+  ): PoiCategoryRecord
 
   """Returns a specific record"""
   post(
