@@ -10,8 +10,8 @@ import {
  * Structured Text fragments for the FAQ answer fields. The model now has two
  * identical structured-text fields: `short_answer` (the concise TL;DR, shown
  * highlighted at the top) and `long_answer` (the full write-up). Both carry the
- * same blocks (image / gallery / video / blog CTA) and inline links
- * (faq / post / landing page), so the selection is mirrored on each field type.
+ * same blocks (image / gallery / video / blog CTA) and inline FAQ links, so the
+ * selection is mirrored on each field type.
  */
 
 export const FaqShortAnswerFragment = graphql(
@@ -37,11 +37,6 @@ export const FaqShortAnswerFragment = graphql(
           id
           slug(locale: $locale)
           question(locale: $locale)
-        }
-        ... on LandingPageRecord {
-          id
-          slug(locale: $locale)
-          title(locale: $locale)
         }
       }
     }
@@ -72,11 +67,6 @@ export const FaqLongAnswerFragment = graphql(
           id
           slug(locale: $locale)
           question(locale: $locale)
-        }
-        ... on LandingPageRecord {
-          id
-          slug(locale: $locale)
-          title(locale: $locale)
         }
       }
     }

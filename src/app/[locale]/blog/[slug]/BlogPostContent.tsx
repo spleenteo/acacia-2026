@@ -20,8 +20,7 @@ type BlogPostData = ResultOf<typeof query>;
 type LinkedRecord =
   | { __typename: 'ApartmentRecord'; id: string; slug: string; name: string }
   | { __typename: 'DistrictRecord'; id: string; slug: string; name: string }
-  | { __typename: 'MoodRecord'; id: string; slug: string; name: string }
-  | { __typename: 'LandingPageRecord'; id: string; slug: string; title: string };
+  | { __typename: 'MoodRecord'; id: string; slug: string; name: string };
 
 function hrefFor(record: LinkedRecord, locale: Locale): string {
   switch (record.__typename) {
@@ -31,15 +30,13 @@ function hrefFor(record: LinkedRecord, locale: Locale): string {
       return modelPath('district', record.slug, locale) ?? '#';
     case 'MoodRecord':
       return modelPath('mood', record.slug, locale) ?? '#';
-    case 'LandingPageRecord':
-      return modelPath('landing_page', record.slug, locale) ?? '#';
     default:
       return '#';
   }
 }
 
 function labelFor(record: LinkedRecord): string {
-  return 'name' in record ? record.name : record.title;
+  return record.name;
 }
 
 export default function BlogPostContent({

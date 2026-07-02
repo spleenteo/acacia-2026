@@ -131,11 +131,6 @@ export const query = graphql(
               slug
               name
             }
-            ... on LandingPageRecord {
-              id
-              slug
-              title
-            }
           }
         }
       }
