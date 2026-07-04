@@ -1,9 +1,8 @@
 'use client';
 
-import { Suspense, useRef, useState, type ReactNode } from 'react';
+import { Suspense, useState, type ReactNode } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { wonkyClip } from '@/lib/wonkyClip';
-import { HERO_PIN_TOP_PX } from '@/lib/useHeroPin';
 import { TONES } from '@/components/WidgetLabel';
 
 /** Light Japan Fish tints, cycled across filters for the hover highlight. */
@@ -34,42 +33,14 @@ type Props = {
 function CategoryFilterInner({ categories, items, allLabel, emptyLabel }: Props) {
   const searchParams = useSearchParams();
   const [activeCategory, setActiveCategory] = useState<string | null>(searchParams.get('category'));
-  const filtersRef = useRef<HTMLDivElement>(null);
-
-  /**
-   * After a filter change, glide the page to the point where the hero settles
-   * into its pinned (sticky) position, so the freshly filtered grid sits right
-   * below the collapsed hero band. Desktop only — the hero never pins below lg,
-   * where we instead bring the filter bar just under the fixed header. The
-   * threshold mirrors `useHeroPin` so we land exactly where it pins.
-   */
-  const scrollToHeroPin = () => {
-    if (window.innerWidth >= 1024) {
-      const hero = document.querySelector('[data-editorial-hero]');
-      if (!hero) return;
-      const heroTopDoc = hero.getBoundingClientRect().top + window.scrollY;
-      const stickyTop = HERO_PIN_TOP_PX - 0.68 * window.innerHeight;
-      const target = heroTopDoc - stickyTop;
-      const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
-      // Short results (e.g. a single post) can't scroll far enough for the hero
-      // to pin: the browser clamps to the bottom and the sticky hero ends up
-      // covering the grid. In that case stay at the top instead of over-scrolling.
-      window.scrollTo({ top: target > maxScroll ? 0 : Math.max(0, target), behavior: 'smooth' });
-    } else {
-      const el = filtersRef.current;
-      if (!el) return;
-      const headerH =
-        parseInt(getComputedStyle(document.documentElement).getPropertyValue('--header-height')) ||
-        64;
-      const y = el.getBoundingClientRect().top + window.scrollY - headerH - 12;
-      window.scrollTo({ top: Math.max(0, y), behavior: 'smooth' });
-    }
-  };
 
   const setCategory = (slug: string | null) => {
     setActiveCategory(slug);
 
-    // Update URL without triggering navigation
+    // Update the URL without navigating. We deliberately do NOT auto-scroll: the
+    // grid updates in place, so the page stays put and the filter bar remains
+    // visible. (The previous scroll-to-hero-pin pushed the filters behind the
+    // pinned hero / under the header.)
     const params = new URLSearchParams(window.location.search);
     if (slug) {
       params.set('category', slug);
@@ -79,9 +50,6 @@ function CategoryFilterInner({ categories, items, allLabel, emptyLabel }: Props)
     const qs = params.toString();
     const newUrl = qs ? `${window.location.pathname}?${qs}` : window.location.pathname;
     window.history.replaceState(null, '', newUrl);
-
-    // Let the filtered grid commit first, then glide to the pinned-hero point.
-    requestAnimationFrame(scrollToHeroPin);
   };
 
   const filteredItems = activeCategory
@@ -90,7 +58,7 @@ function CategoryFilterInner({ categories, items, allLabel, emptyLabel }: Props)
 
   return (
     <>
-      <div ref={filtersRef} className="flex flex-wrap justify-start gap-x-1 gap-y-1 mb-10">
+      <div className="flex flex-wrap justify-start gap-x-1 gap-y-1 mb-10">
         {[
           { slug: null as string | null, label: allLabel },
           ...categories.map((c) => ({ slug: c.slug, label: c.name })),
