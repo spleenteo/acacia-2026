@@ -188,7 +188,7 @@ export default function DistrictDetailContent({
             {/* Masonry — natural-height cards in N ordered columns. */}
             <div className="flex gap-6">
               {columns.map((col, ci) => (
-                <div key={ci} className="flex flex-1 flex-col gap-12">
+                <div key={ci} className="flex min-w-0 flex-1 flex-col gap-12">
                   {col.map((card) => (
                     <div key={card.id}>{card.node}</div>
                   ))}
