@@ -4,7 +4,8 @@ import type { FragmentOf } from '@/lib/datocms/graphql';
 import type { Locale } from '@/i18n/config';
 import { useTranslations } from 'next-intl';
 import InViewSection from '@/components/InViewSection';
-import ApartmentCard, { type ApartmentCardFragment } from '@/components/ApartmentCard';
+import ApartmentCard from '@/components/ApartmentCard';
+import { type ApartmentCardFragment } from '@/components/ApartmentCard/fragment';
 import MoodCard, { type MoodCardFragment } from '@/components/MoodCard';
 
 type Props = {

@@ -17,7 +17,7 @@ import { ComfortFragment } from '@/components/ComfortsList';
 import { InfoTextFragment, InfoAddressFragment } from '@/components/InfoDetail';
 import { FeaturedSlideshowFragment } from '@/components/WhatWeLove/fragment';
 import { TruthFragment } from '@/components/HomeTruths';
-import { ApartmentCardFragment } from '@/components/ApartmentCard';
+import { ApartmentCardFragment } from '@/components/ApartmentCard/fragment';
 import { MoodCardFragment } from '@/components/MoodCard';
 import { EssentialFragment } from '@/components/EssentialsList';
 import RealtimeWrapper from '@/lib/datocms/realtime/RealtimeWrapper';

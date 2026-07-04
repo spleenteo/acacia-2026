@@ -20,7 +20,7 @@ import ReviewsList from '@/components/ReviewsList';
 import RelatedContent from '@/components/RelatedContent';
 import ScrollToBooking from '@/components/ScrollToBooking';
 import { OverDarkHeader } from '@/components/HeaderTheme';
-import { type ApartmentCardFragment } from '@/components/ApartmentCard';
+import { type ApartmentCardFragment } from '@/components/ApartmentCard/fragment';
 import { type MoodCardFragment } from '@/components/MoodCard';
 import { readFragment } from '@/lib/datocms/graphql';
 import { pickHeroColor, isLightColor, pickPillColors } from '@/lib/heroColor';

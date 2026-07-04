@@ -6,7 +6,7 @@ import { draftMode } from 'next/headers';
 import { TagFragment } from '@/lib/datocms/commonFragments';
 import { toNextMetadata } from 'react-datocms/seo';
 import type { Metadata } from 'next';
-import { ApartmentCardFragment } from '@/components/ApartmentCard';
+import { ApartmentCardFragment } from '@/components/ApartmentCard/fragment';
 import { MoodCardFragment } from '@/components/MoodCard';
 import { SectionHeaderFragment } from '@/components/SectionHeader';
 import { ButtonBlockFragment } from '@/components/Button';

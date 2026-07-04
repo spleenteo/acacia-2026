@@ -7,7 +7,7 @@ import { TagFragment } from '@/lib/datocms/commonFragments';
 import { toNextMetadata } from 'react-datocms/seo';
 import type { Metadata } from 'next';
 import { ResponsiveImageFragment } from '@/components/ResponsiveImage';
-import { ApartmentCardFragment } from '@/components/ApartmentCard';
+import { ApartmentCardFragment } from '@/components/ApartmentCard/fragment';
 import RealtimeWrapper from '@/lib/datocms/realtime/RealtimeWrapper';
 import { getDraftRealtimeOptions } from '@/lib/datocms/realtime/getDraftRealtimeOptions';
 import AccommodationsContent, { type AccommodationsProps } from './AccommodationsContent';

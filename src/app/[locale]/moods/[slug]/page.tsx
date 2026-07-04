@@ -11,7 +11,7 @@ import { TagFragment } from '@/lib/datocms/commonFragments';
 import { toNextMetadata } from 'react-datocms/seo';
 import type { Metadata } from 'next';
 import { ResponsiveImageFragment } from '@/components/ResponsiveImage';
-import { ApartmentCardFragment } from '@/components/ApartmentCard';
+import { ApartmentCardFragment } from '@/components/ApartmentCard/fragment';
 import { PostCardFragment } from '@/components/PostCard/fragment';
 import { DistrictCardFragment } from '@/components/DistrictCard/fragment';
 import { RelatedFaqCardFragment } from '@/components/RelatedFaqCard';

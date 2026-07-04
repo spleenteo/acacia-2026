@@ -1,31 +1,12 @@
-import { type FragmentOf, graphql, readFragment } from '@/lib/datocms/graphql';
-import { ResponsiveImageFragment } from '@/components/ResponsiveImage';
+'use client';
+
+import { type FragmentOf, readFragment } from '@/lib/datocms/graphql';
+import { useTranslations } from 'next-intl';
 import CardImage from '@/components/CardImage';
 import type { Locale } from '@/i18n/config';
 import { modelPath } from '@/i18n/paths';
+import { ApartmentCardFragment } from './fragment';
 import Link from 'next/link';
-
-export const ApartmentCardFragment = graphql(
-  `
-    fragment ApartmentCardFragment on ApartmentRecord {
-      id
-      name
-      slug
-      houseBadge {
-        label(locale: $locale)
-      }
-      category {
-        name(locale: $locale)
-      }
-      featuredImage {
-        responsiveImage(imgixParams: { w: 600, h: 800, fit: crop }) {
-          ...ResponsiveImageFragment
-        }
-      }
-    }
-  `,
-  [ResponsiveImageFragment],
-);
 
 type Props = {
   data: FragmentOf<typeof ApartmentCardFragment>;
@@ -33,33 +14,39 @@ type Props = {
 };
 
 export default function ApartmentCard({ data, locale }: Props) {
+  const t = useTranslations('listing');
   const apartment = readFragment(ApartmentCardFragment, data);
+  const category = apartment.category?.name;
+  const district = apartment.district?.name;
 
   return (
-    <Link href={modelPath('apartment', apartment.slug, locale)!} className="group block">
-      <article>
-        {/* Image — portrait 3:4 */}
-        {apartment.featuredImage?.responsiveImage && (
-          <CardImage data={apartment.featuredImage.responsiveImage} />
-        )}
+    <>
+      <Link href={modelPath('apartment', apartment.slug, locale)!} className="group block">
+        <article>
+          {/* Image — portrait 3:4 */}
+          {apartment.featuredImage?.responsiveImage && (
+            <CardImage data={apartment.featuredImage.responsiveImage} />
+          )}
 
-        {/* Content — no background, blends with page */}
-        <div className="pt-4">
-          {apartment.category && (
-            <p className="font-body text-label uppercase tracking-[0.18em] text-muted font-medium mb-2">
-              {apartment.category.name}
-            </p>
-          )}
-          <h3 className="font-heading text-h3 font-normal text-dark leading-snug transition-colors duration-300 group-hover:text-primary">
-            {apartment.name}
-          </h3>
-          {apartment.houseBadge?.label && (
-            <p className="font-body text-caption text-primary font-normal mt-2">
-              {apartment.houseBadge.label}
-            </p>
-          )}
-        </div>
-      </article>
-    </Link>
+          {/* Content — no background, blends with page */}
+          <div className="pt-4">
+            {category && (
+              <p className="mb-2 font-body text-label uppercase tracking-[0.18em] text-muted font-medium">
+                {district ? t('typeInDistrict', { type: category, district }) : category}
+              </p>
+            )}
+            <h3 className="font-heading text-h3 font-normal leading-snug text-dark transition-colors duration-300 group-hover:text-primary">
+              {apartment.name}
+              {apartment.claim && (
+                <span className="font-normal text-muted">, {apartment.claim}</span>
+              )}
+            </h3>
+          </div>
+        </article>
+      </Link>
+
+      {/* Divider closing off the card — clearly separates it from the one below. */}
+      <hr className="mt-8 border-t border-border" />
+    </>
   );
 }
