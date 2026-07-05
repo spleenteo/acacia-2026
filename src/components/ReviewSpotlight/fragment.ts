@@ -24,6 +24,7 @@ export const ReviewSpotlightFragment = graphql(
       apartment {
         name
         slug
+        claim(locale: $locale)
         category {
           name(locale: $locale)
         }

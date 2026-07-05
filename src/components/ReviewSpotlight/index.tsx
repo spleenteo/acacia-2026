@@ -212,6 +212,16 @@ export default function ReviewSpotlight({ data, locale }: Props) {
                 ].join(' ')}
               >
                 {apt.name}
+                {apt.claim && (
+                  <span
+                    className={[
+                      'font-normal text-muted',
+                      panelDark ? 'lg:text-white/70' : 'lg:text-dark/60',
+                    ].join(' ')}
+                  >
+                    , {apt.claim}
+                  </span>
+                )}
               </p>
 
               {aptHref && (
