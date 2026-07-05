@@ -36,7 +36,7 @@ export default function BookingSidebar({
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
-  const scrollToBooking = () => open({ widgetCode: beddyId });
+  const scrollToBooking = () => open({ widgetCode: beddyId, source: 'apartment' });
 
   const stats = [
     { value: bedrooms, label: t('bedrooms') },

@@ -164,7 +164,7 @@ export default function SiteHeader({ locale, navItems }: Props) {
               type="button"
               onClick={() => {
                 setMenuOpen(false);
-                openBooking();
+                openBooking({ source: 'header' });
               }}
               className="inline-flex rounded-pill bg-primary px-4 py-2 font-body text-caption font-medium tracking-[0.06em] text-white transition-colors duration-300 hover:bg-primary-hover lg:px-5 lg:py-2.5"
             >
@@ -243,7 +243,7 @@ export default function SiteHeader({ locale, navItems }: Props) {
               type="button"
               onClick={() => {
                 setMenuOpen(false);
-                openBooking();
+                openBooking({ source: 'header' });
               }}
               className="flex-1 rounded-pill bg-primary px-6 py-3 text-center font-body text-body-sm font-medium tracking-wide text-white transition-colors duration-300 hover:bg-primary-hover"
             >

@@ -4,10 +4,11 @@ import { createContext, useCallback, useContext, useEffect, useState } from 'rea
 import type { Locale } from '@/i18n/config';
 import BeddyBar from '@/components/BeddyBar';
 import WidgetLabel, { type Tone } from '@/components/WidgetLabel';
+import { trackEvent } from '@/lib/analytics';
 
 const TONES_LIST: Tone[] = ['rust', 'gold', 'sage', 'slate'];
 
-type OpenOptions = { widgetCode?: string | null };
+type OpenOptions = { widgetCode?: string | null; source?: string };
 type BookingContextValue = { open: (opts?: OpenOptions) => void; close: () => void };
 
 const BookingContext = createContext<BookingContextValue>({ open: () => {}, close: () => {} });
@@ -54,6 +55,9 @@ export function BookingProvider({ locale, defaultWidgetCode, children }: Props) 
 
   const open = useCallback(
     (opts?: OpenOptions) => {
+      // GA4: every "Book" CTA funnels through here — record where it was clicked
+      // ('header' or 'apartment'). The current page is attached by GA automatically.
+      trackEvent('book_cta', { location: opts?.source ?? 'unknown' });
       setWidgetCode(opts?.widgetCode || defaultWidgetCode);
       // A random tone for the label chip each time the modal opens.
       setTone(TONES_LIST[Math.floor(Math.random() * TONES_LIST.length)]);

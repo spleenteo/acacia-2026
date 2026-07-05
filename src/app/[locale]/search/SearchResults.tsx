@@ -13,6 +13,7 @@ import {
   SEARCH_TYPE_LABEL_KEY,
   type SearchResultType,
 } from '@/lib/search/searchType';
+import { trackEvent } from '@/lib/analytics';
 
 type Props = { locale: Locale; initialQuery: string };
 type TypedHit = SearchHit & { type: SearchResultType | null };
@@ -30,6 +31,14 @@ export default function SearchResults({ locale, initialQuery }: Props) {
 
   const trimmed = query.trim();
   const tooShort = trimmed.length < MIN_QUERY_LENGTH;
+
+  // GA4: record the entry query once. Searches submitted from the home SearchBox
+  // land here as /search?q=…, so this counts those (plus any direct ?q= link).
+  useEffect(() => {
+    const q = initialQuery.trim();
+    if (q.length >= MIN_QUERY_LENGTH) trackEvent('search', { search_term: q });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // Live search: debounce, abort in-flight on change. Skip while too short.
   useEffect(() => {

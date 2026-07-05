@@ -13,7 +13,11 @@ type Props = {
 export default function ScrollToBooking({ children, className, widgetCode }: Props) {
   const { open } = useBooking();
   return (
-    <button type="button" onClick={() => open({ widgetCode })} className={className}>
+    <button
+      type="button"
+      onClick={() => open({ widgetCode, source: 'apartment' })}
+      className={className}
+    >
       {children}
     </button>
   );
