@@ -1,4 +1,5 @@
 import Script from 'next/script';
+import GoogleAnalyticsPageviews from './Pageviews';
 
 /**
  * Google Analytics 4.
@@ -30,6 +31,8 @@ function gtag(){dataLayer.push(arguments);}
 gtag('js', new Date());
 gtag('config', '${gaId}');`}
       </Script>
+      {/* Track client-side route changes too (config only covers the first load). */}
+      <GoogleAnalyticsPageviews />
     </>
   );
 }
