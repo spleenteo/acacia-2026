@@ -32,6 +32,24 @@ const nextConfig = {
       { source: '/en/acacialife/:path*', destination: '/en', permanent: true },
       { source: '/it/debug/:path*', destination: '/it', permanent: true },
       { source: '/en/debug/:path*', destination: '/en', permanent: true },
+      // Legacy static home file (old HTML site) → locale home.
+      { source: '/it/index.html', destination: '/it', permanent: true },
+      { source: '/en/index.html', destination: '/en', permanent: true },
+      // Retired apartments (removed, or draft and being retired) → the
+      // accommodations index, in each locale's public URL. Slugs aren't
+      // localized, so the same slug covers both languages.
+      ...['amarillis', 'kumquat', 'cannella', 'cumino', 'curry'].flatMap((slug) => [
+        {
+          source: `/en/florence/accommodations/${slug}`,
+          destination: '/en/florence/accommodations',
+          permanent: true,
+        },
+        {
+          source: `/it/firenze/appartamenti/${slug}`,
+          destination: '/it/firenze/appartamenti',
+          permanent: true,
+        },
+      ]),
     ];
   },
   async headers() {
