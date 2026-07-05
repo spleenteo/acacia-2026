@@ -32,7 +32,7 @@ export default function AccommodationsContent({
   const apartments = allApartments.map((apt) => ({
     id: apt.id,
     categorySlug: apt.category.slug,
-    node: <ApartmentCard data={apt} locale={locale} />,
+    node: <ApartmentCard data={apt} locale={locale} divider />,
   }));
 
   // Sidebar copy is now the `description` structured-text field (was `intro`).

@@ -11,16 +11,20 @@ import Link from 'next/link';
 type Props = {
   data: FragmentOf<typeof ApartmentCardFragment>;
   locale: Locale;
+  /** Close the card with a divider — used only in the apartments index list,
+   *  where every card is an apartment. Off everywhere else (editorial grids,
+   *  mixed masonries) to avoid an inconsistent line under some cards only. */
+  divider?: boolean;
 };
 
-export default function ApartmentCard({ data, locale }: Props) {
+export default function ApartmentCard({ data, locale, divider = false }: Props) {
   const t = useTranslations('listing');
   const apartment = readFragment(ApartmentCardFragment, data);
   const category = apartment.category?.name;
   const district = apartment.district?.name;
 
   return (
-    <>
+    <div>
       <Link href={modelPath('apartment', apartment.slug, locale)!} className="group block">
         <article>
           {/* Image — portrait 3:4 */}
@@ -46,7 +50,7 @@ export default function ApartmentCard({ data, locale }: Props) {
       </Link>
 
       {/* Divider closing off the card — clearly separates it from the one below. */}
-      <hr className="mt-8 border-t border-border" />
-    </>
+      {divider && <hr className="mt-8 border-t border-border" />}
+    </div>
   );
 }
