@@ -219,6 +219,7 @@ export default function DistrictDetailContent({
         model="district"
         items={otherDistricts}
         locale={locale}
+        layout="grid"
       />
     </>
   );
