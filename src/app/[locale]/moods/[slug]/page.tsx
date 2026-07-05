@@ -13,7 +13,7 @@ import type { Metadata } from 'next';
 import { ResponsiveImageFragment } from '@/components/ResponsiveImage';
 import { ApartmentCardFragment } from '@/components/ApartmentCard/fragment';
 import { PostCardFragment } from '@/components/PostCard/fragment';
-import { DistrictCardFragment } from '@/components/DistrictCard/fragment';
+import { DistrictCompactCardFragment } from '@/components/DistrictCompactCard/fragment';
 import { RelatedFaqCardFragment } from '@/components/RelatedFaqCard';
 import { GalleryImageFragment } from '@/components/ImageGallery/fragment';
 import { PoiCardFragment } from '@/components/PoiCard/fragment';
@@ -100,7 +100,7 @@ export const query = graphql(
           }
           ... on DistrictRecord {
             id
-            ...DistrictCardFragment
+            ...DistrictCompactCardFragment
           }
           ... on GalleryImageRecord {
             id
@@ -126,7 +126,7 @@ export const query = graphql(
     ResponsiveImageFragment,
     ApartmentCardFragment,
     PostCardFragment,
-    DistrictCardFragment,
+    DistrictCompactCardFragment,
     RelatedFaqCardFragment,
     GalleryImageFragment,
     PoiCardFragment,

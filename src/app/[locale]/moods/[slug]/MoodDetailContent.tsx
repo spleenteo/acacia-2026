@@ -9,7 +9,7 @@ import StructuredTextContent from '@/components/StructuredTextContent';
 import ReadMore from '@/components/ReadMore';
 import ApartmentCard from '@/components/ApartmentCard';
 import PostCard from '@/components/PostCard';
-import DistrictCard from '@/components/DistrictCard';
+import DistrictCompactCard from '@/components/DistrictCompactCard';
 import RelatedFaqCard from '@/components/RelatedFaqCard';
 import PolaroidImageCard from '@/components/PolaroidImageCard';
 import PoiCard from '@/components/PoiCard';
@@ -83,7 +83,7 @@ export default function MoodDetailContent({
         cards.push({
           id: item.id,
           kind: 'district',
-          node: <DistrictCard data={item} locale={locale} />,
+          node: <DistrictCompactCard data={item} locale={locale} />,
         });
         break;
       case 'FaqRecord':
