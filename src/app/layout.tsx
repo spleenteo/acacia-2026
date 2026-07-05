@@ -34,6 +34,9 @@ const lato = Lato({
 
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000'),
+  // Google Search Console — "HTML tag" verification. Emits
+  // <meta name="google-site-verification" …> into every page's <head>.
+  verification: { google: '1mtBq9Sf-pUVsHIr9PBLwX4POc9m2hGXcFu6YIGeZpQ' },
 };
 
 export default async function RootLayout({
