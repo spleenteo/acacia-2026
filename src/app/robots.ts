@@ -26,7 +26,12 @@ export default function robots(): MetadataRoute.Robots {
       {
         userAgent: '*',
         allow: '/',
-        disallow: '/api/',
+        // Keep route handlers and the self-hosted webfonts out of the crawl. We
+        // deliberately do NOT block the rest of /_next/static (JS/CSS chunks):
+        // Google needs those to render the pages. The `.woff2` fonts live under
+        // /_next/static/media/, aren't needed to read the text, and were showing
+        // up under "Crawled – currently not indexed".
+        disallow: ['/api/', '/_next/static/media/'],
       },
       // DatoCMS Site Search crawler: index only the detail pages (no home,
       // index pages, guestbook). `Allow` rules ordered before `Disallow: /`.
