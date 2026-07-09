@@ -260,10 +260,11 @@ _iub.csConfiguration = {
   },
 };`}
           </Script>
-          <Script
-            src="https://cdn.iubenda.com/cookie_solution/safemode/iubenda_cs.js"
-            strategy="afterInteractive"
-          />
+          {/* Standard (non-safemode) loader: safemode fetches the banner config
+              saved on the Iubenda dashboard and ignores the local
+              csConfiguration — which silently dropped the accept/reject
+              buttons and the Consent Mode integration configured above. */}
+          <Script src="https://cdn.iubenda.com/cs/iubenda_cs.js" strategy="afterInteractive" />
           <Script src="https://cdn.iubenda.com/iubenda.js" strategy="afterInteractive" />
         </>
       )}
