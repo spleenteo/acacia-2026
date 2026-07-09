@@ -22,6 +22,12 @@ export const ApartmentCardFragment = graphql(
         responsiveImage(imgixParams: { w: 600, h: 800, fit: crop }) {
           ...ResponsiveImageFragment
         }
+        colors {
+          hex
+          red
+          green
+          blue
+        }
       }
     }
   `,

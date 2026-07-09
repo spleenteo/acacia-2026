@@ -81,6 +81,30 @@ function darkenForWhiteText(r: number, g: number, b: number): string {
   return toHex(r, g, b);
 }
 
+/** Mixes a colour toward white by `mix` (0 = unchanged, 1 = white). */
+function lightenToPale(r: number, g: number, b: number, mix: number): string {
+  const ch = (x: number) => x + (255 - x) * mix;
+  return toHex(ch(r), ch(g), ch(b));
+}
+
+/**
+ * Builds a pale wash from an image palette for the apartment-card name
+ * highlight. Takes the photo's predominant colour — the most prominent palette
+ * entry that carries real chroma, so we skip near-grey walls and shadows — and
+ * lightens it toward white, giving a soft tint that still echoes the photo.
+ * Returns null when the image has no usable palette, so the caller can drop the
+ * highlight rather than render a flat grey.
+ */
+export function pickCardTint(colors: ImageColor[] | null | undefined): string | null {
+  if (!colors || colors.length === 0) return null;
+  const chroma = (c: ImageColor) =>
+    Math.max(c.red, c.green, c.blue) - Math.min(c.red, c.green, c.blue);
+  // Palette is ordered by dominance: take the first reasonably colourful entry,
+  // falling back to the very first colour when the photo is all neutrals.
+  const base = colors.find((c) => chroma(c) > 40) ?? colors[0];
+  return lightenToPale(base.red, base.green, base.blue, 0.86);
+}
+
 /**
  * Picks `count` accent colours from the image palette, distinct from the hero
  * background, each darkened enough to carry white text. Used for the coloured

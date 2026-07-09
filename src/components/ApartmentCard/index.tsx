@@ -5,8 +5,13 @@ import { useTranslations } from 'next-intl';
 import CardImage from '@/components/CardImage';
 import type { Locale } from '@/i18n/config';
 import { modelPath } from '@/i18n/paths';
+import { pickCardTint } from '@/lib/heroColor';
+import { wonkyClip } from '@/lib/wonkyClip';
 import { ApartmentCardFragment } from './fragment';
 import Link from 'next/link';
+
+/** Stable numeric seed from a record id, so each card keeps the same wonky tilt. */
+const seed = (id: string) => [...id].reduce((sum, ch) => sum + ch.charCodeAt(0), 0);
 
 type Props = {
   data: FragmentOf<typeof ApartmentCardFragment>;
@@ -22,6 +27,8 @@ export default function ApartmentCard({ data, locale, divider = false }: Props) 
   const apartment = readFragment(ApartmentCardFragment, data);
   const category = apartment.category?.name;
   const district = apartment.district?.name;
+  // Pale wash drawn from the photo's own palette, sitting behind the name.
+  const nameTint = pickCardTint(apartment.featuredImage?.colors);
 
   return (
     <div>
@@ -40,7 +47,16 @@ export default function ApartmentCard({ data, locale, divider = false }: Props) 
               </p>
             )}
             <h3 className="font-heading text-h3 font-normal leading-snug text-dark transition-colors duration-300 group-hover:text-primary">
-              {apartment.name}
+              <span className="relative isolate inline-block font-medium">
+                {nameTint && (
+                  <span
+                    aria-hidden
+                    className="absolute -inset-x-2.5 -inset-y-1 -z-10"
+                    style={{ backgroundColor: nameTint, clipPath: wonkyClip(seed(apartment.id)) }}
+                  />
+                )}
+                {apartment.name}
+              </span>
               {apartment.claim && (
                 <span className="font-normal text-muted">, {apartment.claim}</span>
               )}
