@@ -246,6 +246,18 @@ _iub.csConfiguration = {
      Consent Mode v2 signals (measurement → analytics_storage, advertising →
      ad_*). Pairs with the denied-by-default snippet in <GoogleAnalytics>. */
   googleConsentMode: "template",
+  /* Per-purpose consent so the template mapping can grant analytics alone. */
+  perPurposeConsent: true,
+  /* Garante 2021: consent requires an explicit accept. The previous bare-X
+     banner offered no way to grant it, so GA4 would have stayed denied for
+     every visitor. X now explicitly rejects. */
+  banner: {
+    acceptButtonDisplay: true,
+    rejectButtonDisplay: true,
+    customizeButtonDisplay: true,
+    closeButtonRejects: true,
+    position: "float-bottom-center",
+  },
 };`}
           </Script>
           <Script
