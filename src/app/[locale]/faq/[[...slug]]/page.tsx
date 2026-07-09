@@ -18,7 +18,7 @@ import {
 } from '@/lib/faq/faqTree';
 import { FaqShortAnswerFragment, FaqLongAnswerFragment } from '@/components/Faq/answerFragment';
 import { TagFragment } from '@/lib/datocms/commonFragments';
-import { ResponsiveImageFragment } from '@/components/ResponsiveImage';
+import { IndexPageHeroFragment } from '@/components/EditorialHero/indexPageFragment';
 import { type Crumb } from '@/components/Faq/FaqBreadcrumb';
 import RealtimeWrapper from '@/lib/datocms/realtime/RealtimeWrapper';
 import { getDraftRealtimeOptions } from '@/lib/datocms/realtime/getDraftRealtimeOptions';
@@ -32,26 +32,14 @@ export const indexQuery = graphql(
   `
     query FaqIndexQuery($locale: SiteLocale!, $slug: String!) {
       page: indexPage(locale: $locale, filter: { slug: { eq: $slug } }) {
-        hero(locale: $locale) {
-          color
-          title
-          subtitle
-          featuredImage {
-            responsiveImage(imgixParams: { w: 1400, h: 500, fit: crop }) {
-              ...ResponsiveImageFragment
-            }
-          }
-        }
-        description(locale: $locale, fallbackLocales: [en]) {
-          value
-        }
+        ...IndexPageHeroFragment
         _seoMetaTags(locale: $locale) {
           ...TagFragment
         }
       }
     }
   `,
-  [TagFragment, ResponsiveImageFragment],
+  [TagFragment, IndexPageHeroFragment],
 );
 
 export const nodeQuery = graphql(

@@ -9,6 +9,8 @@ import ReadMore from '@/components/ReadMore';
 import PostCard from '@/components/PostCard';
 import CategoryFilter from '@/components/CategoryFilter';
 import { toHeroTone } from '@/lib/heroTone';
+import { readFragment } from '@/lib/datocms/graphql';
+import { IndexPageHeroFragment } from '@/components/EditorialHero/indexPageFragment';
 import type { ResultOf } from 'gql.tada';
 import type { query } from './page';
 
@@ -18,7 +20,8 @@ type BlogData = ResultOf<typeof query>;
 export default function BlogContent({ locale, data }: BlogProps & { data: BlogData }) {
   const t = useTranslations('blog');
   const tListing = useTranslations('listing');
-  const { page, allBlogCategories, allPosts } = data;
+  const page = data.page ? readFragment(IndexPageHeroFragment, data.page) : null;
+  const { allBlogCategories, allPosts } = data;
 
   // Magazine posts are localized per-locale: exclude any post with no
   // translation in the current locale (no slug for it in `_allSlugLocales`), so

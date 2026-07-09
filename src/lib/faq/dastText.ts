@@ -1,14 +1,15 @@
+import { stripStega } from 'react-datocms/stega';
+
 /**
  * Extracts plain text from a DatoCMS Structured Text (DAST) value.
  * Used to build the `FAQPage` JSON-LD (which needs plain question/answer text).
- * Strips zero-width characters (defensive against stega in draft mode).
+ * Strips stega metadata (draft mode) via `stripStega`, which knows the full
+ * encoding alphabet — a hand-rolled zero-width regex would miss part of it
+ * (U+2061–2063 and the astral U+1D173–1D17A range).
  */
 type DastNode = { value?: string; children?: DastNode[]; type?: string };
 
 const BLOCK_TYPES = new Set(['paragraph', 'heading', 'listItem', 'blockquote']);
-
-// Zero-width / invisible code points used by stega encoding (built ASCII-only).
-const ZERO_WIDTH = new RegExp('[\\u200B-\\u200F\\u2060\\uFEFF]', 'g');
 
 function walk(node: DastNode, out: string[]): void {
   if (typeof node.value === 'string') out.push(node.value);
@@ -21,5 +22,5 @@ export function dastToText(value: unknown): string {
   if (!doc) return '';
   const out: string[] = [];
   walk(doc, out);
-  return out.join('').replace(ZERO_WIDTH, '').replace(/\s+/g, ' ').trim();
+  return stripStega(out.join('')).replace(/\s+/g, ' ').trim();
 }

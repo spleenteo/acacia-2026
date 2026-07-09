@@ -21,7 +21,7 @@ npm run generate-cma-types # Regenerate CMA types (requires DATOCMS_CMA_TOKEN)
 npm run export-translations # Export DatoCMS Translation records to src/messages/*.json
 ```
 
-Pre-commit hook runs `npm run format` automatically via simple-git-hooks.
+Pre-commit hook formats staged files with Prettier via simple-git-hooks + lint-staged.
 
 ## Architecture
 
@@ -106,24 +106,25 @@ Tailwind CSS v4 with `@theme` (NOT `@theme inline`) design tokens in `src/app/gl
 
 ### Components
 
-| Component              | Path                                      | Purpose                                                                                       |
-| ---------------------- | ----------------------------------------- | --------------------------------------------------------------------------------------------- |
-| `SiteHeader`           | `src/components/SiteHeader/`              | Navigation with locale switcher, primary bg                                                   |
-| `SiteFooter`           | `src/components/SiteFooter/`              | Two-band footer (sage `surface-alt` + navy)                                                   |
-| `BeddyBar`             | `src/components/BeddyBar/`                | Wrapper for `<beddy-bar>` web component (booking widget)                                      |
-| `HtmlContent`          | `src/components/HtmlContent/`             | Renders legacy HTML from DatoCMS text fields                                                  |
-| `ApartmentCard`        | `src/components/ApartmentCard/`           | Apartment card with colocated GraphQL fragment                                                |
-| `MoodCard`             | `src/components/MoodCard/`                | Mood card with colocated GraphQL fragment                                                     |
-| `DistrictCard`         | `src/components/DistrictCard/`            | District card with colocated GraphQL fragment                                                 |
-| `GalleryImageFragment` | `src/components/ImageGallery/fragment.ts` | Shared gallery-image fragment (district masonry + WhatWeLove); the grid component was removed |
-| `CategoryFilter`       | `src/components/CategoryFilter/`          | Client component for apartment category filtering                                             |
-| `CuddlesList`          | `src/components/CuddlesList/`             | Amenities list with colocated fragment                                                        |
-| `UpsList`              | `src/components/UpsList/`                 | Lifestyle features pill list with colocated fragment                                          |
-| `InfoDetail`           | `src/components/InfoDetail/`              | Info blocks (text + address) with union type handling                                         |
-| `DistrictLink`         | `src/components/DistrictLink/`            | Editorial link to district detail page                                                        |
-| `ResponsiveImage`      | `src/components/ResponsiveImage/`         | DatoCMS responsive image with fragment                                                        |
-| `ContentLink`          | `src/components/ContentLink/`             | Click-to-edit overlays (draft mode, no next/navigation hooks)                                 |
-| `DraftModeToggler`     | `src/components/DraftModeToggler/`        | Draft mode toggle button                                                                      |
+| Component               | Path                                                | Purpose                                                                                       |
+| ----------------------- | --------------------------------------------------- | --------------------------------------------------------------------------------------------- |
+| `SiteHeader`            | `src/components/SiteHeader/`                        | Navigation with locale switcher, primary bg                                                   |
+| `SiteFooter`            | `src/components/SiteFooter/`                        | Two-band footer (sage `surface-alt` + navy)                                                   |
+| `BeddyBar`              | `src/components/BeddyBar/`                          | Wrapper for `<beddy-bar>` web component (booking widget)                                      |
+| `HtmlContent`           | `src/components/HtmlContent/`                       | Renders legacy HTML from DatoCMS text fields                                                  |
+| `ApartmentCard`         | `src/components/ApartmentCard/`                     | Apartment card with colocated GraphQL fragment                                                |
+| `MoodCard`              | `src/components/MoodCard/`                          | Mood card with colocated GraphQL fragment                                                     |
+| `DistrictCard`          | `src/components/DistrictCard/`                      | District card with colocated GraphQL fragment                                                 |
+| `GalleryImageFragment`  | `src/components/ImageGallery/fragment.ts`           | Shared gallery-image fragment (district masonry + WhatWeLove); the grid component was removed |
+| `IndexPageHeroFragment` | `src/components/EditorialHero/indexPageFragment.ts` | Shared `index_page` hero + description fragment used by every index page query                |
+| `CategoryFilter`        | `src/components/CategoryFilter/`                    | Client component for apartment category filtering                                             |
+| `CuddlesList`           | `src/components/CuddlesList/`                       | Amenities list with colocated fragment                                                        |
+| `UpsList`               | `src/components/UpsList/`                           | Lifestyle features pill list with colocated fragment                                          |
+| `InfoDetail`            | `src/components/InfoDetail/`                        | Info blocks (text + address) with union type handling                                         |
+| `DistrictLink`          | `src/components/DistrictLink/`                      | Editorial link to district detail page                                                        |
+| `ResponsiveImage`       | `src/components/ResponsiveImage/`                   | DatoCMS responsive image with fragment                                                        |
+| `ContentLink`           | `src/components/ContentLink/`                       | Click-to-edit overlays (draft mode, no next/navigation hooks)                                 |
+| `DraftModeToggler`      | `src/components/DraftModeToggler/`                  | Draft mode toggle button                                                                      |
 
 ### Path Alias
 
@@ -133,11 +134,13 @@ Tailwind CSS v4 with `@theme` (NOT `@theme inline`) design tokens in `src/app/gl
 
 Required in `.env.local` (see `.env.local.example`):
 
-- `DATOCMS_PUBLISHED_CONTENT_CDA_TOKEN` — CDA published content token
-- `DATOCMS_DRAFT_CONTENT_CDA_TOKEN` — CDA draft content token
-- `DATOCMS_CMA_TOKEN` — Content Management API token (read-only, for schema generation)
+- `DATOCMS_PUBLISHED_CONTENT_CDA_TOKEN` — CDA token "CDA Only (Published)", NO preview access (cannot read drafts even with `X-Include-Drafts`)
+- `DATOCMS_DRAFT_CONTENT_CDA_TOKEN` — CDA token with preview access; used only in Draft Mode
+- `DATOCMS_CMA_TOKEN` — Content Management API token. The runtime only performs reads (Site Search, seo-analysis route): on Vercel use the "Read-only API token". Locally a write-capable token is fine (scripts/, POI import, schema generation)
+- `DATOCMS_ENVIRONMENT` — DatoCMS environment for app, codegen and scripts (empty = primary)
+- `DATOCMS_SITE_SEARCH_INDEX_ID` — Site Search index id, used by `/api/search`
 - `DATOCMS_BASE_EDITING_URL` — DatoCMS project URL for content link overlays
-- `SECRET_API_TOKEN` — Shared secret for webhook authentication
+- `SECRET_API_TOKEN` — Shared secret for webhook/plugin endpoints; the same value lives in the DatoCMS webhook URL and Web Previews plugin config, so rotate all three together
 - `NEXT_PUBLIC_SITE_URL` — Production URL (e.g. `https://acaciafirenze.com`), used as `metadataBase` for SEO and sitemap generation
 
 ## SEO
@@ -167,7 +170,9 @@ export async function generateMetadata({ params }): Promise<Metadata> {
 }
 ```
 
-`metadataBase` is set in `src/app/layout.tsx`. `src/app/sitemap.ts` generates `/sitemap.xml` for all static and dynamic routes in both locales.
+Index pages backed by an `index_page` record (moods, districts, accommodations, blog, guestbook) don't repeat this boilerplate: they delegate to the shared helper `indexPageMetadata(canonicalRoute, params)` from `src/lib/datocms/indexPageMetadata.ts`. Their queries also share the hero + description selection via `IndexPageHeroFragment` (`src/components/EditorialHero/indexPageFragment.ts`); Content components unwrap it with `readFragment`.
+
+`metadataBase` is set in `src/app/layout.tsx`. `src/app/sitemap.ts` generates `/sitemap.xml` for all static and dynamic routes in both locales. Absolute URLs are always built from the shared `SITE_URL` constant (`src/lib/siteUrl.ts`) — never re-read `NEXT_PUBLIC_SITE_URL` inline.
 
 ## Error Pages
 

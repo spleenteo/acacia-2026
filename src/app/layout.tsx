@@ -4,6 +4,7 @@ import { SpeedInsights } from '@vercel/speed-insights/next';
 import { Analytics } from '@vercel/analytics/next';
 import GoogleAnalytics from '@/components/GoogleAnalytics';
 import { defaultLocale } from '@/i18n/config';
+import { SITE_URL } from '@/lib/siteUrl';
 import type { Metadata } from 'next';
 
 /**
@@ -33,7 +34,7 @@ const lato = Lato({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000'),
+  metadataBase: new URL(SITE_URL),
   // Google Search Console — "HTML tag" verification. Emits
   // <meta name="google-site-verification" …> into every page's <head>.
   verification: { google: '1mtBq9Sf-pUVsHIr9PBLwX4POc9m2hGXcFu6YIGeZpQ' },

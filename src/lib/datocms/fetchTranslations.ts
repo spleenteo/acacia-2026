@@ -3,13 +3,16 @@ import { graphql } from '@/lib/datocms/graphql';
 import type { Locale } from '@/i18n/config';
 
 const translationsQuery = graphql(`
-  query AllTranslations($locale: SiteLocale!) {
-    allTranslations(first: 500, locale: $locale) {
+  query AllTranslations($locale: SiteLocale!, $first: IntType!, $skip: IntType!) {
+    allTranslations(first: $first, skip: $skip, locale: $locale) {
       key
       value
     }
   }
 `);
+
+/** CDA max page size. Paged so >500 translation keys can't be silently lost. */
+const PAGE_SIZE = 500;
 
 /**
  * Convert flat dot-notation keys to a nested object.
@@ -41,12 +44,17 @@ function nestKeys(records: { key: string; value: string }[]): Record<string, unk
  * by the same webhook that invalidates all other CDA content.
  */
 export async function fetchTranslations(locale: Locale): Promise<Record<string, unknown>> {
-  const data = await executeQuery(translationsQuery, {
-    variables: { locale },
-    // In dev, skip the Data Cache so new Translation records show immediately
-    // (no need to wipe `.next/cache`). In prod the webhook invalidates the tag.
-    noStore: process.env.NODE_ENV !== 'production',
-  });
+  const records: { key: string; value: string }[] = [];
+  for (let skip = 0; ; skip += PAGE_SIZE) {
+    const data = await executeQuery(translationsQuery, {
+      variables: { locale, first: PAGE_SIZE, skip },
+      // In dev, skip the Data Cache so new Translation records show immediately
+      // (no need to wipe `.next/cache`). In prod the webhook invalidates the tag.
+      noStore: process.env.NODE_ENV !== 'production',
+    });
+    records.push(...data.allTranslations);
+    if (data.allTranslations.length < PAGE_SIZE) break;
+  }
 
-  return nestKeys(data.allTranslations);
+  return nestKeys(records);
 }

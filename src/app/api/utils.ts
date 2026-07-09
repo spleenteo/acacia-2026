@@ -1,5 +1,20 @@
 import { ApiError } from '@datocms/cma-client';
 import { NextResponse } from 'next/server';
+import { timingSafeEqual } from 'node:crypto';
+
+/**
+ * Constant-time check of the caller-supplied token against `SECRET_API_TOKEN`.
+ * Fails closed when either side is missing; `timingSafeEqual` avoids leaking
+ * how many leading characters matched. (The length is still observable — fine
+ * for a single high-entropy shared secret.)
+ */
+export function isValidSecretToken(token: string | null): boolean {
+  const secret = process.env.SECRET_API_TOKEN;
+  if (!token || !secret) return false;
+  const a = Buffer.from(token);
+  const b = Buffer.from(secret);
+  return a.length === b.length && timingSafeEqual(a, b);
+}
 
 export function withCORS(responseInit?: ResponseInit): ResponseInit {
   return {

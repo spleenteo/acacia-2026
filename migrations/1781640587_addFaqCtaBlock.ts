@@ -14,17 +14,24 @@ import { Client } from 'datocms/lib/cma-client-node';
  * only appended to a field's allow-list when not already present.
  */
 
-const FAQ_ITEM_TYPE_ID = '2803';
-
-// Structured-text fields that should accept the new block (field id → label).
+// Structured-text fields that should accept the new block, addressed by
+// api_key: model/field IDs are not stable across environment forks (see
+// recordInfo.ts), so hardcoding them would break a replay on a pristine env.
 const TARGET_FIELDS = [
-  { id: 'ROuqlOUlSuS27RyeDi4rqg', label: 'post.content' },
-  { id: 'EOZzbknlQ8iV1dYIv56tFw', label: 'page.structured_text' },
+  { model: 'post', field: 'content' },
+  { model: 'page', field: 'structured_text' },
 ];
 
 export default async function (client: Client): Promise<void> {
-  // 1. Create (or reuse) the `cta_faq` block model.
   const itemTypes = await client.itemTypes.list();
+
+  // Resolve the FAQ model by api_key (its link target).
+  const faqModel = itemTypes.find((it) => it.api_key === 'faq');
+  if (!faqModel) {
+    throw new Error('faq model not found — it must exist before this migration');
+  }
+
+  // 1. Create (or reuse) the `cta_faq` block model.
   let block = itemTypes.find((it) => it.api_key === 'cta_faq' && it.modular_block);
 
   if (!block) {
@@ -46,7 +53,7 @@ export default async function (client: Client): Promise<void> {
       api_key: 'faq',
       field_type: 'link',
       validators: {
-        item_item_type: { item_types: [FAQ_ITEM_TYPE_ID] },
+        item_item_type: { item_types: [faqModel.id] },
         required: {},
       },
       appearance: { addons: [], editor: 'link_embed', parameters: {} },
@@ -55,8 +62,17 @@ export default async function (client: Client): Promise<void> {
   }
 
   // 2. Append the block to each target structured-text field's allow-list.
-  for (const { id, label } of TARGET_FIELDS) {
-    const field = await client.fields.find(id);
+  for (const target of TARGET_FIELDS) {
+    const label = `${target.model}.${target.field}`;
+    const model = itemTypes.find((it) => it.api_key === target.model);
+    if (!model) {
+      throw new Error(`${label}: model "${target.model}" not found`);
+    }
+    const field = (await client.fields.list(model.id)).find((f) => f.api_key === target.field);
+    if (!field) {
+      throw new Error(`${label}: field "${target.field}" not found`);
+    }
+
     const validators = { ...(field.validators as Record<string, unknown>) };
     const blocks = (validators.structured_text_blocks as { item_types: string[] }) ?? {
       item_types: [],
@@ -71,7 +87,7 @@ export default async function (client: Client): Promise<void> {
       ...blocks,
       item_types: [...blocks.item_types, block.id],
     };
-    await client.fields.update(id, { validators });
+    await client.fields.update(field.id, { validators });
     console.log(`✓ ${label}: now allows cta_faq`);
   }
 }

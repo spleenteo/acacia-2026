@@ -8,6 +8,8 @@ import StructuredTextContent from '@/components/StructuredTextContent';
 import ReadMore from '@/components/ReadMore';
 import MoodCard from '@/components/MoodCard';
 import { toHeroTone } from '@/lib/heroTone';
+import { readFragment } from '@/lib/datocms/graphql';
+import { IndexPageHeroFragment } from '@/components/EditorialHero/indexPageFragment';
 import type { ResultOf } from 'gql.tada';
 import type { query } from './page';
 
@@ -16,7 +18,8 @@ type MoodsData = ResultOf<typeof query>;
 
 export default function MoodsContent({ locale, data }: MoodsProps & { data: MoodsData }) {
   const t = useTranslations('moods');
-  const { page, allMoods } = data;
+  const page = data.page ? readFragment(IndexPageHeroFragment, data.page) : null;
+  const { allMoods } = data;
 
   const description = page?.description?.value ? (
     <StructuredTextContent data={page.description} className="font-body text-body-sm text-muted" />

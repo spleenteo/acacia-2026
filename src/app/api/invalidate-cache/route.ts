@@ -1,7 +1,12 @@
 import { cacheTag } from '@/lib/datocms/executeQuery';
 import { revalidateTag } from 'next/cache';
 import type { NextRequest, NextResponse } from 'next/server';
-import { handleUnexpectedError, invalidRequestResponse, successfulResponse } from '../utils';
+import {
+  handleUnexpectedError,
+  invalidRequestResponse,
+  isValidSecretToken,
+  successfulResponse,
+} from '../utils';
 
 /*
  * This route handler receives "Cache Tag Invalidation" events from a DatoCMS
@@ -25,7 +30,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     const token = req.nextUrl.searchParams.get('token');
 
     // Ensure that the request is coming from a trusted source
-    if (token !== process.env.SECRET_API_TOKEN) {
+    if (!isValidSecretToken(token)) {
       return invalidRequestResponse('Invalid token', 401);
     }
 

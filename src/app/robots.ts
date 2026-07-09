@@ -1,8 +1,7 @@
 import type { MetadataRoute } from 'next';
 import { locales } from '@/i18n/config';
 import { localizedPath } from '@/i18n/paths';
-
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000';
+import { SITE_URL } from '@/lib/siteUrl';
 
 // Canonical bases of the 5 detail types that DatoCMS Site Search should index.
 const SEARCH_DETAIL_BASES = [
@@ -41,6 +40,6 @@ export default function robots(): MetadataRoute.Robots {
         disallow: '/',
       },
     ],
-    sitemap: `${siteUrl}/sitemap.xml`,
+    sitemap: `${SITE_URL}/sitemap.xml`,
   };
 }

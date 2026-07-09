@@ -4,8 +4,7 @@ import { graphql } from '@/lib/datocms/graphql';
 import { locales, type Locale } from '@/i18n/config';
 import { localizedPath, faqPath } from '@/i18n/paths';
 import { fetchFaqTree, pathSlugsForNode } from '@/lib/faq/faqTree';
-
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000';
+import { SITE_URL } from '@/lib/siteUrl';
 
 /**
  * Regenerate the sitemap at most hourly. This route is statically rendered and
@@ -18,22 +17,22 @@ export const revalidate = 3600;
 
 const slugsQuery = graphql(`
   query SitemapSlugsQuery {
-    allApartments(first: 100) {
+    allApartments(first: 500) {
       slug
       _updatedAt
     }
-    allDistricts(first: 100) {
+    allDistricts(first: 500) {
       slug
       _updatedAt
     }
-    allMoods(first: 100) {
+    allMoods(first: 500) {
       _allSlugLocales {
         locale
         value
       }
       _updatedAt
     }
-    allPosts(first: 100) {
+    allPosts(first: 500) {
       _allSlugLocales {
         locale
         value
@@ -62,7 +61,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       locales.map(async (locale) => {
         const tree = await fetchFaqTree(locale, false);
         return tree.nodes.map((n) => ({
-          url: `${siteUrl}${faqPath(locale, pathSlugsForNode(tree, n.id))}`,
+          url: `${SITE_URL}${faqPath(locale, pathSlugsForNode(tree, n.id))}`,
           changeFrequency: 'monthly' as const,
           priority: 0.5,
         }));
@@ -72,7 +71,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   const staticEntries: MetadataRoute.Sitemap = locales.flatMap((locale) =>
     staticPaths.map((path) => ({
-      url: `${siteUrl}/${locale}${path ? localizedPath(locale, path) : ''}`,
+      url: `${SITE_URL}/${locale}${path ? localizedPath(locale, path) : ''}`,
       changeFrequency: 'weekly' as const,
       priority: path === '' ? 1.0 : 0.8,
     })),
@@ -80,7 +79,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   const apartmentEntries: MetadataRoute.Sitemap = locales.flatMap((locale) =>
     data.allApartments.map((apt) => ({
-      url: `${siteUrl}/${locale}${localizedPath(locale, `/florence/accommodations/${apt.slug}`)}`,
+      url: `${SITE_URL}/${locale}${localizedPath(locale, `/florence/accommodations/${apt.slug}`)}`,
       lastModified: new Date(apt._updatedAt),
       changeFrequency: 'weekly' as const,
       priority: 0.7,
@@ -89,7 +88,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   const districtEntries: MetadataRoute.Sitemap = locales.flatMap((locale) =>
     data.allDistricts.map((d) => ({
-      url: `${siteUrl}/${locale}${localizedPath(locale, `/florence/districts/${d.slug}`)}`,
+      url: `${SITE_URL}/${locale}${localizedPath(locale, `/florence/districts/${d.slug}`)}`,
       lastModified: new Date(d._updatedAt),
       changeFrequency: 'weekly' as const,
       priority: 0.6,
@@ -103,7 +102,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     (m._allSlugLocales ?? [])
       .filter((s) => s.value && locales.includes(s.locale as Locale))
       .map((s) => ({
-        url: `${siteUrl}/${s.locale}${localizedPath(s.locale as Locale, `/moods/${s.value}`)}`,
+        url: `${SITE_URL}/${s.locale}${localizedPath(s.locale as Locale, `/moods/${s.value}`)}`,
         lastModified: new Date(m._updatedAt),
         changeFrequency: 'monthly' as const,
         priority: 0.6,
@@ -116,7 +115,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     (p._allSlugLocales ?? [])
       .filter((s) => s.value && locales.includes(s.locale as Locale))
       .map((s) => ({
-        url: `${siteUrl}/${s.locale}${localizedPath(s.locale as Locale, `/blog/${s.value}`)}`,
+        url: `${SITE_URL}/${s.locale}${localizedPath(s.locale as Locale, `/blog/${s.value}`)}`,
         lastModified: new Date(p._updatedAt),
         changeFrequency: 'monthly' as const,
         priority: 0.5,

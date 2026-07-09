@@ -10,6 +10,8 @@ import BeddyBar from '@/components/BeddyBar';
 import CategoryFilter from '@/components/CategoryFilter';
 import ApartmentCard from '@/components/ApartmentCard';
 import { toHeroTone } from '@/lib/heroTone';
+import { readFragment } from '@/lib/datocms/graphql';
+import { IndexPageHeroFragment } from '@/components/EditorialHero/indexPageFragment';
 import type { ResultOf } from 'gql.tada';
 import type { query } from './page';
 
@@ -21,7 +23,8 @@ export default function AccommodationsContent({
   data,
 }: AccommodationsProps & { data: AccommodationsData }) {
   const t = useTranslations('listing');
-  const { page, allApartmentCategories, allApartments, homePage } = data;
+  const page = data.page ? readFragment(IndexPageHeroFragment, data.page) : null;
+  const { allApartmentCategories, allApartments, homePage } = data;
 
   const categories = allApartmentCategories.map((cat) => ({
     id: cat.id,

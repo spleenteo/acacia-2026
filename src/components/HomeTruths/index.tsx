@@ -1,6 +1,7 @@
 import { Info } from 'lucide-react';
 import { type FragmentOf, graphql, readFragment } from '@/lib/datocms/graphql';
 import WidgetTitle from '@/components/WidgetTitle';
+import HtmlContent from '@/components/HtmlContent';
 import { TONES } from '@/components/WidgetLabel';
 
 export const TruthFragment = graphql(`
@@ -36,9 +37,9 @@ export default function HomeTruths({ data, title, label }: Props) {
               className="shrink-0 mt-0.5"
               style={{ color: TONES.gold.fg }}
             />
-            <div
-              className="font-body text-[0.9rem] text-muted leading-snug prose-acacia"
-              dangerouslySetInnerHTML={{ __html: truth.body }}
+            <HtmlContent
+              html={truth.body}
+              className="font-body text-body-sm text-muted leading-snug"
             />
           </li>
         ))}

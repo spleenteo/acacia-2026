@@ -1,5 +1,6 @@
 import type { LucideIcon } from 'lucide-react';
 import { Globe } from 'lucide-react';
+import { stripStega } from 'react-datocms/stega';
 
 /**
  * Brand glyphs for social links. lucide-react dropped all brand icons (Instagram,
@@ -28,13 +29,15 @@ const SOCIAL_PATHS: Record<string, string> = {
 
 type Props = { name: string; size?: number; className?: string };
 
+// `name` comes from CDA String fields (iconName/platform): in draft mode they
+// carry stega metadata that would silently break the lookup, so strip first.
 export function hasSocialIcon(name: string): boolean {
-  return name.toLowerCase() in SOCIAL_PATHS;
+  return stripStega(name).toLowerCase() in SOCIAL_PATHS;
 }
 
 /** Brand SVG for a social platform, or null when none is known. */
 export function SocialBrandIcon({ name, size = 18, className }: Props) {
-  const path = SOCIAL_PATHS[name.toLowerCase()];
+  const path = SOCIAL_PATHS[stripStega(name).toLowerCase()];
   if (!path) return null;
   return (
     <svg

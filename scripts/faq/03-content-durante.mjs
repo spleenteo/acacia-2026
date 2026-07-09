@@ -15,7 +15,7 @@ import fs from 'node:fs';
 
 const env = fs.readFileSync('.env.local', 'utf8');
 const token = env.match(/DATOCMS_CMA_TOKEN=("?)([^"\n]+)\1/)?.[2];
-const client = buildClient({ apiToken: token, environment: 'acacia-2026' });
+const client = buildClient({ apiToken: token, environment: process.env.DATOCMS_ENVIRONMENT });
 
 const slugify = (s) =>
   (s || '')

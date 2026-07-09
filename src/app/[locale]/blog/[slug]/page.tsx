@@ -3,6 +3,7 @@ import { graphql, readFragment } from '@/lib/datocms/graphql';
 import { type Locale } from '@/i18n/config';
 import { localeSlugParams, localizedSlugPaths, xDefault } from '@/i18n/paths';
 import { absoluteUrl, detailBreadcrumbJsonLd } from '@/lib/seo/jsonLd';
+import { SITE_URL } from '@/lib/siteUrl';
 import JsonLd from '@/components/JsonLd';
 import { stripStega } from 'react-datocms/stega';
 import { SetAlternateLocalePaths } from '@/components/LocaleSwitcher/AlternateLocaleContext';
@@ -178,7 +179,6 @@ export default async function BlogPostPage({
   if (!data.post) notFound();
 
   // --- Structured data: BlogPosting + BreadcrumbList ---
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000';
   const postUrl = absoluteUrl(locale as Locale, `/blog/${data.post.slug}`);
   const postImage = data.post.featuredImage?.responsiveImage
     ? readFragment(ResponsiveImageFragment, data.post.featuredImage.responsiveImage).src
@@ -194,11 +194,11 @@ export default async function BlogPostPage({
     datePublished: data.post._firstPublishedAt,
     dateModified: data.post._updatedAt,
     // The post model has no author field — the brand is the author/publisher.
-    author: { '@type': 'Organization', name: 'Acacia Firenze', url: siteUrl },
+    author: { '@type': 'Organization', name: 'Acacia Firenze', url: SITE_URL },
     publisher: {
       '@type': 'Organization',
       name: 'Acacia Firenze',
-      logo: { '@type': 'ImageObject', url: `${siteUrl}/acacia-isologo.svg` },
+      logo: { '@type': 'ImageObject', url: `${SITE_URL}/acacia-isologo.svg` },
     },
   };
   if (data.post.abstract) blogPostingLd.description = stripStega(data.post.abstract);

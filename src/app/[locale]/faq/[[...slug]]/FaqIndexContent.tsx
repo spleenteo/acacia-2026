@@ -7,6 +7,8 @@ import FaqCard from '@/components/Faq/FaqCard';
 import EditorialHero from '@/components/EditorialHero';
 import StructuredTextContent from '@/components/StructuredTextContent';
 import { toHeroTone } from '@/lib/heroTone';
+import { readFragment } from '@/lib/datocms/graphql';
+import { IndexPageHeroFragment } from '@/components/EditorialHero/indexPageFragment';
 
 export type FaqIndexProps = {
   roots: { id: string; question: string; href: string }[];
@@ -15,7 +17,7 @@ type FaqIndexData = ResultOf<typeof indexQuery>;
 
 export default function FaqIndexContent({ roots, data }: FaqIndexProps & { data: FaqIndexData }) {
   const t = useTranslations('faq');
-  const page = data.page;
+  const page = data.page ? readFragment(IndexPageHeroFragment, data.page) : null;
   return (
     <>
       <EditorialHero

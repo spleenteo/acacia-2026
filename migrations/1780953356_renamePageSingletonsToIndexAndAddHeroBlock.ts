@@ -18,7 +18,6 @@ import { Client, buildBlockRecord } from 'datocms/lib/cma-client-node';
  * re-run and to replay on a pristine environment (e.g. master).
  */
 
-const HERO_INDEX_BLOCK_ID = 'EYk_5XZGRsatdHYno4e7-g';
 const LOCALES = ['en', 'it'] as const;
 
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
@@ -63,6 +62,15 @@ export default async function (client: Client): Promise<void> {
   const itemTypes = await client.itemTypes.list();
   const byApiKey = new Map(itemTypes.map((it) => [it.api_key, it]));
 
+  // Resolve the existing `hero_index` block by api_key — numeric/opaque IDs are
+  // not stable across environment forks (see recordInfo.ts), so a hardcoded id
+  // would break a replay on a pristine environment.
+  const heroIndexBlock = byApiKey.get('hero_index');
+  if (!heroIndexBlock?.modular_block) {
+    throw new Error('hero_index block model not found — it must exist before this migration');
+  }
+  const heroIndexBlockId = heroIndexBlock.id;
+
   for (const { from, to, color } of MODELS) {
     // Tolerate a model already renamed by a previous (partial) run.
     const model = byApiKey.get(from) ?? byApiKey.get(to);
@@ -88,7 +96,7 @@ export default async function (client: Client): Promise<void> {
         field_type: 'single_block',
         localized: true,
         validators: {
-          single_block_blocks: { item_types: [HERO_INDEX_BLOCK_ID] },
+          single_block_blocks: { item_types: [heroIndexBlockId] },
           required: {},
         },
         appearance: { addons: [], editor: 'frameless_single_block', parameters: {} },
@@ -105,7 +113,7 @@ export default async function (client: Client): Promise<void> {
       const hero: Record<string, ReturnType<typeof buildBlockRecord>> = {};
       for (const loc of LOCALES) {
         hero[loc] = buildBlockRecord({
-          item_type: { type: 'item_type', id: HERO_INDEX_BLOCK_ID },
+          item_type: { type: 'item_type', id: heroIndexBlockId },
           color,
           title: title[loc] || title.en || to,
           subtitle: subtitle[loc] || subtitle.en || '',

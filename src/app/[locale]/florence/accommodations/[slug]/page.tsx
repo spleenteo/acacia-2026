@@ -7,6 +7,7 @@ import { notFound } from 'next/navigation';
 import { stripStega } from 'react-datocms/stega';
 import JsonLd from '@/components/JsonLd';
 import { detailBreadcrumbJsonLd } from '@/lib/seo/jsonLd';
+import { SITE_URL } from '@/lib/siteUrl';
 import { TagFragment } from '@/lib/datocms/commonFragments';
 import { toNextMetadata } from 'react-datocms/seo';
 import type { Metadata } from 'next';
@@ -236,8 +237,7 @@ function buildApartmentJsonLd(
   locale: Locale,
   slug: string,
 ): Record<string, unknown> {
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000';
-  const url = `${siteUrl}/${locale}${localizedPath(locale, `/florence/accommodations/${slug}`)}`;
+  const url = `${SITE_URL}/${locale}${localizedPath(locale, `/florence/accommodations/${slug}`)}`;
 
   const image = apartment.featuredImage?.responsiveImage
     ? readFragment(ResponsiveImageFragment, apartment.featuredImage.responsiveImage).src

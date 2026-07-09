@@ -1,13 +1,11 @@
 import { executeQuery } from '@/lib/datocms/executeQuery';
 import { graphql } from '@/lib/datocms/graphql';
 import { type Locale } from '@/i18n/config';
-import { indexAlternates, indexPageSlug } from '@/i18n/paths';
+import { indexPageSlug } from '@/i18n/paths';
 import { draftMode } from 'next/headers';
-import { TagFragment } from '@/lib/datocms/commonFragments';
+import { indexPageMetadata } from '@/lib/datocms/indexPageMetadata';
 import { GuestbookCardFragment } from '@/components/GuestbookCard/fragment';
-import { ResponsiveImageFragment } from '@/components/ResponsiveImage';
-import { toNextMetadata } from 'react-datocms/seo';
-import type { Metadata } from 'next';
+import { IndexPageHeroFragment } from '@/components/EditorialHero/indexPageFragment';
 import RealtimeWrapper from '@/lib/datocms/realtime/RealtimeWrapper';
 import { getDraftRealtimeOptions } from '@/lib/datocms/realtime/getDraftRealtimeOptions';
 import GuestbookContent, { type GuestbookProps } from './GuestbookContent';
@@ -19,53 +17,15 @@ import GuestbookContent, { type GuestbookProps } from './GuestbookContent';
  */
 const WINDOW_MONTHS = 24;
 
-const metaQuery = graphql(
-  `
-    query GuestbookMetaQuery($locale: SiteLocale!, $slug: String!) {
-      page: indexPage(locale: $locale, filter: { slug: { eq: $slug } }) {
-        _seoMetaTags(locale: $locale) {
-          ...TagFragment
-        }
-      }
-    }
-  `,
-  [TagFragment],
-);
-
-export async function generateMetadata({
-  params,
-}: {
-  params: Promise<{ locale: string }>;
-}): Promise<Metadata> {
-  const { locale } = await params;
-  const { isEnabled } = await draftMode();
-  const data = await executeQuery(metaQuery, {
-    variables: { locale: locale as Locale, slug: indexPageSlug('/guestbook', locale as Locale) },
-    includeDrafts: isEnabled,
-  });
-  return {
-    ...toNextMetadata(data.page?._seoMetaTags ?? []),
-    alternates: indexAlternates(locale as Locale, '/guestbook'),
-  };
+export function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
+  return indexPageMetadata('/guestbook', params);
 }
 
 export const query = graphql(
   `
     query GuestbookQuery($locale: SiteLocale!, $cutoff: Date!, $slug: String!) {
       page: indexPage(locale: $locale, filter: { slug: { eq: $slug } }) {
-        hero(locale: $locale) {
-          color
-          title
-          subtitle
-          featuredImage {
-            responsiveImage(imgixParams: { w: 1400, h: 500, fit: crop }) {
-              ...ResponsiveImageFragment
-            }
-          }
-        }
-        description(locale: $locale, fallbackLocales: [en]) {
-          value
-        }
+        ...IndexPageHeroFragment
       }
       allGuestbooks(
         locale: $locale
@@ -78,7 +38,7 @@ export const query = graphql(
       }
     }
   `,
-  [GuestbookCardFragment, ResponsiveImageFragment],
+  [GuestbookCardFragment, IndexPageHeroFragment],
 );
 
 /** First day of the N-month window, as a `YYYY-MM-DD` string (day-stable). */

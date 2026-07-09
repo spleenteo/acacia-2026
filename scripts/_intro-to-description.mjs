@@ -2,7 +2,10 @@ import { buildClient } from '@datocms/cma-client-node';
 import { parse5ToStructuredText } from 'datocms-html-to-structured-text';
 import { parse } from 'parse5';
 
-const client = buildClient({ apiToken: process.env.DATOCMS_CMA_TOKEN, environment: 'acacia-2026' });
+const client = buildClient({
+  apiToken: process.env.DATOCMS_CMA_TOKEN,
+  environment: process.env.DATOCMS_ENVIRONMENT,
+});
 const LOCALES = ['en', 'it'];
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 

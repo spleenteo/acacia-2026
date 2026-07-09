@@ -10,6 +10,8 @@ import StructuredTextContent from '@/components/StructuredTextContent';
 import ReadMore from '@/components/ReadMore';
 import GuestbookCard from '@/components/GuestbookCard';
 import { toHeroTone } from '@/lib/heroTone';
+import { readFragment } from '@/lib/datocms/graphql';
+import { IndexPageHeroFragment } from '@/components/EditorialHero/indexPageFragment';
 import type { query } from './page';
 
 export type GuestbookProps = { locale: Locale };
@@ -20,7 +22,8 @@ export default function GuestbookContent({
   data,
 }: GuestbookProps & { data: GuestbookData }) {
   const t = useTranslations('guestbook');
-  const { page, allGuestbooks } = data;
+  const page = data.page ? readFragment(IndexPageHeroFragment, data.page) : null;
+  const { allGuestbooks } = data;
 
   const description = page?.description?.value ? (
     <StructuredTextContent data={page.description} className="font-body text-body-sm text-muted" />

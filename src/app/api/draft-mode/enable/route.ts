@@ -5,6 +5,7 @@ import {
   handleUnexpectedError,
   invalidRequestResponse,
   isRelativeUrl,
+  isValidSecretToken,
   makeDraftModeWorkWithinIframes,
 } from '../../utils';
 
@@ -23,7 +24,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
 
   try {
     // Ensure that the request is coming from a trusted source
-    if (token !== process.env.SECRET_API_TOKEN) {
+    if (!isValidSecretToken(token)) {
       return invalidRequestResponse('Invalid token', 401);
     }
 

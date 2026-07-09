@@ -12,6 +12,7 @@ import { executeQuery } from '@/lib/datocms/executeQuery';
 import { graphql, type ResultOf } from '@/lib/datocms/graphql';
 import { type Locale, locales, isValidLocale } from '@/i18n/config';
 import { modelPath } from '@/i18n/paths';
+import { SITE_URL } from '@/lib/siteUrl';
 import { draftMode } from 'next/headers';
 import { notFound } from 'next/navigation';
 import { toNextMetadata } from 'react-datocms/seo';
@@ -213,13 +214,12 @@ export default async function LocaleLayout({
 
   // Sitewide Organization structured data. All values are static or `link`-type
   // URLs (socialLinks), so none carry stega — nothing to strip here.
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000';
   const organizationLd: Record<string, unknown> = {
     '@context': 'https://schema.org',
     '@type': 'Organization',
     name: 'Acacia Firenze',
-    url: siteUrl,
-    logo: `${siteUrl}/acacia-isologo.svg`,
+    url: SITE_URL,
+    logo: `${SITE_URL}/acacia-isologo.svg`,
     ...(socialLinks.length ? { sameAs: socialLinks.map((s) => s.url).filter(Boolean) } : {}),
   };
 

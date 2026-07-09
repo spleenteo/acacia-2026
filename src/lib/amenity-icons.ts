@@ -1,4 +1,5 @@
 import { icons, type LucideIcon } from 'lucide-react';
+import { stripStega } from 'react-datocms/stega';
 
 /**
  * Resolve a Lucide icon by name. Accepts both formats:
@@ -17,10 +18,13 @@ function toPascalCase(str: string): string {
 
 export function getAmenityIcon(name: string | null | undefined): LucideIcon {
   if (!name) return icons.Info;
+  // The name is a CDA String field: in draft mode it carries stega metadata
+  // that would silently fail the lookup, so strip before matching.
+  const clean = stripStega(name);
   // Try as-is first (already PascalCase), then convert from kebab-case
   return (
-    icons[name as keyof typeof icons] ??
-    icons[toPascalCase(name) as keyof typeof icons] ??
+    icons[clean as keyof typeof icons] ??
+    icons[toPascalCase(clean) as keyof typeof icons] ??
     icons.Info
   );
 }

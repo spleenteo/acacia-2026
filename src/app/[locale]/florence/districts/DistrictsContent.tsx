@@ -8,6 +8,8 @@ import StructuredTextContent from '@/components/StructuredTextContent';
 import ReadMore from '@/components/ReadMore';
 import DistrictCard from '@/components/DistrictCard';
 import { toHeroTone } from '@/lib/heroTone';
+import { readFragment } from '@/lib/datocms/graphql';
+import { IndexPageHeroFragment } from '@/components/EditorialHero/indexPageFragment';
 import type { ResultOf } from 'gql.tada';
 import type { query } from './page';
 
@@ -19,7 +21,8 @@ export default function DistrictsContent({
   data,
 }: DistrictsProps & { data: DistrictsData }) {
   const t = useTranslations('districts');
-  const { page, allDistricts } = data;
+  const page = data.page ? readFragment(IndexPageHeroFragment, data.page) : null;
+  const { allDistricts } = data;
 
   const description = page?.description?.value ? (
     <StructuredTextContent data={page.description} className="font-body text-body-sm text-muted" />

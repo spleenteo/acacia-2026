@@ -1,5 +1,6 @@
 import { type Locale } from '@/i18n/config';
 import { localeUrl } from '@/i18n/paths';
+import { SITE_URL } from '@/lib/siteUrl';
 
 /**
  * Shared JSON-LD builders. Callers must pass values already cleaned with
@@ -7,11 +8,9 @@ import { localeUrl } from '@/i18n/paths';
  * non-render path — see CLAUDE.md "Stega encoding & stripStega").
  */
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000';
-
 /** Absolute, locale-prefixed, segment-localized URL for a canonical path. */
 export function absoluteUrl(locale: Locale, canonicalPath: string): string {
-  return `${siteUrl}${localeUrl(locale, canonicalPath)}`;
+  return `${SITE_URL}${localeUrl(locale, canonicalPath)}`;
 }
 
 export function breadcrumbJsonLd(items: { name: string; url: string }[]): Record<string, unknown> {
@@ -48,7 +47,7 @@ export function detailBreadcrumbJsonLd(opts: {
 }): Record<string, unknown> {
   const { locale, sectionPath, path, name } = opts;
   return breadcrumbJsonLd([
-    { name: 'Acacia Firenze', url: `${siteUrl}/${locale}` },
+    { name: 'Acacia Firenze', url: `${SITE_URL}/${locale}` },
     {
       name: sectionNames[sectionPath]?.[locale] ?? sectionPath,
       url: absoluteUrl(locale, sectionPath),
