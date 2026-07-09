@@ -242,11 +242,25 @@ _iub.csConfiguration = {
   siteId: 306241,
   cookiePolicyId: 684676,
   lang: "${locale}",
-  /* Push gtag('consent','update',…) mapping Iubenda purposes onto Google
-     Consent Mode v2 signals (measurement → analytics_storage, advertising →
-     ad_*). Pairs with the denied-by-default snippet in <GoogleAnalytics>. */
-  googleConsentMode: "template",
-  /* Per-purpose consent so the template mapping can grant analytics alone. */
+  /* Map Iubenda purposes onto Google Consent Mode v2 signals ourselves
+     (measurement/4 → analytics_storage, advertising/5 → ad_*): the built-in
+     googleConsentMode:"template" never pushed the consent update in our
+     setup, so we own it. Pairs with the denied-by-default snippet in
+     <GoogleAnalytics>; fires both on stored consent at load and when the
+     visitor acts on the banner. */
+  callback: {
+    onPreferenceExpressedOrNotNeeded: function (preference) {
+      if (typeof gtag !== "function" || !preference || !preference.purposes) return;
+      var granted = function (id) { return preference.purposes[id] ? "granted" : "denied"; };
+      gtag("consent", "update", {
+        analytics_storage: granted(4),
+        ad_storage: granted(5),
+        ad_user_data: granted(5),
+        ad_personalization: granted(5),
+      });
+    },
+  },
+  /* Per-purpose consent so measurement can be granted on its own. */
   perPurposeConsent: true,
   /* Garante 2021: consent requires an explicit accept. The previous bare-X
      banner offered no way to grant it, so GA4 would have stayed denied for
