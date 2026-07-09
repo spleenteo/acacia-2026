@@ -238,7 +238,15 @@ export default async function LocaleLayout({
         <>
           <Script id="iubenda-cs-config" strategy="afterInteractive">
             {`var _iub = _iub || [];
-_iub.csConfiguration = { siteId: 306241, cookiePolicyId: 684676, lang: "${locale}" };`}
+_iub.csConfiguration = {
+  siteId: 306241,
+  cookiePolicyId: 684676,
+  lang: "${locale}",
+  /* Push gtag('consent','update',…) mapping Iubenda purposes onto Google
+     Consent Mode v2 signals (measurement → analytics_storage, advertising →
+     ad_*). Pairs with the denied-by-default snippet in <GoogleAnalytics>. */
+  googleConsentMode: "template",
+};`}
           </Script>
           <Script
             src="https://cdn.iubenda.com/cookie_solution/safemode/iubenda_cs.js"
