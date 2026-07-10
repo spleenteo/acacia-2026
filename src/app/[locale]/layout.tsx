@@ -242,29 +242,29 @@ _iub.csConfiguration = {
   siteId: 306241,
   cookiePolicyId: 684676,
   lang: "${locale}",
-  /* Map Iubenda purposes onto Google Consent Mode v2 signals ourselves
-     (measurement/4 → analytics_storage, advertising/5 → ad_*): the built-in
-     googleConsentMode:"template" never pushed the consent update in our
-     setup, so we own it. Pairs with the denied-by-default snippet in
-     <GoogleAnalytics>; fires both on stored consent at load and when the
-     visitor acts on the banner. */
+  /* Site-owner decision (July 2026): GA4 analytics runs for every visitor —
+     analytics_storage defaults to "granted" in <GoogleAnalytics> and is NOT
+     downgraded here, so pageviews/engagement are counted even when a visitor
+     rejects. The banner only governs ADVERTISING (purpose 5 → ad_*), which
+     stays denied until explicitly accepted. NOTE: counting analytics without
+     prior consent is a deliberate, owner-accepted tradeoff (not aligned with
+     the Garante's GA4 cookie guidelines); re-add analytics_storage here and
+     flip the default back to "denied" to restore the compliant behaviour. */
   callback: {
     onPreferenceExpressedOrNotNeeded: function (preference) {
       if (typeof gtag !== "function" || !preference || !preference.purposes) return;
-      var granted = function (id) { return preference.purposes[id] ? "granted" : "denied"; };
+      var ads = preference.purposes[5] ? "granted" : "denied";
       gtag("consent", "update", {
-        analytics_storage: granted(4),
-        ad_storage: granted(5),
-        ad_user_data: granted(5),
-        ad_personalization: granted(5),
+        ad_storage: ads,
+        ad_user_data: ads,
+        ad_personalization: ads,
       });
     },
   },
-  /* Per-purpose consent so measurement can be granted on its own. */
+  /* Per-purpose consent so advertising can be granted on its own. */
   perPurposeConsent: true,
-  /* Garante 2021: consent requires an explicit accept. The previous bare-X
-     banner offered no way to grant it, so GA4 would have stayed denied for
-     every visitor. X now explicitly rejects. */
+  /* Garante 2021: explicit accept/reject buttons; the X rejects. Governs
+     advertising and the cookie policy — analytics is counted regardless. */
   banner: {
     acceptButtonDisplay: true,
     rejectButtonDisplay: true,

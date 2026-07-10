@@ -9,15 +9,19 @@ import GoogleAnalyticsPageviews from './Pageviews';
  * isn't configured (local dev, preview deploys). The id is public by design —
  * GA4 needs it in the browser — hence the `NEXT_PUBLIC_` prefix.
  *
- * Consent flow: the inline `<script>` below runs during HTML parsing —
- * guaranteed before the Iubenda banner and gtag.js (both `afterInteractive`) —
- * and defaults every Consent Mode signal to `denied`. Iubenda (configured with
- * `googleConsentMode: "template"` in the locale layout) pushes
- * `gtag('consent','update',…)` when the visitor grants consent, or right away
- * on later visits from stored consent (`wait_for_update` gives it a 500ms
- * window before the first hit). Until then GA4 sends only cookieless pings and
- * models the missing data — no `_ga` cookies are written without consent, as
- * required by the Garante's cookie guidelines.
+ * Consent flow (site-owner decision, July 2026): the inline `<script>` below
+ * runs during HTML parsing — before the Iubenda banner and gtag.js (both
+ * `afterInteractive`) — and defaults `analytics_storage` to `granted` so GA4
+ * counts every visitor (pageviews, engagement, routes) regardless of the banner
+ * choice, restoring the traffic numbers we had before analytics was gated.
+ * Advertising signals stay `denied` and are only granted if the visitor accepts
+ * (the Iubenda callback in the locale layout maps purpose 5 → `ad_*`).
+ *
+ * TRADEOFF: granting `analytics_storage` without prior consent writes `_ga`
+ * cookies before the banner is answered, which is NOT aligned with the Italian
+ * Garante's cookie guidelines for GA4. This is a deliberate, owner-accepted
+ * choice — flip `analytics_storage` back to `denied` to return to the
+ * consent-gated (compliant) behaviour.
  *
  * Replaces the legacy Universal Analytics (`UA-796094-2`) used by the previous
  * site, which Google shut down in July 2023 and no longer collects data.
@@ -38,7 +42,7 @@ gtag('consent', 'default', {
   ad_storage: 'denied',
   ad_user_data: 'denied',
   ad_personalization: 'denied',
-  analytics_storage: 'denied',
+  analytics_storage: 'granted',
   wait_for_update: 500
 });`,
         }}
