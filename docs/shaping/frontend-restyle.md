@@ -4,6 +4,8 @@ shaping: true
 
 # Frontend Restyle — Shaping
 
+> **Historical / superseded.** This shaping targeted the "Rinascimento Moderno" direction (Playfair headings, rust as the single accent). The site later moved to the current "Japan Fish" language (Fraunces + Lato, blackberry as the action colour, navy ground). Read this for process history only — for the live design system see `CLAUDE.md` → "Styling — Japan Fish".
+
 ## Frame
 
 ### Source

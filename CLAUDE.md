@@ -85,9 +85,9 @@ Debug stega-related bugs with `revealStega(value)` from `react-datocms` — `con
 
 ### Styling — "Japan Fish" Editorial Design System
 
-> Re-skinned from the original "Rinascimento Moderno" (warm cream + Cormorant) to a light, editorial language: navy ground, warm-cool "Japan Fish" palette, Fraunces display serif. The token NAMES were kept and only their VALUES swapped, so every component re-themed automatically.
+> A light, editorial visual language: navy ground, warm-cool "Japan Fish" palette, Fraunces display serif. Design-token NAMES are decoupled from their VALUES — a re-theme swaps the values in one place and every component follows automatically.
 
-Tailwind CSS v4 with `@theme` (NOT `@theme inline`) design tokens in `src/app/global.css`. Full design system reference: `docs/pitches/demostyle.jsx`.
+Tailwind CSS v4 with `@theme` (NOT `@theme inline`) design tokens in `src/app/global.css`. This section is the single source of truth for the visual language.
 
 **Critical Tailwind v4 rules:**
 
@@ -186,4 +186,4 @@ Index pages backed by an `index_page` record (moods, districts, accommodations, 
 - Prettier: single quotes, trailing commas, 100 char print width
 - Generated files to never edit: `schema.graphql`, `src/lib/datocms/graphql-env.d.ts`, `src/lib/datocms/cma-types.ts`
 - Route handlers use `.ts` extension (not `.tsx`) since they contain no JSX
-- Always use the `/frontend-design` skill when evaluating or implementing UI changes
+- When evaluating or implementing UI changes, follow the "Styling — Japan Fish" section above as the design source of truth

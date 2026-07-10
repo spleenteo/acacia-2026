@@ -179,6 +179,8 @@ Design decision: `overflow-hidden` scoped to the image wrapper only (not the `ar
 
 ## v0.2.0 — 2026-03-14 — Rinascimento Moderno design system
 
+> **Superseded.** This design system (Playfair + DM Sans, rust-primary, cream surfaces) was later replaced by the current "Japan Fish" language (Fraunces + Lato, blackberry-primary, navy ground). The token _names_ below survived; their values were re-themed. Kept as history — for the current system see `CLAUDE.md` → "Styling — Japan Fish".
+
 Applied the "Rinascimento Moderno" design system across the entire frontend, replacing the original Acacia brand tokens with a refined editorial aesthetic.
 
 - **New typography**: Switched from Source Sans Pro + Lato + Cormorant Garamond to Playfair Display (headings) + DM Sans (body), with a complete font-size scale from `text-hero` (56px) down to `text-fine` (11px).

@@ -4,6 +4,8 @@ shaping: true
 
 # Acacia Firenze Rebuild — Slices
 
+> **Historical / superseded.** The typography and palette in this initial slice plan (Source Sans Pro + Cormorant, early brand tokens) predate the current "Japan Fish" design system. Kept as a completed-work record — for the live design system see `CLAUDE.md` → "Styling — Japan Fish".
+
 Fonte: [init-shaping.md](init-shaping.md)
 
 ---

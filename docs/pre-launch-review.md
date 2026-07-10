@@ -109,7 +109,6 @@ Concrete refactors that collapse the bulk of the duplicate findings:
 
 - `react-dom`, `postcss`, `tailwindcss`, `@tailwindcss/postcss` (framework/build-only peers — no app import is normal); all tooling devDeps (`@datocms/cli`, `dotenv-cli`, `tsx`, `parse5`, `datocms-html-to-structured-text`, lint/hooks/types).
 - `scripts/faq/*.mjs` (01-07) — keep as the documented FAQ-migration audit trail (`docs/shaping/faq-slices.md`); future schema work goes through `migrations/`.
-- `docs/pitches/demostyle.jsx` — design-system reference. **But fix the stale path in CLAUDE.md:90** which says `pitches/demostyle.jsx` (actual: `docs/pitches/demostyle.jsx`).
 - `--color-slate`, `--color-border-strong`, `--text-tag` are named in CLAUDE.md as intended palette tokens — removing is a design decision even though currently unwired (update the doc if you drop them).
 - **No leftover plumguide files** — `plumguide-design` is a global Claude skill outside the repo; the only "Plum Guide" hits are inspiration prose in `pitches/apartment-detail-redesign.md`.
 
@@ -120,4 +119,4 @@ Concrete refactors that collapse the bulk of the duplicate findings:
 - **Land the `assertLocale` helper + the two page-boilerplate extractions** (`makeIndexMetadata`, `renderMaybeRealtime`) — removes ~400 lines and the highest-drift-risk copy-paste before more pages are added.
 - **Do the safe deletions** (3 unused deps, dead imports, `logo--main.svg`, `src/messages/*.json`, ~13 dead CSS tokens, `siblingsOf`) — clean, zero-risk.
 - **Sweep the remaining hardcoded strings** into the Translation model (InfoDetail, BookingModal, structured-text CTA, FaqNodeContent, Modal close) to satisfy the no-hardcoded-strings rule and make copy editor-editable.
-- **Fix the docs drift** — CLAUDE.md palette (blackberry is the action color, not rust) and the `demostyle.jsx` path — so the launch reviewer and future contributors aren't misled.
+- **Fix the docs drift** — CLAUDE.md palette (blackberry is the action color, not rust) — so the launch reviewer and future contributors aren't misled.

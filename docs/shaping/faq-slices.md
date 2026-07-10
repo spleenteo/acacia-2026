@@ -280,7 +280,7 @@ flowchart TB
 ## Note di implementazione per slice
 
 - **V1** è lo slice più pesante (porta schema + routing + render insieme: non c'è UI demo-abile prima). Tienilo stretto: seed solo del ramo DURANTE con 2-3 FAQ reali, renderer StructuredText base (paragrafi/liste/marks, senza link inline). Riferimento: `florence/districts/[slug]` per pattern `executeQuery`/`generateStaticParams`/`generateMetadata`.
-- **V1 design**: applicare la skill `acacia-design-system` (accordion mobile-first, card root, breadcrumb, label fasi).
+- **V1 design**: applicare il design system del progetto (CLAUDE.md → "Styling — Japan Fish") — accordion mobile-first, card root, breadcrumb, label fasi.
 - **Ordine consigliato**: V1 → V2 → V3 → V4 → V5. V4/V5 possono procedere mentre Diana popola i contenuti.
 - **Tutto DatoCMS via CLI** (migrazione schema + script seed), env `acacia-2026`, mai MCP.
 
