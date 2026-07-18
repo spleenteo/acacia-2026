@@ -50,6 +50,33 @@ const nextConfig = {
           permanent: true,
         },
       ]),
+      // Legacy `/index.html` suffix from the old static site → strip it. Covers
+      // old apartment/district URLs like `…/appartamenti/villa-pepi/index.html`
+      // and chains with the retired-apartment rules above
+      // (`…/cannella/index.html` → `…/cannella` → accommodations index). The
+      // explicit `/{locale}/index.html` rules above win (first match), so the
+      // site roots stay correct.
+      { source: '/:path*/index.html', destination: '/:path*', permanent: true },
+      // Old apartment URL space (`/en/apartments/<slug>`, no `/florence/`
+      // prefix) → the current accommodations detail path. Slugs are unchanged.
+      {
+        source: '/en/apartments/:slug',
+        destination: '/en/florence/accommodations/:slug',
+        permanent: true,
+      },
+      // Services under the un-prefixed `/services` (EN) / `/servizi` (IT) — the
+      // counterpart of the `/florence/services` · `/firenze/servizi` rules
+      // above: no equivalent section → locale home.
+      { source: '/en/services/:path*', destination: '/en', permanent: true },
+      { source: '/it/servizi/:path*', destination: '/it', permanent: true },
+      // Legacy index `.html`, and a mood with no EN translation → their current
+      // index pages.
+      {
+        source: '/en/florence/accommodations.html',
+        destination: '/en/florence/accommodations',
+        permanent: true,
+      },
+      { source: '/en/moods/spring-in-florence', destination: '/en/moods', permanent: true },
     ];
   },
   async headers() {
