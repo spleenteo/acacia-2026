@@ -16,8 +16,8 @@
     "prepare": "npx simple-git-hooks; if [ -z \"$VERCEL\" ] && [ -z \"$CI\" ]; then npm run codegen; fi"
   },
   "dependencies": {
-    "@datocms/cda-client": "^0.2.10",
-    "@datocms/cma-client": "^5.2.6",
+    "@datocms/cda-client": "^0.3.1",
+    "@datocms/cma-client": "^6.1.0",
     "@tailwindcss/postcss": "^4.2.1",
     "@vercel/analytics": "^2.0.1",
     "@vercel/speed-insights": "^2.0.0",
