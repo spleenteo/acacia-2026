@@ -129,6 +129,94 @@ for (const { from, expect } of PAGES) {
   await page.close();
 }
 
+// --- V2: the bar holds at every width, in both languages ------------------
+// The spike's arithmetic (content − wordmark − cluster) cannot see this: it
+// ignores whatever sits between those two, which is exactly where the switch
+// now lives. Ask the layout instead.
+//
+// The ceiling is the measured baseline, not the 58px the token claims: the bar
+// was already 59.5px on mobile and 63.5 on desktop before this work started.
+// Asserting against the token would fail on every run and send whoever reads
+// the output chasing a regression nobody introduced.
+const BASELINE_HEIGHT = { mobile: 59.5, desktop: 63.5 };
+
+{
+  const WIDTHS = [320, 360, 390, 400, 430];
+  for (const locale of ['it', 'en']) {
+    for (const width of WIDTHS) {
+      const page = await browser.newPage({ viewport: { width, height: 800 } });
+      await page.goto(`${BASE}/${locale}`, { waitUntil: 'domcontentloaded' });
+      await page.waitForTimeout(400);
+
+      const measure = () =>
+        page.evaluate(() => {
+          const header = document.querySelector('header');
+          const row = header.firstElementChild;
+          const cs = getComputedStyle(row);
+          const rb = row.getBoundingClientRect();
+          const inner = {
+            l: rb.left + parseFloat(cs.paddingLeft),
+            r: rb.right - parseFloat(cs.paddingRight),
+          };
+          const visible = [...row.children].filter((el) => getComputedStyle(el).display !== 'none');
+          const sw = document.querySelector('header [role="group"][aria-label="Language"]');
+          // The CTA is the only button in the bar carrying an aria-label; its
+          // span is the word. Visibility has to come from geometry, because
+          // `class="hidden xs:inline"` reads as hidden in both forms.
+          const label = document.querySelector('header button[aria-label] span');
+          return {
+            overflows: row.scrollWidth > row.clientWidth + 1,
+            headerHeight: Math.round(header.getBoundingClientRect().height * 10) / 10,
+            escapes: visible
+              .filter((el) => {
+                const b = el.getBoundingClientRect();
+                return b.left < inner.l - 0.5 || b.right > inner.r + 0.5;
+              })
+              .map((el) => String(el.className).slice(0, 40)),
+            wraps: [...row.querySelectorAll('a,button,span')]
+              .filter((el) => el.getClientRects().length > 1)
+              .map((el) => (el.textContent ?? '').trim().slice(0, 20)),
+            switchWidth: sw ? Math.round(sw.getBoundingClientRect().width * 10) / 10 : 0,
+            ctaLabelVisible: !!label && label.getClientRects().length > 0,
+          };
+        });
+
+      for (const [state, scrollTo] of [
+        ['unscrolled', 0],
+        ['scrolled', 400],
+      ]) {
+        await page.evaluate((y) => window.scrollTo(0, y), scrollTo);
+        await page.waitForTimeout(300);
+        const r = await measure();
+        const at = `${locale} @ ${width}px ${state}`;
+        const problems = [];
+
+        if (r.overflows) problems.push('the bar overflows');
+        if (r.escapes.length) problems.push(`outside the bar: ${r.escapes.join(', ')}`);
+        if (r.wraps.length) problems.push(`wrapped onto two lines: ${r.wraps.join(', ')}`);
+        if (r.headerHeight > BASELINE_HEIGHT.mobile + 0.5)
+          problems.push(`header grew to ${r.headerHeight}px (baseline ${BASELINE_HEIGHT.mobile})`);
+        // Done #1: the switch is not just in the DOM, it takes up space. With
+        // V1's `hidden lg:flex` wrapper still in place this is 0 — which is the
+        // one failure this check exists to catch.
+        if (!r.switchWidth) problems.push('the language switch is not visible in the bar');
+        // Done #4: the word above the threshold, the icon below it.
+        if (width >= 400 !== r.ctaLabelVisible)
+          problems.push(
+            `CTA label ${r.ctaLabelVisible ? 'visible' : 'hidden'} at ${width}px, expected the opposite`,
+          );
+
+        if (problems.length) problems.forEach((m) => note(`${at}: ${m}`));
+        else
+          console.log(
+            `  ${at}: ${r.headerHeight}px, switch ${r.switchWidth}px, label ${r.ctaLabelVisible ? 'shown' : 'hidden'}`,
+          );
+      }
+      await page.close();
+    }
+  }
+}
+
 await browser.close();
 
 if (failures.length) {
