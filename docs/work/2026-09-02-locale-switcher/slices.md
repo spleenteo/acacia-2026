@@ -261,6 +261,37 @@ Consegnata. Tutti i Done verdi tranne il #3, che è lo scostamento 1 qui sopra.
 - **Nell'HTML servito ci sono tre switcher** (barra desktop, overlay mobile, footer): l'overlay è
   sempre nel DOM, nascosto via CSS, non montato condizionalmente. Dopo V2 devono scendere a due.
 
+## V2 — fatta il 2026-09-02
+
+Consegnata, tutti i Done verdi. Misure su `{it,en} × {320,360,390,400,430} × {unscrolled,scrolled}`:
+nessun overflow, niente che va a capo, switch visibile a 55,7px ovunque, label della CTA nascosta sotto
+i 400px e mostrata da 400 in su. Gli switcher nell'HTML sono scesi da tre a due.
+
+**Scostamenti**
+
+1. **Il Done #2 diceva `headerHeight === 58` ed era già falso prima di V2.** Misurato sul build
+   pre-modifica: la barra è **59,5px** su mobile e **63,5** su desktop, contro un `--header-height` che
+   dichiara 58. L'asserzione è stata riscritta come non-crescita rispetto al baseline misurato. Dopo V2
+   la barra sta a 59px sotto la soglia (l'icona è 22px contro i 22,5 della riga di testo) e 59,5 sopra:
+   non cresce mai.
+2. **`size-5.5` invece di un valore arbitrario**: con `--spacing: 0.25rem` vale esattamente 1,375rem.
+3. **La soglia GA4 usa `matchMedia('(min-width: 400px)')`**, non `window.innerWidth < 400`: il letterale
+   sarebbe rimasto slegato dal token `--breakpoint-xs`, e cambiando il token la telemetria avrebbe
+   etichettato le due forme al contrario — proprio la misura che giustifica questa decisione.
+
+**Lezioni per V3**
+
+- **`--header-height` è disallineato di 1,5px dalla realtà** (58 dichiarati, 59,5 reali su mobile, 63,5
+  su desktop). Non è stato allineato qui perché il token è letto da sette punti — padding del `main`,
+  overlay, tre `marginTop` negativi degli hero, ancore `scroll-mt` — e toccarlo dentro V2 avrebbe
+  mescolato un aggiustamento globale a un cambio di layout locale. **Candidato per un lavoro a sé.**
+- **Un check che non può fallire è peggio di nessun check.** La review del piano di V2 ne ha trovati
+  sei: cercavano l'elemento nel DOM invece che la sua geometria, leggevano l'attributo `class` invece
+  del rendering, o matchavano l'overlay dell'hamburger (che è sempre nel DOM, nascosto via opacity) al
+  posto della modale. Prima di scrivere un'asserzione, verificare che fallisca quando deve.
+- **Nell'albero di accessibilità l'overlay c'è sempre**: `getByRole('button', { name: … })` trova due
+  bottoni Book, non uno. Restringere sempre a `page.locator('header')`.
+
 ## Decisioni
 
 - **2026-09-02 — Breadboard saltato.** Sei affordance su file già letti.
