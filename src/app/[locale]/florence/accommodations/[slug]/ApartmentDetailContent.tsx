@@ -26,6 +26,7 @@ import { readFragment } from '@/lib/datocms/graphql';
 import { pickHeroColor, isLightColor, pickPillColors } from '@/lib/heroColor';
 import { useHeroDiagonal } from '@/lib/useHeroDiagonal';
 import { useHeroPin } from '@/lib/useHeroPin';
+import { whatsappUrl } from '@/lib/whatsapp';
 import type { ResultOf } from 'gql.tada';
 import type { query as apartmentDetailQuery } from './page';
 
@@ -406,7 +407,7 @@ export default function ApartmentDetailContent({
                   {t('ctaContactText')}
                 </p>
                 <a
-                  href={`https://wa.me/393939070181?text=${encodeURIComponent(apartment.name)}`}
+                  href={whatsappUrl(apartment.name)}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-2 bg-[#25D366] hover:bg-[#1fb855] text-white font-body font-medium text-body px-6 py-3 rounded-pill transition-colors duration-300"

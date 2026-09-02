@@ -3,8 +3,8 @@
 import { useState } from 'react';
 import { useTranslations } from 'next-intl';
 
-/** Same WhatsApp Business number as the header + apartment detail CTA. */
-const WHATSAPP_NUMBER = '393939070181';
+import { whatsappUrl } from '@/lib/whatsapp';
+
 const WHATSAPP_GREEN = '#25D366';
 
 function WhatsAppGlyph({ className }: { className?: string }) {
@@ -18,7 +18,7 @@ function WhatsAppGlyph({ className }: { className?: string }) {
 export default function WhatsAppWidget() {
   const t = useTranslations('chat');
   const [open, setOpen] = useState(false);
-  const href = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(t('prefill'))}`;
+  const href = whatsappUrl(t('prefill'));
 
   return (
     <div className="pointer-events-none fixed bottom-5 right-5 z-30 flex flex-col items-end gap-3 print:hidden">

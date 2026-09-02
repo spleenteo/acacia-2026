@@ -7,6 +7,7 @@ import { useHeaderOverDark } from '@/components/HeaderTheme';
 import { useBooking } from '@/components/BookingModal';
 import { TONES } from '@/components/WidgetLabel';
 import { wonkyClip } from '@/lib/wonkyClip';
+import { whatsappUrl } from '@/lib/whatsapp';
 import type { Locale } from '@/i18n/config';
 import type { NavItem } from '@/app/[locale]/layout';
 import LocaleSwitcher from '@/components/LocaleSwitcher';
@@ -19,9 +20,6 @@ type Props = {
   locale: Locale;
   navItems: NavItem[];
 };
-
-/** WhatsApp contact — same number used by the apartment detail CTA band. */
-const WHATSAPP_URL = 'https://wa.me/393939070181';
 
 export default function SiteHeader({ locale, navItems }: Props) {
   const t = useTranslations('nav');
@@ -257,7 +255,7 @@ export default function SiteHeader({ locale, navItems }: Props) {
         >
           <div className="flex items-center gap-4">
             <a
-              href={WHATSAPP_URL}
+              href={whatsappUrl()}
               target="_blank"
               rel="noopener noreferrer"
               onClick={() => setMenuOpen(false)}
