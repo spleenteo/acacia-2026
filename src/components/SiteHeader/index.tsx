@@ -159,6 +159,14 @@ export default function SiteHeader({ locale, navItems }: Props) {
           {/* Right: Book + hamburger (mobile/tablet). Contact lives only in the
               mobile menu now. */}
           <div className="flex items-center justify-end gap-3 lg:justify-self-end lg:gap-5">
+            {/* Language — desktop only in V1. V2 drops the wrapper and shows it
+                at every width, which is the point of the whole work. It lives
+                inside this cluster, not as a fourth child of the grid: the grid
+                is lg:grid-cols-[1fr_auto_1fr] and a fourth child would wrap. */}
+            <div className="hidden lg:flex">
+              <LocaleSwitcher locale={locale} variant="header" onLight={onLight} />
+            </div>
+
             {/* Primary CTA — Book (always) → opens the site-wide booking modal */}
             <button
               type="button"

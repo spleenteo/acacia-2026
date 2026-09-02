@@ -1,8 +1,9 @@
 'use client';
 
-import { Fragment } from 'react';
+import { Fragment, useSyncExternalStore } from 'react';
 import { type Locale, locales } from '@/i18n/config';
 import { switchLocalePath } from '@/i18n/paths';
+import { trackEvent } from '@/lib/analytics';
 import { useAlternateLocalePaths } from './AlternateLocaleContext';
 
 /** Language autonyms — shown (in their own language) only to assistive tech. */
@@ -15,11 +16,64 @@ function setLocaleCookie(locale: Locale) {
   document.cookie = `NEXT_LOCALE=${locale};path=/;max-age=${ONE_YEAR};samesite=lax`;
 }
 
-type Variant = 'footer' | 'menu';
+type Variant = 'footer' | 'menu' | 'header';
+
+type Tone = { active: string; idle: string; sep: string };
+
+/**
+ * Tones for the two inline (slash-separated) variants. Typing the map over
+ * `Exclude<Variant, 'header'>` is what makes a fourth variant a compile error
+ * instead of a silent fall-through: the ternary this replaces dressed anything
+ * that wasn't `footer` as `menu`, so a new variant would have shipped white
+ * text onto the white bar without a single type error.
+ */
+const INLINE_TONES = {
+  footer: { active: 'text-white/90', idle: 'text-white/45 hover:text-white', sep: 'text-white/25' },
+  menu: { active: 'text-white', idle: 'text-white/55 hover:text-white', sep: 'text-white/30' },
+} satisfies Record<Exclude<Variant, 'header'>, Tone>;
+
+/**
+ * The header segmented control inverts with the bar it sits on. Both states are
+ * 20.2:1 against a flat fill — the dark bar is `bg-dark/20` over a hero photo,
+ * so that figure is the floor rather than the exact value. Filling the active
+ * cell with `primary` instead would have measured 1.39:1 against the navy bar,
+ * worse than the hairline border the spike rejected, and would have spent the
+ * action colour on the one cell you cannot click, inches from a blackberry CTA.
+ */
+const HEADER_TONES = {
+  light: {
+    wrap: 'border-border-strong',
+    active: 'bg-dark text-white',
+    idle: 'text-muted hover:text-dark',
+  },
+  dark: {
+    wrap: 'border-white/70',
+    active: 'bg-white text-dark',
+    idle: 'text-white/70 hover:text-white',
+  },
+} as const;
+
+/**
+ * `useSyncExternalStore` over window.location, rather than a state set in an
+ * effect: React 19's lint rules forbid the latter, and this gives the server a
+ * null snapshot instead of a hydration mismatch. `popstate` covers back and
+ * forward; a client-side <Link> navigation does not fire it, so the href can
+ * lag until the next render — the click handler reads location fresh every
+ * time, so only the href attribute is affected.
+ */
+function subscribeToHistory(onChange: () => void) {
+  window.addEventListener('popstate', onChange);
+  return () => window.removeEventListener('popstate', onChange);
+}
+
+const getHref = () => window.location.href;
+const getServerHref = () => null;
 
 type Props = {
   locale: Locale;
   variant?: Variant;
+  /** Only read by `variant="header"`: which of the two header states we're on. */
+  onLight?: boolean;
   /** Optional callback (e.g. close the mobile menu) fired before navigating. */
   onNavigate?: () => void;
 };
@@ -27,29 +81,79 @@ type Props = {
 /**
  * EN / IT language switcher. Keeps the user on the same page in the other
  * language: prefers the alternate URLs published by the current page (mood, FAQ
- * — localized slugs) and otherwise derives them from the live path at click
- * time via window.location (Turbopack-safe, unlike the forbidden
- * next/navigation hooks). The click writes the NEXT_LOCALE cookie and performs a
- * full navigation so the new locale layout renders cleanly.
+ * — localized slugs) and otherwise derives them from the live path via
+ * window.location (Turbopack-safe, unlike the forbidden next/navigation hooks).
+ * The click writes the NEXT_LOCALE cookie and performs a full navigation so the
+ * new locale layout renders cleanly.
  */
-export default function LocaleSwitcher({ locale, variant = 'footer', onNavigate }: Props) {
+export default function LocaleSwitcher({
+  locale,
+  variant = 'footer',
+  onLight = false,
+  onNavigate,
+}: Props) {
   const override = useAlternateLocalePaths();
 
-  // Best-effort href for SEO / open-in-new-tab. The precise same-page target for
-  // non-override pages needs the live path, so it is resolved in onClick.
-  const hrefFor = (l: Locale) => override?.[l] ?? `/${l}`;
+  // The server has no location, so `getServerSnapshot` returns null and the
+  // first paint falls back to the locale root. Once hydrated the href points at
+  // the current page, which is what keeps cmd-click, middle-click and "open in
+  // new tab" from going home — the click handler always knew the right target,
+  // the href did not. Query and hash ride along so the href matches the click.
+  const currentHref = useSyncExternalStore(subscribeToHistory, getHref, getServerHref);
+
+  const hrefFor = (l: Locale) => {
+    if (override?.[l]) return override[l];
+    if (!currentHref) return `/${l}`;
+    const url = new URL(currentHref);
+    return switchLocalePath(url.pathname, locale, l) + url.search + url.hash;
+  };
 
   const handleSwitch = (target: Locale) => {
+    trackEvent('locale_switch', { from: locale, to: target, source: variant });
     setLocaleCookie(target);
     onNavigate?.();
     const dest = override?.[target] ?? switchLocalePath(window.location.pathname, locale, target);
     window.location.assign(dest + window.location.search + window.location.hash);
   };
 
-  const tone =
-    variant === 'footer'
-      ? { active: 'text-white/90', idle: 'text-white/45 hover:text-white', sep: 'text-white/25' }
-      : { active: 'text-white', idle: 'text-white/55 hover:text-white', sep: 'text-white/30' };
+  // The header variant is a segmented control, not a slash-separated pair: the
+  // filled cell is the separator, and it is what makes the control read as a
+  // control rather than as decoration.
+  if (variant === 'header') {
+    const tone = onLight ? HEADER_TONES.light : HEADER_TONES.dark;
+    const cell = 'px-1.5 py-1 font-body text-label uppercase tracking-[0.06em] leading-none';
+    return (
+      <div
+        className={`inline-flex items-center overflow-hidden rounded-pill border transition-colors duration-300 ${tone.wrap}`}
+        role="group"
+        aria-label="Language"
+      >
+        {locales.map((l) =>
+          l === locale ? (
+            <span key={l} className={`${cell} font-medium ${tone.active}`} aria-current="true">
+              {l}
+            </span>
+          ) : (
+            <a
+              key={l}
+              href={hrefFor(l)}
+              hrefLang={l}
+              aria-label={LOCALE_NAMES[l]}
+              onClick={(e) => {
+                e.preventDefault();
+                handleSwitch(l);
+              }}
+              className={`${cell} transition-colors duration-200 ${tone.idle}`}
+            >
+              {l}
+            </a>
+          ),
+        )}
+      </div>
+    );
+  }
+
+  const tone = INLINE_TONES[variant];
 
   return (
     <div
