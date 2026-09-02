@@ -39,3 +39,4 @@ Raccolto leggendo il codice il 2026-09-02, prima dello shaping:
 
 - 2026-09-02 — aperto il lavoro, letto il codice esistente, fissato lo scope (posizione + cookie) — resta lo shaping — nessun blocco
 - 2026-09-02 — shaping: 9 requisiti, 3 shape (A voce+dropdown, B EN/IT accanto alla CTA, C controllo nella barra). R2 e R8 promossi a Must-have → A e B escono. **C selezionata ma con un ❌ su R7**: C6 (barra mobile sotto i 360px) è flagged — resta lo spike S1 prima dello slicing — nessun blocco
+- 2026-09-02 — spike S1 chiuso (misure Playwright sul build di produzione): a 320px lo switch non entra in nessuna lingua; entra da 360px in IT e da 390px in EN. Il collo di bottiglia è la CTA ("Check availability" = 163,6px, il 58% della barra), non lo switch. I bordi tenui del design system sono sotto 3:1 → la cella attiva va a fondo pieno — resta la scelta della leva prima di aggiornare C
