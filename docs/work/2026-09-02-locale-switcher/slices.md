@@ -292,6 +292,39 @@ i 400px e mostrata da 400 in su. Gli switcher nell'HTML sono scesi da tre a due.
 - **Nell'albero di accessibilità l'overlay c'è sempre**: `getByRole('button', { name: … })` trova due
   bottoni Book, non uno. Restringere sempre a `page.locator('header')`.
 
+## V3 — fatta il 2026-09-02
+
+Consegnata, tutti i Done verdi. Confronto col baseline registrato prima di toccare `proxy.ts`:
+
+|                                                   | Prima                        | Dopo                |
+| ------------------------------------------------- | ---------------------------- | ------------------- |
+| Visita a `/en/…`                                  | `Set-Cookie: NEXT_LOCALE=en` | nessun `Set-Cookie` |
+| `/` con `Accept-Language: it-IT`                  | `location: /en`              | `location: /it`     |
+| Cookie `it` mentre si naviga `/en` con browser EN | riscritto a `en`             | rinnovato `it`      |
+| 404 su `/it/…` con browser IT                     | `/` → negoziato              | link a `/it`        |
+
+**Scostamenti**
+
+1. **`ONE_YEAR` è rimasto**, contro il "rimuovere funzione + `ONE_YEAR`" del mandato: serve al rinnovo
+   condizionale, che è arrivato dopo la scrittura di quel mandato (Decisione del 2026-09-02 sul cap ITP).
+2. **Un file in più**: `src/components/HomeLink/index.tsx`. Le due pagine di errore non ricevono
+   `params` e non potevano condividere il codice altrimenti.
+3. **Anche `CLAUDE.md:182` era falsa** e non solo la riga sul proxy: diceva che le pagine di errore
+   rendono fuori dal layout di locale, mentre hanno header e footer. Solo la 404 di root ne è priva.
+
+**Lezioni**
+
+- **`/en/blog` non passa dal proxy**: è un 308 di `next.config.mjs`, dove `:path*` matcha anche zero
+  segmenti. Il ramo `/blog` → `/magazine` del proxy è interamente ombreggiato. Per esercitare i 301 del
+  proxy servono `/it/districts`, `/it/search`, `/it/florence/accommodations`.
+- **Le due 404 si comportano in modo diverso**: quella dentro `[locale]` arriva da `notFound()`, è
+  renderizzata client-side (il `body` servito è vuoto) e ha header e footer; quella di root, per URL che
+  non matchano alcuna route, è server-rendered e nuda. Un check che aspetta 400ms invece del testo è una
+  corsa; e `.first()` su un link della 404 con header prende il wordmark, non il pulsante.
+- **Verificare l'asserzione nella direzione che può fallire.** Provare la scelta esplicita _verso la
+  lingua che `Accept-Language` già produrrebbe_ non prova niente: il caso vero è browser italiano +
+  scelta EN.
+
 ## Decisioni
 
 - **2026-09-02 — Breadboard saltato.** Sei affordance su file già letti.

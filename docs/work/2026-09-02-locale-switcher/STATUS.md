@@ -1,8 +1,8 @@
 ---
-status: open
-phase: slice
-slice: V3
-step: piano
+status: chiuso
+phase: conclusa
+slice: null
+step: null
 work: locale-switcher
 stack: react
 updated: 2026-09-02
@@ -33,7 +33,7 @@ Raccolto leggendo il codice il 2026-09-02, prima dello shaping:
 
 - [x] **V1** — il controllo nella barra, su desktop
 - [x] **V2** — il controllo nella barra, su mobile + CTA a icona sotto 400px
-- [ ] **V3** — il cookie scritto solo quando l'utente sceglie
+- [x] **V3** — il cookie scritto solo quando l'utente sceglie
 
 ## Log
 
@@ -47,3 +47,4 @@ Raccolto leggendo il codice il 2026-09-02, prima dello shaping:
 - 2026-09-02 — fase impatto: 5 lenti in parallelo, **21 problemi** (4 trovati da 3 lenti indipendenti). Slice riscritte da capo: una sola istanza del componente, cella attiva invertita per stato, cookie rinominato + rinnovo condizionale (Safari ITP), token `xs` al posto della classe arbitraria, 404/error dentro V3. **R4 corretto nel fit check: era ✅ a torto** (href alla home su quasi tutte le pagine). Baseline V3 registrato: `/` con Accept-Language it → `location: /en` — resta il piano di V1 — nessun blocco
 - 2026-09-02 — **V1 consegnata**. Piano scritto, rivisto da un subagent (16 rilievi, 4 gravi: il piano ridefiniva il Done #3 invece di rispettarlo, e il check del contrasto girava su una pagina il cui header non è mai scuro). Implementata: variante `header` segmented con inversione per stato, prop `onLight`, mappa dei toni al posto del ternario, href risolto via `useSyncExternalStore`. Playwright e `scripts/measure-header.mjs` nel repo. Tutti i Done verdi tranne il #3 (href corretto solo post-idratazione, R4 parziale per i crawler) — resta il piano di V2 — nessun blocco
 - 2026-09-02 — **V2 consegnata**. Piano rivisto da un subagent: 12 rilievi, di cui sei erano check incapaci di fallire e uno era un'asserzione sull'altezza già falsa in partenza (la barra era 59,5px, non i 58 del token). Implementata: switch visibile a ogni larghezza, CTA a icona sotto `xs` (400px, breakpoint vero), variante `menu` rimossa, sorgenti GA4 distinte. Matrice 20/20 verde — resta il piano di V3 — nessun blocco
+- 2026-09-02 — **V3 consegnata, lavoro concluso.** Piano rivisto: 9 rilievi, di nuovo quasi tutti su check incapaci di fallire (il test del 404 leggeva il wordmark dell'header; `/en/blog` non passa dal proxy ma da next.config; la scelta esplicita era provata nella direzione che Accept-Language produce già). Implementato: cookie rinominato `acacia_locale`, scritto solo dal click, rinnovato dal proxy solo se esiste; `HomeLink` per 404 ed error; due righe false corrette in CLAUDE.md. Prossimi passi: `/devflow-docs` prima del merge, `/devflow-archive` dopo.
