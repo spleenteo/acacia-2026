@@ -4,12 +4,20 @@ import { locales, defaultLocale } from '@/i18n/config';
 import type { Locale } from '@/i18n/config';
 import { canonicalPath, localizedPath } from '@/i18n/paths';
 
-const LOCALE_COOKIE = 'NEXT_LOCALE';
+/**
+ * Renamed in V3: every `NEXT_LOCALE` already on a visitor's machine — most of
+ * them written by a visit rather than by a choice — goes inert the moment this
+ * ships, instead of steering them for another year. next-intl does not read it
+ * in this project: it resolves the locale from `x-next-intl-locale` and
+ * `requestLocale`, so the conventional name bought us nothing.
+ */
+const LOCALE_COOKIE = 'acacia_locale';
 const ONE_YEAR = 60 * 60 * 24 * 365;
 
 /**
- * Picks the locale for a prefix-less request: a remembered manual choice
- * (NEXT_LOCALE cookie) wins, then the browser's Accept-Language, then English.
+ * Picks the locale for a prefix-less request: an explicit choice (the
+ * `acacia_locale` cookie, written only by the language switcher) wins, then
+ * the browser's Accept-Language, then English.
  */
 function negotiateLocale(request: NextRequest): Locale {
   const cookie = request.cookies.get(LOCALE_COOKIE)?.value;
@@ -80,25 +88,39 @@ export function proxy(request: NextRequest) {
       url.pathname = `/${locale}${canonical}`;
       const response = NextResponse.rewrite(url);
       response.headers.set('x-next-intl-locale', locale);
-      rememberLocale(response, locale);
+      renewLocaleChoice(request, response);
       return response;
     }
   }
 
   const response = NextResponse.next();
   response.headers.set('x-next-intl-locale', locale);
-  rememberLocale(response, locale);
+  renewLocaleChoice(request, response);
   return response;
 }
 
-/** Persist the locale of an explicitly-prefixed visit, so later prefix-less
- *  URLs (shared links, the bare root) follow the user's last-used language. */
-function rememberLocale(response: NextResponse, locale: Locale) {
-  response.cookies.set(LOCALE_COOKIE, locale, {
-    path: '/',
-    maxAge: ONE_YEAR,
-    sameSite: 'lax',
-  });
+/**
+ * Refreshes an existing choice; never creates one. Two reasons it exists at all
+ * rather than dropping the write entirely:
+ *
+ * - Safari's ITP caps cookies written by JavaScript at seven days, ignoring
+ *   max-age. The old per-visit `Set-Cookie` hid that. Without a server-side
+ *   renewal an explicit choice would quietly expire after a week and the
+ *   visitor would fall back to Accept-Language — the very defect this slice
+ *   removes, arriving from the other side.
+ * - It renews the value it finds, NOT the locale of the page being visited.
+ *   Renewing with the visited locale would be the old behaviour under a new
+ *   name, and no test that starts from a clean jar would notice.
+ */
+function renewLocaleChoice(request: NextRequest, response: NextResponse) {
+  const chosen = request.cookies.get(LOCALE_COOKIE)?.value;
+  if (chosen && locales.includes(chosen as Locale)) {
+    response.cookies.set(LOCALE_COOKIE, chosen, {
+      path: '/',
+      maxAge: ONE_YEAR,
+      sameSite: 'lax',
+    });
+  }
 }
 
 export const config = {

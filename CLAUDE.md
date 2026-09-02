@@ -49,7 +49,7 @@ Two type generation systems work together:
 
 **Record routing**: `src/lib/datocms/recordInfo.ts` maps DatoCMS item types to frontend URLs via `modelPath()` from `src/i18n/paths.ts`. Used by Web Previews and SEO Analysis plugins. Handles both detail records (with slug) and singleton index models (fixed path, slug ignored).
 
-**Locale routing**: App Router uses a `[locale]` dynamic segment (`src/app/[locale]/`). Supported locales are `en` and `it`, configured in `src/i18n/config.ts`. The root layout (`src/app/layout.tsx`) provides `<html lang>` dynamically from params; the locale layout adds header, footer, Beddy script, and draft mode controls. `proxy.ts` (the Next.js 16 replacement for the deprecated `middleware` convention) redirects paths without locale prefix to `/en` and rewrites translated path segments to canonical filesystem paths.
+**Locale routing**: App Router uses a `[locale]` dynamic segment (`src/app/[locale]/`). Supported locales are `en` and `it`, configured in `src/i18n/config.ts`. The root layout (`src/app/layout.tsx`) provides `<html lang>` dynamically from params; the locale layout adds header, footer, Beddy script, and draft mode controls. `proxy.ts` (the Next.js 16 replacement for the deprecated `middleware` convention) content-negotiates the locale for prefix-less paths — an explicit choice in the `acacia_locale` cookie first, then `Accept-Language`, then English — and rewrites translated path segments to canonical filesystem paths. **The cookie is written only by a click on the language switcher**: the proxy renews an existing one so Safari's 7-day cap on JS-written cookies doesn't expire a real choice, but never creates one. A visit alone must never decide the visitor's language.
 
 **Localized path segments**: URL path segments are translated per locale (`florence` → `firenze`, `accommodations` → `appartamenti`, `districts` → `quartieri`). The translation map and utilities live in `src/i18n/paths.ts`. The proxy rewrites incoming translated paths to canonical (English) filesystem routes. All components use `modelPath()` or `localizedPath()` to generate locale-aware hrefs. To add a new translated section: add the segment to `pathSegments`, then add the model to `modelPrefixes` (detail) or `indexPaths` (singleton) in `paths.ts`.
 
@@ -179,7 +179,7 @@ Index pages backed by an `index_page` record (moods, districts, accommodations, 
 - `src/app/[locale]/not-found.tsx` — 404 page (server component, no locale access, bilingual)
 - `src/app/[locale]/error.tsx` — error boundary (`'use client'`, required by Next.js)
 - `src/app/[locale]/loading.tsx` — loading skeleton for Suspense boundaries
-- These render WITHOUT SiteHeader/SiteFooter (outside locale layout)
+- `src/app/[locale]/not-found.tsx` and `error.tsx` render **inside** the locale layout, header and footer included. Only the root `src/app/not-found.tsx` — for URLs that match no route at all — renders without them. Neither receives `params`, so neither knows its locale: the "back home" link uses `<HomeLink>`, which reads it from the URL.
 
 ## Formatting
 

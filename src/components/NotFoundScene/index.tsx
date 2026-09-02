@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import HomeLink from '@/components/HomeLink';
 
 /**
  * Creative 404 scene — a tourist lost in Florence, watercolor-styled
@@ -177,13 +177,12 @@ export default function NotFoundScene() {
           </span>
         </p>
 
-        <Link
-          href="/"
+        <HomeLink
           className="mt-9 inline-flex items-center rounded-pill bg-primary px-9 py-3.5 font-body text-caption font-medium uppercase tracking-[0.08em] text-white transition-colors duration-300 hover:bg-primary-hover"
           style={{ animation: 'nf-rise .6s ease-out .18s both' }}
         >
           Torna alla home&nbsp;·&nbsp;Back home
-        </Link>
+        </HomeLink>
       </div>
     </main>
   );

@@ -1,6 +1,6 @@
 'use client';
 
-import Link from 'next/link';
+import HomeLink from '@/components/HomeLink';
 
 export default function Error({
   reset,
@@ -41,12 +41,9 @@ export default function Error({
           >
             Riprova &nbsp;/&nbsp; Try again
           </button>
-          <Link
-            href="/"
-            className="border border-white/40 text-white/80 text-body-sm uppercase tracking-widest px-8 py-3 hover:bg-white/10 hover:border-white/60 transition-all duration-300"
-          >
+          <HomeLink className="border border-white/40 text-white/80 text-body-sm uppercase tracking-widest px-8 py-3 hover:bg-white/10 hover:border-white/60 transition-all duration-300">
             ← Torna alla home &nbsp;/&nbsp; Back to home
-          </Link>
+          </HomeLink>
         </div>
       </div>
     </div>

@@ -11,9 +11,13 @@ const LOCALE_NAMES: Record<Locale, string> = { en: 'English', it: 'Italiano' };
 
 const ONE_YEAR = 60 * 60 * 24 * 365;
 
-/** Persist the manual choice so prefix-less URLs follow it on later visits. */
+/**
+ * Persist the manual choice so prefix-less URLs follow it on later visits.
+ * This click is the only thing in the codebase that creates the cookie: the
+ * proxy renews an existing one but never writes a new one.
+ */
 function setLocaleCookie(locale: Locale) {
-  document.cookie = `NEXT_LOCALE=${locale};path=/;max-age=${ONE_YEAR};samesite=lax`;
+  document.cookie = `acacia_locale=${locale};path=/;max-age=${ONE_YEAR};samesite=lax`;
 }
 
 type Variant = 'footer' | 'header';
@@ -82,7 +86,7 @@ type Props = {
  * language: prefers the alternate URLs published by the current page (mood, FAQ
  * — localized slugs) and otherwise derives them from the live path via
  * window.location (Turbopack-safe, unlike the forbidden next/navigation hooks).
- * The click writes the NEXT_LOCALE cookie and performs a full navigation so the
+ * The click writes the acacia_locale cookie and performs a full navigation so the
  * new locale layout renders cleanly.
  */
 export default function LocaleSwitcher({
