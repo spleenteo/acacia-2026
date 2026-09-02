@@ -108,14 +108,35 @@ tutta l'attenzione.
 
 ## C: Controllo esplicito nella barra, desktop e mobile
 
-| Parte | Meccanismo                                                                                    | Flag |
-| ----- | --------------------------------------------------------------------------------------------- | :--: |
-| C1    | `variant="header"`: due codici in un contenitore con bordo, la lingua corrente su fondo pieno |      |
-| C2    | Desktop: nella terza colonna, prima della CTA Book, separato da essa                          |      |
-| C3    | Mobile: **nella barra sempre visibile**, fra il wordmark e la CTA, non nell'overlay           |      |
-| C4    | Nell'overlay mobile lo switch sparisce: sta già nella barra sopra                             |      |
-| C5    | Il contrasto segue lo stato dell'header (`onLight`), come già fanno wordmark e hamburger      |      |
-| C6    | Su mobile stretto (≤360px) la CTA Book perde il padding orizzontale per far spazio            |  ⚠️  |
+🟡 Aggiornata il 2026-09-02 con gli esiti dello spike S1.
+
+| Parte | Meccanismo                                                                                                                                                      | Flag |
+| ----- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- | :--: |
+| C1    | 🟡 `variant="header"`: due celle, quella attiva **a fondo pieno** `primary` con testo bianco (14,51:1)                                                          |      |
+| C2    | Desktop: nella terza colonna, prima della CTA, separato da essa                                                                                                 |      |
+| C3    | Mobile: **nella barra sempre visibile**, fra il wordmark e la CTA, non nell'overlay                                                                             |      |
+| C4    | Nell'overlay mobile lo switch sparisce: sta già nella barra sopra                                                                                               |      |
+| C5    | Il contrasto segue lo stato dell'header (`onLight`), come già fanno wordmark e hamburger                                                                        |      |
+| C6    | 🟡 **Sotto 400px la CTA diventa un bottone a sola icona** (calendario, `lucide-react`), con `aria-label` dalla stessa chiave di traduzione che oggi fa da testo |      |
+| C7    | 🟡 Il segmented usa `--text-label` con padding 6px: 55,7px misurati, il compromesso fra leggibilità e ingombro                                                  |      |
+
+**Perché C1 è cambiata.** Lo spike ha misurato i bordi del design system a 1,27:1 sulla barra chiara e
+2,49:1 sopra un hero navy — entrambi sotto la soglia 3:1 per i componenti non testuali. Un contenitore
+delimitato solo da quel bordo ricadrebbe nel difetto che R3 esiste per togliere. Il riempimento della
+cella attiva regge (14,51:1).
+
+**Perché C6 è cambiata, e a che prezzo.** Il collo di bottiglia misurato non è lo switch ma la CTA:
+163,6px in inglese, il 58% della barra a 320px. Con la CTA a icona il cluster destro scende da 207,6 a
+~84px e lo switch entra ovunque, 320px compresi.
+
+La soglia di 400px non è arbitraria: è dove la CTA **testuale** smette di convivere con lo switch
+(380px in inglese, 344 in italiano), più un margine. A 400px restano ~20px di margine in inglese — il
+minimo accettabile, visto che la label arriva dal CMS e può allungarsi.
+
+Il prezzo è dichiarato: sotto i 400px la CTA perde la parola, e la parola è ciò che fa cliccare un
+bottone di prenotazione. Nessuna misura dice quanto costi in conversioni; è la ragione per cui vale la
+pena tenerlo d'occhio dopo il rilascio (GA4 traccia già i click sui CTA di prenotazione, evento
+esistente dal lavoro di luglio).
 
 La forma è un segmented control: si legge come "due opzioni, una attiva". A differenza di `EN / IT`
 separati da uno slash, dice da sé che è un controllo e non un'etichetta.
@@ -133,7 +154,7 @@ separati da uno slash, dice da sé che è un controllo e non un'etichetta.
 | R4  | Il cambio lingua resta sulla stessa pagina, non rimanda alla home                                      | Must-have |   ✅    | ✅  | ✅  | ✅  |
 | R5  | `NEXT_LOCALE` è scritto solo quando l'utente sceglie davvero, mai per il solo fatto di visitare un URL | Must-have |   ❌    | ✅  | ✅  | ✅  |
 | R6  | Il nav resta di competenza dell'editor: nessuna voce di sistema mescolata a quelle del CMS             | Must-have |   ✅    | ❌  | ✅  | ✅  |
-| R7  | La barra regge in EN e IT, da mobile a desktop, senza andare a capo né schiacciare la CTA              | Must-have |   ✅    | ❌  | ✅  | ❌  |
+| R7  | La barra regge in EN e IT, da mobile a desktop, senza andare a capo né schiacciare la CTA              | Must-have |   ✅    | ❌  | ✅  | ✅  |
 | R8  | 🟡 Chi il cambio lingua lo cerca nel footer continua a trovarlo lì                                     | Must-have |   ✅    | ✅  | ✅  | ✅  |
 
 **Note**
@@ -150,30 +171,22 @@ separati da uno slash, dice da sé che è un controllo e non un'etichetta.
 
 ---
 
-## Shape selezionata: C, condizionata a uno spike
+## Shape selezionata: C 🟡 (spike chiuso)
 
 Con R2 e R8 promossi a Must-have, **A e B escono**: A fallisce R2, R6 e R7, B fallisce R2 e R3.
 Resta **C**, che però ha ancora un ❌ su R7 per via di C6 flagged.
 
-**C non è ancora dichiarabile in piedi.** Un ✅ è un'affermazione di conoscenza, e sotto i 360px non
-sappiamo se wordmark, switch e CTA convivono. I conti a mano dicono che è al limite: a 320px, tolti i
-`px-5` di padding, restano 280px per un wordmark su due righe (~85px), la CTA Book (~70px),
-l'hamburger (32px) e due `gap-3` (24px) — cioè ~69px per lo switch, quando un segmented `EN|IT`
-compatto ne chiede 64–70. Un conto che finisce sul filo non è una risposta.
+🟡 **Lo spike S1 ha chiuso C6, e R7 passa.** Le misure sul build di produzione hanno smentito il conto
+a mano in entrambe le direzioni: il wordmark è 53px, non ~85, ma la CTA è 127,3px in italiano e 163,6
+in inglese, perché la sua label viene dalle traduzioni CMS. A 320px non entrava niente in nessuna
+lingua. Con C6 nella nuova forma — CTA a icona sotto 400px — il cluster destro scende a ~84px e il
+controllo entra a ogni larghezza. Dettagli e numeri in `spike-barra-mobile.md`.
 
-### Spike S1 — lo spazio nella barra mobile
+### Spike S1 — chiuso il 2026-09-02
 
-Da fare **prima** del piano della slice che monta lo switch su mobile. Vive in `spike-barra-mobile.md`.
-
-| #     | Domanda                                                                                                |
-| ----- | ------------------------------------------------------------------------------------------------------ |
-| S1-Q1 | A 320, 360 e 390px, quanto spazio libero resta davvero nella barra fra wordmark, CTA e hamburger?      |
-| S1-Q2 | Quanto misura un segmented `EN\|IT` alle dimensioni tipografiche del design system?                    |
-| S1-Q3 | Se non ci sta, quali leve esistono già nel codice (wordmark su una riga, CTA più stretta, gap minori)? |
-| S1-Q4 | Il contrasto sullo stato `onLight` regge sopra un hero scuro come sopra la barra chiara?               |
-
-**Accettazione**: lo spike è chiuso quando sappiamo dire, con numeri misurati sul sito e non stimati,
-se il controllo entra nella barra a 320px e con quale forma.
+Esiti completi in `spike-barra-mobile.md`. In sintesi: il controllo non entrava a 320px in nessuna
+lingua, entrava da 360px in italiano e da 390px in inglese, e i bordi tenui del design system sono
+sotto la soglia di contrasto. Da qui le correzioni a C1 e C6.
 
 ## Decisioni
 
@@ -184,3 +197,11 @@ se il controllo entra nella barra a 320px e con quale forma.
 - **2026-09-02 — Il suggerimento di lingua resta fuori scope.** Chi atterra da Google su `/en` con
   browser italiano continuerà ad atterrare in inglese: P1–P3 tolgono il cookie che _incolla_ la lingua
   sbagliata, non l'atterraggio in sé. È il candidato naturale per il lavoro successivo.
+- 🟡 **2026-09-02 — CTA a sola icona sotto 400px.** Scelta dell'utente fra le leve misurate dallo spike.
+  L'alternativa raccomandata era una label breve dedicata sotto `lg` (una chiave `Translation` in più,
+  la parola conservata); scartata. Il rischio accettato è che sotto i 400px il bottone di prenotazione
+  perda la parola. Da rivedere se i click sui CTA calano: l'evento GA4 esiste già.
+- 🟡 **2026-09-02 — Soglia a 400px, non a un breakpoint standard.** Sotto `sm` (640px) e sotto `lg`
+  l'icona comparirebbe anche dove lo spazio abbonda (a 768px restano 467px liberi). Serve quindi una
+  soglia arbitraria `min-[400px]:`, e il Done della slice deve verificare che la classe sopravviva al
+  build: su questo repo è già successo che una classe arbitraria non finisse nel CSS di produzione.
