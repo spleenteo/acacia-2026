@@ -16,20 +16,19 @@ function setLocaleCookie(locale: Locale) {
   document.cookie = `NEXT_LOCALE=${locale};path=/;max-age=${ONE_YEAR};samesite=lax`;
 }
 
-type Variant = 'footer' | 'menu' | 'header';
+type Variant = 'footer' | 'header';
 
 type Tone = { active: string; idle: string; sep: string };
 
 /**
- * Tones for the two inline (slash-separated) variants. Typing the map over
- * `Exclude<Variant, 'header'>` is what makes a fourth variant a compile error
- * instead of a silent fall-through: the ternary this replaces dressed anything
- * that wasn't `footer` as `menu`, so a new variant would have shipped white
- * text onto the white bar without a single type error.
+ * Tone for the inline (slash-separated) variant. Typing the map over
+ * `Exclude<Variant, 'header'>` keeps the two halves honest in both directions:
+ * a variant added to the union without a tone fails to compile, and a tone
+ * left behind for a variant that no longer exists fails too — which is how the
+ * `menu` entry left with its last call site instead of lingering as dead code.
  */
 const INLINE_TONES = {
   footer: { active: 'text-white/90', idle: 'text-white/45 hover:text-white', sep: 'text-white/25' },
-  menu: { active: 'text-white', idle: 'text-white/55 hover:text-white', sep: 'text-white/30' },
 } satisfies Record<Exclude<Variant, 'header'>, Tone>;
 
 /**

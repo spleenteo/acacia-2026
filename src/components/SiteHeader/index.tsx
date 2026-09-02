@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { Calendar } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useHeaderOverDark } from '@/components/HeaderTheme';
 import { useBooking } from '@/components/BookingModal';
@@ -159,24 +160,41 @@ export default function SiteHeader({ locale, navItems }: Props) {
           {/* Right: Book + hamburger (mobile/tablet). Contact lives only in the
               mobile menu now. */}
           <div className="flex items-center justify-end gap-3 lg:justify-self-end lg:gap-5">
-            {/* Language — desktop only in V1. V2 drops the wrapper and shows it
-                at every width, which is the point of the whole work. It lives
-                inside this cluster, not as a fourth child of the grid: the grid
-                is lg:grid-cols-[1fr_auto_1fr] and a fourth child would wrap. */}
-            <div className="hidden lg:flex">
-              <LocaleSwitcher locale={locale} variant="header" onLight={onLight} />
-            </div>
+            {/* Language — visible at every width: that is the point of the
+                work. It lives inside this cluster, not as a fourth child of the
+                grid, which is lg:grid-cols-[1fr_auto_1fr] and would wrap. The
+                bar sits above the mobile overlay, so a click here has to close
+                it — hence onNavigate. */}
+            <LocaleSwitcher
+              locale={locale}
+              variant="header"
+              onLight={onLight}
+              onNavigate={() => setMenuOpen(false)}
+            />
 
-            {/* Primary CTA — Book (always) → opens the site-wide booking modal */}
+            {/* Primary CTA — Book. Below `xs` (400px) it drops to the icon
+                alone: measured, the English label is 163.6px, 58% of a 320px
+                bar, and it comes from a CMS string that can grow. The
+                accessible name is the same word in both forms. The source told
+                to GA4 distinguishes them, because a drop in bookings from the
+                icon is the only signal that would revisit this decision. */}
             <button
               type="button"
+              aria-label={t('book')}
               onClick={() => {
                 setMenuOpen(false);
-                openBooking({ source: 'header' });
+                openBooking({
+                  source: window.matchMedia('(min-width: 400px)').matches
+                    ? 'header-bar'
+                    : 'header-icon',
+                });
               }}
-              className="inline-flex rounded-pill bg-primary px-4 py-2 font-body text-caption font-medium tracking-[0.06em] text-white transition-colors duration-300 hover:bg-primary-hover lg:px-5 lg:py-2.5"
+              className="inline-flex items-center justify-center rounded-pill bg-primary px-3 py-2 font-body text-caption font-medium tracking-[0.06em] text-white transition-colors duration-300 hover:bg-primary-hover xs:px-4 lg:px-5 lg:py-2.5"
             >
-              {t('book')}
+              {/* 5.5 × the 0.25rem spacing unit = 22px, the height of the text
+                  line it replaces, so the bar does not grow. */}
+              <Calendar aria-hidden className="size-5.5 xs:hidden" />
+              <span className="hidden xs:inline">{t('book')}</span>
             </button>
 
             {/* Hamburger / X — mobile & tablet (up to lg) */}
@@ -251,14 +269,13 @@ export default function SiteHeader({ locale, navItems }: Props) {
               type="button"
               onClick={() => {
                 setMenuOpen(false);
-                openBooking({ source: 'header' });
+                openBooking({ source: 'header-menu' });
               }}
               className="flex-1 rounded-pill bg-primary px-6 py-3 text-center font-body text-body-sm font-medium tracking-wide text-white transition-colors duration-300 hover:bg-primary-hover"
             >
               {t('book')}
             </button>
           </div>
-          <LocaleSwitcher locale={locale} variant="menu" onNavigate={() => setMenuOpen(false)} />
         </div>
       </div>
     </>

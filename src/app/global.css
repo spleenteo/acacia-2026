@@ -125,6 +125,7 @@
      BREAKPOINTS
      ══════════════════════════════════════ */
 
+  --breakpoint-xs: 400px;
   --breakpoint-sm: 480px;
   --breakpoint-md: 720px;
   --breakpoint-lg: 1024px;
