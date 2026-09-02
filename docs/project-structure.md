@@ -91,7 +91,6 @@ acacia-next/
 │   └── skills/
 │       └── realtime-page-pattern/SKILL.md     # Project skill: page creation pattern
 ├── docs/
-│   ├── change-log.md                          # Version changelog
 │   ├── how-to.md                              # Internal reference (AI-optimized)
 │   ├── project-structure.md                   # This file
 │   ├── pre-launch-review.md                   # Pre-launch audit, June 2026
@@ -103,6 +102,8 @@ acacia-next/
 ├── tsconfig.json                              # TypeScript strict + gql.tada plugin
 ├── postcss.config.mjs                         # PostCSS with Tailwind
 ├── next.config.mjs                            # Next.js config
+├── CHANGELOG.md                               # Version changelog (devflow-docs)
+├── .version                                   # Application version, one line
 ├── .nvmrc                                     # Node 25
 ├── public/
 │   ├── logo--main.svg                         # Full wordmark SVG (ratio ~3.6:1)

@@ -2,6 +2,60 @@
 
 > Entries are ordered by version. **v0.8.0, v0.8.1 and v0.9.0 were reconstructed in September 2026** from the git history and the shaping documents of work that shipped without being recorded at the time — v0.9.0 (21 June) therefore carries a date one day later than v1.0.0 (20 June), which kept the number it was released under.
 
+## v1.4.0 — 2026-09-02 — The language switch is where people look for it
+
+Guests reported not finding how to change language: it sat in the footer, on the
+assumption that browser language negotiation would spare most of them from
+needing it. It now sits in the header bar at every width, and a visit alone no
+longer decides which language someone gets.
+
+- **The switch is in the bar**: a segmented control before the booking button,
+  on desktop and on mobile alike, whose filled cell inverts with the header —
+  navy on the light bar, white over a dark hero. On mobile it used to be inside
+  the hamburger overlay, below the buttons, where the people who needed it were
+  never going to look.
+- **The booking button makes room below 400px**: it keeps its name but shows a
+  calendar icon instead of its label. Measured, the English label alone takes
+  58% of a 320px bar, and it comes from a CMS string that can grow at any time.
+- **Switching keeps you on the page you were reading**, now also when you
+  cmd-click, middle-click or open in a new tab. Before, those went to the home
+  page from every page except moods, FAQ and the magazine.
+- **The language is remembered only when chosen**: arriving on an English URL
+  from a search no longer marks the visitor as an English reader for the next
+  year. The cookie is written by the switch and by nothing else; the proxy
+  refreshes an existing one, so an explicit choice survives Safari's seven-day
+  cap on cookies written by JavaScript.
+- **Landing on a 404 or an error no longer changes your language** on top of an
+  already-failed request.
+- **Known limit**: someone arriving from a search still lands in whatever
+  language the link carries. What changed is that the wrong language no longer
+  sticks to them, and the way out is now visible. Suggesting a language to those
+  visitors is deliberately left to a separate work.
+- **Work**: `locale-switcher`
+
+---
+
+## v1.3.3 — 2026-09-02 — Finished work moved out of the way
+
+Nine works whose documents were still open in `docs/shaping/` and `pitches/` had
+all shipped months ago. Every session that explored `docs/` paid for them in
+context while reading decisions taken long before.
+
+- **Archived**: the nine works moved to a folder Claude is denied read access
+  to, each keeping its documents plus a reconstructed record of how it ended and
+  what it left open. `docs/lavori/archiviati.md` stays outside and is the only
+  readable trace they existed.
+- **Changelog backfilled**: seven entries were missing — the FAQ section, the
+  audit fixes, Site Search, the POI work, GA4 under Consent Mode, the legacy
+  redirects and the dependency refresh — reconstructed from the git history and
+  the shaping documents so that archiving would not bury their outcome.
+- **Three works were archived with known leftovers**, recorded in the index
+  because it is the only place that stays readable: a must-have never done in
+  `cms-realignment`, two slices parked in `audit-fixes`, and the phase-2 notes
+  of `home-search`.
+
+---
+
 ## v1.3.2 — 2026-09-01 — Dependency refresh: every audit advisory cleared
 
 Two months without a lockfile refresh had piled up 16 advisories, 9 of them high-severity ones on Next itself. The tree is back to zero.

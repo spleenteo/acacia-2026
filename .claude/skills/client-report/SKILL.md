@@ -21,7 +21,7 @@ git diff --stat $(git log --all --oneline --after="$(date +%Y-%m-%d) 00:00" --fo
 
 Also read:
 
-- `docs/change-log.md` — check for entries dated today
+- `CHANGELOG.md` (repo root) — check for entries dated today
 - Recent documentation updates (`git diff` on `docs/` files)
 - Any shaping docs updated today
 
