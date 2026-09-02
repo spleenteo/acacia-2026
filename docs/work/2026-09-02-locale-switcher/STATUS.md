@@ -1,7 +1,7 @@
 ---
 status: open
 phase: slice
-slice: V1
+slice: V2
 step: piano
 work: locale-switcher
 stack: react
@@ -31,7 +31,7 @@ Raccolto leggendo il codice il 2026-09-02, prima dello shaping:
 
 ## Slices
 
-- [ ] **V1** — il controllo nella barra, su desktop
+- [x] **V1** — il controllo nella barra, su desktop
 - [ ] **V2** — il controllo nella barra, su mobile + CTA a icona sotto 400px
 - [ ] **V3** — il cookie scritto solo quando l'utente sceglie
 
@@ -45,3 +45,4 @@ Raccolto leggendo il codice il 2026-09-02, prima dello shaping:
 - 2026-09-02 — shape C aggiornata con gli esiti dello spike: cella attiva a fondo pieno (C1), CTA a sola icona sotto 400px (C6, scelta dell'utente fra le leve misurate), segmented a `--text-label` 55,7px (C7). **R7 passa: C senza flag, fit check pulito** — resta lo slicing — nessun blocco
 - 2026-09-02 — migrato alle nuove convenzioni della skill (docs/work/, STATUS.md, campi inglesi); breadboard saltato e dichiarato; slicing: 3 slice (V1 desktop, V2 mobile+CTA, V3 cookie) — resta la fase impatto prima del piano di V1 — nessun blocco
 - 2026-09-02 — fase impatto: 5 lenti in parallelo, **21 problemi** (4 trovati da 3 lenti indipendenti). Slice riscritte da capo: una sola istanza del componente, cella attiva invertita per stato, cookie rinominato + rinnovo condizionale (Safari ITP), token `xs` al posto della classe arbitraria, 404/error dentro V3. **R4 corretto nel fit check: era ✅ a torto** (href alla home su quasi tutte le pagine). Baseline V3 registrato: `/` con Accept-Language it → `location: /en` — resta il piano di V1 — nessun blocco
+- 2026-09-02 — **V1 consegnata**. Piano scritto, rivisto da un subagent (16 rilievi, 4 gravi: il piano ridefiniva il Done #3 invece di rispettarlo, e il check del contrasto girava su una pagina il cui header non è mai scuro). Implementata: variante `header` segmented con inversione per stato, prop `onLight`, mappa dei toni al posto del ternario, href risolto via `useSyncExternalStore`. Playwright e `scripts/measure-header.mjs` nel repo. Tutti i Done verdi tranne il #3 (href corretto solo post-idratazione, R4 parziale per i crawler) — resta il piano di V2 — nessun blocco

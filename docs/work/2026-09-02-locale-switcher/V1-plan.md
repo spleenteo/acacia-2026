@@ -12,7 +12,7 @@
 
 - **Niente hook di `next/navigation`** (`usePathname`, `useRouter`): bug Turbopack noto, vedi CLAUDE.md. `useEffect` su `window.location` è la via consentita.
 - **Nessuna stringa hardcoded nuova.** `aria-label="Language"` esistente resta com'è: debito dichiarato in `slices.md` § Decisioni.
-- **Token del design system, non valori arbitrari**: `text-label` (0.75rem), `rounded-pill`, `bg-dark`, `text-muted`, `border-border-strong`.
+- **Token del design system dove esistono**: `text-label` (0.75rem), `rounded-pill`, `bg-dark`, `text-muted`, `border-border-strong`. L'unico valore arbitrario ammesso è `tracking-[0.06em]`, che replica quello della CTA accanto (`SiteHeader/index.tsx:169`).
 - **Il footer non deve cambiare aspetto**: `variant="footer"` mantiene esattamente le classi di oggi.
 - **Nessun test nel repo** (zero file, zero runner): al posto del ciclo TDD, ogni task chiude con comandi di verifica eseguibili il cui output atteso è scritto qui.
 
@@ -78,11 +78,12 @@ const INLINE_TONES = {
 } satisfies Record<Exclude<Variant, 'header'>, Tone>;
 
 /**
- * The header segmented control inverts with the bar it sits on. Both states
- * are 20.2:1: filling the active cell with `primary` would have measured
- * 1.39:1 against the navy bar — worse than the hairline border the spike
- * rejected — and would have spent the action colour on the one cell you
- * cannot click, inches from a blackberry CTA.
+ * The header segmented control inverts with the bar it sits on. Both states are
+ * 20.2:1 against a flat fill — the dark bar is `bg-dark/20` over a hero photo,
+ * so that figure is the floor, not the exact value. Filling the active cell
+ * with `primary` instead would have measured 1.39:1 against the navy bar,
+ * worse than the hairline border the spike rejected, and would have spent the
+ * action colour on the one cell you cannot click, inches from a blackberry CTA.
  */
 const HEADER_TONES = {
   light: {
@@ -126,11 +127,17 @@ export default function LocaleSwitcher({
   // root. Resolving it on mount is what keeps cmd-click, middle-click and
   // "open in new tab" on the current page instead of sending them home —
   // the click handler always knew the right target, the href did not.
-  const [path, setPath] = useState<string | null>(null);
-  useEffect(() => setPath(window.location.pathname), []);
+  // `suffix` carries ?query and #hash so cmd-click lands exactly where a left
+  // click would: handleSwitch already appends them, and Done #3 says the href
+  // must behave "come il click".
+  const [here, setHere] = useState<{ path: string; suffix: string } | null>(null);
+  useEffect(
+    () => setHere({ path: window.location.pathname, suffix: location.search + location.hash }),
+    [],
+  );
 
   const hrefFor = (l: Locale) =>
-    override?.[l] ?? (path ? switchLocalePath(path, locale, l) : `/${l}`);
+    override?.[l] ?? (here ? switchLocalePath(here.path, locale, l) + here.suffix : `/${l}`);
 
   const handleSwitch = (target: Locale) => {
     trackEvent('locale_switch', { from: locale, to: target, source: variant });
@@ -223,7 +230,7 @@ git commit -m "Add the header variant to LocaleSwitcher, and fix its href"
 **Interfaces:**
 
 - Consumes: `LocaleSwitcher` con `variant="header"` e `onLight` dal Task 1.
-- Produces: niente per le slice successive; V2 rimuoverà solo il wrapper `hidden lg:block`.
+- Produces: niente per le slice successive; V2 rimuoverà solo il wrapper `hidden lg:flex`.
 
 - [ ] **Step 1: Inserire il montaggio nel cluster destro**
 
@@ -235,7 +242,7 @@ Sostituire la riga 161 e l'apertura del blocco CTA con:
           <div className="flex items-center justify-end gap-3 lg:justify-self-end lg:gap-5">
             {/* Language — desktop only in V1; V2 drops the wrapper and shows it
                 at every width, which is the point of the whole work. */}
-            <div className="hidden lg:block">
+            <div className="hidden lg:flex">
               <LocaleSwitcher locale={locale} variant="header" onLight={onLight} />
             </div>
 
@@ -256,7 +263,7 @@ Atteso: nessun errore di tipo; lint con i soli 3 warning preesistenti.
 npm run build
 ```
 
-Atteso: `✓ Compiled successfully`, 205 pagine statiche generate, nessun errore.
+Atteso: `✓ Compiled successfully` e nessun errore. Il numero di pagine statiche dipende dal contenuto sul CMS: non è un valore da asserire.
 
 - [ ] **Step 4: Commit**
 
@@ -267,130 +274,237 @@ git commit -m "Mount the language switcher in the header bar on desktop"
 
 ---
 
-### Task 3: Verificare il Done della slice sul sito vero
+### Task 3: Installare Playwright e verificare il Done sul sito vero
 
 **Files:**
 
-- Create: `scripts/check-locale-switcher.mjs` (script di verifica, resta nel repo — V2 lo estenderà con la matrice delle larghezze)
+- Modify: `package.json` (aggiunge `playwright` a `devDependencies`)
+- Create: `scripts/measure-header.mjs`
 
 **Interfaces:**
 
 - Consumes: il build di produzione servito su `localhost:3111`.
-- Produces: `scripts/check-locale-switcher.mjs`, che V2 riusa aggiungendo i controlli di overflow.
+- Produces: `scripts/measure-header.mjs`, che V2 estende con la matrice delle larghezze — stesso nome che V2 dichiara, per non ritrovarsi due script o una rinomina.
 
-- [ ] **Step 1: Avviare il server di produzione**
+- [ ] **Step 1: Installare Playwright**
+
+I Done di tutte e tre le slice hanno bisogno di un browser pilotabile, e lo spike girava da una directory di sessione che non esiste più. Va nel repo adesso, non in V2.
+
+```bash
+npm i -D playwright
+```
+
+Atteso: `added N packages`. Il browser è il Chrome di sistema (`channel: 'chrome'`), quindi non serve `npx playwright install`.
+
+- [ ] **Step 2: Raccogliere gli URL reali delle tre famiglie di pagina**
+
+Done #2 nomina un mood, una FAQ profonda e un post del blog. Gli slug vanno presi dalla sitemap, non inventati.
 
 ```bash
 PORT=3111 npm run start &
+until curl -s -o /dev/null http://localhost:3111/it; do sleep 1; done
+curl -s http://localhost:3111/sitemap.xml | grep -oE '/en/(moods|faq|magazine)/[^<]+' | sort -u | head -20
 ```
 
-Attendere che `curl -s -o /dev/null http://localhost:3111/it` risponda.
+Annotare un URL per famiglia. La FAQ deve essere **profonda** (almeno due segmenti dopo `/faq/`): è il caso che esercita il catch-all ricorsivo.
 
-- [ ] **Step 2: Done #3 — l'href non punta più alla home**
-
-```bash
-curl -s http://localhost:3111/en/florence/accommodations | grep -o '<a[^>]*hrefLang="it"[^>]*>' | head -1
-```
-
-Atteso: **nessun** `href="/it"` secco. Prima di V1 questo comando restituiva `href="/it"`; ora l'href è risolto al mount, quindi nell'HTML del server resta `/it` e diventa corretto dopo l'idratazione. **Se il valore servito è ancora `/it`, è atteso**: il controllo vero è quello del passo successivo, sul DOM idratato.
-
-- [ ] **Step 3: Done #2 e #3 — click e nuova scheda sulle tre famiglie di pagina**
-
-Scrivere `scripts/check-locale-switcher.mjs`:
+- [ ] **Step 3: Scrivere `scripts/measure-header.mjs`**
 
 ```js
 /**
- * Done checks for the locale switcher (slice V1).
+ * Header checks for the locale-switcher work.
  *
- * Runs against a production build served on localhost:3111. Verifies that the
- * switch keeps the visitor on the same page — both by click and by the href
- * that cmd-click and crawlers use — on the three page families that behave
- * differently: alternate-publishing (mood, FAQ, blog) and plain.
+ * V1: the switch keeps the visitor on the same page — by click and by the href
+ * that cmd-click and "open in new tab" use — across the page families that
+ * behave differently, and the segmented control inverts with the header state.
+ * V2 will extend this with the width matrix.
+ *
+ * Usage: node scripts/measure-header.mjs [--base http://localhost:3111]
  */
 import { chromium } from 'playwright';
 
-const BASE = process.env.BASE ?? 'http://localhost:3111';
-const PAGES = [
-  { from: '/en/moods/slow-tourism', expect: /^\/it\/moods\// },
-  { from: '/en/florence/accommodations', expect: /^\/it\/firenze\/appartamenti/ },
-];
+const arg = (name, fallback) => {
+  const i = process.argv.indexOf(`--${name}`);
+  return i === -1 ? fallback : process.argv[i + 1];
+};
+const BASE = arg('base', 'http://localhost:3111');
+
+/** One per page family. `expect` is what the IT href and the landing path must match. */
+const PAGES = JSON.parse(process.env.PAGES ?? '[]');
+
+const SWITCH = 'header [role="group"][aria-label="Language"]';
+const IT_LINK = `${SWITCH} a[hreflang="it"]`;
+
+const failures = [];
+const note = (m) => failures.push(m);
 
 const browser = await chromium.launch({ channel: 'chrome' });
-const failures = [];
 
+// --- Done #2 and #3: same page, by click and by href ---------------------
 for (const { from, expect } of PAGES) {
+  const re = new RegExp(expect);
   const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
-  await page.goto(BASE + from, { waitUntil: 'networkidle' });
+  await page.goto(BASE + from, { waitUntil: 'domcontentloaded' });
 
-  const href = await page.getAttribute('header a[hreflang="it"]', 'href');
-  if (!href || !expect.test(href)) {
-    failures.push(`${from}: href is ${href}, expected ${expect}`);
-  }
+  // The href is resolved in an effect, so wait for hydration to have run
+  // rather than for the network to fall quiet.
+  await page
+    .waitForFunction(
+      (sel) => {
+        const el = document.querySelector(sel);
+        return el && el.getAttribute('href') !== '/it';
+      },
+      IT_LINK,
+      { timeout: 5000 },
+    )
+    .catch(() => note(`${from}: href still /it after hydration`));
 
-  await page.click('header a[hreflang="it"]');
-  await page.waitForURL(/\/it\//, { timeout: 5000 }).catch(() => {});
+  const href = await page.getAttribute(IT_LINK, 'href');
+  if (!href || !re.test(href)) note(`${from}: href is ${href}, expected /${expect}/`);
+
+  await page.click(IT_LINK);
+  await page.waitForURL(re, { timeout: 8000 }).catch(() => {});
   const landed = new URL(page.url()).pathname;
-  if (!expect.test(landed)) failures.push(`${from}: click landed on ${landed}, expected ${expect}`);
+  if (!re.test(landed)) note(`${from}: click landed on ${landed}, expected /${expect}/`);
 
   await page.close();
 }
 
+// --- Done #5: the footer switcher still works -----------------------------
+{
+  const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
+  const { from, expect } = PAGES[0];
+  await page.goto(BASE + from, { waitUntil: 'domcontentloaded' });
+  const footerIt = 'footer [role="group"][aria-label="Language"] a[hreflang="it"]';
+  const count = await page.locator(footerIt).count();
+  if (count !== 1) note(`footer switcher: ${count} IT links, expected 1`);
+  else {
+    await page.click(footerIt);
+    await page.waitForURL(new RegExp(expect), { timeout: 8000 }).catch(() => {});
+    const landed = new URL(page.url()).pathname;
+    if (!new RegExp(expect).test(landed)) note(`footer click landed on ${landed}`);
+  }
+  await page.close();
+}
+
+// --- Done #4: the control inverts with the header state -------------------
+// Structural, not per-URL: read the header background and the active cell in
+// both states and assert they swap. A page whose hero is dark starts in the
+// dark state; one without starts light. Either way the pair must invert.
+{
+  const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
+  await page.goto(BASE + (process.env.DARK_HERO_PAGE ?? PAGES[0].from), {
+    waitUntil: 'domcontentloaded',
+  });
+  await page.waitForTimeout(600);
+
+  const read = () =>
+    page.evaluate((sel) => {
+      const cell = document.querySelector(`${sel} [aria-current]`);
+      const header = document.querySelector('header');
+      const s = getComputedStyle(cell);
+      return {
+        fill: s.backgroundColor,
+        text: s.color,
+        bar: getComputedStyle(header).backgroundColor,
+      };
+    }, SWITCH);
+
+  const before = await read();
+  await page.evaluate(() => window.scrollTo(0, 400));
+  await page.waitForTimeout(600);
+  const after = await read();
+
+  if (before.fill === after.fill) {
+    note(`contrast: active cell did not invert on scroll (${before.fill} both times)`);
+  }
+  for (const [label, s] of [
+    ['unscrolled', before],
+    ['scrolled', after],
+  ]) {
+    if (s.fill === s.text) note(`contrast ${label}: fill and text are the same colour (${s.fill})`);
+  }
+  console.log('  header state before scroll:', JSON.stringify(before));
+  console.log('  header state after scroll: ', JSON.stringify(after));
+  await page.close();
+}
+
 await browser.close();
+
 if (failures.length) {
   console.error('FAIL\n' + failures.map((f) => '  - ' + f).join('\n'));
   process.exit(1);
 }
-console.log('OK — href and click both stay on the page, on every family tested');
+console.log('OK — href, click, footer and contrast inversion all check out');
 ```
 
-- [ ] **Step 4: Eseguirlo**
+- [ ] **Step 4: Eseguirlo con gli URL raccolti al Passo 2**
 
 ```bash
-node scripts/check-locale-switcher.mjs
+PAGES='[
+  {"from":"/en/moods/<mood-slug>","expect":"^/it/moods/"},
+  {"from":"/en/faq/<branch>/<leaf>","expect":"^/it/faq/"},
+  {"from":"/en/magazine/<post-slug>","expect":"^/it/magazine/"},
+  {"from":"/en/florence/accommodations","expect":"^/it/firenze/appartamenti"}
+]' DARK_HERO_PAGE=/en/florence/accommodations node scripts/measure-header.mjs
 ```
 
-Atteso: `OK — href and click both stay on the page, on every family tested`.
+Atteso: `OK — href, click, footer and contrast inversion all check out`.
 
-- [ ] **Step 5: Done #4 — contrasto nei due stati**
+Le prime tre pagine pubblicano URL alternati; la quarta è il controllo senza override, quella dove l'`href` prima di V1 puntava alla home. `DARK_HERO_PAGE` deve essere una pagina che monta `OverDarkHeader`: la home **non** lo fa (`Hero` senza `image` → `hasImage` falso), quindi lì l'header parte già chiaro e il confronto non proverebbe nulla.
 
-Verificare a 1280px su una pagina con hero scuro (`/it`): unscrolled la cella attiva è bianca su fondo scuro; dopo `window.scrollTo(0,100)` l'header diventa chiaro e la cella attiva è navy su bianco. Controllo automatico dei colori calcolati:
+- [ ] **Step 5: Done #3 — la forma servita dal server, per quello che è**
 
 ```bash
-node -e "
-import('playwright').then(async ({ chromium }) => {
-  const b = await chromium.launch({ channel: 'chrome' });
-  const p = await b.newPage({ viewport: { width: 1280, height: 900 } });
-  await p.goto('http://localhost:3111/it', { waitUntil: 'networkidle' });
-  const read = () => p.evaluate(() => {
-    const el = document.querySelector('header [role=group][aria-label=Language] [aria-current]');
-    const s = getComputedStyle(el);
-    return { bg: s.backgroundColor, color: s.color };
-  });
-  console.log('unscrolled', await read());
-  await p.evaluate(() => window.scrollTo(0, 200));
-  await p.waitForTimeout(500);
-  console.log('scrolled  ', await read());
-  await b.close();
-});
-"
+curl -s http://localhost:3111/en/florence/accommodations | grep -oi '<a[^>]*hreflang="it"[^>]*>' | head -1
 ```
 
-Atteso: `unscrolled` con `bg: rgb(255, 255, 255)` e `color: rgb(0, 1, 42)`; `scrolled` con `bg: rgb(0, 1, 42)` e `color: rgb(255, 255, 255)`.
+Atteso: contiene ancora `href="/it"`. **Questo è un mancato raggiungimento del Done #3 come scritto**, non un dettaglio: l'attributo è corretto solo dopo l'idratazione, quindi cmd-click e tasto centrale funzionano ma i crawler no. Va registrato negli Scostamenti (Task 4), non silenziato.
 
-- [ ] **Step 6: Done #5 — il footer è intatto**
+L'attributo HTML è `hreflang` minuscolo: `grep` per `hrefLang` non trova mai nulla e passerebbe a vuoto.
+
+- [ ] **Step 6: Fermare il server e committare**
 
 ```bash
-curl -s http://localhost:3111/en/moods/slow-tourism | grep -c 'aria-label="Language"'
+lsof -ti tcp:3111 | xargs kill
+git add package.json package-lock.json scripts/measure-header.mjs
+git commit -m "Add Playwright and the header checks for V1"
 ```
 
-Atteso: `2` — quello del footer e quello dell'header desktop (l'overlay mobile ne aggiunge uno solo quando è renderizzato; qui il markup è sempre nel DOM, quindi il valore atteso è **3** se l'overlay è presente nell'HTML servito. Registrare il numero trovato: serve a V2 come baseline, dove deve scendere di uno.)
+`pkill -f "next-server.*3111"` non funziona: il titolo del processo di Next non porta la porta.
 
-- [ ] **Step 7: Fermare il server e committare**
+---
+
+### Task 4: Registrare gli scostamenti e chiudere la slice
+
+**Files:**
+
+- Modify: `docs/work/2026-09-02-locale-switcher/slices.md` (§ _Scostamenti emersi_, tabella delle slice)
+- Modify: `docs/work/2026-09-02-locale-switcher/STATUS.md` (checkbox V1, Log, `slice:`/`step:`)
+- Modify: `docs/work/2026-09-02-locale-switcher/shaping.md` (riferimento di riga sbagliato in CUR3)
+
+- [ ] **Step 1: Scrivere gli scostamenti in `slices.md`**
+
+Quattro voci, sotto § _Scostamenti emersi_:
+
+1. **Done #3 non raggiunto come scritto.** L'`href` è corretto solo dopo l'idratazione: cmd-click e tasto centrale sì, crawler no. Renderlo giusto in SSR richiede che il proxy inoltri il pathname in un header, cioè territorio di V3. **R4 resta parziale**: chiuso per le persone, aperto per i crawler.
+2. **`satisfies Record<Exclude<Variant, 'header'>, Tone>`** invece del `Record<Variant, Tone>` che il mandato chiedeva: la variante `header` ha un ramo di render proprio e non un tono inline, e l'`Exclude` dà la stessa garanzia di esaustività (verificato: una quarta variante produce due errori di compilazione).
+3. **Due file in più rispetto ai due dichiarati**: `package.json` (Playwright fra le devDependencies) e `scripts/measure-header.mjs`. Erano attribuiti a V2, ma i Done di V1 non sono eseguibili senza.
+4. **`hrefFor` porta anche `?query` e `#hash`**, che il mandato non nominava: senza, cmd-click su una ricerca o su un'ancora atterrerebbe altrove rispetto al click sinistro, contro il "come il click" del Done #3.
+
+- [ ] **Step 2: Correggere il riferimento di riga in `shaping.md`**
+
+CUR3 cita `SiteHeader/index.tsx:283` per il montaggio dello switcher nell'overlay; la riga reale è **253**. V2 lavorerà proprio lì.
+
+- [ ] **Step 3: Aggiornare `STATUS.md`**
+
+Spuntare V1 nella lista delle slice, portare `slice: V2` e `step: piano`, aggiungere la riga di Log con cosa si è scoperto.
+
+- [ ] **Step 4: Commit**
 
 ```bash
-pkill -f "next-server.*3111"
-git add scripts/check-locale-switcher.mjs
-git commit -m "Add the V1 Done checks as a script"
+git add docs/work/2026-09-02-locale-switcher/
+git commit -m "Close V1: record the deviations"
 ```
 
 ---
@@ -413,4 +527,4 @@ git commit -m "Add the V1 Done checks as a script"
 
 **Coerenza dei nomi**: `Variant`, `Tone`, `INLINE_TONES`, `HEADER_TONES`, `onLight`, `hrefFor`, `handleSwitch` sono usati con la stessa grafia in tutti i task.
 
-**Punto lasciato aperto di proposito**: l'HTML servito dal server continua a contenere `href="/it"`, perché il pathname esiste solo nel browser. La correzione agisce dopo l'idratazione, che è ciò che serve per cmd-click e tasto centrale ma non per i crawler. Renderlo giusto anche in SSR vorrebbe dire passare il pathname dal server, ed è fuori dal mandato di V1: annotato negli Scostamenti.
+**Punto lasciato aperto di proposito**: l'HTML servito continua a contenere `href="/it"`, perché il pathname esiste solo nel browser. Vale per cmd-click e tasto centrale, non per i crawler — quindi il Done #3 **non è raggiunto come scritto**, e R4 resta parziale. Registrato come primo scostamento nel Task 4 invece che dichiarato passato.

@@ -53,7 +53,7 @@ Feedback raccolto a voce dagli utenti, nessun materiale scritto.
 | ----- | -------------------------------------------------------------------------------------------------------------- |
 | CUR1  | `LocaleSwitcher` client component, due varianti grafiche già esistenti: `footer` e `menu`                      |
 | CUR2  | Desktop: montato **solo** nel footer (`SiteFooter/index.tsx:135`), banda navy, `text-white/45`                 |
-| CUR3  | Mobile: montato nell'overlay dell'hamburger (`SiteHeader/index.tsx:283`), in fondo, sotto i CTA Contact e Book |
+| CUR3  | Mobile: montato nell'overlay dell'hamburger (`SiteHeader/index.tsx:253`), in fondo, sotto i CTA Contact e Book |
 | CUR4  | Il click scrive `NEXT_LOCALE`, poi `window.location.assign()` sulla pagina equivalente nell'altra lingua       |
 | CUR5  | `AlternateLocaleProvider` nel layout: le pagine con slug localizzato (mood, FAQ) pubblicano gli URL alternati  |
 | CUR6  | `proxy.ts` negozia `Accept-Language` **solo** per URL senza prefisso di lingua                                 |

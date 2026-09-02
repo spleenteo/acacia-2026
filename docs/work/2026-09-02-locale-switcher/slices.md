@@ -15,11 +15,11 @@ shaping: true
 Tre slice, ognuna dimostrabile da sola. Il breadboard è stato saltato: le affordance sono sei, su file
 già noti, e i collegamenti sono espliciti nelle parti di C.
 
-| Slice  | Copre          | File toccati                                                                      | Rischio | Stato   |
-| ------ | -------------- | --------------------------------------------------------------------------------- | ------- | ------- |
-| **V1** | C1, C2, C7     | `LocaleSwitcher/index.tsx`, `SiteHeader/index.tsx`                                | medio   | da fare |
-| **V2** | C3, C4, C5, C6 | `SiteHeader/index.tsx`, `global.css`, `scripts/measure-header.mjs`                | medio   | da fare |
-| **V3** | P1, P2, P3     | `proxy.ts`, `LocaleSwitcher/index.tsx`, `NotFoundScene`, `error.tsx`, `CLAUDE.md` | medio   | da fare |
+| Slice  | Copre          | File toccati                                                                      | Rischio | Stato    |
+| ------ | -------------- | --------------------------------------------------------------------------------- | ------- | -------- |
+| **V1** | C1, C2, C7     | `LocaleSwitcher/index.tsx`, `SiteHeader/index.tsx`                                | medio   | ✅ fatta |
+| **V2** | C3, C4, C5, C6 | `SiteHeader/index.tsx`, `global.css`, `scripts/measure-header.mjs`                | medio   | da fare  |
+| **V3** | P1, P2, P3     | `proxy.ts`, `LocaleSwitcher/index.tsx`, `NotFoundScene`, `error.tsx`, `CLAUDE.md` | medio   | da fare  |
 
 **Una sola istanza del componente.** Il piano precedente ne montava due (una desktop, una mobile) più
 quella del footer: tre `role="group"` identici nel DOM. Ne va montata **una sola**, dentro il cluster
@@ -221,7 +221,45 @@ risolvere `/` in inglese), `AlternateLocaleProvider` (avvolge davvero l'header),
 
 ## Scostamenti emersi
 
-<!-- Da riempire scrivendo i piani di dettaglio -->
+**V1, scrivendo ed eseguendo il piano:**
+
+1. **Done #3 non raggiunto come scritto.** L'`href` è corretto solo dopo l'idratazione: cmd-click,
+   tasto centrale e apri-in-nuova-scheda funzionano, i crawler no, perché nell'HTML servito resta
+   `/it`. Il pathname esiste solo nel browser; renderlo giusto in SSR richiede che il proxy inoltri il
+   percorso in un header, cioè territorio di V3. **R4 resta parziale**: chiuso per le persone, aperto
+   per i crawler. Registrato invece che dichiarato passato.
+2. **`satisfies Record<Exclude<Variant, 'header'>, Tone>`** invece del `Record<Variant, Tone>` che il
+   mandato chiedeva: la variante `header` ha un ramo di render proprio e nessun tono inline. La
+   garanzia è la stessa — verificato che una quarta variante produce due errori di compilazione.
+3. **Due file in più** rispetto ai due dichiarati: `package.json` (Playwright fra le devDependencies) e
+   `scripts/measure-header.mjs`. Erano attribuiti a V2, ma i Done di V1 non sono eseguibili senza.
+4. **`hrefFor` porta anche `?query` e `#hash`**, che il mandato non nominava: senza, cmd-click su una
+   ricerca o su un'ancora atterrerebbe altrove rispetto al click sinistro, contro il "come il click".
+5. **`useSyncExternalStore` invece di `useState` + `useEffect`**: `react-hooks` 7 vieta `setState`
+   dentro un effect (`react-hooks/set-state-in-effect`, errore non warning). Limite noto che ne
+   deriva: una navigazione client-side con `<Link>` non emette `popstate`, quindi l'`href` può restare
+   quello della pagina precedente fino al render successivo. Il click legge `location` ogni volta, ed
+   è quindi sempre corretto.
+
+## V1 — fatta il 2026-09-02
+
+Consegnata. Tutti i Done verdi tranne il #3, che è lo scostamento 1 qui sopra.
+
+**Lezioni per le slice successive** — ognuna è costata tempo qui, e si ripresenterà:
+
+- **`pkill -f "next-server.*3111"` non uccide il server**: il titolo del processo di Next non porta la
+  porta. Il server dello spike è rimasto vivo e ha servito una build vecchia, facendo fallire i check
+  contro un DOM che non conteneva ancora le modifiche. Usare `lsof -ti tcp:3111 | xargs kill` e
+  verificare che la porta sia libera prima di ricostruire.
+- **`rm -rf` è intercettato in questa shell** (`Use del, or the full path`): serve `/bin/rm -rf .next`,
+  altrimenti la cancellazione fallisce in silenzio e si ricostruisce sopra la cache.
+- **React 19 emette `hrefLang` in camelCase nell'HTML servito**, non `hreflang`. Un `grep` sensibile
+  alle maiuscole non trova mai nulla e passa a vuoto; il selettore CSS invece funziona, perché il DOM
+  normalizza i nomi degli attributi. Per i controlli via `curl` usare sempre `grep -i`.
+- **`grep -c` conta le righe, non le occorrenze**: l'HTML di Next sta su una riga sola, quindi
+  restituisce 1 qualunque sia il numero di elementi. Per contare usare `grep -o … | wc -l`.
+- **Nell'HTML servito ci sono tre switcher** (barra desktop, overlay mobile, footer): l'overlay è
+  sempre nel DOM, nascosto via CSS, non montato condizionalmente. Dopo V2 devono scendere a due.
 
 ## Decisioni
 
