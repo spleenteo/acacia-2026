@@ -1,5 +1,55 @@
 # Changelog
 
+> Entries are ordered by version. **v0.8.0, v0.8.1 and v0.9.0 were reconstructed in September 2026** from the git history and the shaping documents of work that shipped without being recorded at the time — v0.9.0 (21 June) therefore carries a date one day later than v1.0.0 (20 June), which kept the number it was released under.
+
+## v1.3.2 — 2026-09-01 — Dependency refresh: every audit advisory cleared
+
+Two months without a lockfile refresh had piled up 16 advisories, 9 of them high-severity ones on Next itself. The tree is back to zero.
+
+- **Lockfile refresh**: `npm update` alone — no semver range in `package.json` had to move — took the tree from 16 advisories to none. Next 16.2.7 to 16.3.4 (cache confusion on requests with bodies, SSRF in rewrites, Image Optimization DoS via SVG, Server Function endpoint disclosure), plus `sharp` 0.35.4 and `uuid` 11.1.1 in transitive position.
+- **DatoCMS clients to their next major**: `@datocms/cma-client` 6 and `@datocms/cda-client` 0.3. Neither breaking change touches this codebase — nothing here calls the `uploads` simple methods, and only `executeQuery` is imported from the barrel.
+- **API token kept out of the logs**: `rest-client-utils` 6.1.1 redacts the token from the errors the clients throw. `handleUnexpectedError()` logs the whole error server-side, so until now a failing CMA call could write the token into the log along with it.
+- **Deferred on purpose**: TypeScript 7 (no stable programmatic API before 7.1, so `typescript-eslint` and the `gql.tada` ts-plugin cannot run on it), ESLint 10, Prettier, `node-html-parser`.
+- **Release**: `20e105f`, `ffb7a01`
+
+---
+
+## v1.3.1 — 2026-07-18 — Legacy URLs redirected instead of 404ing
+
+Search Console was reporting 404s on URL patterns from the old Middleman site that had no equivalent here.
+
+- **Redirect map**: Permanent redirects in `next.config.mjs` for the legacy `/index.html` files, the retired apartment pages, and the old services, offers, events and acacialife sections — each to the closest live page rather than the home page where a better target existed.
+- **Release**: `c18bb9c`
+
+---
+
+## v1.3.0 — 2026-07-10 — GA4 behind Consent Mode, richer apartment cards
+
+Analytics came back online under a consent layer, and the card and hero work from early July landed.
+
+- **GA4 under Google Consent Mode v2**: Analytics is gated on `NEXT_PUBLIC_GA_ID` and wired to Consent Mode. The Iubenda banner got explicit accept and reject buttons, and its purposes are mapped onto Consent Mode signals through an explicit callback rather than the automatic bridge, which did not fire.
+- **Analytics granted by default**: The `analytics_storage` signal starts granted for every visitor. A deliberate choice, not an oversight — cookieless measurement stays available through Vercel Analytics.
+- **Conversion tracking**: Booking CTAs and site searches are reported to GA4; client-side route changes count as pageviews.
+- **Apartment card**: Shows claim and district instead of the badge, and tints the name with a wonky highlight sampled from the photo's palette.
+- **Code-review pass**: Stega stripped on every non-render path, duplicate SEO tags removed, token handling tightened.
+- **Search Console**: HTML-tag verification added; self-hosted webfonts kept out of the crawl.
+- **Release**: `c9083e9`, `4f59a2c`, `8b048b1`, `c8326fb`, `322f704`, `92fd939`, `4d46de6`
+
+---
+
+## v1.2.0 — 2026-07-02 — Points of interest and cross-content masonry
+
+Districts and moods stopped being lists of one thing each: POIs, gallery images, posts and apartments now share the same grid.
+
+- **POIs on the site**: A reusable `PoiCard` renders POI records in mood related content, and district pages pull their POIs through an inverse query. The masonry can be filtered by content type.
+- **District detail aligned with moods**: Two-column masonry, expanded desktop text, polaroid treatment on caption images.
+- **Moods on `relatedContent`**: Migrated off the removed `mood_item` model to the `relatedContent` union.
+- **Schema cleanup**: Block models carry a `_block` suffix; the unused `guest_post`, `offer`, `image`, `paragraph`, `redirect` and `hero_block` models are gone, along with seven orphaned fields.
+- **POI import skill**: `.claude/skills/poi-import/` turns a photographed POI list into draft records.
+- **Release**: `ba9917d`, `500a72e`, `d061e9d`, `caa2b9a`, `81c1e4e`
+
+---
+
 ## v1.1.0 — 2026-06-28 — District detail: unified content masonry + Post blocks
 
 The district `gallery` field gained a Post block type; the district detail page now renders apartments, gallery photos, and posts together in one shuffled masonry.
@@ -44,6 +94,51 @@ The single-instance `index_*` models were consolidated into one reusable `index_
 Design note: a collection needs a stable selector. DatoCMS filters localized slugs against the queried locale, so each `index_page` record's per-locale slug is set to its route's localized final segment (e.g. `accommodations`/`appartamenti`, `magazine`/`magazine`) — selection and URL stay in lockstep.
 
 Migration note: the legacy `index_*` singleton models are unhooked from the frontend but left in DatoCMS. Before deleting them, repoint any remaining menu items to the matching `index_page` records (some were still pointing at singletons per-locale).
+
+---
+
+## v0.9.0 — 2026-06-21 — Site Search: results page and hero search box
+
+Reconstructed entry. The site gained a real search, backed by the DatoCMS Site Search index.
+
+- **Backend**: A `/api/search` route handler proxies the Site Search index server-side, keeping the CMA token off the client. Results are restricted to the queried locale by URL prefix.
+- **Results page**: `/{locale}/search` renders live results with term highlighting and relative links; type filters carry counters, and each type gets its own card shape (apartment thumbnails, category kickers).
+- **Ranking**: Results are re-ranked by slug, title and type match, with term coverage first, because the index's own order buried exact matches.
+- **Hero search box**: The home hero swapped its buttons for a `SearchBox` with bilingual typewriter prompts, a wonky `<em>` highlight, and a shareable `?q=` in the URL.
+- **Known limits**: Nav and footer text still pollutes the excerpts — the crawler cannot exclude page regions — and the API returns at most 100 results, so per-type counters reflect the first 100 when the total is higher.
+- **Work**: `home-search`
+- **Release**: `2defb83`, `85d1aba`, `abfdd82`, `9bb7836`, `a82bca2`, `77d665f`
+
+---
+
+## v0.8.1 — 2026-06-17 — Audit fixes: security, de-duplication, performance
+
+Reconstructed entry. A project audit produced eight requirements; the five that mattered shipped in a day.
+
+- **Security**: Closed an open redirect and stopped error responses from leaking internals to the caller.
+- **Shared card image**: `CardImage`, a shared excerpt helper and an `ease-card` token replaced four near-identical card implementations.
+- **Generic widget list**: One `WidgetList` now backs amenities, comforts and essentials.
+- **Less page boilerplate**: `indexAlternates` and `localeSlugParams` in `i18n/paths` removed the metadata and static-params duplication across nine pages.
+- **Faster apartment detail**: The page's secondary queries run in parallel.
+- **Build**: Schema codegen is skipped on Vercel and CI, where the tokens are not available.
+- **Deferred**: V6 and V7 (maintainability only, high regression risk on working code) were parked in the backlog on 2026-06-17 and never picked up.
+- **Work**: `audit-fixes`
+- **Release**: `3e01dff`, `5b958fa`, `3d597e4`, `a17b4df`, `6b982a9`, `6a3fe73`
+
+---
+
+## v0.8.0 — 2026-06-12 — FAQ section
+
+Reconstructed entry. A full FAQ section, modelled as a tree and rendered as documentation-style pages.
+
+- **Tree model and routing**: FAQ records form a tree in DatoCMS, served by a recursive catch-all route (`/faq/[[...slug]]`) that resolves any depth of branch.
+- **Answers as Structured Text**: Answers render Structured Text with internal record links, embeddable blocks and related posts.
+- **Short and long answer**: Each entry leads with a highlighted TL;DR and opens the full answer behind "read more".
+- **Node pages**: Documentation-style layout with a scrollable left side nav and a wonky active marker.
+- **SEO**: `FAQPage` JSON-LD, sitemap entries, `recordInfo` mapping and a menu entry.
+- **Editing**: Draft mode, realtime preview and visual editing work on FAQ pages like on the rest of the site.
+- **Work**: `faq-section`
+- **Release**: `c3348b4`, `3061fd2`, `14166b5`, `de4b5df`, `4c21fc7`, `38e93c3`, `f06d336`
 
 ---
 
