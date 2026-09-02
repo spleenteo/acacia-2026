@@ -94,9 +94,9 @@ acacia-next/
 │   ├── how-to.md                              # Internal reference (AI-optimized)
 │   ├── project-structure.md                   # This file
 │   ├── pre-launch-review.md                   # Pre-launch audit, June 2026
-│   └── lavori/                                # devflow works, one folder per work
-│       ├── archiviati.md                      # Index of the archived ones — readable
-│       └── __Archived/                        # Closed works. Denied in .claude/settings.json
+│   └── work/                                  # devflow works, one folder per work
+│       ├── archived.md                        # Index of the archived ones — readable
+│       └── archive/                           # Closed works. Denied in .claude/settings.json
 ├── src/proxy.ts                                # Locale redirect + translated path rewrite + /blog→/magazine 301 (Next 16 proxy, replaces middleware)
 ├── schema.graphql                             # Auto-generated DatoCMS schema
 ├── tsconfig.json                              # TypeScript strict + gql.tada plugin

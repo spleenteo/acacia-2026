@@ -1,11 +1,11 @@
 ---
 tags: [lavori, archivio, indice]
-description: "Indice dei lavori archiviati in docs/lavori/__Archived/, cartella che Claude non legge. Questo file sta fuori ed è l'unica traccia che quei lavori siano esistiti."
+description: "Indice dei lavori archiviati in docs/work/archive/, cartella che Claude non legge. Questo file sta fuori ed è l'unica traccia che quei lavori siano esistiti."
 ---
 
 # Lavori archiviati
 
-> `docs/lavori/__Archived/` contiene i lavori conclusi. Claude non la legge: `.claude/settings.json` nega `Read` e `Grep` su quel percorso. Questo file sta fuori e dice dove trovare l'esito di ogni lavoro. Si aggiorna con `/devflow-archive`.
+> `docs/work/archive/` contiene i lavori conclusi. Claude non la legge: `.claude/settings.json` nega `Read` e `Grep` su quel percorso. Questo file sta fuori e dice dove trovare l'esito di ogni lavoro. Si aggiorna con `/devflow-archive`.
 
 I nove lavori qui sotto sono **precedenti all'adozione di devflow**: vivevano in `docs/shaping/`, `docs/pitches/` e `pitches/`. Il 2026-09-02 sono stati riorganizzati nella struttura devflow (`<data>-<slug>/` con `pitch.md`, `shaping.md`, `slices.md`) e archiviati in blocco. Lo `STATO.md` di ognuno è ricostruito dai documenti e dalla storia git, non scritto durante il lavoro.
 

@@ -43,7 +43,7 @@ context while reading decisions taken long before.
 
 - **Archived**: the nine works moved to a folder Claude is denied read access
   to, each keeping its documents plus a reconstructed record of how it ended and
-  what it left open. `docs/lavori/archiviati.md` stays outside and is the only
+  what it left open. `docs/work/archived.md` stays outside and is the only
   readable trace they existed.
 - **Changelog backfilled**: seven entries were missing — the FAQ section, the
   audit fixes, Site Search, the POI work, GA4 under Consent Mode, the legacy
