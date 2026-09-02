@@ -1,11 +1,12 @@
 ---
-status: chiuso
-phase: conclusa
+status: closed
+phase: done
 slice: null
 step: null
 work: locale-switcher
 stack: react
 updated: 2026-09-02
+archived: 2026-09-02
 tags: [work, locale-switcher]
 description: 'Portare il cambio lingua dal footer al menu principale, dove gli utenti lo trovino, e smettere di memorizzare una lingua che nessuno ha scelto.'
 ---
