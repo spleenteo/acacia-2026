@@ -4,7 +4,7 @@ shaping: true
 
 # Acacia Firenze Rebuild — Shaping
 
-Fonte: [pitches/init.md](init.md)
+Fonte: [pitch.md](pitch.md)
 
 **Appetito:** 2 settimane, sviluppatore singolo + Claude Code
 **Deploy:** Vercel free tier
@@ -128,4 +128,4 @@ Segmento dinamico `[locale]` nel path. `generateStaticParams` per `['en', 'it']`
 
 ## Slicing
 
-Shape A selezionata e sliced in 5 incrementi verticali → [init-slices.md](init-slices.md)
+Shape A selezionata e sliced in 5 incrementi verticali → [slices.md](slices.md)

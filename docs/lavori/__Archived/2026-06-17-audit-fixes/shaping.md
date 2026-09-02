@@ -120,7 +120,7 @@ Branch dedicato, da affrontare **a slice** (un'area per volta, ognuna verificabi
 
 ## Esito (2026-06-17)
 
-Scelto **C**, implementato su `chore/audit-fixes` (vedi [audit-fixes-slices.md](./audit-fixes-slices.md)).
+Scelto **C**, implementato su `chore/audit-fixes` (vedi [slices.md](./slices.md)).
 
 - **Consegnato (V1–V5):** R0, R1, R2, R3, R4, R5 — sicurezza, parallelizzazione, de-dup componenti (`CardImage`/`WidgetList`/`excerpt`/`ease-card`) e pagine (`indexAlternates`/`localeSlugParams`).
 - **R6 → Out:** `HomeContent`/`FaqIndexContent` devono restare `'use client'` (passano dal `RealtimeWrapper`); rilievo dell'audit non valido qui.

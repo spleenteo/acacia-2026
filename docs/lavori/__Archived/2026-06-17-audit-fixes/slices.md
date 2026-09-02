@@ -4,7 +4,7 @@ shaping: true
 
 # Audit fixes — Slices
 
-**Stato:** Slicing/Implementing · **Branch:** `chore/audit-fixes` · Shape: **C** (vedi [audit-fixes.md](./audit-fixes.md))
+**Stato:** Slicing/Implementing · **Branch:** `chore/audit-fixes` · Shape: **C** (vedi [shaping.md](./shaping.md))
 
 Ogni slice è verificabile in isolamento (`tsc` + lint, e runtime EN+IT dove tocca rendering). Vincolo trasversale **R8**: nessuna regressione visibile.
 

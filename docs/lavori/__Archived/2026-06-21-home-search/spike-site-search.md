@@ -4,7 +4,7 @@ shaping: true
 
 # Spike — DatoCMS Site Search (setup + query + esclusioni)
 
-Relativo a `home-search.md`, parti flaggate **A1** e **A2**.
+Relativo a `shaping.md`, parti flaggate **A1** e **A2**.
 
 ### Context
 

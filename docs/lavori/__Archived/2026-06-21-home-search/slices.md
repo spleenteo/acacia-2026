@@ -4,7 +4,7 @@ shaping: true
 
 # Home Search — Breadboard (Detail A) + Slices
 
-Implementazione di **Shape A** (vedi `home-search.md`). Le tabelle sono la verità; il Mermaid è una visualizzazione.
+Implementazione di **Shape A** (vedi `shaping.md`). Le tabelle sono la verità; il Mermaid è una visualizzazione.
 
 ## Places
 

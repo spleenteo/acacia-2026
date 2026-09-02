@@ -190,6 +190,6 @@ L'allowlist dei link/inline item dello Structured Text di `answer` è: **`faq`, 
 
 1. ~~Decidere C-slug / C-st / C-seg~~ ✅ fatto.
 2. ~~Eseguire **S1** e **S2**~~ ✅ fatto — fit check tutto verde.
-3. ~~Breadboard + slicing~~ ✅ fatto → **[`faq-slices.md`](./faq-slices.md)** (5 slice: V1 DURANTE end-to-end → V5 draft/realtime).
+3. ~~Breadboard + slicing~~ ✅ fatto → **[`slices.md`](./slices.md)** (5 slice: V1 DURANTE end-to-end → V5 draft/realtime).
 4. Implementare **V1** (slice end-to-end ramo DURANTE).
 5. Avviare in parallelo il **workstream contenuti IT** (Diana) — dipendenza esterna per il lancio bilingue.

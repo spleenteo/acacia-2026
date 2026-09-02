@@ -145,8 +145,8 @@ Dalla home, sopra la piega, l'ospite digita una domanda in linguaggio naturale e
 ## Next
 
 1. 🟡 ~~Spike~~ ✅ fatto. ~~Decisione nav/footer noise~~ ✅ accettato (POC).
-2. 🟡 ~~`/breadboarding`~~ ✅ fatto → **`home-search-slices.md`** (Detail A: affordance UI/Non-UI + wiring + slice).
-3. 🟡 Slice (ground truth in `home-search-slices.md`). Il setup (ex-V0) è **assorbito in V1**. **Tutte fatte** sul branch `feat/site-search`:
+2. 🟡 ~~`/breadboarding`~~ ✅ fatto → **`slices.md`** (Detail A: affordance UI/Non-UI + wiring + slice).
+3. 🟡 Slice (ground truth in `slices.md`). Il setup (ex-V0) è **assorbito in V1**. **Tutte fatte** sul branch `feat/site-search`:
    - **V1** ✅ (`2defb83`) — Backend (robots + `searchIndexes` + token riusato `DATOCMS_CMA_TOKEN`) + route handler `/api/search` + pagina `/{locale}/cerca` (input live, highlight, link relativi).
    - **V2** ✅ (`85d1aba`) — facet per tipo (da URL) + contatori (bucketing) + card pulite (kicker, titolo, excerpt).
    - **V3** ✅ (`abfdd82`) — `SearchBox` nell'hero (al posto dei bottoni) + typewriter prompt bilingue.

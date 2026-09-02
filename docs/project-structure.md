@@ -87,34 +87,27 @@ acacia-next/
 │       └── seo/
 │           └── jsonLd.ts                        # Shared JSON-LD builders (breadcrumb, absoluteUrl)
 ├── .claude/
+│   ├── settings.json                          # Project permissions: the archive wall
 │   └── skills/
 │       └── realtime-page-pattern/SKILL.md     # Project skill: page creation pattern
 ├── docs/
 │   ├── change-log.md                          # Version changelog
 │   ├── how-to.md                              # Internal reference (AI-optimized)
 │   ├── project-structure.md                   # This file
-│   ├── design/                                # Design documentation
-│   ├── pitches/
-│   │   └── init.md                            # Original project pitch
-│   └── shaping/
-│       ├── frontend-restyle.md                # Active shaping: Hero, Nav, Cards, Sections
-│       ├── datocms-schema-migration.md        # CMS schema migration docs
-│       └── completed/
-│           ├── init-shaping.md                # Shape A: full rebuild
-│           └── init-slices.md                 # V1–V5 slice breakdown
-├── pitches/
-│   ├── apartment-detail-redesign.md           # Apartment detail page pitch
-│   └── web-previews-visual-editing.md         # Web Previews & Visual Editing pitch
+│   ├── pre-launch-review.md                   # Pre-launch audit, June 2026
+│   └── lavori/                                # devflow works, one folder per work
+│       ├── archiviati.md                      # Index of the archived ones — readable
+│       └── __Archived/                        # Closed works. Denied in .claude/settings.json
 ├── src/proxy.ts                                # Locale redirect + translated path rewrite + /blog→/magazine 301 (Next 16 proxy, replaces middleware)
 ├── schema.graphql                             # Auto-generated DatoCMS schema
 ├── tsconfig.json                              # TypeScript strict + gql.tada plugin
 ├── postcss.config.mjs                         # PostCSS with Tailwind
 ├── next.config.mjs                            # Next.js config
-├── .nvmrc                                     # Node 22
+├── .nvmrc                                     # Node 25
 ├── public/
 │   ├── logo--main.svg                         # Full wordmark SVG (ratio ~3.6:1)
 │   └── acacia-isologo.svg                     # Isologo (copyright: not for standalone use)
-└── package.json                               # v1.0.1
+└── package.json                               # v1.3.2
 ```
 
 ## Tech Stack

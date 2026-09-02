@@ -4,7 +4,7 @@ shaping: true
 
 # Sezione FAQ — Slices
 
-**Stato:** Sliced · **Branch:** `feat/faq` · Deriva da [`faq-section.md`](./faq-section.md) (Shape A)
+**Stato:** Sliced · **Branch:** `feat/faq` · Deriva da [`shaping.md`](./shaping.md) (Shape A)
 
 Breadboard di Shape A + slice verticali demo-abili. Ogni slice finisce in UI dimostrabile. I riferimenti `A1…A7` sono le parti della Shape A.
 

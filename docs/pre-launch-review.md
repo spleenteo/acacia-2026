@@ -108,9 +108,9 @@ Concrete refactors that collapse the bulk of the duplicate findings:
 **Keep (called out to prevent accidental removal):**
 
 - `react-dom`, `postcss`, `tailwindcss`, `@tailwindcss/postcss` (framework/build-only peers — no app import is normal); all tooling devDeps (`@datocms/cli`, `dotenv-cli`, `tsx`, `parse5`, `datocms-html-to-structured-text`, lint/hooks/types).
-- `scripts/faq/*.mjs` (01-07) — keep as the documented FAQ-migration audit trail (`docs/shaping/faq-slices.md`); future schema work goes through `migrations/`.
+- `scripts/faq/*.mjs` (01-07) — keep as the documented FAQ-migration audit trail (`docs/lavori/__Archived/2026-06-01-faq-section/slices.md`); future schema work goes through `migrations/`.
 - `--color-slate`, `--color-border-strong`, `--text-tag` are named in CLAUDE.md as intended palette tokens — removing is a design decision even though currently unwired (update the doc if you drop them).
-- **No leftover plumguide files** — `plumguide-design` is a global Claude skill outside the repo; the only "Plum Guide" hits are inspiration prose in `pitches/apartment-detail-redesign.md`.
+- **No leftover plumguide files** — `plumguide-design` is a global Claude skill outside the repo; the only "Plum Guide" hits are inspiration prose in `docs/lavori/__Archived/2026-03-15-apartment-detail-redesign/pitch.md`.
 
 ## Top actions before launch
 
