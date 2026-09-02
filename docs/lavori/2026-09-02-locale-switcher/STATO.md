@@ -38,3 +38,4 @@ Raccolto leggendo il codice il 2026-09-02, prima dello shaping:
 <!-- data — cosa fatto — cosa resta — blocchi -->
 
 - 2026-09-02 — aperto il lavoro, letto il codice esistente, fissato lo scope (posizione + cookie) — resta lo shaping — nessun blocco
+- 2026-09-02 — shaping: 9 requisiti, 3 shape (A voce+dropdown, B EN/IT accanto alla CTA, C controllo nella barra). R2 e R8 promossi a Must-have → A e B escono. **C selezionata ma con un ❌ su R7**: C6 (barra mobile sotto i 360px) è flagged — resta lo spike S1 prima dello slicing — nessun blocco
