@@ -1,20 +1,20 @@
 ---
-stato: in-corso
-fase: shaping
+status: open
+phase: slicing
 slice: null
-passo: null
-lavoro: locale-switcher
+step: null
+work: locale-switcher
 stack: react
 updated: 2026-09-02
-tags: [lavoro, locale-switcher]
+tags: [work, locale-switcher]
 description: 'Portare il cambio lingua dal footer al menu principale, dove gli utenti lo trovino, e smettere di memorizzare una lingua che nessuno ha scelto.'
 ---
 
-# Stato — Selettore di lingua nel menu principale
+# Status — Selettore di lingua nel menu principale
 
 > Aggiornare a **fine di ogni sessione**: cosa fatto, cosa resta, blocchi.
 
-**Ingresso**: prodotto, deciso il 2026-09-02 perché l'esito non è definibile in una frase senza dire "dipende da come lo mettiamo": voce di menu con dropdown, elemento compatto accanto alla CTA e riga di suggerimento sono tre esiti diversi per l'utente. Il problema però è già chiaro (utenti che non trovano il cambio lingua), quindi si salta il frame e si parte dallo shaping.
+**Entry**: prodotto, deciso il 2026-09-02 perché l'esito non è definibile in una frase senza dire "dipende da come lo mettiamo": voce di menu con dropdown, elemento compatto accanto alla CTA e riga di suggerimento sono tre esiti diversi per l'utente. Il problema però è già chiaro (utenti che non trovano il cambio lingua), quindi si salta il frame e si parte dallo shaping.
 
 **Scope deciso in apertura**: posizione dello switch **+** il cookie `NEXT_LOCALE` scritto anche quando l'utente non ha scelto nulla. Il suggerimento di lingua a chi atterra da Google nella lingua sbagliata resta **fuori scope**, valutabile come lavoro a sé.
 
@@ -29,9 +29,11 @@ Raccolto leggendo il codice il 2026-09-02, prima dello shaping:
 - **Il nav centrale viene dal CMS** (`navItems`, modello `MenuItemRecord`): una voce "lingua" lì mescolerebbe una funzione di sistema con voci di contenuto che gestisce l'editor.
 - **Vincolo Turbopack**: niente hook di `next/navigation`. `LocaleSwitcher` usa già `window.location` e `window.history`, come impone il CLAUDE.md.
 
-## Slice
+## Slices
 
-- [ ] (da definire nello slicing)
+- [ ] **V1** — il controllo nella barra, su desktop
+- [ ] **V2** — il controllo nella barra, su mobile + CTA a icona sotto 400px
+- [ ] **V3** — il cookie scritto solo quando l'utente sceglie
 
 ## Log
 
@@ -41,3 +43,4 @@ Raccolto leggendo il codice il 2026-09-02, prima dello shaping:
 - 2026-09-02 — shaping: 9 requisiti, 3 shape (A voce+dropdown, B EN/IT accanto alla CTA, C controllo nella barra). R2 e R8 promossi a Must-have → A e B escono. **C selezionata ma con un ❌ su R7**: C6 (barra mobile sotto i 360px) è flagged — resta lo spike S1 prima dello slicing — nessun blocco
 - 2026-09-02 — spike S1 chiuso (misure Playwright sul build di produzione): a 320px lo switch non entra in nessuna lingua; entra da 360px in IT e da 390px in EN. Il collo di bottiglia è la CTA ("Check availability" = 163,6px, il 58% della barra), non lo switch. I bordi tenui del design system sono sotto 3:1 → la cella attiva va a fondo pieno — resta la scelta della leva prima di aggiornare C
 - 2026-09-02 — shape C aggiornata con gli esiti dello spike: cella attiva a fondo pieno (C1), CTA a sola icona sotto 400px (C6, scelta dell'utente fra le leve misurate), segmented a `--text-label` 55,7px (C7). **R7 passa: C senza flag, fit check pulito** — resta lo slicing — nessun blocco
+- 2026-09-02 — migrato alle nuove convenzioni della skill (docs/work/, STATUS.md, campi inglesi); breadboard saltato e dichiarato; slicing: 3 slice (V1 desktop, V2 mobile+CTA, V3 cookie) — resta la fase impatto prima del piano di V1 — nessun blocco
