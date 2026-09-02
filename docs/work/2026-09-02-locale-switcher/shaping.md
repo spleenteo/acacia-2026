@@ -26,7 +26,7 @@ Feedback raccolto a voce dagli utenti, nessun materiale scritto.
 | R1  | Su desktop il controllo è visibile nella barra, senza interazioni preliminari                          | Must-have |
 | R2  | 🟡 Su mobile il controllo è raggiungibile senza aprire l'hamburger                                     | Must-have |
 | R3  | Si riconosce a colpo d'occhio come controllo della lingua, senza interpretarlo                         | Must-have |
-| R4  | Il cambio lingua resta sulla stessa pagina, non rimanda alla home                                      | Must-have |
+| R4  | 🟡 Il cambio lingua resta sulla stessa pagina, non rimanda alla home                                   | Must-have |
 | R5  | `NEXT_LOCALE` è scritto solo quando l'utente sceglie davvero, mai per il solo fatto di visitare un URL | Must-have |
 | R6  | Il nav resta di competenza dell'editor: nessuna voce di sistema mescolata a quelle del CMS             | Must-have |
 | R7  | La barra regge in EN e IT, da mobile a desktop, senza andare a capo né schiacciare la CTA              | Must-have |
@@ -110,20 +110,30 @@ tutta l'attenzione.
 
 🟡 Aggiornata il 2026-09-02 con gli esiti dello spike S1.
 
-| Parte | Meccanismo                                                                                                                                                      | Flag |
-| ----- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- | :--: |
-| C1    | 🟡 `variant="header"`: due celle, quella attiva **a fondo pieno** `primary` con testo bianco (14,51:1)                                                          |      |
-| C2    | Desktop: nella terza colonna, prima della CTA, separato da essa                                                                                                 |      |
-| C3    | Mobile: **nella barra sempre visibile**, fra il wordmark e la CTA, non nell'overlay                                                                             |      |
-| C4    | Nell'overlay mobile lo switch sparisce: sta già nella barra sopra                                                                                               |      |
-| C5    | Il contrasto segue lo stato dell'header (`onLight`), come già fanno wordmark e hamburger                                                                        |      |
-| C6    | 🟡 **Sotto 400px la CTA diventa un bottone a sola icona** (calendario, `lucide-react`), con `aria-label` dalla stessa chiave di traduzione che oggi fa da testo |      |
-| C7    | 🟡 Il segmented usa `--text-label` con padding 6px: 55,7px misurati, il compromesso fra leggibilità e ingombro                                                  |      |
+| Parte | Meccanismo                                                                                                                                                                               | Flag |
+| ----- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :--: |
+| C1    | 🟡🟡 `variant="header"`: due celle, riempimento **invertito per stato** — barra chiara: attiva `dark` su bianco; barra scura: attiva bianca su `dark`. Entrambe 20,2:1                   |      |
+| C2    | 🟡 **Una sola istanza** nel cluster destro già esistente, nell'ordine `switch · CTA · hamburger`                                                                                         |      |
+| C3    | 🟡 Su mobile la stessa istanza resta nella barra sempre visibile, fuori dall'overlay                                                                                                     |      |
+| C4    | Nell'overlay mobile lo switch sparisce: sta già nella barra sopra                                                                                                                        |      |
+| C5    | Il contrasto segue lo stato dell'header (`onLight`), come già fanno wordmark e hamburger                                                                                                 |      |
+| C6    | 🟡🟡 **Sotto 400px la CTA diventa un bottone a sola icona** (calendario, `lucide-react`), con nome accessibile da `t('book')`. Soglia via token `--breakpoint-xs`, non classe arbitraria |      |
+| C7    | 🟡 Il segmented usa `--text-label` con padding 6px: 55,7px misurati, il compromesso fra leggibilità e ingombro                                                                           |      |
 
-**Perché C1 è cambiata.** Lo spike ha misurato i bordi del design system a 1,27:1 sulla barra chiara e
-2,49:1 sopra un hero navy — entrambi sotto la soglia 3:1 per i componenti non testuali. Un contenitore
-delimitato solo da quel bordo ricadrebbe nel difetto che R3 esiste per togliere. Il riempimento della
-cella attiva regge (14,51:1).
+**Perché C1 è cambiata due volte.** Lo spike ha misurato i bordi del design system a 1,27:1 sulla barra
+chiara e 2,49:1 sopra un hero navy — sotto la soglia 3:1 per i componenti non testuali: un contenitore
+delimitato solo da quel bordo ricadrebbe nel difetto che R3 esiste per togliere.
+
+🟡 Ma la prima correzione — cella attiva a fondo `primary` — era fondata sulla coppia sbagliata. Il
+14,51:1 dello spike è _bianco su primary_, cioè il testo **dentro** la cella; la coppia che decide se il
+controllo **si vede** è il riempimento contro il fondo della barra, e `#48182f` su `#00012a` fa
+**1,39:1** — peggio del bordo che lo spike aveva bocciato. Con il menu aperto quella è anche la
+condizione più frequente su mobile. In più `CLAUDE.md` assegna a blackberry il ruolo di colore
+dell'azione: spenderlo sulla cella **non** cliccabile, a 12px da una CTA già blackberry, avrebbe
+aggiunto la seconda pillola piena che questo stesso documento rimprovera alla shape B.
+
+Da qui l'inversione per stato: navy su bianco quando la barra è chiara, bianco su navy quando è scura.
+Entrambe 20,2:1, e il colore dell'azione resta alla CTA.
 
 **Perché C6 è cambiata, e a che prezzo.** Il collo di bottiglia misurato non è lo switch ma la CTA:
 163,6px in inglese, il 58% della barra a 320px. Con la CTA a icona il cluster destro scende da 207,6 a
@@ -151,7 +161,7 @@ separati da uno slash, dice da sé che è un controllo e non un'etichetta.
 | R1  | Su desktop il controllo è visibile nella barra, senza interazioni preliminari                          | Must-have |   ❌    | ✅  | ✅  | ✅  |
 | R2  | 🟡 Su mobile il controllo è raggiungibile senza aprire l'hamburger                                     | Must-have |   ❌    | ❌  | ❌  | ✅  |
 | R3  | Si riconosce a colpo d'occhio come controllo della lingua, senza interpretarlo                         | Must-have |   ❌    | ✅  | ❌  | ✅  |
-| R4  | Il cambio lingua resta sulla stessa pagina, non rimanda alla home                                      | Must-have |   ✅    | ✅  | ✅  | ✅  |
+| R4  | 🟡 Il cambio lingua resta sulla stessa pagina, non rimanda alla home                                   | Must-have |   ❌    | ❌  | ❌  | ✅  |
 | R5  | `NEXT_LOCALE` è scritto solo quando l'utente sceglie davvero, mai per il solo fatto di visitare un URL | Must-have |   ❌    | ✅  | ✅  | ✅  |
 | R6  | Il nav resta di competenza dell'editor: nessuna voce di sistema mescolata a quelle del CMS             | Must-have |   ✅    | ❌  | ✅  | ✅  |
 | R7  | La barra regge in EN e IT, da mobile a desktop, senza andare a capo né schiacciare la CTA              | Must-have |   ✅    | ❌  | ✅  | ✅  |
@@ -205,3 +215,17 @@ sotto la soglia di contrasto. Da qui le correzioni a C1 e C6.
   l'icona comparirebbe anche dove lo spazio abbonda (a 768px restano 467px liberi). Serve quindi una
   soglia arbitraria `min-[400px]:`, e il Done della slice deve verificare che la classe sopravviva al
   build: su questo repo è già successo che una classe arbitraria non finisse nel CSS di produzione.
+- 🟡 **2026-09-02 — Fase impatto: 21 problemi, le slice riscritte.** Cinque lenti in parallelo. Quattro
+  problemi trovati indipendentemente da tre lenti diverse. Dettaglio in `slices.md`, sezione _Cosa ha
+  trovato la fase impatto_.
+- 🟡 **2026-09-02 — R4 era ✅ a torto, per CURRENT e per tutte le shape.** L'`href` renderizzato dallo
+  switcher punta alla home su ogni pagina che non pubblichi URL alternati — cioè tutte tranne mood, FAQ
+  e blog. Il click sinistro funziona perché il target vero è calcolato in `onClick`; cmd-click, tasto
+  centrale, apri-in-nuova-scheda e i crawler no. Il difetto esiste già oggi, ma questo lavoro lo
+  promuove da sepolto-nel-footer a primo elemento di ogni pagina, quindi lo risolve V1.
+- 🟡 **2026-09-02 — Il cookie viene rinominato e rinnovato solo se esiste.** Safari tronca a 7 giorni i
+  cookie scritti da JS: senza rinnovo server-side condizionale, R5 verrebbe soddisfatto e subito
+  disfatto. La rinomina dà un taglio netto ai cookie già in circolazione.
+- 🟡 **2026-09-02 — Debito accettato: `aria-label="Language"` resta inglese.** Deroga consapevole a
+  `CLAUDE.md` § UI Translations, stesso giudizio applicato in `pre-launch-review.md` ad
+  `aria-label="Breadcrumb"`.

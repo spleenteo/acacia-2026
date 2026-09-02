@@ -1,8 +1,8 @@
 ---
 status: open
-phase: slicing
-slice: null
-step: null
+phase: slice
+slice: V1
+step: piano
 work: locale-switcher
 stack: react
 updated: 2026-09-02
@@ -44,3 +44,4 @@ Raccolto leggendo il codice il 2026-09-02, prima dello shaping:
 - 2026-09-02 — spike S1 chiuso (misure Playwright sul build di produzione): a 320px lo switch non entra in nessuna lingua; entra da 360px in IT e da 390px in EN. Il collo di bottiglia è la CTA ("Check availability" = 163,6px, il 58% della barra), non lo switch. I bordi tenui del design system sono sotto 3:1 → la cella attiva va a fondo pieno — resta la scelta della leva prima di aggiornare C
 - 2026-09-02 — shape C aggiornata con gli esiti dello spike: cella attiva a fondo pieno (C1), CTA a sola icona sotto 400px (C6, scelta dell'utente fra le leve misurate), segmented a `--text-label` 55,7px (C7). **R7 passa: C senza flag, fit check pulito** — resta lo slicing — nessun blocco
 - 2026-09-02 — migrato alle nuove convenzioni della skill (docs/work/, STATUS.md, campi inglesi); breadboard saltato e dichiarato; slicing: 3 slice (V1 desktop, V2 mobile+CTA, V3 cookie) — resta la fase impatto prima del piano di V1 — nessun blocco
+- 2026-09-02 — fase impatto: 5 lenti in parallelo, **21 problemi** (4 trovati da 3 lenti indipendenti). Slice riscritte da capo: una sola istanza del componente, cella attiva invertita per stato, cookie rinominato + rinnovo condizionale (Safari ITP), token `xs` al posto della classe arbitraria, 404/error dentro V3. **R4 corretto nel fit check: era ✅ a torto** (href alla home su quasi tutte le pagine). Baseline V3 registrato: `/` con Accept-Language it → `location: /en` — resta il piano di V1 — nessun blocco

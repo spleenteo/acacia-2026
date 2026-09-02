@@ -1,5 +1,10 @@
 {
   "permissions": {
-    "deny": ["Read(./docs/lavori/__Archived/**)", "Grep(./docs/lavori/__Archived/**)"]
+    "deny": [
+      "Read(./docs/lavori/__Archived/**)",
+      "Grep(./docs/lavori/__Archived/**)",
+      "Read(./docs/work/__Archived/**)",
+      "Grep(./docs/work/__Archived/**)"
+    ]
   }
 }
