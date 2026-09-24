@@ -328,8 +328,7 @@ export default function ApartmentDetailContent({
                   <InfoDetail
                     data={apartment.infoDetail.map((item) => ({
                       __typename: item.__typename as
-                        | 'InfoTextBlockRecord'
-                        | 'InfoAddressBlockRecord',
+                        'InfoTextBlockRecord' | 'InfoAddressBlockRecord',
                       fragment: item as never,
                     }))}
                     title={t('info')}

@@ -647,12 +647,7 @@ export type Post = ItemTypeDefinition<
     content: {
       type: 'structured_text';
       blocks:
-        | VideoBlock
-        | ButtonBlock
-        | ImageBlock
-        | ImageGalleryBlock
-        | CtaBlogPostBlock
-        | CtaFaqBlock;
+        VideoBlock | ButtonBlock | ImageBlock | ImageGalleryBlock | CtaBlogPostBlock | CtaFaqBlock;
       localized: true;
     };
     featured_image: {

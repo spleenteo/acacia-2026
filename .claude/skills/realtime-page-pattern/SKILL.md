@@ -75,9 +75,7 @@ export const query = graphql(
       # ... fields
     }
   `,
-  [
-    /* fragments */
-  ],
+  [/* fragments */],
 );
 
 // ── Optional: generateStaticParams ──

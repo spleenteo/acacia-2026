@@ -336,7 +336,7 @@ Immagine ritagliata in formato verticale (3:4 o 5:7). Testo sotto l'immagine, st
 | D1.1 | Immagine 600×800 (3:4) — portrait, foto protagonista                     |
 | D1.2 | Testo sotto: category label → h3 Playfair → claim body-sm → link freccia |
 | D1.3 | Pill tag solo se `highlight` ha contenuto (per ApartmentCard)            |
-| D1.4 | ApartmentCard: riga con ícone 🛏 N camere o 👤 N persone                 |
+| D1.4 | ApartmentCard: riga con ícone 🛏 N camere o 👤 N persone                  |
 
 #### D2 — Overlay Text (Plum-like)
 
