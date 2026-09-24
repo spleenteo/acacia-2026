@@ -142,6 +142,7 @@ Required in `.env.local` (see `.env.local.example`):
 - `DATOCMS_BASE_EDITING_URL` — DatoCMS project URL for content link overlays
 - `SECRET_API_TOKEN` — Shared secret for webhook/plugin endpoints; the same value lives in the DatoCMS webhook URL and Web Previews plugin config, so rotate all three together
 - `NEXT_PUBLIC_SITE_URL` — Production URL (e.g. `https://acaciafirenze.com`), used as `metadataBase` for SEO and sitemap generation
+- `NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN` / `NEXT_PUBLIC_POSTHOG_HOST` — PostHog (trial, US region). Initialised by `src/components/PostHogAnalytics`, never in Draft Mode or inside an iframe. Custom events go through `trackEvent()` in `src/lib/analytics.ts`, which feeds both GA4 and PostHog; empty = PostHog off
 
 ## SEO
 
@@ -187,3 +188,13 @@ Index pages backed by an `index_page` record (moods, districts, accommodations, 
 - Generated files to never edit: `schema.graphql`, `src/lib/datocms/graphql-env.d.ts`, `src/lib/datocms/cma-types.ts`
 - Route handlers use `.ts` extension (not `.tsx`) since they contain no JSX
 - When evaluating or implementing UI changes, follow the "Styling — Japan Fish" section above as the design source of truth
+
+<!-- BEGIN:nextjs-agent-rules -->
+
+# This is NOT the Next.js you know
+
+This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` (resolved from this file's directory; in monorepos the `next` package may not be visible from the repo root) before writing any code. Heed deprecation notices.
+
+This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
+
+<!-- END:nextjs-agent-rules -->

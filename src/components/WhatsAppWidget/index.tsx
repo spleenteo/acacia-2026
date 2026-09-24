@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useTranslations } from 'next-intl';
 
 import { whatsappUrl } from '@/lib/whatsapp';
+import { trackEvent } from '@/lib/analytics';
 
 const WHATSAPP_GREEN = '#25D366';
 
@@ -70,6 +71,7 @@ export default function WhatsAppWidget() {
           </p>
           <a
             href={href}
+            onClick={() => trackEvent('whatsapp_click')}
             target="_blank"
             rel="noopener noreferrer"
             className="flex w-full items-center justify-center gap-2 rounded-pill px-5 py-3 font-body text-caption font-medium uppercase tracking-[0.08em] text-white transition-opacity hover:opacity-90"

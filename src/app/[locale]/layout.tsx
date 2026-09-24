@@ -3,6 +3,7 @@ import DraftModeToggler from '@/components/DraftModeToggler';
 import SiteHeader from '@/components/SiteHeader';
 import SiteFooter from '@/components/SiteFooter';
 import WhatsAppWidget from '@/components/WhatsAppWidget';
+import PostHogAnalytics from '@/components/PostHogAnalytics';
 import JsonLd from '@/components/JsonLd';
 import { HeaderThemeProvider } from '@/components/HeaderTheme';
 import { AlternateLocaleProvider } from '@/components/LocaleSwitcher/AlternateLocaleContext';
@@ -282,6 +283,8 @@ _iub.csConfiguration = {
           <Script src="https://cdn.iubenda.com/iubenda.js" strategy="afterInteractive" />
         </>
       )}
+      {/* Product analytics — kept out of Draft Mode so editors aren't tracked. */}
+      {!isDraftModeEnabled && <PostHogAnalytics />}
       {isDraftModeEnabled && <ContentLink />}
       <AlternateLocaleProvider>
         <BookingProvider locale={locale} defaultWidgetCode={data.homePage?.beddyId ?? null}>

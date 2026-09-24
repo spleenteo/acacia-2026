@@ -27,6 +27,7 @@
     "next-intl": "^4.8.3",
     "node-html-parser": "^7.0.1",
     "postcss": "^8.5.8",
+    "posthog-js": "^1.434.12",
     "react": "^19",
     "react-datocms": "^8.1.0",
     "react-dom": "^19",

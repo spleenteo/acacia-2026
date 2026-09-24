@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect } from 'react';
-import { trackEvent } from '@/lib/analytics';
+import { trackGaEvent } from '@/lib/analytics';
 
 /**
  * Sends a GA4 `page_view` on every client-side route change.
@@ -27,7 +27,7 @@ export default function GoogleAnalyticsPageviews() {
       const path = window.location.pathname;
       if (path === lastPath) return;
       lastPath = path;
-      trackEvent('page_view', {
+      trackGaEvent('page_view', {
         page_location: window.location.href,
         page_path: path,
         page_title: document.title,

@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useTranslations } from 'next-intl';
+import { trackEvent } from '@/lib/analytics';
 
 /**
  * Copies the absolute, shareable URL of a FAQ page/leaf to the clipboard.
@@ -18,6 +19,7 @@ export default function CopyLinkButton({ href, className }: { href: string; clas
     try {
       const url = new URL(href, window.location.origin).href;
       await navigator.clipboard.writeText(url);
+      trackEvent('faq_link_copied');
       setCopied(true);
       setTimeout(() => setCopied(false), 1500);
     } catch {
