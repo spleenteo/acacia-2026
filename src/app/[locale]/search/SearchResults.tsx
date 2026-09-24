@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
 import { type Locale } from '@/i18n/config';
@@ -40,6 +40,10 @@ export default function SearchResults({ locale, initialQuery }: Props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // Record how many results the entry query got, once, so zero-result searches
+  // (content gaps) show up. Later live keystrokes aren't tracked: too noisy.
+  const resultsTrackedRef = useRef(false);
+
   // Live search: debounce, abort in-flight on change. Skip while too short.
   useEffect(() => {
     if (tooShort) return;
@@ -53,6 +57,10 @@ export default function SearchResults({ locale, initialQuery }: Props) {
         .then((d: { results?: SearchHit[]; total?: number }) => {
           setResults(d.results ?? []);
           setTotal(d.total ?? 0);
+          if (!resultsTrackedRef.current && trimmed === initialQuery.trim()) {
+            resultsTrackedRef.current = true;
+            trackEvent('search_results', { search_term: trimmed, result_total: d.total ?? 0 });
+          }
         })
         .catch(() => {})
         .finally(() => setLoading(false));
@@ -61,7 +69,7 @@ export default function SearchResults({ locale, initialQuery }: Props) {
       clearTimeout(id);
       controller.abort();
     };
-  }, [trimmed, tooShort, locale]);
+  }, [trimmed, tooShort, locale, initialQuery]);
 
   // Keep the URL shareable: reflect the current query in `?q=` (replaceState,
   // no router — Turbopack-safe). The initial `?q=` is read server-side (page.tsx).

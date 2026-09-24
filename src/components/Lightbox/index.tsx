@@ -4,6 +4,7 @@ import { useState, useCallback, useEffect, useRef, useMemo } from 'react';
 import { useTranslations } from 'next-intl';
 import YARLightbox from 'yet-another-react-lightbox';
 import 'yet-another-react-lightbox/styles.css';
+import { trackEvent } from '@/lib/analytics';
 
 export type LightboxSlide = {
   src: string;
@@ -98,10 +99,28 @@ export default function Lightbox({ slides, open, index = 0, onClose }: LightboxP
     return () => document.body.classList.remove('lightbox-open');
   }, [open]);
 
+  // Analytics: one event on open, one on close with how many distinct photos
+  // were seen. The page the gallery lives on is attached by GA/PostHog.
+  const viewedRef = useRef<Set<number>>(new Set());
+  const wasOpenRef = useRef(false);
+  useEffect(() => {
+    if (open && !wasOpenRef.current) {
+      viewedRef.current = new Set([index]);
+      trackEvent('gallery_open', { photos_total: slides.length, start_index: index });
+    } else if (!open && wasOpenRef.current) {
+      trackEvent('gallery_close', {
+        photos_total: slides.length,
+        photos_viewed: viewedRef.current.size,
+      });
+    }
+    wasOpenRef.current = open;
+  }, [open, index, slides.length]);
+
   const onHandlers = useMemo(
     () => ({
       view: ({ index: i }: { index: number }) => {
         setCurrentIndex(i);
+        viewedRef.current.add(i);
       },
     }),
     [],
