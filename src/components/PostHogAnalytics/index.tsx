@@ -2,13 +2,26 @@
 
 import { useEffect } from 'react';
 import posthog from 'posthog-js';
+import { SITE_URL } from '@/lib/siteUrl';
+
+const withoutWww = (host: string) => host.replace(/^www\./, '');
+
+/** True only on the production domain; false on localhost and `*.vercel.app` previews. */
+function isProductionHost(): boolean {
+  return withoutWww(window.location.hostname) === withoutWww(new URL(SITE_URL).hostname);
+}
 
 /**
  * PostHog product analytics: pageviews, autocapture (clicks → heatmaps),
  * session replay and the custom events sent through `trackEvent()`.
  *
  * Renders nothing and initialises nothing unless both `NEXT_PUBLIC_POSTHOG_*`
- * variables are set, so local dev and preview deploys run without it. The
+ * variables are set AND the page is served from the production host (the one in
+ * `NEXT_PUBLIC_SITE_URL`, `www.` ignored). The host check, not the env vars, is
+ * what keeps local dev and Vercel preview deploys silent: those environments
+ * often carry the token too, and a blocked request floods the console with
+ * "[PostHog.js] Request failed" errors. Consequence: if `NEXT_PUBLIC_SITE_URL`
+ * is misconfigured in production, PostHog stays off. The
  * locale layout mounts it only outside Draft Mode, and it also bails out when
  * the page is framed (DatoCMS Web Previews / Visual Editing iframe), so editors
  * are never tracked or recorded.
@@ -25,6 +38,7 @@ export default function PostHogAnalytics() {
     const host = process.env.NEXT_PUBLIC_POSTHOG_HOST;
     if (!token || !host) return;
     if (window.self !== window.top) return;
+    if (!isProductionHost()) return;
     if (posthog.__loaded) return;
 
     posthog.init(token, {
@@ -33,7 +47,6 @@ export default function PostHogAnalytics() {
       // tracked without `usePathname()` (which breaks under Turbopack here).
       defaults: '2026-01-30',
       capture_exceptions: true,
-      debug: process.env.NODE_ENV === 'development',
     });
   }, []);
 

@@ -101,7 +101,7 @@ See `.env.local.example` for the full commented list. Non-obvious points:
 - `SECRET_API_TOKEN` — guards `/api/invalidate-cache`, `/api/preview-links`, `/api/seo-analysis`, `/api/draft-mode/enable`; the same value is in the DatoCMS webhook URL and the Web Previews plugin config, so rotate all three together.
 - `NEXT_PUBLIC_SITE_URL` — read once in `src/lib/siteUrl.ts` as `SITE_URL`; build absolute URLs from that constant, never re-read the env inline.
 - `NEXT_PUBLIC_GA_ID` — GA4; analytics consent defaults to **granted** by owner decision (see `src/app/[locale]/layout.tsx`), do not flip it back as a "fix".
-- `NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN` / `_HOST` — PostHog, off in Draft Mode and inside iframes (`src/components/PostHogAnalytics`). Custom events go through `trackEvent()` in `src/lib/analytics.ts` (GA4 + PostHog).
+- `NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN` / `_HOST` — PostHog, off in Draft Mode, inside iframes and on any host other than the production one in `NEXT_PUBLIC_SITE_URL` (so localhost and Vercel previews never call it, whatever env vars they carry) (`src/components/PostHogAnalytics`). Custom events go through `trackEvent()` in `src/lib/analytics.ts` (GA4 + PostHog).
 
 ## SEO
 
