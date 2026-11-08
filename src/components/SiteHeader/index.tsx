@@ -208,7 +208,7 @@ export default function SiteHeader({ locale, navItems }: Props) {
               ref={menuButtonRef}
               onClick={() => setMenuOpen((o) => !o)}
               className="flex h-8 w-8 flex-col items-center justify-center gap-[6px] lg:hidden"
-              aria-label={menuOpen ? 'Chiudi menu' : 'Apri menu'}
+              aria-label={menuOpen ? t('closeMenu') : t('openMenu')}
             >
               <span
                 className={[

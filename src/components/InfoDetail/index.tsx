@@ -1,4 +1,5 @@
 import { ExternalLink } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import { type FragmentOf, graphql, readFragment } from '@/lib/datocms/graphql';
 import WidgetTitle from '@/components/WidgetTitle';
 import DistrictAnchor from '@/components/DistrictAnchor';
@@ -29,6 +30,7 @@ type Props = {
 };
 
 export default function InfoDetail({ data, title, district }: Props) {
+  const t = useTranslations('apartment');
   if (data.length === 0) return null;
 
   return (
@@ -51,7 +53,7 @@ export default function InfoDetail({ data, title, district }: Props) {
                       name={district.name}
                       className="text-primary hover:text-primary-hover transition-colors cursor-pointer"
                     />
-                    {' area)'}
+                    {')'}
                   </>
                 )}
               </p>
@@ -60,7 +62,7 @@ export default function InfoDetail({ data, title, district }: Props) {
                   href={mapsUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  aria-label="Open in Google Maps (opens in a new tab)"
+                  aria-label={t('openInMaps')}
                   className="shrink-0 text-muted/50 hover:text-primary transition-colors duration-300"
                 >
                   <ExternalLink size={16} strokeWidth={1.5} />
@@ -77,7 +79,7 @@ export default function InfoDetail({ data, title, district }: Props) {
                   allowFullScreen
                   loading="lazy"
                   referrerPolicy="no-referrer-when-downgrade"
-                  title="Map"
+                  title={t('map')}
                   tabIndex={-1}
                 />
               </div>

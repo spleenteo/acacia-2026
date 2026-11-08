@@ -1,4 +1,6 @@
 import { ExternalLink } from 'lucide-react';
+import { useTranslations } from 'next-intl';
+import { stripStega } from 'react-datocms/stega';
 import { getAmenityIcon } from '@/lib/amenity-icons';
 import { TONES, type Tone } from '@/components/WidgetLabel';
 
@@ -17,11 +19,12 @@ type Props = {
 
 /**
  * Uniform sidebar list (amenities / essentials / comforts): each row is a large
- * tone-coloured leading icon, the label at ~0.8rem, and — when the item links
+ * tone-coloured leading icon, the label at caption size, and — when the item links
  * out — a small external-link icon on the right that opens in a new tab. Rows
  * are split by a hairline divider with tight, even vertical padding.
  */
 export default function WidgetItemList({ items, tone }: Props) {
+  const t = useTranslations('apartment');
   const iconColor = TONES[tone].fg;
 
   return (
@@ -34,7 +37,7 @@ export default function WidgetItemList({ items, tone }: Props) {
             className="flex items-center gap-3 py-1.5 border-b border-border-light last:border-b-0"
           >
             <Icon size={24} strokeWidth={1.5} className="shrink-0" style={{ color: iconColor }} />
-            <span className="flex-1 font-body text-[0.9rem] leading-snug text-muted">
+            <span className="flex-1 font-body text-caption leading-snug text-muted">
               {item.name}
             </span>
             {item.url && (
@@ -42,7 +45,7 @@ export default function WidgetItemList({ items, tone }: Props) {
                 href={item.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                aria-label={`${item.name} (opens in a new tab)`}
+                aria-label={t('opensInNewTab', { name: stripStega(item.name) })}
                 className="shrink-0 text-muted/50 hover:text-primary transition-colors duration-300"
               >
                 <ExternalLink size={16} strokeWidth={1.5} />

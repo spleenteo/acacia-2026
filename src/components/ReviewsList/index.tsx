@@ -1,7 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { useLocale } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import { useInView } from '@/hooks/useInView';
 import Modal from '@/components/Modal';
 import { getChannelLogo } from '@/lib/channelLogos';
@@ -24,6 +24,7 @@ type Props = {
 
 export default function ReviewsList({ reviews, label, title }: Props) {
   const locale = useLocale();
+  const t = useTranslations('apartment');
   const headingRef = useInView<HTMLDivElement>();
   const scrollRef = useRef<HTMLDivElement>(null);
   const [activeIndex, setActiveIndex] = useState(0);
@@ -72,7 +73,7 @@ export default function ReviewsList({ reviews, label, title }: Props) {
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src="/placeholder-booking-score.svg"
-              alt="Booking.com score"
+              alt={t('bookingScoreAlt')}
               className="h-10 md:h-12 w-auto"
             />
             {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -142,16 +143,16 @@ export default function ReviewsList({ reviews, label, title }: Props) {
 
         {/* Dot indicators */}
         {totalDots > 1 && (
-          <div className="flex justify-center gap-2 mt-6">
+          <div className="flex justify-center gap-4 mt-6">
             {Array.from({ length: totalDots }, (_, i) => (
               <button
                 key={i}
                 type="button"
                 onClick={() => scrollToIndex(i)}
-                className={`w-2 h-2 rounded-full transition-all duration-300 cursor-pointer ${
+                className={`relative w-2 h-2 rounded-full transition-all duration-300 cursor-pointer after:absolute after:-inset-2 ${
                   i === activeIndex ? 'bg-primary w-5' : 'bg-border'
                 }`}
-                aria-label={`Go to review ${i + 1}`}
+                aria-label={t('goToReview', { number: i + 1 })}
               />
             ))}
           </div>

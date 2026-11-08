@@ -139,7 +139,7 @@ export default function ApartmentDetailContent({
         {/* Full-bleed on mobile; contained + rounded from md up. */}
         <div className="pointer-events-auto relative md:mx-auto md:max-w-7xl md:px-8">
           <div
-            className={`relative min-h-[calc(58svh-50px)] md:min-h-[calc(68svh-50px)] overflow-hidden md:rounded-card transition-shadow duration-500 ${
+            className={`hero-photo relative overflow-hidden md:rounded-card transition-shadow duration-500 ${
               heroPinned ? 'md:shadow-none' : 'md:shadow-card-hover'
             }`}
           >
@@ -217,7 +217,7 @@ export default function ApartmentDetailContent({
                           className={`${pillClass} cursor-pointer transition-opacity hover:opacity-85`}
                           style={{ backgroundColor: pillB }}
                         >
-                          in {apartment.district.name}
+                          {t('inDistrict', { district: apartment.district.name })}
                         </a>
                       )}
                     </div>
@@ -343,7 +343,7 @@ export default function ApartmentDetailContent({
                 <div className="break-inside-avoid">
                   <InfoDetail
                     data={addresses as never}
-                    title={t('info')}
+                    title={t('location')}
                     district={apartment.district}
                   />
                 </div>

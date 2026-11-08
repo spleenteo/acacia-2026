@@ -136,7 +136,7 @@ function ZigZagItem({ photo, isRight, index }: { photo: Photo; isRight: boolean;
           style={{
             backgroundColor: bg,
             clipPath: wonkyClip(index + 1),
-            transitionTimingFunction: 'cubic-bezier(0.34, 1.56, 0.64, 1)',
+            transitionTimingFunction: 'cubic-bezier(0.22, 1, 0.36, 1)',
           }}
           className={[
             // Mobile/tablet: anchor the caption to the block top — it fills the
