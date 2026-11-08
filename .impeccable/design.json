@@ -270,7 +270,7 @@
       "name": "Editorial Heading",
       "kind": "custom",
       "refersTo": "h2",
-      "description": "Titolo con una parola in corsivo color Blackberry Ink e filo sottile.",
+      "description": "Titolo in corsivo color Blackberry Ink e filo sottile.",
       "html": "<h2 class=\"ds-h\">Un soggiorno nel cuore di <em>Firenze</em></h2>",
       "css": ".ds-h{margin:0;font-family: Fraunces, Georgia, serif; font-variation-settings: 'opsz' 144, 'SOFT' 0, 'WONK' 0;font-size:2.7rem;font-weight:400;line-height:1.12;color:var(--color-dark)}.ds-h em{position:relative;font-style:italic;color:var(--color-primary)}.ds-h em::after{content:\"\";position:absolute;left:0;right:0;bottom:-.04em;height:1px;background:currentColor;opacity:.45}"
     }
@@ -279,7 +279,7 @@
     "northStar": "The Quiet Concierge",
     "overview": "Il sito parla come un concierge discreto: tutto è calmo e nitido, il colore compare dove serve e non prima. Un serif ad alto contrasto dà la voce editoriale, un sans leggibile porta il testo di servizio, i fondi alternano bianco, sage e sand come pagine di una guida. L'unico gesto \"a mano\" è l'evidenziatore sghembo.",
     "keyCharacteristics": [
-      "Serif Fraunces nel suo taglio più affilato, corsivo solo per la parola chiave del titolo.",
+      "Serif Fraunces nel suo taglio più affilato, corsivo per i titoli di sezione o per la loro parola chiave.",
       "Fondo navy mai nero puro, azioni sempre color blackberry.",
       "Superfici piatte a riposo, angoli netti da 4px, bottoni a pillola.",
       "Evidenziatori a parallelogramma (wonkyClip) come firma.",
@@ -297,8 +297,8 @@
         "section": "colors"
       },
       {
-        "name": "The One Italic Rule",
-        "body": "In un titolo, una sola parola va in corsivo Fraunces peso 400 color Blackberry Ink.",
+        "name": "The Italic Title Rule",
+        "body": "Il corsivo Fraunces peso 400 color Blackberry Ink è la voce dei titoli di sezione: un em può avvolgere l'intero titolo o solo la parola chiave.",
         "section": "typography"
       },
       {

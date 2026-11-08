@@ -116,7 +116,7 @@ La densità è bassa e il ritmo lento: immagini verticali grandi, titoli che res
 
 **Key Characteristics:**
 
-- Serif Fraunces nel suo taglio più affilato, corsivo solo per la parola chiave del titolo.
+- Serif Fraunces nel suo taglio più affilato, corsivo per i titoli di sezione o per la loro parola chiave.
 - Fondo navy mai nero puro, azioni sempre color blackberry.
 - Superfici piatte a riposo, angoli netti da 4px, bottoni a pillola.
 - Evidenziatori a parallelogramma (`wonkyClip`) come firma, ogni istanza con inclinazione propria ma stabile.
@@ -128,7 +128,7 @@ Una palette calda e fredda insieme: blackberry e rust contro sage, slate e un na
 
 ### Primary
 
-- **Blackberry Ink** (#48182f): il colore dell'azione. CTA, link, parola in corsivo dei titoli, stato hover del titolo di una card. Hover più scuro **Blackberry Ink Hover** (#381325); come fondo pallido **Blackberry Pale** (#efe2e9).
+- **Blackberry Ink** (#48182f): il colore dell'azione. CTA, link, corsivo dei titoli di sezione, stato hover del titolo di una card. Hover più scuro **Blackberry Ink Hover** (#381325); come fondo pallido **Blackberry Pale** (#efe2e9).
 
 ### Secondary
 
@@ -177,7 +177,7 @@ I contenuti dal CMS (`.prose-acacia`) usano un'altra scala: h2 1.75rem, h3 1.375
 
 ### Named Rules
 
-**The One Italic Rule.** In un titolo, una sola parola va in corsivo Fraunces peso 400 color Blackberry Ink, con un filo sottile che si disegna quando entra in vista. Più di una parola svuota l'enfasi.
+**The Italic Title Rule.** Il corsivo Fraunces peso 400 è la voce dei titoli di sezione: un `<em>` in H1-H3 può avvolgere l'intero titolo oppure solo la parola chiave, come negli hero editoriali dal CMS. È color Blackberry Ink, con un filo sottile che si disegna quando entra in vista. I titoli dei widget e dei modali restano in corsivo Night Navy, senza filo. Il nome dell'appartamento nell'hero non è mai in corsivo.
 
 **The Sharp Cut Rule.** Fraunces non si usa mai con `WONK` o `SOFT` attivi: il carattere "giocoso" è del solo evidenziatore, non delle lettere.
 
