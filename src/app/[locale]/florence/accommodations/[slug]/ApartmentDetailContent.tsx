@@ -3,14 +3,16 @@
 import { useEffect } from 'react';
 import { type Locale } from '@/i18n/config';
 import { useTranslations } from 'next-intl';
+import { stripStega } from 'react-datocms/stega';
 import type { FragmentOf } from '@/lib/datocms/graphql';
 import ResponsiveImage from '@/components/ResponsiveImage';
 import PhotoLightbox from '@/components/PhotoLightbox';
 import { toSlide } from '@/components/Lightbox/toSlide';
-import EssentialsList, { type EssentialFragment } from '@/components/EssentialsList';
+import EssentialsList, { EssentialFragment } from '@/components/EssentialsList';
 import AmenitiesList from '@/components/AmenitiesList';
-import ComfortsList from '@/components/ComfortsList';
+import ComfortsList, { ComfortFragment } from '@/components/ComfortsList';
 import InfoDetail from '@/components/InfoDetail';
+import KeyFacts from '@/components/KeyFacts';
 import DistrictLink from '@/components/DistrictLink';
 import BookingSidebar from '@/components/BookingSidebar';
 import WhatWeLove from '@/components/WhatWeLove';
@@ -86,6 +88,18 @@ export default function ApartmentDetailContent({
   const heroTextDark = (!heroOnImage || heroPinned) && isLightColor(heroColor);
   // Two more palette colours (distinct from the hero) for the coloured fact pills.
   const [pillA, pillB] = pickPillColors(apartment.featuredImage?.colors, heroColor);
+
+  const keyFacts = apartment.infoDetail.filter((i) => i.__typename === 'InfoTextBlockRecord');
+  const addresses = apartment.infoDetail.filter((i) => i.__typename === 'InfoAddressBlockRecord');
+
+  // Essentials are shared by every apartment: a comfort with the same wording
+  // would only repeat one of them a few lines further down.
+  const essentialNames = new Set(
+    essentials.map((e) => stripStega(readFragment(EssentialFragment, e).name)),
+  );
+  const comforts = apartment.comforts.filter(
+    (c) => !essentialNames.has(stripStega(readFragment(ComfortFragment, c).name)),
+  );
 
   return (
     <>
@@ -289,6 +303,8 @@ export default function ApartmentDetailContent({
           <div className="lg:grid lg:grid-cols-[1fr_320px] lg:gap-16 xl:gap-20">
             {/* ── Main content ── */}
             <div className="min-w-0">
+              <KeyFacts data={keyFacts as never} label={t('info')} />
+
               {/* What We Love + Description */}
               {(apartment.wwlGallery.length >= 2 || apartment.description) && (
                 <section className="mb-16 lg:mb-20">
@@ -323,26 +339,12 @@ export default function ApartmentDetailContent({
                 acaciaReward={apartment.acaciaReward}
                 beddyId={apartment.beddyId}
               />
-              {apartment.infoDetail.length > 0 && (
+              {addresses.length > 0 && (
                 <div className="break-inside-avoid">
                   <InfoDetail
-                    data={apartment.infoDetail.map((item) => ({
-                      __typename: item.__typename as
-                        'InfoTextBlockRecord' | 'InfoAddressBlockRecord',
-                      fragment: item as never,
-                    }))}
+                    data={addresses as never}
                     title={t('info')}
-                    locale={locale}
                     district={apartment.district}
-                  />
-                </div>
-              )}
-              {apartment.amenities.length > 0 && (
-                <div className="break-inside-avoid">
-                  <AmenitiesList
-                    data={apartment.amenities}
-                    label={t('amenitiesLabel')}
-                    title={t('amenitiesTitle')}
                   />
                 </div>
               )}
@@ -355,14 +357,23 @@ export default function ApartmentDetailContent({
                   />
                 </div>
               )}
+              {apartment.amenities.length > 0 && (
+                <div className="break-inside-avoid">
+                  <AmenitiesList
+                    data={apartment.amenities}
+                    label={t('amenitiesLabel')}
+                    title={t('amenitiesTitle')}
+                  />
+                </div>
+              )}
               {essentials.length > 0 && (
                 <div className="break-inside-avoid">
                   <EssentialsList data={essentials} title={t('essentials')} />
                 </div>
               )}
-              {apartment.comforts.length > 0 && (
+              {comforts.length > 0 && (
                 <div className="break-inside-avoid">
-                  <ComfortsList data={apartment.comforts} title={t('comforts')} />
+                  <ComfortsList data={comforts} title={t('comforts')} />
                 </div>
               )}
               {(apartment.cin || apartment.ape) && (
