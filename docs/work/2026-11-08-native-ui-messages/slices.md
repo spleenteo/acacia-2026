@@ -40,6 +40,11 @@ Lavoro tecnico: niente frame, shaping, breadboard e design. Per i visitatori non
 - Dal deploy di V1 in poi il modello `Translation` resta modificabile ma non ha più effetto, senza alcun segnale: stop alle modifiche delle label sul CMS, e intervallo breve tra V1 e V2.
 - `src/messages/*.json` oggi è descritto da `CLAUDE.md` come da non committare: in questo work diventa sorgente.
 
+**Deviations found while planning V1**
+
+- `CLAUDE.md:38` va corretta anche se non era nel mandato: cita `noStore: true`, che V1 rimuove.
+- `docs/pre-launch-review.md:21` e il commento in `src/components/BookingModal/index.tsx:20` vanno corretti anche se non erano nel mandato: indicano ancora DatoCMS come destinazione del testo.
+
 ## V2 — Il modello Translation sparisce da DatoCMS
 
 **Precondizione**: V1 è in produzione. Fino ad allora il codice deployato interroga `allTranslations`.

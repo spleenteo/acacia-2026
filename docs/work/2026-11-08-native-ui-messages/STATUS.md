@@ -2,7 +2,7 @@
 status: open
 phase: slice
 slice: V1
-step: plan
+step: execute
 work: native-ui-messages
 stacks: [datocms, react]
 base: main
