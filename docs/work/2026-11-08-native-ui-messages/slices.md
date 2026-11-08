@@ -45,6 +45,10 @@ Lavoro tecnico: niente frame, shaping, breadboard e design. Per i visitatori non
 - `CLAUDE.md:38` va corretta anche se non era nel mandato: cita `noStore: true`, che V1 rimuove.
 - `docs/pre-launch-review.md:21` e il commento in `src/components/BookingModal/index.tsx:20` vanno corretti anche se non erano nel mandato: indicano ancora DatoCMS come destinazione del testo.
 
+**V1 — done on 2026-11-08**
+
+Le label arrivano da `src/messages/{en,it}.json`, 134 chiavi per lingua, generate una volta dai record pubblicati di `activities-01` e ricontrollate alla chiusura. `request.ts` importa il JSON della lingua richiesta, in chunk separati per lingua; `fetchTranslations` e `noStore` non esistono più; `AppConfig` tipizza le chiavi e `appConfig.ts` fa fallire `tsc` su una chiave inesistente o presente in una sola lingua. Ruling: T6 è rimasta in due commit, perché un `sed` fallito su macOS ha lasciato un bullet e unirli avrebbe riscritto la storia. Ruling: il gate era rosso su Prettier per due artefatti locali di `.impeccable/`, risolto con `.prettierignore` su ok dell'owner. Controlli manuali fatti sul testo server-rendered contro la produzione: clic sui filtri e resa nel browser non provati. La review finale ha lasciato un'osservazione bassa: le voci 17, 21 e 25 di `docs/pre-launch-review.md` descrivono fix già fatti nel codice.
+
 ## V2 — Il modello Translation sparisce da DatoCMS
 
 **Precondizione**: V1 è in produzione. Fino ad allora il codice deployato interroga `allTranslations`.
