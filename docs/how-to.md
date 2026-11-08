@@ -79,7 +79,7 @@ The old `index_*` singletons still resolve via `indexPaths` (fixed path, slug ig
 - Draft: `executeQuery()` with `no-store` (bypasses cache entirely)
 - Invalidation: webhook → `/api/invalidate-cache`
 - Draft mode: `/api/draft-mode/enable` / `/api/draft-mode/disable`
-- Types: gql.tada (compile-time) + @datocms/cli (CMA types)
+- Types: gql.tada (compile-time) + datocms CLI (CMA types)
 
 ### UI Translations (next-intl)
 
