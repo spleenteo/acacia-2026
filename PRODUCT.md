@@ -46,11 +46,12 @@ Eccezione confermata: i badge delle piattaforme (punteggio medio Booking.com, Ai
 
 ## Product Principles
 
-1. Prima la scelta, poi la prenotazione: mood e quartiere guidano l'ospite verso l'appartamento giusto.
+1. Prima l'impatto, poi la verifica: la prima cosa che chi cerca casa guarda sono le foto, e devono piacere a colpo d'occhio; solo dopo controlla i fatti. Mood e quartiere sono una chiave di scelta per chi arriva senza averla fatta, non un passaggio obbligato: l'ospite può arrivare già deciso.
 2. EN e IT sono pari: nessuna lingua è la traduzione dell'altra.
 3. Il CMS è la fonte unica: niente testo, numero o prova che l'editor non possa cambiare.
 4. Nessuna prova inventata: la fiducia si costruisce con ciò che esiste davvero.
 5. Il sito serve anche dopo la prenotazione, non solo prima.
+6. Ogni criterio di design è rivedibile se aumenta la prenotazione diretta (disintermediazione rispetto alle piattaforme) e la qualità della scelta dell'ospite. Il proprietario lo ha dichiarato esplicitamente.
 
 ## Accessibility & Inclusion
 
