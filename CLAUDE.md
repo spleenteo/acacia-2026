@@ -1,193 +1,118 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+Guidance for Claude Code when working in this repository. It holds only what the code does not show on its own: constraints, gotchas and the reasons behind them, or where to look. Lists of files, components, routes or function names are deliberately absent — they drift; read the code.
 
-IMPORTANT: always use DatoCMS CLI plugin with SKILLS
-Dont use the DatoCMS MCP when developing.
+IMPORTANT: for anything DatoCMS (schema, records, migrations) use the `datocms` CLI through its skills (`datocms:datocms-cli`, `datocms:datocms-cma`). Do not use the DatoCMS MCP while developing.
 
-## Project Overview
+## Project
 
-Acacia Firenze — Next.js 16 (App Router) website integrated with DatoCMS as headless CMS. Uses React 19, TypeScript (strict mode), Tailwind CSS v4, and deploys to Vercel. Node 24 required (see .nvmrc). Bilingual site (EN/IT) with locale-prefixed URLs (`/en/...`, `/it/...`).
+Acacia Firenze — Next.js 16 (App Router, Turbopack), React 19, TypeScript strict, Tailwind CSS v4, DatoCMS as headless CMS, deployed on Vercel. Node 24 (`.nvmrc`). Bilingual EN/IT with locale-prefixed URLs (`/en/...`, `/it/...`).
+
+## Documentation map
+
+This file covers engineering only. Other knowledge lives elsewhere — load the right one instead of searching here:
+
+| Need                                                      | Where                                                                                                                         |
+| --------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
+| Users, purpose, positioning, product limits               | `PRODUCT.md`                                                                                                                  |
+| Visual language: palette, type, shapes, components, rules | `DESIGN.md` + `.impeccable/design.json`                                                                                       |
+| Design token values                                       | `@theme` in `src/app/global.css` (what ships; if `DESIGN.md` disagrees, report the drift)                                     |
+| Active works, plans, decisions                            | `docs/work/` — `docs/work/archive/` is **denied to Claude** by `.claude/settings.json`; use the index `docs/work/archived.md` |
+| Pre-launch checklist                                      | `docs/pre-launch-review.md`                                                                                                   |
+| Creating a page with realtime draft preview               | project skill `realtime-page-pattern` (`.claude/skills/`)                                                                     |
+
+For UI decisions `DESIGN.md` wins over this file; for product questions `PRODUCT.md` wins. Never copy palette values, type sizes or product claims into `CLAUDE.md` or `docs/` — they drift.
 
 ## Commands
 
-```bash
-npm run dev                # Start dev server
-npm run build              # Production build
-npm run lint               # ESLint + Prettier check
-npm run format             # Auto-format with Prettier
-npm run generate-schema    # Regenerate GraphQL schema + introspection types from DatoCMS
-npm run generate-cma-types # Regenerate CMA types (requires DATOCMS_CMA_TOKEN)
-npm run export-translations # Export DatoCMS Translation records to src/messages/*.json
-```
+Scripts are in `package.json`; the non-obvious ones:
 
-Pre-commit hook formats staged files with Prettier via simple-git-hooks + lint-staged.
+- `npm run generate-schema` — refreshes `schema.graphql` from the CDA **of the environment in `DATOCMS_ENVIRONMENT`** (empty = primary). `src/lib/datocms/graphql-env.d.ts` is written by the gql.tada TS plugin configured in `tsconfig.json`; if it lags, `npx gql.tada generate output`. Run after any DatoCMS schema change.
+- `npm run generate-cma-types` — regenerates `src/lib/datocms/cma-types.ts` (needs `DATOCMS_CMA_TOKEN`).
+- `npm run codegen` = both of the above. **`prepare` runs `codegen` on every local `npm install`** (skipped when `VERCEL` or `CI` is set), so a fresh install needs a filled `.env.local`.
+- `npm run lint` = `eslint . && prettier --check .`. Pre-commit runs Prettier on staged files (simple-git-hooks + lint-staged).
+- `npm run export-translations` — dumps Translation records to `src/messages/*.json` for debugging only; the files are not used at runtime and should not be committed.
 
-## Architecture
+## Data flow and caching
 
-### Data Flow
+- Every read goes through `executeQuery()` in `src/lib/datocms/executeQuery.ts` (wraps `@datocms/cda-client`). Published content: `force-cache` + Next tag `datocms`; draft content or `noStore: true`: `no-store`. The comments in that file are the reference.
+- A DatoCMS webhook hits `/api/invalidate-cache` and calls `revalidateTag('datocms')`. On Vercel the Data Cache **survives deploys**: a deploy alone does not refresh content — fire the webhook or purge manually. Static routes such as `sitemap.ts` are not purged by the tag either; the sitemap has `revalidate = 3600` for that reason.
+- Two CDA tokens: `DATOCMS_PUBLISHED_CONTENT_CDA_TOKEN` (published only, no preview access) and `DATOCMS_DRAFT_CONTENT_CDA_TOKEN` (drafts, used only in Draft Mode). `DATOCMS_ENVIRONMENT` is applied to every CDA/CMA call, to codegen and to `baseEditingUrl`.
+- Site Search (`/api/search` → `src/lib/datocms/siteSearch.ts`) uses the CMA token server-side only. The index is re-crawled daily by `.github/workflows/reindex-search.yml`, whose hard-coded index id must stay in sync with `DATOCMS_SITE_SEARCH_INDEX_ID`.
 
-All content comes from DatoCMS via its GraphQL Content Delivery API. The central data-fetching function is `src/lib/datocms/executeQuery.ts`, which wraps `@datocms/cda-client` with Next.js cache integration (force-cache + `datocms` cache tag). Cache is invalidated by a DatoCMS webhook hitting `/api/invalidate-cache`.
+## GraphQL and types
 
-Two CDA tokens control what content is returned:
+- Build queries with `graphql()` from `@/lib/datocms/graphql` (gql.tada + DatoCMS custom scalars), never from `gql.tada` directly. `readFragment`, `FragmentOf`, `ResultOf` are re-exported from the same module.
+- Fragments are colocated with the component that consumes them. **If the component is `'use client'`, put the fragment in a sibling `fragment.ts`** (e.g. `src/components/ApartmentCard/fragment.ts`): importing a fragment from a `'use client'` file into a server component breaks the gql.tada build ("j.definitions is not iterable").
+- `src/lib/datocms/cma-types.ts` (datocms CLI) types CMA records in `recordInfo.ts` and `/api/seo-analysis`.
+- Generated, never edit by hand: `schema.graphql`, `src/lib/datocms/graphql-env.d.ts`, `src/lib/datocms/cma-types.ts`.
 
-- `DATOCMS_PUBLISHED_CONTENT_CDA_TOKEN` — published content for production
-- `DATOCMS_DRAFT_CONTENT_CDA_TOKEN` — draft content with stega-encoded metadata for click-to-edit overlays
+## Page pattern
 
-### GraphQL Type Safety
+Each route has `page.tsx` (server: query, `generateMetadata`, `generateStaticParams`, draft/published switch) and a `*Content.tsx` presentational component. In Draft Mode `page.tsx` returns `<RealtimeWrapper>` (`src/lib/datocms/realtime/`) spread with `getDraftRealtimeOptions()`, so editors get live updates via `useQuerySubscription`; otherwise it renders the Content component directly. Follow the `realtime-page-pattern` skill when adding a page; never duplicate `RealtimeWrapper`.
 
-Two type generation systems work together:
+Legacy text fields (apartment/district/home `description`, `abstract`, `claim`) are still queried with `markdown: true` and rendered by `<HtmlContent>`; newer models use Structured Text (`src/components/StructuredText*`).
 
-- **gql.tada** — compile-time type safety for CDA GraphQL queries. Schema lives in `schema.graphql` (auto-generated via `gql.tada generate schema`). The TypeScript plugin in `tsconfig.json` reads it for editor inference. `gql.tada generate output` produces `graphql-env.d.ts` for build-time checks. After any DatoCMS schema change, run `npm run generate-schema`.
-- **datocms** (CLI) — generates `src/lib/datocms/cma-types.ts` with typed CMA record definitions used in `recordInfo.ts` for record-to-URL mapping.
+## Draft Mode, Content Link and stega
 
-### Key Patterns
+- `/api/draft-mode/enable?token=…&redirect=/…` and `/api/draft-mode/disable`. Enable re-sets the `__prerender_bypass` cookie with `partitioned: true` so Draft Mode works inside the Web Previews iframe (`src/app/api/utils.ts`). The site CSP `frame-ancestors` in `next.config.mjs` must list the custom admin domain too.
+- Web Previews plugin and Content Link: the plugin is configured in the DatoCMS UI, not in the repo. Its preview webhook is `{SITE_URL}/api/preview-links?token={SECRET_API_TOKEN}` and its draft-mode URL is `/api/draft-mode/enable?token=…`. `reloadPreviewOnRecordUpdate` is `false` on purpose: live updates come from the realtime subscription. `baseEditingUrl` automatically appends `/environments/{DATOCMS_ENVIRONMENT}` when set. `/api/seo-analysis` serves the SEO/Readability plugin.
+- In Draft Mode the locale layout mounts `<ContentLink>` and `<DraftModeToggler>` and **does not load** Beddy, Iubenda or PostHog. There is no public "enable draft" button.
+- `executeQuery` sets `contentLink: 'v1'` only for drafts: text fields (`title`, `description`, `abstract`, `claim`, `intro`, `subtitle`, `body`, structured-text values, asset `alt`…) then carry invisible stega metadata. Rendering it is safe; **any non-render use must go through `stripStega()`**: comparisons, `switch`, `.split`/`.replace`/regex, `.length`, `.toLowerCase()` lookups, `JSON.stringify` (JSON-LD via `<JsonLd>`, analytics), `<meta>`/`<title>`/OG built from raw fields, cache keys, anything persisted. Slug, JSON, boolean, number, date, color, lat/lon, SEO, file/gallery, link(s), modular content and `_seoMetaTags` never carry stega. Debug with `revealStega(value)` (`console.log` shows nothing).
+- Import `react-datocms` from its subpaths (`react-datocms/stega`, `react-datocms/seo`, `react-datocms/use-query-subscription`), never from the barrel `'react-datocms'`: the barrel drags the Mux player into client bundles and broke visual editing.
 
-**Fragment colocation**: GraphQL fragments are defined in the same file as the component that consumes them (e.g., `ResponsiveImageFragment` in `src/components/ResponsiveImage/index.tsx`). Components receive data typed as `FragmentOf<typeof SomeFragment>`.
+## Locale routing
 
-**Draft mode**: Next.js Draft Mode is toggled via `/api/draft-mode/enable` and `/api/draft-mode/disable`. When active, pages use the draft CDA token and enable content-link click-to-edit overlays.
+- Locales `en`/`it` in `src/i18n/config.ts`; routes live under `src/app/[locale]/`. `src/proxy.ts` (Next 16 replacement for `middleware`) handles prefix-less paths and localized segments; its comments are the spec. Two rules it enforces that are easy to break:
+  - **The `acacia_locale` cookie is written only by a click on `<LocaleSwitcher>`.** The proxy renews an existing cookie (Safari caps JS-written cookies at 7 days) but never creates one. A visit must never decide the visitor's language.
+  - Every page has one public URL per locale: non-localized variants (`/it/florence/...`, legacy `/blog`) are 301-redirected, then localized segments are rewritten to the English filesystem route.
+- The segment map and every path helper live in `src/i18n/paths.ts`. Always build hrefs with those helpers — never hand-write `/it/firenze/...`. Note `blog` is public as `magazine` in both locales and `search` as `cerca` in IT.
+- Index pages are records of the `index_page` collection selected by localized slug (`indexPageSlug`); legacy `index_*` singletons still resolve via `indexPaths` for old menu items. Adding a section: `pathSegments` → `modelPrefixes` (detail) / `indexPageRoutes` (index_page-backed) / `indexPaths` (legacy singleton), then `robots.ts` `SEARCH_DETAIL_BASES` and `sitemap.ts` if it must be crawled.
+- Pages with per-locale slugs (mood, post, FAQ) cannot be switched by segment translation: they publish their alternate URLs through `AlternateLocaleProvider` and build hreflang with `localizedSlugPaths`.
+- `src/lib/datocms/recordInfo.ts` maps CMA records to URLs for the Web Previews and SEO Analysis plugins, dispatching on model `api_key` (numeric item-type ids change across environment forks). FAQ URLs come from the tree (`src/lib/faq/faqTree.ts`), not from a single slug.
 
-**Record routing**: `src/lib/datocms/recordInfo.ts` maps DatoCMS item types to frontend URLs via `modelPath()` from `src/i18n/paths.ts`. Used by Web Previews and SEO Analysis plugins. Handles both detail records (with slug) and singleton index models (fixed path, slug ignored).
+## UI translations (next-intl)
 
-**Locale routing**: App Router uses a `[locale]` dynamic segment (`src/app/[locale]/`). Supported locales are `en` and `it`, configured in `src/i18n/config.ts`. The root layout (`src/app/layout.tsx`) provides `<html lang>` dynamically from params; the locale layout adds header, footer, Beddy script, and draft mode controls. `proxy.ts` (the Next.js 16 replacement for the deprecated `middleware` convention) content-negotiates the locale for prefix-less paths — an explicit choice in the `acacia_locale` cookie first, then `Accept-Language`, then English — and rewrites translated path segments to canonical filesystem paths. **The cookie is written only by a click on the language switcher**: the proxy renews an existing one so Safari's 7-day cap on JS-written cookies doesn't expire a real choice, but never creates one. A visit alone must never decide the visitor's language.
+- No hardcoded UI strings except in `not-found.tsx`, `error.tsx` and `NotFoundScene` (no locale context there, copy is bilingual). Source of truth is the DatoCMS `Translation` model: `key` (unique, pattern `^[a-zA-Z][a-zA-Z0-9_.]*$`, convention `section.camelCaseKey`) and localized `value`.
+- `src/lib/datocms/fetchTranslations.ts` loads all records at request time (paged by 500) through `executeQuery`; in dev it bypasses the Data Cache (`noStore`), in prod the webhook refreshes it — no rebuild. `src/i18n/request.ts` feeds them to next-intl; the locale layout provides `NextIntlClientProvider`.
+- Client components: `useTranslations('section')`; server components: `await getTranslations('section')` from `next-intl/server`. ICU placeholders: `t('key', { name })`. Sections are whatever `useTranslations('…')` calls exist in `src/` — grep before inventing a new one.
+- New string: create + publish the Translation record in DatoCMS (CLI), then use `t('key')`. The webhook makes it visible.
 
-**Localized path segments**: URL path segments are translated per locale (`florence` → `firenze`, `accommodations` → `appartamenti`, `districts` → `quartieri`). The translation map and utilities live in `src/i18n/paths.ts`. The proxy rewrites incoming translated paths to canonical (English) filesystem routes. All components use `modelPath()` or `localizedPath()` to generate locale-aware hrefs. To add a new translated section: add the segment to `pathSegments`, then add the model to `modelPrefixes` (detail) or `indexPaths` (singleton) in `paths.ts`.
+## Turbopack workaround
 
-**Mood apartments (union type)**: Moods link to related content directly via `relatedContent` (union: `ApartmentRecord | DistrictRecord | FaqRecord | PostRecord`). Apartments are extracted inline with `__typename === 'ApartmentRecord'` filtering.
+`useRouter()`, `usePathname()` and other `next/navigation` hooks that subscribe to router state throw "Cannot read properties of undefined (reading 'unsubscribe')" in this project. Use `window.location.pathname` (read through `useSyncExternalStore`, see `HomeLink`/`LocaleSwitcher`), `window.history.replaceState` instead of `router.push`, `window.location.assign()` for full navigations. `useSearchParams` works inside a `<Suspense>` boundary (`CategoryFilter`, `search/page.tsx`).
 
-**HTML content from DatoCMS**: Legacy text fields (description, abstract, claim) are queried with `markdown: true` and rendered via the `<HtmlContent>` component (`dangerouslySetInnerHTML`). This will be replaced with a Structured Text renderer when DatoCMS schema migrates.
+## Styling — build constraints
 
-**Stega encoding & `stripStega`**: In draft mode, the CDA wrapper sets `contentLink: 'v1'`, which embeds invisible stega-encoded metadata into text fields (`title`, `description`, `abstract`, `claim`, `intro`, `subtitle`, `body`, structured-text values, asset `alt`, etc.). This is what powers Content Link click-to-edit overlays. Stega is **safe to render directly** (the encoding is zero-width Unicode that survives intact), but **NOT safe outside the render path**. Wrap any value crossing into non-render logic with `stripStega()` from `react-datocms`:
+Tailwind CSS v4, tokens in `@theme` in `src/app/global.css`, PostCSS in `postcss.config.mjs`. The visual language is in `DESIGN.md`; only engineering constraints here:
 
-- ✅ Safe as-is: `<h1>{title}</h1>`, `dangerouslySetInnerHTML={{ __html: description }}`, slug fields (slug type never carries stega), dates/JSON/numbers/booleans
-- ❌ Must `stripStega()`: string comparisons (`title === 'X'`, `.includes()`, `switch`), `.split`/`.replace`/regex, `JSON.stringify` to analytics or third-party APIs, `<meta>`/`<title>`/OG tags built from raw text fields, JSON-LD, cache keys, `length` checks, anything persisted
+- Use `@theme` (NOT `@theme inline`) so variables are emitted at `:root` and usable in `@layer base`.
+- Font-size tokens use `--text-*` with `--text-*--line-height` companions (NOT `--font-size-*`).
+- All base/reset CSS goes inside `@layer base` — unlayered CSS overrides `@layer utilities` regardless of specificity.
+- Never set `color`, `font-family` or `font-weight` on `h1–h6` in base styles; use utility classes.
+- Fonts load with `next/font/google` in `src/app/layout.tsx` (exposing `--font-fraunces` / `--font-lato`), NOT a CSS `@import`: Turbopack strips external `@import url()` and the fonts silently fell back to Georgia. Fraunces' `opsz`/`SOFT`/`WONK` axes must be requested via next/font `axes` or the `font-variation-settings` in CSS do nothing.
+- Scroll-triggered `.in-view` comes from `InViewSection` (server) or `useInView` (`src/hooks/useInView.ts`, client).
 
-Field types that **never** carry stega and don't need stripping: slug, JSON, boolean, integer, float, date/datetime, color, lat/lon, SEO, video, file, gallery, link, links, modular content, single block. SEO meta tags coming from `_seoMetaTags` are also clean.
+## Environment variables
 
-Debug stega-related bugs with `revealStega(value)` from `react-datocms` — `console.log` shows nothing (encoding is invisible), but `revealStega` rewrites it as visible `[STEGA:/editor/...]` markers, preserving object/array shape.
+See `.env.local.example` for the full commented list. Non-obvious points:
 
-**Fragment separation for client components**: When a GraphQL fragment is defined in a `'use client'` file but needs to be imported in server components, extract it to a separate `.ts` file (e.g., `ImageGallery/fragment.ts`). Importing from `'use client'` files in server components causes gql.tada build errors ("j.definitions is not iterable").
-
-**UI Translations (next-intl)**: All user-facing UI strings are managed via the DatoCMS `Translation` model and consumed at runtime through `next-intl`. **No hardcoded strings** — every label, button text, section heading, or CTA must use a translation key.
-
-- **Source of truth**: DatoCMS `Translation` model with fields `key` (string, unique, format `section.camelCaseKey`) and `value` (string, localized EN/IT).
-- **Runtime fetch**: `src/lib/datocms/fetchTranslations.ts` queries all Translation records from the CDA at runtime via `executeQuery`, benefiting from Next.js Data Cache (tagged `datocms`). When an editor modifies a translation in DatoCMS, the existing cache invalidation webhook automatically refreshes translations — no rebuild needed. The static `src/messages/*.json` files have been removed (they were stale and unused at runtime); `npm run export-translations` regenerates them on demand for reference/debugging only.
-- **Configuration**: `src/i18n/request.ts` configures next-intl by calling `fetchTranslations(locale)`; `next.config.mjs` wraps with `createNextIntlPlugin`. The locale layout (`src/app/[locale]/layout.tsx`) provides `NextIntlClientProvider` with all messages.
-- **Client components** (`'use client'`): use `useTranslations('section')` hook → `t('keyName')`.
-- **Server components** (async): use `const t = await getTranslations('section')` from `next-intl/server` → `t('keyName')`.
-- **ICU interpolation**: use `{placeholder}` in the value, call `t('key', { placeholder: value })`. Example: `listing.exploreDistrict` = `"Explore {name}"` → `t('exploreDistrict', { name })`.
-- **Key naming convention**: dot-notation `section.camelCaseKey`. Sections: `nav`, `footer`, `listing`, `districts`, `moods`, `district`, `apartment`, `gallery`. The `key` field on DatoCMS validates with `/^[a-zA-Z][a-zA-Z0-9_.]*$/`.
-- **Adding a new translated string**: (1) create a Translation record in DatoCMS with key + EN/IT values, (2) publish it, (3) the cache invalidation webhook will automatically refresh translations, (4) use `t('section.key')` in the component.
-- **Files not using translations**: `not-found.tsx` and `error.tsx` keep bilingual inline strings (no locale context available).
-- **Legacy export script**: `npm run export-translations` regenerates the on-demand static JSON files (`src/messages/en.json`, `src/messages/it.json`) as a reference or debugging aid; they are not committed and not used at runtime.
-
-**Turbopack workaround**: Next.js 16 Turbopack has a bug where `useRouter()`, `usePathname()`, and other `next/navigation` hooks that subscribe to router state cause "Cannot read properties of undefined (reading 'unsubscribe')" errors. Use `window.history.replaceState` instead of `router.push`, `window.location.pathname` instead of `usePathname()`, and `window.location.assign()` for full navigation. `useSearchParams` works when wrapped in a Suspense boundary.
-
-### Styling — "Japan Fish" Editorial Design System
-
-> A light, editorial visual language: navy ground, warm-cool "Japan Fish" palette, Fraunces display serif. Design-token NAMES are decoupled from their VALUES — a re-theme swaps the values in one place and every component follows automatically.
-
-Tailwind CSS v4 with `@theme` (NOT `@theme inline`) design tokens in `src/app/global.css`. This section is the single source of truth for the visual language.
-
-**Critical Tailwind v4 rules:**
-
-- Use `@theme` (without `inline`) so variables are emitted at `:root` and accessible in `@layer base`
-- Font-size tokens use `--text-*` namespace with `--text-*--line-height` companions (NOT `--font-size-*`)
-- All base/reset CSS must be inside `@layer base` — unlayered CSS overrides `@layer utilities` regardless of specificity
-- Never set `color`, `font-family`, or `font-weight` on `h1–h6` in base styles — use Tailwind utility classes
-
-**Palette ("Japan Fish"):** **Blackberry** `#48182F` (`primary`) is THE action colour — CTAs/links/focus (hover `#381325`, pale `#EFE2E9`); warm **rust** `#D53302` (`rust`/`rust-pale`) is a secondary accent kept for specific touches. Support hues gold `#FFAA4D` (with `gold-soft` `#FFC680` hover) / sage `#A0CBAD` / slate `#8FB1BE`. Surfaces: white `surface` #FFFFFF / sage-tint `surface-alt` #EAF2F1 / warm sand `surface-warm` #FBF3E3. Deep **navy** ground `#00012A` (`dark`/`body`/dark sections, never pure black); muted text `#4C5168`. Hairline border `#DCE6E6`; crisp navy border via `border-strong`. Text selection is sage-on-navy; structured-text `<mark>` highlight uses `rust-pale`.
-
-**Typography:** Fraunces (`font-heading`) for all headings — a free high-contrast "old style" serif (SIL OFL) standing in for Domaine Display, pinned to its sharp cut via `font-variation-settings: 'opsz' 144, 'SOFT' 0, 'WONK' 0` on h1–h6 + `.font-heading` (WONK 0 removes the playful quirks). Lato (`font-body`) for body/UI. **Fonts are loaded with `next/font/google` in `src/app/layout.tsx`** (self-hosted, exposing `--font-fraunces` / `--font-lato`), NOT a CSS `@import` — Turbopack strips external `@import url()` from the compiled stylesheet, so webfonts silently fell back to Georgia. Fraunces' `opsz`/`SOFT`/`WONK` axes are requested via next/font's `axes` so the variation-settings actually apply. Body scale is bumped up one step from the source demo: `text-hero` (56px), `text-h1` (42px), `text-h2` (36px), `text-h3` (24px), `text-h4` (18px), `text-body-lg` (19px), `text-body` (17px), `text-body-sm` (15px), `text-caption` (13.5px), `text-label` (12px), `text-tag` (10px), `text-fine` (11px).
-
-**Editorial pattern:** Section/hero headings use `<em>` for emphasis on one key word — rendered as the **italic Fraunces cut in rust** with a thin underline that wipes in on scroll (`em::after`, scaleX, triggered via `.in-view`). Use `InViewSection` wrapper (server components) or `useInView` hook (client components) to trigger it. Section labels / card kickers: `text-label uppercase tracking-[0.18em–0.22em] text-muted/text-rust font-medium`.
-
-**Cards:** crisp `radius-card` 4px, portrait 3:4 image (`overflow-hidden rounded-sm`), uppercase kicker + serif title that shifts to rust on `group-hover`, image zoom `scale-[1.03]`, restrained navy-tinted `shadow-card-hover`. PostCSS configured in `postcss.config.mjs`.
-
-### Components
-
-| Component               | Path                                                | Purpose                                                                                       |
-| ----------------------- | --------------------------------------------------- | --------------------------------------------------------------------------------------------- |
-| `SiteHeader`            | `src/components/SiteHeader/`                        | Navigation with locale switcher, primary bg                                                   |
-| `SiteFooter`            | `src/components/SiteFooter/`                        | Two-band footer (sage `surface-alt` + navy)                                                   |
-| `BeddyBar`              | `src/components/BeddyBar/`                          | Wrapper for `<beddy-bar>` web component (booking widget)                                      |
-| `HtmlContent`           | `src/components/HtmlContent/`                       | Renders legacy HTML from DatoCMS text fields                                                  |
-| `ApartmentCard`         | `src/components/ApartmentCard/`                     | Apartment card with colocated GraphQL fragment                                                |
-| `MoodCard`              | `src/components/MoodCard/`                          | Mood card with colocated GraphQL fragment                                                     |
-| `DistrictCard`          | `src/components/DistrictCard/`                      | District card with colocated GraphQL fragment                                                 |
-| `GalleryImageFragment`  | `src/components/ImageGallery/fragment.ts`           | Shared gallery-image fragment (district masonry + WhatWeLove); the grid component was removed |
-| `IndexPageHeroFragment` | `src/components/EditorialHero/indexPageFragment.ts` | Shared `index_page` hero + description fragment used by every index page query                |
-| `CategoryFilter`        | `src/components/CategoryFilter/`                    | Client component for apartment category filtering                                             |
-| `CuddlesList`           | `src/components/CuddlesList/`                       | Amenities list with colocated fragment                                                        |
-| `UpsList`               | `src/components/UpsList/`                           | Lifestyle features pill list with colocated fragment                                          |
-| `InfoDetail`            | `src/components/InfoDetail/`                        | Info blocks (text + address) with union type handling                                         |
-| `DistrictLink`          | `src/components/DistrictLink/`                      | Editorial link to district detail page                                                        |
-| `ResponsiveImage`       | `src/components/ResponsiveImage/`                   | DatoCMS responsive image with fragment                                                        |
-| `ContentLink`           | `src/components/ContentLink/`                       | Click-to-edit overlays (draft mode, no next/navigation hooks)                                 |
-| `DraftModeToggler`      | `src/components/DraftModeToggler/`                  | Draft mode toggle button                                                                      |
-
-### Path Alias
-
-`@/*` maps to `./src/*` in tsconfig.
-
-## Environment Variables
-
-Required in `.env.local` (see `.env.local.example`):
-
-- `DATOCMS_PUBLISHED_CONTENT_CDA_TOKEN` — CDA token "CDA Only (Published)", NO preview access (cannot read drafts even with `X-Include-Drafts`)
-- `DATOCMS_DRAFT_CONTENT_CDA_TOKEN` — CDA token with preview access; used only in Draft Mode
-- `DATOCMS_CMA_TOKEN` — Content Management API token. The runtime only performs reads (Site Search, seo-analysis route): on Vercel use the "Read-only API token". Locally a write-capable token is fine (scripts/, POI import, schema generation)
-- `DATOCMS_ENVIRONMENT` — DatoCMS environment for app, codegen and scripts (empty = primary)
-- `DATOCMS_SITE_SEARCH_INDEX_ID` — Site Search index id, used by `/api/search`
-- `DATOCMS_BASE_EDITING_URL` — DatoCMS project URL for content link overlays
-- `SECRET_API_TOKEN` — Shared secret for webhook/plugin endpoints; the same value lives in the DatoCMS webhook URL and Web Previews plugin config, so rotate all three together
-- `NEXT_PUBLIC_SITE_URL` — Production URL (e.g. `https://acaciafirenze.com`), used as `metadataBase` for SEO and sitemap generation
-- `NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN` / `NEXT_PUBLIC_POSTHOG_HOST` — PostHog (trial, US region). Initialised by `src/components/PostHogAnalytics`, never in Draft Mode or inside an iframe. Custom events go through `trackEvent()` in `src/lib/analytics.ts`, which feeds both GA4 and PostHog; empty = PostHog off
+- `DATOCMS_CMA_TOKEN` — runtime only reads (Site Search, seo-analysis): on Vercel use a read-only token; locally a write token is fine for `scripts/`, migrations and codegen.
+- `SECRET_API_TOKEN` — guards `/api/invalidate-cache`, `/api/preview-links`, `/api/seo-analysis`, `/api/draft-mode/enable`; the same value is in the DatoCMS webhook URL and the Web Previews plugin config, so rotate all three together.
+- `NEXT_PUBLIC_SITE_URL` — read once in `src/lib/siteUrl.ts` as `SITE_URL`; build absolute URLs from that constant, never re-read the env inline.
+- `NEXT_PUBLIC_GA_ID` — GA4; analytics consent defaults to **granted** by owner decision (see `src/app/[locale]/layout.tsx`), do not flip it back as a "fix".
+- `NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN` / `_HOST` — PostHog, off in Draft Mode and inside iframes (`src/components/PostHogAnalytics`). Custom events go through `trackEvent()` in `src/lib/analytics.ts` (GA4 + PostHog).
 
 ## SEO
 
-Each page exports `generateMetadata()` using `_seoMetaTags` from DatoCMS + `toNextMetadata` from `react-datocms`. Pattern:
+- Each `page.tsx` exports `generateMetadata()` combining `_seoMetaTags` (`TagFragment` from `src/lib/datocms/commonFragments.ts`) with `toNextMetadata` from `react-datocms/seo`, plus `alternates` (canonical + hreflang + `x-default`) built with the helpers in `paths.ts`.
+- Index pages backed by `index_page` (accommodations, districts, moods, blog, guestbook) delegate to `indexPageMetadata(canonicalRoute, params)` (`src/lib/datocms/indexPageMetadata.ts`) and share `IndexPageHeroFragment` (`src/components/EditorialHero/indexPageFragment.ts`). Pages with per-record alternates (mood, post, FAQ) build their own.
+- JSON-LD goes through `<JsonLd>` with helpers in `src/lib/seo/jsonLd.ts`; every CMS string in it is `stripStega()`-cleaned first. `metadataBase` is set in `src/app/layout.tsx`; `sitemap.ts` and `robots.ts` cover both locales.
 
-```ts
-const metaQuery = graphql(
-  `
-    query {
-      record {
-        _seoMetaTags(locale: $locale) {
-          ...TagFragment
-        }
-      }
-    }
-  `,
-  [TagFragment],
-);
+## Error pages
 
-export async function generateMetadata({ params }): Promise<Metadata> {
-  const data = await executeQuery(metaQuery, { variables: { locale }, includeDrafts });
-  return {
-    ...toNextMetadata(data.record?._seoMetaTags ?? []),
-    alternates: { canonical, languages },
-  };
-}
-```
-
-Index pages backed by an `index_page` record (moods, districts, accommodations, blog, guestbook) don't repeat this boilerplate: they delegate to the shared helper `indexPageMetadata(canonicalRoute, params)` from `src/lib/datocms/indexPageMetadata.ts`. Their queries also share the hero + description selection via `IndexPageHeroFragment` (`src/components/EditorialHero/indexPageFragment.ts`); Content components unwrap it with `readFragment`.
-
-`metadataBase` is set in `src/app/layout.tsx`. `src/app/sitemap.ts` generates `/sitemap.xml` for all static and dynamic routes in both locales. Absolute URLs are always built from the shared `SITE_URL` constant (`src/lib/siteUrl.ts`) — never re-read `NEXT_PUBLIC_SITE_URL` inline.
-
-## Error Pages
-
-- `src/app/[locale]/not-found.tsx` — 404 page (server component, no locale access, bilingual)
-- `src/app/[locale]/error.tsx` — error boundary (`'use client'`, required by Next.js)
-- `src/app/[locale]/loading.tsx` — loading skeleton for Suspense boundaries
-- `src/app/[locale]/not-found.tsx` and `error.tsx` render **inside** the locale layout, header and footer included. Only the root `src/app/not-found.tsx` — for URLs that match no route at all — renders without them. Neither receives `params`, so neither knows its locale: the "back home" link uses `<HomeLink>`, which reads it from the URL.
-
-## Formatting
-
-- Prettier: single quotes, trailing commas, 100 char print width
-- Generated files to never edit: `schema.graphql`, `src/lib/datocms/graphql-env.d.ts`, `src/lib/datocms/cma-types.ts`
-- Route handlers use `.ts` extension (not `.tsx`) since they contain no JSX
-- When evaluating or implementing UI changes, follow the "Styling — Japan Fish" section above as the design source of truth
+- `src/app/[locale]/not-found.tsx` and `src/app/not-found.tsx` both render `<NotFoundScene>` (bilingual). The root one is the only real-404 for unmatched URLs; the locale one catches `notFound()` and renders inside the locale layout. **Do not add a `loading.tsx` above the `[slug]` routes**: it turned missing records into soft 404s.
+- `src/app/[locale]/error.tsx` (client) and `src/app/global-error.tsx` (reports to PostHog). None of these receive `params`, so the "back home" link is `<HomeLink>`, which reads the locale from the URL.
 
 <!-- BEGIN:nextjs-agent-rules -->
 

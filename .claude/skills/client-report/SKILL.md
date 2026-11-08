@@ -65,7 +65,7 @@ Drop anything purely internal (code refactors, dependency updates, dev tooling) 
 
 ### Format
 
-Keep it short — ideally 3-6 sentences. One paragraph, no bullet points unless there are 4+ distinct items. Start directly with what was done, no greetings or preamble.
+Keep it short. One paragraph, no bullet points unless there are 4+ distinct items. Start directly with what was done, no greetings or preamble.
 
 **Example output:**
 
@@ -75,7 +75,7 @@ Keep it short — ideally 3-6 sentences. One paragraph, no bullet points unless 
 
 - Implementation details ("ho usato un middleware", "ho creato un file paths.ts")
 - Developer workflow changes (pre-commit hooks, linting, type generation)
-- Internal documentation updates (changelog, how-to, project structure) — these are for us, not for Diana
+- Internal documentation updates (changelog, CLAUDE.md, project structure) — these are for us, not for Diana
 - Test results or build status
 - Git branch names or commit hashes
 
