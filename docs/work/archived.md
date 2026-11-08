@@ -5,7 +5,7 @@ description: "Indice dei lavori archiviati in docs/work/archive/, cartella che C
 
 # Lavori archiviati
 
-> `docs/work/archive/` contiene i lavori conclusi. Claude non la legge: `.claude/settings.json` nega `Read` e `Grep` su quel percorso. Questo file sta fuori e dice dove trovare l'esito di ogni lavoro. Si aggiorna con `/devflow-archive`.
+> `docs/work/archive/` contiene i lavori conclusi. Claude non la legge: `.claude/settings.json` nega `Read` e `Grep` su quel percorso. Questo file sta fuori e dice dove trovare l'esito di ogni lavoro. Si aggiorna con `/flow:archive`.
 
 I primi nove lavori qui sotto sono **precedenti all'adozione di devflow**: vivevano in `docs/shaping/`, `docs/pitches/` e `pitches/`. Il 2026-09-02 sono stati riorganizzati nella struttura devflow (`<data>-<slug>/` con `pitch.md`, `shaping.md`, `slices.md`) e archiviati in blocco. Lo `STATO.md` di ognuno è ricostruito dai documenti e dalla storia git, non scritto durante il lavoro. `locale-switcher`, in coda, è il primo condotto interamente con devflow: il suo `STATUS.md` è stato scritto passo per passo mentre il lavoro procedeva.
 
