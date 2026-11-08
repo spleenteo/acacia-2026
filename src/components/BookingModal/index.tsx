@@ -17,7 +17,7 @@ export function useBooking() {
   return useContext(BookingContext);
 }
 
-/** Static intro copy (not yet in DatoCMS). The booking portal is an external,
+/** Static intro copy (not yet in `src/messages/`). The booking portal is an external,
  *  trusted service that looks a little different from the rest of the site. */
 const INTRO: Record<Locale, { kicker: string; title: string; body: string; close: string }> = {
   en: {

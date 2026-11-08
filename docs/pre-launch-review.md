@@ -14,15 +14,15 @@ Acacia Firenze (Next 16 App Router + DatoCMS). De-duplicated from ~55 raw findin
 
 These are visible wrong-language bugs on a bilingual site — the most user-facing class of issue here. All low effort.
 
-1. **Lightbox controls hardcoded Italian for all locales** — `src/components/Lightbox/index.tsx:142-146`. The shared YARL lightbox (used by ImageGallery/PhotoLightbox/WhatWeLove on EN and IT) passes fixed `Precedente/Successiva/Chiudi` aria-labels, so EN users get Italian Previous/Next/Close. Fix: it's already `'use client'` — use `useTranslations('gallery')` and add `gallery.previous/next/close` Translation records. Effort: low.
+1. **Lightbox controls hardcoded Italian for all locales** — `src/components/Lightbox/index.tsx:142-146`. The shared YARL lightbox (used by ImageGallery/PhotoLightbox/WhatWeLove on EN and IT) passes fixed `Precedente/Successiva/Chiudi` aria-labels, so EN users get Italian Previous/Next/Close. Fix: it's already `'use client'` — use `useTranslations('gallery')` and add `gallery.previous/next/close` keys to `src/messages/{en,it}.json`. Effort: low.
 
 2. **ReviewsList formats dates as en-GB regardless of locale** — `src/components/ReviewsList/index.tsx:124-127, 180-183`. Hardcoded `toLocaleDateString('en-GB', …)` shows English month names ("January 2025") on `/it/` apartment pages. Fix: add a `locale` prop, thread it from the apartment-detail content component, and format via `Intl.DateTimeFormat(locale === 'it' ? 'it-IT' : 'en-GB', …)` — extract a shared `formatReviewDate(date, locale)` since GuestbookCard already does this correctly. Effort: low.
 
-3. **CopyLinkButton aria-label/title hardcoded Italian only** — `src/components/Faq/CopyLinkButton.tsx:30-32`. `Link copiato`/`Copia link` are the accessible name on EN FAQ pages too. Fix: already `'use client'` — `useTranslations('faq')` + `faq.copyLink`/`faq.linkCopied` records. Effort: low.
+3. **CopyLinkButton aria-label/title hardcoded Italian only** — `src/components/Faq/CopyLinkButton.tsx:30-32`. `Link copiato`/`Copia link` are the accessible name on EN FAQ pages too. Fix: already `'use client'` — `useTranslations('faq')` + `faq.copyLink`/`faq.linkCopied` keys in `src/messages/*.json`. Effort: low.
 
 4. **FaqCard "Explore" CTA hardcoded English on IT pages** — `src/components/Faq/FaqCard.tsx:21`. Server component with no locale awareness renders the English word "Explore" on the Italian FAQ index (a real wrong-language bug, not just a policy violation). Fix: pass a translated `cta` label from the async parent via `getTranslations`. Effort: low. _(Sibling `FaqSideNav.tsx:38` uses an inline `it ? 'Tutte le domande' : 'All questions'` ternary — correct text but bypasses the pipeline; convert it with `useTranslations` in the same pass.)_
 
-5. **ApartmentDetailContent bed/bath/sleeps copy via inline locale ternaries** — `src/app/[locale]/florence/accommodations/[slug]/ApartmentDetailContent.tsx:166-235`. A code comment already flags it as provisional ("Move to DatoCMS Translation records once finalised"). Hand-rolled `beds === 1 ? 'bedroom' : 'bedrooms'` / `isIt ? 'posti letto' : 'sleeps'` etc. Fix: move to Translation records and use next-intl ICU plural (`{count, plural, one{…} other{…}}`) instead of `=== 1` ternaries. Effort: medium.
+5. **ApartmentDetailContent bed/bath/sleeps copy via inline locale ternaries** — `src/app/[locale]/florence/accommodations/[slug]/ApartmentDetailContent.tsx:166-235`. Hand-rolled `beds === 1 ? 'bedroom' : 'bedrooms'` / `isIt ? 'posti letto' : 'sleeps'` etc. Fix: move to `src/messages/*.json` and use next-intl ICU plural (`{count, plural, one{…} other{…}}`) instead of `=== 1` ternaries. Effort: medium.
 
 ## P2 — post-launch / nice-to-have
 
@@ -47,7 +47,7 @@ Every collection query either omits `first:` (silent default of 20) or hard-caps
 ### More hardcoded strings (policy violations; correct text per locale, so not wrong-language bugs — lower than P1)
 
 - **InfoDetail "( … area)" English literals** — `src/components/InfoDetail/index.tsx:86-94`. Renders "Via X (Santo Spirito area)" on IT pages. Fix: ICU rich-text translation key. Effort: low.
-- **BookingModal intro copy** in a per-locale `INTRO` object literal — `src/components/BookingModal/index.tsx:21-34` (comment admits "not yet in DatoCMS"). Fix: `booking` Translation section + `useTranslations`. Effort: medium.
+- **BookingModal intro copy** in a per-locale `INTRO` object literal — `src/components/BookingModal/index.tsx:21-34` (comment admits "not yet in `src/messages/`"). Fix: `booking` section in `src/messages/*.json` + `useTranslations`. Effort: medium.
 - **Structured-text CtaBlogPost** `Leggi tutto`/`Read more`, `Dal blog`/`From the blog` ternaries — `src/components/StructuredText/StructuredTextBlocks.tsx:157-158`; and **FaqNodeContent** `In breve`/`In short` `:126`. Fix: resolve via `getTranslations` and pass into the renderer. Effort: low.
 - **Modal close aria-label "Close"** hardcoded English — `src/components/Modal/index.tsx:52` (used site-wide incl. ReviewsList). Fix: translate via a `label` prop. (`FaqBreadcrumb:9` `aria-label="Breadcrumb"` is a borderline ARIA term — leave.) Effort: low.
 
@@ -98,7 +98,6 @@ Concrete refactors that collapse the bulk of the duplicate findings:
 - **Dead imports:** `HtmlContent` import in `ApartmentDetailContent.tsx:8`; `cookies` in `src/app/api/draft-mode/disable/route.ts:1` (use `import { draftMode }`).
 - **Dead local code:** `siblingsOf` export in `src/lib/faq/faqTree.ts:144-149` (zero callers); unused `inputRef` in `src/components/SearchBox/index.tsx:71,95`; unused `locale` prop in `InfoDetail` (`:48,52` — or wire it up to fix the "( area)" bug, recommended).
 - **`public/logo--main.svg`** — old header logo, replaced by text wordmark in commit 48134e6; zero refs in src. (Keep `placeholder-airbnb-superhost.svg` / `placeholder-booking-score.svg` — actively rendered in ReviewsList despite the name.)
-- **`src/messages/en.json` / `it.json`** — confirmed NOT imported at runtime (runtime path is `fetchTranslations()` → DatoCMS CDA; only `scripts/export-translations.ts` references them, and it _writes_ them). Also stale (missing 8 live namespaces). Delete, or keep strictly as a regenerable reference — but don't trust them.
 - **Dead CSS `@theme` tokens in `global.css`:** 9 pure dead color variants (`--color-dark-soft`, `--color-primary-soft`, `--color-primary-deep`, `--color-rust-hover`, `--color-rust-soft`, `--color-rust-deep`, `--color-sage-strong`, `--color-alert`, `--color-notice`), `--text-tag`, and 3 section-spacing tokens (`--spacing-section-x/-y/-y-lg`). Zero `var()` refs and zero generated utility usage.
 
 **Delete-candidate (medium confidence):**
@@ -117,6 +116,6 @@ Concrete refactors that collapse the bulk of the duplicate findings:
 - **Fix the 5 P1 bilingual bugs** (Lightbox, ReviewsList dates, CopyLinkButton, FaqCard "Explore", apartment bed/bath/sleeps) — these are visible wrong-language defects on a bilingual launch; all low/medium effort.
 - **Add explicit `first:` to every capped/uncapped collection query** (generateStaticParams ×3, related-moods, categories, sitemap, search enrichment) — quick interim fix; real fix is the shared `fetchAllPages` helper, but at minimum prerendering today is silently truncated to 20 with 35 apartments.
 - **Land the `assertLocale` helper + the two page-boilerplate extractions** (`makeIndexMetadata`, `renderMaybeRealtime`) — removes ~400 lines and the highest-drift-risk copy-paste before more pages are added.
-- **Do the safe deletions** (3 unused deps, dead imports, `logo--main.svg`, `src/messages/*.json`, ~13 dead CSS tokens, `siblingsOf`) — clean, zero-risk.
-- **Sweep the remaining hardcoded strings** into the Translation model (InfoDetail, BookingModal, structured-text CTA, FaqNodeContent, Modal close) to satisfy the no-hardcoded-strings rule and make copy editor-editable.
+- **Do the safe deletions** (3 unused deps, dead imports, `logo--main.svg`, ~13 dead CSS tokens, `siblingsOf`) — clean, zero-risk.
+- **Sweep the remaining hardcoded strings** into `src/messages/*.json` (InfoDetail, BookingModal, structured-text CTA, FaqNodeContent, Modal close) to satisfy the no-hardcoded-strings rule.
 - **Fix the docs drift** — CLAUDE.md palette (blackberry is the action color, not rust) — so the launch reviewer and future contributors aren't misled.
