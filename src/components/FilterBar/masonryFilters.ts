@@ -17,11 +17,11 @@ export const FILTER_KIND_ORDER: CardKind[] = [
 ];
 
 /** CardKind → key in the `filters` translation namespace. */
-export const FILTER_KIND_TKEY: Record<CardKind, string> = {
+export const FILTER_KIND_TKEY = {
   apartment: 'apartments',
   poi: 'pois',
   district: 'districts',
   post: 'posts',
   image: 'images',
   faq: 'faq',
-};
+} as const satisfies Record<CardKind, string>;

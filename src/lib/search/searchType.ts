@@ -16,13 +16,13 @@ export const SEARCH_TYPES: readonly SearchResultType[] = [
 ];
 
 /** Translation key (under the `search` namespace) for each type's label. */
-export const SEARCH_TYPE_LABEL_KEY: Record<SearchResultType, string> = {
+export const SEARCH_TYPE_LABEL_KEY = {
   apartment: 'typeApartment',
   district: 'typeDistrict',
   mood: 'typeMood',
   faq: 'typeFaq',
   magazine: 'typeMagazine',
-};
+} as const satisfies Record<SearchResultType, string>;
 
 /** Derive the content type from a result path (EN or IT segments). */
 export function getResultType(path: string): SearchResultType | null {
