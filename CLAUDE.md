@@ -31,7 +31,7 @@ Scripts are in `package.json`; the non-obvious ones:
 - `npm run generate-cma-types` — regenerates `src/lib/datocms/cma-types.ts` (needs `DATOCMS_CMA_TOKEN`).
 - `npm run codegen` = both of the above. **`prepare` runs `codegen` on every local `npm install`** (skipped when `VERCEL` or `CI` is set), so a fresh install needs a filled `.env.local`.
 - `npm run lint` = `eslint . && prettier --check .`. Pre-commit runs Prettier on staged files (simple-git-hooks + lint-staged).
-- `npm run export-translations` — the one-off dump that seeded `src/messages/*.json`, which are committed and maintained by hand. Do not re-run it after V1 is deployed: it would overwrite them.
+- `npm run export-translations` — the one-off dump that seeded `src/messages/*.json`, which are committed and maintained by hand. Do not re-run it: it would overwrite them.
 
 ## Data flow and caching
 
