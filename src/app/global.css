@@ -134,9 +134,25 @@
 
 :root {
   --header-height: 58px;
+  --floating-action-lift: 0rem;
+}
+
+/* Below lg, apartment pages slide a booking bar in on scroll: the floating
+   WhatsApp button rises with it so neither covers the other. */
+@media (width < 1024px) {
+  :root:has([data-mobile-booking-bar][data-visible]) {
+    --floating-action-lift: 4.5rem;
+  }
 }
 
 @layer base {
+  /* Keeps the end of the page, legal links included, clear of the mobile booking bar. */
+  @media (width < 1024px) {
+    body:has([data-mobile-booking-bar]) {
+      padding-bottom: 4.5rem;
+    }
+  }
+
   html {
     font-family: var(--font-body);
     color: var(--color-body);

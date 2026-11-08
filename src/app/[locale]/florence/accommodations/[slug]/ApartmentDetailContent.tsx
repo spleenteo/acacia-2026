@@ -315,10 +315,10 @@ export default function ApartmentDetailContent({
                 each widget stays intact and CIN/APE spans the full width below. */}
             <div className="mt-12 md:columns-2 md:gap-8 lg:mt-0 lg:columns-1 lg:relative lg:top-[-40px]">
               <BookingSidebar
-                bedrooms={apartment.bedrooms}
+                name={apartment.name}
+                district={apartment.district?.name}
                 bathrooms={apartment.bathrooms}
                 sleeps={apartment.sleeps}
-                price={apartment.price}
                 highlight={apartment.houseBadge?.label}
                 acaciaReward={apartment.acaciaReward}
                 beddyId={apartment.beddyId}
@@ -468,9 +468,6 @@ export default function ApartmentDetailContent({
         {(similarApartments.length > 0 || relatedMoods.length > 0) && (
           <RelatedContent apartments={similarApartments} moods={relatedMoods} locale={locale} />
         )}
-
-        {/* Bottom bar spacer on mobile */}
-        <div className="h-16 lg:hidden" />
       </div>
     </>
   );

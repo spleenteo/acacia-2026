@@ -22,7 +22,10 @@ export default function WhatsAppWidget() {
   const href = whatsappUrl(t('prefill'));
 
   return (
-    <div className="pointer-events-none fixed bottom-5 right-5 z-30 flex flex-col items-end gap-3 print:hidden">
+    <div
+      className="pointer-events-none fixed bottom-5 right-5 z-30 flex flex-col items-end gap-3 transition-transform duration-300 ease-out motion-reduce:transition-none print:hidden"
+      style={{ transform: 'translateY(calc(var(--floating-action-lift) * -1))' }}
+    >
       {/* Card — always mounted, toggled for a smooth open/close transition */}
       <div
         role="dialog"
