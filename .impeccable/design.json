@@ -1,0 +1,331 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-11-08T17:09:28.402Z",
+  "title": "Design System: Acacia Firenze",
+  "extensions": {
+    "colorMeta": {
+      "blackberry-ink": {
+        "role": "primary",
+        "displayName": "Blackberry Ink",
+        "canonical": "#48182f",
+        "tonalRamp": [
+          "#18040d",
+          "#3f1629",
+          "#653248",
+          "#89536a",
+          "#af758d",
+          "#cf9eb1",
+          "#e5c3d0",
+          "#f7ebef"
+        ]
+      },
+      "rust": {
+        "role": "secondary",
+        "displayName": "Rust",
+        "canonical": "#d53302",
+        "tonalRamp": [
+          "#2a0000",
+          "#620000",
+          "#940000",
+          "#bf1500",
+          "#ea4923",
+          "#ff8264",
+          "#ffb49f",
+          "#ffe6df"
+        ]
+      },
+      "gold": {
+        "role": "secondary",
+        "displayName": "Gold",
+        "canonical": "#ffaa4d",
+        "tonalRamp": [
+          "#1f0100",
+          "#4c0d00",
+          "#762b00",
+          "#9c4f00",
+          "#c47300",
+          "#e19e57",
+          "#f1c499",
+          "#fbebdd"
+        ]
+      },
+      "sage": {
+        "role": "secondary",
+        "displayName": "Sage",
+        "canonical": "#a0cbad",
+        "tonalRamp": [
+          "#010f05",
+          "#0d2e1a",
+          "#284f36",
+          "#497156",
+          "#6b9578",
+          "#96b8a0",
+          "#bed4c4",
+          "#e9f1eb"
+        ]
+      },
+      "slate": {
+        "role": "secondary",
+        "displayName": "Slate",
+        "canonical": "#8fb1be",
+        "tonalRamp": [
+          "#020d12",
+          "#102a33",
+          "#2b4a55",
+          "#4c6c78",
+          "#6e8f9c",
+          "#98b3be",
+          "#bfd1d8",
+          "#e9f0f2"
+        ]
+      },
+      "night-navy": {
+        "role": "neutral",
+        "displayName": "Night Navy",
+        "canonical": "#00012a",
+        "tonalRamp": [
+          "#030a1e",
+          "#13244b",
+          "#2d4373",
+          "#4d6598",
+          "#6f89be",
+          "#98aedb",
+          "#bfceec",
+          "#e9eff9"
+        ]
+      },
+      "muted-navy": {
+        "role": "neutral",
+        "displayName": "Muted Navy",
+        "canonical": "#4c5168",
+        "tonalRamp": [
+          "#090a14",
+          "#222537",
+          "#3f445a",
+          "#5f657d",
+          "#8288a1",
+          "#a8adc2",
+          "#cacddb",
+          "#edeef3"
+        ]
+      },
+      "surface-sage": {
+        "role": "neutral",
+        "displayName": "Surface Sage",
+        "canonical": "#eaf2f1",
+        "tonalRamp": [
+          "#090c0b",
+          "#232827",
+          "#404746",
+          "#616867",
+          "#848b8a",
+          "#a9afaf",
+          "#cbcfce",
+          "#edefee"
+        ]
+      },
+      "surface-sand": {
+        "role": "neutral",
+        "displayName": "Surface Sand",
+        "canonical": "#fbf3e3",
+        "tonalRamp": [
+          "#0d0b06",
+          "#2b261b",
+          "#4b4437",
+          "#6c6558",
+          "#90887a",
+          "#b3ada1",
+          "#d1cdc5",
+          "#f0eeeb"
+        ]
+      },
+      "hairline": {
+        "role": "neutral",
+        "displayName": "Hairline",
+        "canonical": "#dce6e6",
+        "tonalRamp": [
+          "#090c0c",
+          "#212828",
+          "#3f4747",
+          "#5f6868",
+          "#828b8b",
+          "#a8b0b0",
+          "#cacfcf",
+          "#edefef"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "hero": {
+        "displayName": "Hero",
+        "purpose": "Titolo della home e delle testate editoriali."
+      },
+      "h3": {
+        "displayName": "H3",
+        "purpose": "Titolo delle card."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Testo corrente, 19px su body."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Kicker e etichette di sezione, maiuscolo."
+      }
+    },
+    "shadows": [
+      {
+        "name": "card",
+        "value": "0 1px 0 0 rgba(0, 1, 42, 0.06)",
+        "purpose": "Filo di base per contenitori."
+      },
+      {
+        "name": "card-hover",
+        "value": "0 4px 6px -1px rgba(0, 1, 42, 0.1), 0 2px 4px -2px rgba(0, 1, 42, 0.1)",
+        "purpose": "Solo in hover sull'immagine della card."
+      }
+    ],
+    "motion": [
+      {
+        "name": "ease-card",
+        "value": "cubic-bezier(0.19, 1, 0.22, 1)",
+        "purpose": "Zoom delle immagini, ombra, sottolineatura dei titoli."
+      },
+      {
+        "name": "hero-rise",
+        "value": "700ms cubic-bezier(0.22, 1, 0.36, 1)",
+        "purpose": "Ingresso dell'hero, con sfasamento di 90ms."
+      },
+      {
+        "name": "nav-pop",
+        "value": "cubic-bezier(0.34, 1.56, 0.64, 1)",
+        "purpose": "Evidenziatore di navigazione e menu mobile, con leggero rimbalzo."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "xs",
+        "value": "400px"
+      },
+      {
+        "name": "sm",
+        "value": "480px"
+      },
+      {
+        "name": "md",
+        "value": "720px"
+      },
+      {
+        "name": "lg",
+        "value": "1024px"
+      },
+      {
+        "name": "xl",
+        "value": "1500px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Azione principale, pillola Blackberry Ink.",
+      "html": "<button class=\"ds-btn-primary\">Prenota</button>",
+      "css": ".ds-btn-primary{background:var(--color-primary);color:#fff;font-family:Lato,sans-serif;font-size:0.9375rem;font-weight:500;letter-spacing:0.06em;padding:14px 32px;border:0;border-radius:100px;transition:background-color .3s}.ds-btn-primary:hover{background:var(--color-primary-hover)}.ds-btn-primary:focus-visible{outline:2px solid var(--color-primary);outline-offset:3px}"
+    },
+    {
+      "name": "Secondary Button",
+      "kind": "button",
+      "refersTo": "button-secondary-dark",
+      "description": "Azione secondaria su fondo chiaro, solo bordo.",
+      "html": "<button class=\"ds-btn-secondary\">Scopri</button>",
+      "css": ".ds-btn-secondary{background:transparent;color:var(--color-dark);font-family:Lato,sans-serif;font-size:0.9375rem;font-weight:500;letter-spacing:0.06em;padding:14px 32px;border:1px solid rgba(0,1,42,.3);border-radius:100px;transition:border-color .3s}.ds-btn-secondary:hover{border-color:rgba(0,1,42,.6)}.ds-btn-secondary:focus-visible{outline:2px solid var(--color-primary);outline-offset:3px}"
+    },
+    {
+      "name": "Widget Label",
+      "kind": "chip",
+      "refersTo": "widget-label",
+      "description": "Etichetta di sezione in toni Japan Fish.",
+      "html": "<span class=\"ds-label ds-label-sage\">Quartiere</span>",
+      "css": ".ds-label{display:inline-block;font-family:Lato,sans-serif;font-size:0.75rem;font-weight:600;letter-spacing:0.16em;text-transform:uppercase;padding:4px 10px;border-radius:4px}.ds-label-sage{background:#dcebe0;color:#3f7757}"
+    },
+    {
+      "name": "Apartment Card",
+      "kind": "card",
+      "refersTo": "card-image",
+      "description": "Ritratto 3:4, kicker, titolo con evidenziatore wonky.",
+      "html": "<article class=\"ds-card\"><div class=\"ds-card-img\"></div><p class=\"ds-card-kicker\">Appartamento in Santo Spirito</p><h3 class=\"ds-card-title\"><span class=\"ds-card-name\">Casa Acacia</span>, luce sull'Arno</h3></article>",
+      "css": ".ds-card{width:280px;font-family:Lato,sans-serif}.ds-card-img{aspect-ratio:3/4;border-radius:4px;background:linear-gradient(160deg,#a0cbad,#fbf3e3);transition:box-shadow .5s cubic-bezier(.19,1,.22,1)}.ds-card:hover .ds-card-img{box-shadow:0 4px 6px -1px rgba(0,1,42,.1),0 2px 4px -2px rgba(0,1,42,.1)}.ds-card-kicker{margin:16px 0 8px;font-size:0.75rem;font-weight:500;letter-spacing:0.18em;text-transform:uppercase;color:var(--color-muted)}.ds-card-title{margin:0;font-family:Fraunces,Georgia,serif;font-size:1.8rem;font-weight:400;line-height:1.18;color:var(--color-dark);transition:color .3s}.ds-card:hover .ds-card-title{color:var(--color-primary)}.ds-card-name{position:relative;isolation:isolate;font-weight:500}.ds-card-name::before{content:\"\";position:absolute;inset:-4px -10px;z-index:-1;background:#dcebe0;clip-path:polygon(8px 0,100% 0,calc(100% - 8px) 100%,0 100%)}"
+    },
+    {
+      "name": "Nav Item",
+      "kind": "nav",
+      "refersTo": "",
+      "description": "Voce di navigazione con evidenziatore wonky in hover.",
+      "html": "<a class=\"ds-nav\" href=\"#\"><span class=\"ds-nav-hl\"></span><span class=\"ds-nav-t\">Appartamenti</span></a>",
+      "css": ".ds-nav{position:relative;display:inline-flex;font-family:Lato,sans-serif;font-size:1.0625rem;letter-spacing:.025em;color:var(--color-muted);text-decoration:none}.ds-nav-hl{position:absolute;inset:-8px -12px;background:#ffeccb;clip-path:polygon(8px 0,100% 0,calc(100% - 8px) 100%,0 100%);transform:scale(.9);opacity:0;transition:all .3s cubic-bezier(.34,1.56,.64,1)}.ds-nav-t{position:relative;transition:color .3s}.ds-nav:hover .ds-nav-hl{transform:scale(1);opacity:1}.ds-nav:hover .ds-nav-t{color:var(--color-dark)}.ds-nav:focus-visible{outline:2px solid var(--color-primary);outline-offset:6px}"
+    },
+    {
+      "name": "Editorial Heading",
+      "kind": "custom",
+      "refersTo": "h2",
+      "description": "Titolo con una parola in corsivo color Blackberry Ink e filo sottile.",
+      "html": "<h2 class=\"ds-h\">Un soggiorno nel cuore di <em>Firenze</em></h2>",
+      "css": ".ds-h{margin:0;font-family: Fraunces, Georgia, serif; font-variation-settings: 'opsz' 144, 'SOFT' 0, 'WONK' 0;font-size:2.7rem;font-weight:400;line-height:1.12;color:var(--color-dark)}.ds-h em{position:relative;font-style:italic;color:var(--color-primary)}.ds-h em::after{content:\"\";position:absolute;left:0;right:0;bottom:-.04em;height:1px;background:currentColor;opacity:.45}"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Quiet Concierge",
+    "overview": "Il sito parla come un concierge discreto: tutto è calmo e nitido, il colore compare dove serve e non prima. Un serif ad alto contrasto dà la voce editoriale, un sans leggibile porta il testo di servizio, i fondi alternano bianco, sage e sand come pagine di una guida. L'unico gesto \"a mano\" è l'evidenziatore sghembo.",
+    "keyCharacteristics": [
+      "Serif Fraunces nel suo taglio più affilato, corsivo solo per la parola chiave del titolo.",
+      "Fondo navy mai nero puro, azioni sempre color blackberry.",
+      "Superfici piatte a riposo, angoli netti da 4px, bottoni a pillola.",
+      "Evidenziatori a parallelogramma (wonkyClip) come firma.",
+      "Movimento lento e morbido, disattivato con prefers-reduced-motion."
+    ],
+    "rules": [
+      {
+        "name": "The One Action Rule",
+        "body": "Blackberry Ink è il colore di ogni azione primaria. Rust, gold, sage e slate non fanno mai da CTA.",
+        "section": "colors"
+      },
+      {
+        "name": "The No Pure Black Rule",
+        "body": "Il nero più scuro è Night Navy. Un #000 è un errore.",
+        "section": "colors"
+      },
+      {
+        "name": "The One Italic Rule",
+        "body": "In un titolo, una sola parola va in corsivo Fraunces peso 400 color Blackberry Ink.",
+        "section": "typography"
+      },
+      {
+        "name": "The Sharp Cut Rule",
+        "body": "Fraunces non si usa mai con WONK o SOFT attivi.",
+        "section": "typography"
+      },
+      {
+        "name": "The Flat-By-Default Rule",
+        "body": "Una superficie ferma non ha ombra. L'ombra è la risposta a un gesto.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "Do usare Blackberry Ink (#48182f) per ogni azione primaria e per il corsivo dei titoli.",
+      "Do tenere le superfici piatte a riposo e dare rilievo solo in hover.",
+      "Do passare ogni nuovo evidenziatore da wonkyClip(seed) con un seme stabile.",
+      "Do rispettare prefers-reduced-motion.",
+      "Do aggiungere uno stato :focus-visible visibile a ogni elemento interattivo nuovo."
+    ],
+    "donts": [
+      "Don't usare nero puro: il più scuro è Night Navy (#00012a).",
+      "Don't colorare una CTA con rust, gold, sage o slate.",
+      "Don't attivare WONK o SOFT su Fraunces.",
+      "Don't mettere ombre a riposo sulle card.",
+      "Don't togliere l'outline di un campo senza un sostituto visibile.",
+      "Don't usare @import url() per i font."
+    ]
+  }
+}
