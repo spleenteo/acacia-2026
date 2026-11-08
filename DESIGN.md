@@ -148,6 +148,8 @@ Una palette calda e fredda insieme: blackberry e rust contro sage, slate e un na
 
 **The One Action Rule.** Blackberry Ink è il colore di ogni azione primaria. Rust, gold, sage e slate non fanno mai da CTA: colorano, evidenziano, segnano.
 
+**The Inverted Action Rule.** Su Night Navy il blackberry sparisce (1,39:1): l'azione primaria si inverte in Surface Sand con testo Night Navy (18:1), hover Gold Soft. Il blackberry resta l'azione su tutti i fondi chiari. Le azioni secondarie sui fondi scuri hanno bordo bianco al 70% e testo bianco.
+
 **The No Pure Black Rule.** Il nero più scuro è Night Navy. Un `#000` è un errore.
 
 ## Typography
@@ -245,7 +247,9 @@ Un pannello tinto a parallelogramma che si disegna da sinistra a destra in 700ms
 
 ### Do:
 
-- **Do** usare Blackberry Ink (#48182f) per ogni azione primaria e per il corsivo dei titoli.
+- **Do** usare Blackberry Ink (#48182f) per ogni azione primaria su fondo chiaro e per il corsivo dei titoli; su Night Navy vale l'Inverted Action Rule.
+- **Do** far parlare le foto per prime: nelle pagine di dettaglio l'impatto visivo viene prima, subito dopo i fatti per verificare. È un criterio di progetto dichiarato da PRODUCT.md (principio 1), rivedibile solo se aumenta la prenotazione diretta.
+- **Do** su fondo scuro tingere i kicker di Gold (#ffaa4d, 10,7:1) e il testo secondario di bianco al 60-70%.
 - **Do** tenere le superfici piatte a riposo e dare rilievo solo in hover.
 - **Do** passare ogni nuovo evidenziatore da `wonkyClip(seed)` con un seme stabile.
 - **Do** rispettare `prefers-reduced-motion`: animazioni d'ingresso e scorrimento morbido si spengono.
@@ -254,7 +258,8 @@ Un pannello tinto a parallelogramma che si disegna da sinistra a destra in 700ms
 ### Don't:
 
 - **Don't** usare nero puro: il più scuro è Night Navy (#00012a).
-- **Don't** colorare una CTA con rust, gold, sage o slate: sono accenti, non azioni.
+- **Don't** colorare una CTA con rust, gold, sage o slate: sono accenti, non azioni. Fa eccezione solo lo stato hover Gold Soft della CTA invertita su Night Navy.
+- **Don't** usare il verde del marchio WhatsApp come fondo di un pulsante con testo bianco (1,98:1): il verde resta nell'icona (#25d366), il pulsante è secondario.
 - **Don't** attivare `WONK` o `SOFT` su Fraunces.
 - **Don't** mettere ombre a riposo sulle card.
 - **Don't** togliere l'outline di un campo senza un sostituto visibile.

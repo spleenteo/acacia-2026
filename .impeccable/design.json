@@ -310,14 +310,21 @@
         "name": "The Flat-By-Default Rule",
         "body": "Una superficie ferma non ha ombra. L'ombra è la risposta a un gesto.",
         "section": "elevation"
+      },
+      {
+        "name": "The Inverted Action Rule",
+        "body": "Su Night Navy l'azione primaria si inverte in Surface Sand con testo Night Navy, hover Gold Soft. Il blackberry resta l'azione sui fondi chiari.",
+        "section": "colors"
       }
     ],
     "dos": [
-      "Do usare Blackberry Ink (#48182f) per ogni azione primaria e per il corsivo dei titoli.",
+      "Do usare Blackberry Ink (#48182f) per ogni azione primaria su fondo chiaro e per il corsivo dei titoli; su Night Navy vale l'Inverted Action Rule.",
       "Do tenere le superfici piatte a riposo e dare rilievo solo in hover.",
       "Do passare ogni nuovo evidenziatore da wonkyClip(seed) con un seme stabile.",
       "Do rispettare prefers-reduced-motion.",
-      "Do aggiungere uno stato :focus-visible visibile a ogni elemento interattivo nuovo."
+      "Do aggiungere uno stato :focus-visible visibile a ogni elemento interattivo nuovo.",
+      "Do far parlare le foto per prime nelle pagine di dettaglio: impatto prima, verifica subito dopo.",
+      "Do su fondo scuro tingere i kicker di Gold (#ffaa4d) e il testo secondario di bianco al 60-70%."
     ],
     "donts": [
       "Don't usare nero puro: il più scuro è Night Navy (#00012a).",
@@ -325,7 +332,8 @@
       "Don't attivare WONK o SOFT su Fraunces.",
       "Don't mettere ombre a riposo sulle card.",
       "Don't togliere l'outline di un campo senza un sostituto visibile.",
-      "Don't usare @import url() per i font."
+      "Don't usare @import url() per i font.",
+      "Don't usare il verde WhatsApp come fondo di un pulsante con testo bianco (1,98:1): il verde resta nell'icona."
     ]
   }
 }
