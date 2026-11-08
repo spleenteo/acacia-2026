@@ -1,6 +1,6 @@
 ---
 status: open
-phase: slicing
+phase: impact
 slice: null
 step: null
 work: native-ui-messages
@@ -19,7 +19,8 @@ description: 'Portare le label UI dal modello Translation di DatoCMS a file nati
 
 ## Slices
 
-- [ ] (defined during slicing)
+- [ ] V1 — Le label vengono dai file del repo
+- [ ] V2 — Il modello Translation sparisce da DatoCMS
 
 ## Pending proposals
 
@@ -28,3 +29,5 @@ description: 'Portare le label UI dal modello Translation di DatoCMS a file nati
 ## Log
 
 <!-- date — step — done — remaining — wall-clock — cost -->
+
+- 2026-11-08 — slicing — due slice definite, fidelity check saltato (nessun frame) — resta impact — n/d — n/d
