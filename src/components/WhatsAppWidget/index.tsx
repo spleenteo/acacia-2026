@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { useTranslations } from 'next-intl';
 
 import { whatsappUrl } from '@/lib/whatsapp';
@@ -20,17 +20,51 @@ export default function WhatsAppWidget() {
   const t = useTranslations('chat');
   const [open, setOpen] = useState(false);
   const href = whatsappUrl(t('prefill'));
+  const toggleRef = useRef<HTMLButtonElement>(null);
 
   return (
     <div
-      className="pointer-events-none fixed bottom-5 right-5 z-30 flex flex-col items-end gap-3 transition-transform duration-300 ease-out motion-reduce:transition-none print:hidden"
+      className="pointer-events-none fixed bottom-5 right-5 z-30 flex flex-col-reverse items-end gap-3 transition-transform duration-300 ease-out motion-reduce:transition-none print:hidden"
       style={{ transform: 'translateY(calc(var(--floating-action-lift) * -1))' }}
+      onKeyDown={(e) => {
+        if (e.key !== 'Escape' || !open) return;
+        setOpen(false);
+        toggleRef.current?.focus();
+      }}
     >
+      {/* The toggle comes first in the DOM (flex-col-reverse keeps it visually
+          last) so Tab goes from it straight into the open card. */}
+      {/* Floating button */}
+      <button
+        ref={toggleRef}
+        type="button"
+        onClick={() => setOpen((o) => !o)}
+        aria-label={t('openLabel')}
+        aria-expanded={open}
+        className="pointer-events-auto flex h-14 w-14 items-center justify-center rounded-full text-white shadow-card-hover transition-transform duration-300 hover:scale-105 active:scale-95"
+        style={{ backgroundColor: WHATSAPP_GREEN }}
+      >
+        {open ? (
+          <svg
+            viewBox="0 0 24 24"
+            className="h-6 w-6"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            aria-hidden
+          >
+            <path d="M6 6l12 12M18 6L6 18" strokeLinecap="round" />
+          </svg>
+        ) : (
+          <WhatsAppGlyph className="h-7 w-7" />
+        )}
+      </button>
+
       {/* Card — always mounted, toggled for a smooth open/close transition */}
       <div
         role="dialog"
         aria-label={t('title')}
-        aria-hidden={!open}
+        inert={!open}
         className={`w-72 origin-bottom-right overflow-hidden rounded-lg border border-border bg-surface shadow-card-hover transition-all duration-300 ${
           open
             ? 'pointer-events-auto translate-y-0 scale-100 opacity-100'
@@ -85,31 +119,6 @@ export default function WhatsAppWidget() {
           </a>
         </div>
       </div>
-
-      {/* Floating button */}
-      <button
-        type="button"
-        onClick={() => setOpen((o) => !o)}
-        aria-label={t('openLabel')}
-        aria-expanded={open}
-        className="pointer-events-auto flex h-14 w-14 items-center justify-center rounded-full text-white shadow-card-hover transition-transform duration-300 hover:scale-105 active:scale-95"
-        style={{ backgroundColor: WHATSAPP_GREEN }}
-      >
-        {open ? (
-          <svg
-            viewBox="0 0 24 24"
-            className="h-6 w-6"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            aria-hidden
-          >
-            <path d="M6 6l12 12M18 6L6 18" strokeLinecap="round" />
-          </svg>
-        ) : (
-          <WhatsAppGlyph className="h-7 w-7" />
-        )}
-      </button>
     </div>
   );
 }

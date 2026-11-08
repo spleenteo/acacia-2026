@@ -99,8 +99,7 @@ export default function ReviewsList({ reviews, label, title }: Props) {
             return (
               <blockquote
                 key={review.id}
-                className="snap-start shrink-0 w-[85vw] sm:w-[45vw] lg:w-[calc((80rem-4.5rem)/3.4)] bg-card rounded-card p-7 shadow-card flex flex-col cursor-pointer hover:shadow-card-hover transition-shadow duration-300"
-                onClick={() => setSelectedReview(review)}
+                className="snap-start shrink-0 w-[85vw] sm:w-[45vw] lg:w-[calc((80rem-4.5rem)/3.4)] bg-card rounded-card p-7 shadow-card flex flex-col relative hover:shadow-card-hover transition-shadow duration-300"
               >
                 {/* Channel logo + opening quote */}
                 <div className="flex justify-between items-start mb-3">
@@ -112,9 +111,17 @@ export default function ReviewsList({ reviews, label, title }: Props) {
                 </div>
 
                 {/* Quote — truncated to 5 lines */}
-                <p className="font-body text-body text-muted leading-relaxed -mt-4 mb-5 flex-1 line-clamp-5">
-                  {review.quote}
-                </p>
+                {/* A real button named by the quote; its ::after stretches over
+                    the card so the whole card stays clickable. */}
+                <button
+                  type="button"
+                  onClick={() => setSelectedReview(review)}
+                  className="-mt-4 mb-5 flex flex-1 cursor-pointer items-start text-left outline-none after:absolute after:inset-0 after:rounded-card focus-visible:after:outline-2 focus-visible:after:-outline-offset-2 focus-visible:after:outline-primary"
+                >
+                  <span className="font-body text-body text-muted leading-relaxed line-clamp-5">
+                    {review.quote}
+                  </span>
+                </button>
 
                 <footer className="border-t border-border-light pt-4">
                   <p className="font-body text-body font-medium text-dark">{review.name}</p>

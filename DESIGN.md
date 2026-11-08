@@ -212,7 +212,7 @@ Angoli netti da 4px per card, immagini e chip (`rounded-card`); 6px e 8px per co
 - **Primary:** fondo Blackberry Ink, testo bianco; in hover passa a Blackberry Ink Hover in 300ms.
 - **Secondary:** bordo sottile trasparente (bianco al 40% su fondo scuro, Night Navy al 30% su fondo chiaro), testo coerente; hover scurisce il bordo.
 - **Tertiary:** solo testo sottolineato, offset 4px, il filo si rafforza in hover.
-- **Focus:** nel codice di oggi non esiste uno stato `:focus-visible` dedicato (vedi Do's and Don'ts).
+- **Focus:** anello unico globale in `:focus-visible` (2px Blackberry Ink, offset 2px, alone Surface White per restare visibile su navy e foto). La CTA invertita su Night Navy usa Gold.
 
 ### Chips (WidgetLabel)
 
@@ -231,7 +231,7 @@ Angoli netti da 4px per card, immagini e chip (`rounded-card`); 6px e 8px per co
 ### Inputs / Fields
 
 - **Style:** campo trasparente dentro un contenitore, testo Body, segnaposto Muted Navy al 70%.
-- **Focus:** oggi il campo rimuove l'outline (`outline-none`) senza sostituirlo; da correggere.
+- **Focus:** il campo non ha outline proprio; l'anello Blackberry Ink si disegna sul contenitore a pillola.
 
 ### Navigation
 

@@ -78,6 +78,7 @@ export default function InfoDetail({ data, title, district }: Props) {
                   loading="lazy"
                   referrerPolicy="no-referrer-when-downgrade"
                   title="Map"
+                  tabIndex={-1}
                 />
               </div>
             )}
