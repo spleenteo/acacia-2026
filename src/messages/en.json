@@ -1,0 +1,172 @@
+{
+  "apartment": {
+    "allPhotos": "View gallery",
+    "amenitiesLabel": "Amenities",
+    "amenitiesTitle": "The House Includes",
+    "bathWord": "{count, plural, one {bathroom} other {bathrooms}}",
+    "bathrooms": "Bathrooms",
+    "bedLabel": "{count, plural, one {# bedroom apartment} other {# bedrooms apartment}}",
+    "bedrooms": "Bedrooms",
+    "book": "Check availability",
+    "bookingScoreAlt": "Booking.com score",
+    "comforts": "Comforts",
+    "ctaBookLabel": "Do you like the idea?",
+    "ctaBookText": "See real-time availability and pricing for this apartment.",
+    "ctaBookTitle": "Check availability",
+    "ctaContactButton": "Chat on WhatsApp",
+    "ctaContactLabel": "Talk to us",
+    "ctaContactText": "Chat with the Acacia® crew on WhatsApp for personalized advice on your stay.",
+    "ctaContactTitle": "Have a question?",
+    "essentials": "Acacia® Essentials",
+    "goToReview": "Go to review {number}",
+    "inDistrict": "in {district}",
+    "info": "Details",
+    "location": "Location",
+    "map": "Map",
+    "moodsLabel": "Explore",
+    "moodsTitle": "Related Moods",
+    "openInMaps": "Open in Google Maps (opens in a new tab)",
+    "opensInNewTab": "{name} (opens in a new tab)",
+    "reviewsLabel": "Guest reviews",
+    "reviewsTitle": "What Our Guests Say",
+    "similarLabel": "You may also like",
+    "similarTitle": "You may also like",
+    "sleeps": "Sleeps",
+    "sleepsWord": "sleeps",
+    "truthsLabel": "Good to Know",
+    "truthsTitle": "For a Great Experience",
+    "wwlLabel": "What We Love!",
+    "wwlTitle": "What We Love"
+  },
+  "blog": {
+    "label": "Acacia Magazine",
+    "noPosts": "No posts in this category"
+  },
+  "chat": {
+    "closeLabel": "Close",
+    "cta": "Message us on WhatsApp",
+    "openLabel": "Open WhatsApp chat",
+    "prefill": "Hi! I have a question about my stay in Florence.",
+    "replyTime": "We usually reply within minutes",
+    "title": "Acacia® crew",
+    "welcome": "Hi! 👋 How can we help with your stay in Florence?"
+  },
+  "district": {
+    "apartments": "Apartments in",
+    "storiesLabel": "Magazine",
+    "storiesTitle": "Stories worth reading"
+  },
+  "districts": {
+    "label": "Florence neighborhoods",
+    "tag": "District",
+    "title": "Explore the city"
+  },
+  "draftMode": {
+    "disable": "Disable Draft Mode",
+    "enable": "Enable Draft Mode",
+    "error": "Could not complete the operation!",
+    "tokenPrompt": "To enter Draft Mode, you need to insert the SECRET_API_TOKEN:",
+    "tooltipDisable": "Return to viewing published content",
+    "tooltipEnable": "Preview unpublished changes from DatoCMS"
+  },
+  "faq": {
+    "allQuestions": "All questions",
+    "copyLink": "Copy link",
+    "explore": "Explore",
+    "linkCopied": "Link copied",
+    "readMore": "Want to know more? Let's go!"
+  },
+  "filters": {
+    "all": "All",
+    "apartments": "Apartments",
+    "districts": "Districts",
+    "faq": "FAQ",
+    "images": "Images",
+    "pois": "Points of interest",
+    "posts": "Articles"
+  },
+  "footer": {
+    "aboutUs": "About us",
+    "address": "Address",
+    "brandDescription": "Curated apartments in the heart of Florence, crafted for those who seek beauty in every detail.",
+    "explore": "Explore",
+    "faq": "FAQ",
+    "followUs": "Follow us",
+    "getInTouch": "Get in touch",
+    "info": "Info",
+    "privacyPolicy": "Privacy Policy"
+  },
+  "gallery": {
+    "close": "Close",
+    "next": "Next",
+    "previous": "Previous",
+    "viewAll": "View gallery"
+  },
+  "guestbook": {
+    "kicker": "Guestbook"
+  },
+  "home": {
+    "navApartments": "Apartments",
+    "navExperiences": "Experiences",
+    "navHome": "Welcome",
+    "navMoods": "Moods",
+    "navReview": "Reviews",
+    "navStay": "Your stay"
+  },
+  "listing": {
+    "allFilter": "All",
+    "alsoInterested": "You might also be interested in",
+    "discoverArea": "Discover the area",
+    "exploreDistrict": "Explore {name}",
+    "florence": "Florence",
+    "noApartments": "No apartments in this category",
+    "readLess": "Read less",
+    "readMore": "Read more",
+    "searchAvailability": "Search availability",
+    "typeInDistrict": "{type} in {district}",
+    "whereToStay": "Where to stay"
+  },
+  "moods": {
+    "apartments": "Apartments for this mood",
+    "label": "Travel by feeling",
+    "relatedLabel": "Explore",
+    "relatedTitle": "Worth a look",
+    "title": "Discover our moods"
+  },
+  "nav": {
+    "accommodations": "Accommodations",
+    "book": "Check availability",
+    "closeMenu": "Close menu",
+    "contact": "Contact",
+    "districts": "Districts",
+    "language": "Language",
+    "moods": "Moods",
+    "openMenu": "Open menu"
+  },
+  "poi": {
+    "dayTime": "Day time",
+    "mapFor": "Acacia map for {category}",
+    "nightAndDay": "Night & Day",
+    "nightTime": "Night time"
+  },
+  "reviewSpotlight": {
+    "cta": "Discover",
+    "label": "Guest review"
+  },
+  "search": {
+    "button": "search",
+    "empty": "No results for “{q}”",
+    "filterAll": "All",
+    "filterBy": "Filter by",
+    "loading": "Searching…",
+    "minChars": "Type at least 3 characters",
+    "placeholder": "…no AI here, keep it simple :)",
+    "resultsFor": "{count} results for “{q}”",
+    "title": "Search",
+    "typeApartment": "Apartments",
+    "typeDistrict": "Districts",
+    "typeFaq": "FAQ",
+    "typeMagazine": "Magazine",
+    "typeMood": "Moods"
+  }
+}

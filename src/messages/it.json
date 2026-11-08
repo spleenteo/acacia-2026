@@ -1,0 +1,172 @@
+{
+  "apartment": {
+    "allPhotos": "View gallery",
+    "amenitiesLabel": "Amenities",
+    "amenitiesTitle": "La casa include",
+    "bathWord": "{count, plural, one {bagno} other {bagni}}",
+    "bathrooms": "Bagni",
+    "bedLabel": "appartamento {count, plural, one {# camera} other {# camere}}",
+    "bedrooms": "Camere",
+    "book": "Verifica disponibilità",
+    "bookingScoreAlt": "Punteggio Booking.com",
+    "comforts": "Comforts",
+    "ctaBookLabel": "Ti piace l'idea?",
+    "ctaBookText": "Scopri disponibilità e prezzi in tempo reale per questo appartamento.",
+    "ctaBookTitle": "Verifica disponibilità",
+    "ctaContactButton": "Chatta su WhatsApp",
+    "ctaContactLabel": "Parla con noi",
+    "ctaContactText": "Chatta con il crew di Acacia® su WhatsApp per un consiglio personalizzato sul tuo soggiorno.",
+    "ctaContactTitle": "Hai una domanda?",
+    "essentials": "Acacia® Essentials",
+    "goToReview": "Vai alla recensione {number}",
+    "inDistrict": "in {district}",
+    "info": "Dettagli",
+    "location": "Dove si trova",
+    "map": "Mappa",
+    "moodsLabel": "Esplora",
+    "moodsTitle": "Mood correlati",
+    "openInMaps": "Apri in Google Maps (si apre in una nuova scheda)",
+    "opensInNewTab": "{name} (si apre in una nuova scheda)",
+    "reviewsLabel": "Recensioni",
+    "reviewsTitle": "I nostri ospiti raccontano",
+    "similarLabel": "Potrebbe piacerti anche",
+    "similarTitle": "Appartamenti simili",
+    "sleeps": "Ospiti",
+    "sleepsWord": "posti letto",
+    "truthsLabel": "Da sapere",
+    "truthsTitle": "Per una grande esperienza",
+    "wwlLabel": "Cosa adoriamo di questa casa",
+    "wwlTitle": "Cosa ci piace"
+  },
+  "blog": {
+    "label": "Acacia Magazine",
+    "noPosts": "Nessun articolo in questa categoria"
+  },
+  "chat": {
+    "closeLabel": "Chiudi",
+    "cta": "Scrivici su WhatsApp",
+    "openLabel": "Apri la chat WhatsApp",
+    "prefill": "Ciao! Ho una domanda sul mio soggiorno a Firenze.",
+    "replyTime": "Di solito rispondiamo in pochi minuti",
+    "title": "Acacia® crew",
+    "welcome": "Ciao! 👋 Come possiamo aiutarti per il tuo soggiorno a Firenze?"
+  },
+  "district": {
+    "apartments": "Alloggi a",
+    "storiesLabel": "Magazine",
+    "storiesTitle": "Storie da leggere"
+  },
+  "districts": {
+    "label": "Quartieri di Firenze",
+    "tag": "Quartiere",
+    "title": "Esplora la città"
+  },
+  "draftMode": {
+    "disable": "Disattiva Draft Mode",
+    "enable": "Attiva Draft Mode",
+    "error": "Impossibile completare l'operazione!",
+    "tokenPrompt": "Per entrare in Draft Mode, inserisci il SECRET_API_TOKEN:",
+    "tooltipDisable": "Torna a vedere il contenuto pubblicato",
+    "tooltipEnable": "Anteprima delle modifiche non pubblicate da DatoCMS"
+  },
+  "faq": {
+    "allQuestions": "Tutte le domande",
+    "copyLink": "Copia link",
+    "explore": "Esplora",
+    "linkCopied": "Link copiato",
+    "readMore": "Per saperne di più"
+  },
+  "filters": {
+    "all": "Tutti",
+    "apartments": "Appartamenti",
+    "districts": "Quartieri",
+    "faq": "FAQ",
+    "images": "Immagini",
+    "pois": "Punti di interesse",
+    "posts": "Articoli"
+  },
+  "footer": {
+    "aboutUs": "Chi siamo",
+    "address": "Indirizzo",
+    "brandDescription": "Appartamenti selezionati nel cuore di Firenze, per chi cerca bellezza in ogni dettaglio.",
+    "explore": "Esplora",
+    "faq": "FAQ",
+    "followUs": "Seguici",
+    "getInTouch": "Contattaci",
+    "info": "Info",
+    "privacyPolicy": "Privacy Policy"
+  },
+  "gallery": {
+    "close": "Chiudi",
+    "next": "Successiva",
+    "previous": "Precedente",
+    "viewAll": "View gallery"
+  },
+  "guestbook": {
+    "kicker": "Guestbook"
+  },
+  "home": {
+    "navApartments": "Appartamenti",
+    "navExperiences": "Esperienze",
+    "navHome": "Benvenuti",
+    "navMoods": "Moods",
+    "navReview": "Recensioni",
+    "navStay": "Il soggiorno"
+  },
+  "listing": {
+    "allFilter": "Tutti",
+    "alsoInterested": "Potresti essere interessato anche a",
+    "discoverArea": "Scopri la zona",
+    "exploreDistrict": "Esplora {name}",
+    "florence": "Firenze",
+    "noApartments": "Nessun alloggio in questa categoria",
+    "readLess": "Mostra meno",
+    "readMore": "Leggi tutto",
+    "searchAvailability": "Cerca disponibilità",
+    "typeInDistrict": "{type} in {district}",
+    "whereToStay": "Dove alloggiare"
+  },
+  "moods": {
+    "apartments": "Alloggi per questo mood",
+    "label": "Viaggia per ispirazione",
+    "relatedLabel": "Esplora",
+    "relatedTitle": "Da non perdere",
+    "title": "Scopri i nostri mood"
+  },
+  "nav": {
+    "accommodations": "Alloggi",
+    "book": "Disponibilità",
+    "closeMenu": "Chiudi menu",
+    "contact": "Contatti",
+    "districts": "Quartieri",
+    "language": "Lingua",
+    "moods": "Moods",
+    "openMenu": "Apri menu"
+  },
+  "poi": {
+    "dayTime": "Di giorno",
+    "mapFor": "Mappa Acacia per {category}",
+    "nightAndDay": "Notte e giorno",
+    "nightTime": "Di notte"
+  },
+  "reviewSpotlight": {
+    "cta": "Scopri",
+    "label": "La parola agli ospiti"
+  },
+  "search": {
+    "button": "cerca",
+    "empty": "Nessun risultato per “{q}”",
+    "filterAll": "Tutti",
+    "filterBy": "Filtra per",
+    "loading": "Ricerca in corso…",
+    "minChars": "Digita almeno 3 caratteri",
+    "placeholder": "…niente AI qui, semplice :)",
+    "resultsFor": "{count} risultati per “{q}”",
+    "title": "Cerca",
+    "typeApartment": "Appartamenti",
+    "typeDistrict": "Quartieri",
+    "typeFaq": "FAQ",
+    "typeMagazine": "Magazine",
+    "typeMood": "Moods"
+  }
+}
