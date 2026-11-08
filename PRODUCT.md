@@ -24,7 +24,7 @@ Si sceglie un'atmosfera e una zona di Firenze, non solo un letto: mood e quartie
 ## Operating Context
 
 - Tutti i contenuti vivono in DatoCMS (GraphQL CDA); gli editor lavorano con anteprima in bozza e overlay click-to-edit.
-- Ogni stringa dell'interfaccia passa dal modello `Translation` di DatoCMS (EN/IT), nessun testo cablato nel codice.
+- Ogni stringa dell'interfaccia viene dai file del repo `src/messages/en.json` e `it.json` (EN/IT), nessun testo cablato nei componenti.
 - Deploy su Vercel; analytics con GA4 e PostHog (in prova).
 
 ## Capabilities and Constraints

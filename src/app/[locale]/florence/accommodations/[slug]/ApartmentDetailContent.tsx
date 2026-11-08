@@ -177,7 +177,7 @@ export default function ApartmentDetailContent({
               </h1>
 
               {/* Key facts — two coloured pills (palette colours) + a stat line.
-                  Copy comes from DatoCMS `Translation` records (ICU plurals). */}
+                  Copy comes from `src/messages/*.json` (ICU plurals). */}
               {(() => {
                 const beds = apartment.bedrooms ?? 0;
                 const baths = apartment.bathrooms ?? 0;

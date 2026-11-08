@@ -31,11 +31,11 @@ Scripts are in `package.json`; the non-obvious ones:
 - `npm run generate-cma-types` — regenerates `src/lib/datocms/cma-types.ts` (needs `DATOCMS_CMA_TOKEN`).
 - `npm run codegen` = both of the above. **`prepare` runs `codegen` on every local `npm install`** (skipped when `VERCEL` or `CI` is set), so a fresh install needs a filled `.env.local`.
 - `npm run lint` = `eslint . && prettier --check .`. Pre-commit runs Prettier on staged files (simple-git-hooks + lint-staged).
-- `npm run export-translations` — dumps Translation records to `src/messages/*.json` for debugging only; the files are not used at runtime and should not be committed.
+- `npm run export-translations` — the one-off dump that seeded `src/messages/*.json`, which are committed and maintained by hand. Do not re-run it after V1 is deployed: it would overwrite them.
 
 ## Data flow and caching
 
-- Every read goes through `executeQuery()` in `src/lib/datocms/executeQuery.ts` (wraps `@datocms/cda-client`). Published content: `force-cache` + Next tag `datocms`; draft content or `noStore: true`: `no-store`. The comments in that file are the reference.
+- Every read goes through `executeQuery()` in `src/lib/datocms/executeQuery.ts` (wraps `@datocms/cda-client`). Published content: `force-cache` + Next tag `datocms`; draft content: `no-store`. The comments in that file are the reference.
 - A DatoCMS webhook hits `/api/invalidate-cache` and calls `revalidateTag('datocms')`. On Vercel the Data Cache **survives deploys**: a deploy alone does not refresh content — fire the webhook or purge manually. Static routes such as `sitemap.ts` are not purged by the tag either; the sitemap has `revalidate = 3600` for that reason.
 - Two CDA tokens: `DATOCMS_PUBLISHED_CONTENT_CDA_TOKEN` (published only, no preview access) and `DATOCMS_DRAFT_CONTENT_CDA_TOKEN` (drafts, used only in Draft Mode). `DATOCMS_ENVIRONMENT` is applied to every CDA/CMA call, to codegen and to `baseEditingUrl`.
 - Site Search (`/api/search` → `src/lib/datocms/siteSearch.ts`) uses the CMA token server-side only. The index is re-crawled daily by `.github/workflows/reindex-search.yml`, whose hard-coded index id must stay in sync with `DATOCMS_SITE_SEARCH_INDEX_ID`.
@@ -73,10 +73,10 @@ Legacy text fields (apartment/district/home `description`, `abstract`, `claim`) 
 
 ## UI translations (next-intl)
 
-- No hardcoded UI strings except in `not-found.tsx`, `error.tsx` and `NotFoundScene` (no locale context there, copy is bilingual). Source of truth is the DatoCMS `Translation` model: `key` (unique, pattern `^[a-zA-Z][a-zA-Z0-9_.]*$`, convention `section.camelCaseKey`) and localized `value`.
-- `src/lib/datocms/fetchTranslations.ts` loads all records at request time (paged by 500) through `executeQuery`; in dev it bypasses the Data Cache (`noStore`), in prod the webhook refreshes it — no rebuild. `src/i18n/request.ts` feeds them to next-intl; the locale layout provides `NextIntlClientProvider`.
+- No hardcoded UI strings except in `not-found.tsx`, `error.tsx` and `NotFoundScene` (no locale context there, copy is bilingual). Source of truth is `src/messages/en.json` and `it.json`, nested by section (`section.camelCaseKey`). The DatoCMS `Translation` model is no longer read: editing it has no effect.
+- `src/i18n/request.ts` imports the JSON of the requested locale and feeds next-intl; the locale layout provides `NextIntlClientProvider`. `src/i18n/appConfig.ts` types the keys, so an unknown key or a key in one language only fails `tsc`; computed keys need a literal map (`as const satisfies`).
 - Client components: `useTranslations('section')`; server components: `await getTranslations('section')` from `next-intl/server`. ICU placeholders: `t('key', { name })`. Sections are whatever `useTranslations('…')` calls exist in `src/` — grep before inventing a new one.
-- New string: create + publish the Translation record in DatoCMS (CLI), then use `t('key')`. The webhook makes it visible.
+- New string: add the key to both JSON files, then `t('key')`. It ships with a deploy, no CMS and no webhook.
 
 ## Turbopack workaround
 
