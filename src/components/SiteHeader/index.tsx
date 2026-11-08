@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Calendar } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useHeaderOverDark } from '@/components/HeaderTheme';
@@ -27,6 +27,7 @@ export default function SiteHeader({ locale, navItems }: Props) {
   const { open: openBooking } = useBooking();
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const menuButtonRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 50);
@@ -34,10 +35,17 @@ export default function SiteHeader({ locale, navItems }: Props) {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Lock body scroll when menu is open
+  // Lock body scroll and close on Esc while the menu is open
   useEffect(() => {
     document.body.style.overflow = menuOpen ? 'hidden' : '';
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key !== 'Escape' || !menuOpen) return;
+      setMenuOpen(false);
+      menuButtonRef.current?.focus();
+    };
+    window.addEventListener('keydown', onKey);
     return () => {
+      window.removeEventListener('keydown', onKey);
       document.body.style.overflow = '';
     };
   }, [menuOpen]);
@@ -197,9 +205,10 @@ export default function SiteHeader({ locale, navItems }: Props) {
 
             {/* Hamburger / X — mobile & tablet (up to lg) */}
             <button
+              ref={menuButtonRef}
               onClick={() => setMenuOpen((o) => !o)}
               className="flex h-8 w-8 flex-col items-center justify-center gap-[6px] lg:hidden"
-              aria-label={menuOpen ? 'Chiudi menu' : 'Apri menu'}
+              aria-label={menuOpen ? t('closeMenu') : t('openMenu')}
             >
               <span
                 className={[
@@ -227,8 +236,9 @@ export default function SiteHeader({ locale, navItems }: Props) {
         </div>
       </header>
 
-      {/* Mobile full-screen overlay */}
+      {/* Mobile full-screen overlay — inert while closed so its links take no focus */}
       <div
+        inert={!menuOpen}
         className={[
           'fixed inset-0 z-40 flex flex-col bg-dark px-6 pb-10 pt-[var(--header-height)]',
           'origin-top-right transition-[opacity,transform] duration-300 ease-out lg:hidden',

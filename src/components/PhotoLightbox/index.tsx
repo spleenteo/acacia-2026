@@ -23,8 +23,7 @@ export default function PhotoLightbox({ slides, label, variant = 'dark' }: Props
           onClick={() => lightbox.openAt(0)}
           className="cursor-pointer font-body font-medium uppercase transition-colors text-label tracking-[0.12em] text-white rounded-pill bg-black/40 px-3 py-1.5 backdrop-blur-sm md:rounded-none md:bg-transparent md:px-0 md:py-0 md:backdrop-blur-none md:text-body-sm md:tracking-[0.15em] md:text-white/90 md:underline md:decoration-white/40 md:underline-offset-4 md:hover:text-white md:hover:decoration-white"
         >
-          {label}{' '}
-          <span className="text-[0.65rem] text-white/70 md:text-caption">{slides.length}</span>
+          {label} <span className="text-fine text-white/70 md:text-caption">{slides.length}</span>
         </button>
         <Lightbox
           slides={slides}

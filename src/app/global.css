@@ -134,9 +134,33 @@
 
 :root {
   --header-height: 58px;
+  --floating-action-lift: 0rem;
+}
+
+/* Below lg, apartment pages slide a booking bar in on scroll: the floating
+   WhatsApp button rises with it so neither covers the other. */
+@media (width < 1024px) {
+  :root:has([data-mobile-booking-bar][data-visible]) {
+    --floating-action-lift: 4.5rem;
+  }
 }
 
 @layer base {
+  /* One focus ring for the whole site. The white halo keeps it visible on navy
+     bands and photos, where blackberry alone would disappear (1.39:1). */
+  :focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+    box-shadow: 0 0 0 2px var(--color-surface);
+  }
+
+  /* Keeps the end of the page, legal links included, clear of the mobile booking bar. */
+  @media (width < 1024px) {
+    body:has([data-mobile-booking-bar]) {
+      padding-bottom: 4.5rem;
+    }
+  }
+
   html {
     font-family: var(--font-body);
     color: var(--color-body);
@@ -507,6 +531,17 @@ body.lightbox-open beddy-bar {
      reads the computed position/top, so there's no JS height to keep in sync
      (only 384px is shared, via HERO_PIN_TOP_PX).
   ──────────────────────────────────────────────────────────────── */
+  /* Floor under the svh height: on a phone held sideways the overlaid title
+     would otherwise climb under the fixed header. */
+  .hero-photo {
+    min-height: max(calc(58svh - 50px), 20rem);
+  }
+  @media (min-width: 720px) {
+    .hero-photo {
+      min-height: max(calc(68svh - 50px), 24rem);
+    }
+  }
+
   .hero-pin {
     position: relative;
     z-index: 10;

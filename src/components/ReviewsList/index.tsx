@@ -1,7 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { useLocale } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import { useInView } from '@/hooks/useInView';
 import Modal from '@/components/Modal';
 import { getChannelLogo } from '@/lib/channelLogos';
@@ -24,6 +24,7 @@ type Props = {
 
 export default function ReviewsList({ reviews, label, title }: Props) {
   const locale = useLocale();
+  const t = useTranslations('apartment');
   const headingRef = useInView<HTMLDivElement>();
   const scrollRef = useRef<HTMLDivElement>(null);
   const [activeIndex, setActiveIndex] = useState(0);
@@ -72,7 +73,7 @@ export default function ReviewsList({ reviews, label, title }: Props) {
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src="/placeholder-booking-score.svg"
-              alt="Booking.com score"
+              alt={t('bookingScoreAlt')}
               className="h-10 md:h-12 w-auto"
             />
             {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -99,8 +100,7 @@ export default function ReviewsList({ reviews, label, title }: Props) {
             return (
               <blockquote
                 key={review.id}
-                className="snap-start shrink-0 w-[85vw] sm:w-[45vw] lg:w-[calc((80rem-4.5rem)/3.4)] bg-card rounded-card p-7 shadow-card flex flex-col cursor-pointer hover:shadow-card-hover transition-shadow duration-300"
-                onClick={() => setSelectedReview(review)}
+                className="snap-start shrink-0 w-[85vw] sm:w-[45vw] lg:w-[calc((80rem-4.5rem)/3.4)] bg-card rounded-card p-7 shadow-card flex flex-col relative hover:shadow-card-hover transition-shadow duration-300"
               >
                 {/* Channel logo + opening quote */}
                 <div className="flex justify-between items-start mb-3">
@@ -112,9 +112,17 @@ export default function ReviewsList({ reviews, label, title }: Props) {
                 </div>
 
                 {/* Quote — truncated to 5 lines */}
-                <p className="font-body text-body text-muted leading-relaxed -mt-4 mb-5 flex-1 line-clamp-5">
-                  {review.quote}
-                </p>
+                {/* A real button named by the quote; its ::after stretches over
+                    the card so the whole card stays clickable. */}
+                <button
+                  type="button"
+                  onClick={() => setSelectedReview(review)}
+                  className="-mt-4 mb-5 flex flex-1 cursor-pointer items-start text-left outline-none after:absolute after:inset-0 after:rounded-card focus-visible:after:outline-2 focus-visible:after:-outline-offset-2 focus-visible:after:outline-primary"
+                >
+                  <span className="font-body text-body text-muted leading-relaxed line-clamp-5">
+                    {review.quote}
+                  </span>
+                </button>
 
                 <footer className="border-t border-border-light pt-4">
                   <p className="font-body text-body font-medium text-dark">{review.name}</p>
@@ -135,16 +143,16 @@ export default function ReviewsList({ reviews, label, title }: Props) {
 
         {/* Dot indicators */}
         {totalDots > 1 && (
-          <div className="flex justify-center gap-2 mt-6">
+          <div className="flex justify-center gap-4 mt-6">
             {Array.from({ length: totalDots }, (_, i) => (
               <button
                 key={i}
                 type="button"
                 onClick={() => scrollToIndex(i)}
-                className={`w-2 h-2 rounded-full transition-all duration-300 cursor-pointer ${
+                className={`relative w-2 h-2 rounded-full transition-all duration-300 cursor-pointer after:absolute after:-inset-2 ${
                   i === activeIndex ? 'bg-primary w-5' : 'bg-border'
                 }`}
-                aria-label={`Go to review ${i + 1}`}
+                aria-label={t('goToReview', { number: i + 1 })}
               />
             ))}
           </div>

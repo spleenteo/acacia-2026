@@ -1,6 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useRef } from 'react';
+import { useTranslations } from 'next-intl';
 
 type Props = {
   open: boolean;
@@ -9,6 +10,7 @@ type Props = {
 };
 
 export default function Modal({ open, onClose, children }: Props) {
+  const t = useTranslations('gallery');
   const dialogRef = useRef<HTMLDialogElement>(null);
 
   useEffect(() => {
@@ -49,7 +51,7 @@ export default function Modal({ open, onClose, children }: Props) {
             type="button"
             onClick={onClose}
             className="absolute top-4 right-4 text-muted hover:text-dark text-h4 transition-colors cursor-pointer"
-            aria-label="Close"
+            aria-label={t('close')}
           >
             &times;
           </button>

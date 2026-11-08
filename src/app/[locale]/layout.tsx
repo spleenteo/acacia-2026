@@ -298,12 +298,12 @@ _iub.csConfiguration = {
             socialLinks={socialLinks}
             legalText={legalText}
           />
+          <WhatsAppWidget />
         </BookingProvider>
       </AlternateLocaleProvider>
       {/* Only shown while draft mode is on (lets editors exit). The public site
           no longer shows an "enable draft" button. */}
       {isDraftModeEnabled && <DraftModeToggler draftModeEnabled={isDraftModeEnabled} />}
-      <WhatsAppWidget />
     </NextIntlClientProvider>
   );
 }

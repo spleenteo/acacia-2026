@@ -15,20 +15,18 @@ type Props = {
 export default async function SiteFooter({ locale, footerColumns, socialLinks, legalText }: Props) {
   const tFooter = await getTranslations('footer');
 
+  // One column on phones, one per group from md up.
+  const columnCount = Math.min(footerColumns.length + (socialLinks.length > 0 ? 1 : 0), 4);
+  const columnsClass = ['', 'md:grid-cols-1', 'md:grid-cols-2', 'md:grid-cols-3', 'md:grid-cols-4'][
+    columnCount
+  ];
+
   return (
     <footer>
       {/* Band 1 — Light navigation columns (+ social as its own column) */}
       {(footerColumns.length > 0 || socialLinks.length > 0) && (
         <div className="bg-surface-alt border-t border-border py-14">
-          <div
-            className="mx-auto max-w-6xl px-8 grid grid-cols-1 gap-12"
-            style={{
-              gridTemplateColumns: `repeat(${Math.min(
-                footerColumns.length + (socialLinks.length > 0 ? 1 : 0),
-                4,
-              )}, minmax(0, 1fr))`,
-            }}
-          >
+          <div className={`mx-auto max-w-6xl px-8 grid grid-cols-1 gap-12 ${columnsClass}`}>
             {footerColumns.map((column) => (
               <div key={column.widgetLabel} className="max-md:first:pt-0">
                 <h4 className="font-body text-label uppercase tracking-[0.22em] text-primary font-medium mb-5">

@@ -90,7 +90,7 @@ export default function SearchBox({ locale, className }: Props) {
         />
       </p>
 
-      <div className="flex items-center gap-2 rounded-pill border border-strong bg-surface px-2 py-2 shadow-card">
+      <div className="flex items-center gap-2 rounded-pill border border-strong bg-surface px-2 py-2 shadow-card has-[input:focus]:outline-2 has-[input:focus]:outline-offset-2 has-[input:focus]:outline-primary">
         <input
           ref={inputRef}
           type="search"

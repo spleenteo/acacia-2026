@@ -1,6 +1,7 @@
 'use client';
 
 import { Fragment, useSyncExternalStore } from 'react';
+import { useTranslations } from 'next-intl';
 import { type Locale, locales } from '@/i18n/config';
 import { switchLocalePath } from '@/i18n/paths';
 import { trackEvent } from '@/lib/analytics';
@@ -95,6 +96,7 @@ export default function LocaleSwitcher({
   onLight = false,
   onNavigate,
 }: Props) {
+  const t = useTranslations('nav');
   const override = useAlternateLocalePaths();
 
   // The server has no location, so `getServerSnapshot` returns null and the
@@ -129,7 +131,7 @@ export default function LocaleSwitcher({
       <div
         className={`inline-flex items-center overflow-hidden rounded-pill border transition-colors duration-300 ${tone.wrap}`}
         role="group"
-        aria-label="Language"
+        aria-label={t('language')}
       >
         {locales.map((l) =>
           l === locale ? (
@@ -162,7 +164,7 @@ export default function LocaleSwitcher({
     <div
       className="flex items-center gap-1.5 font-body text-caption tracking-wide"
       role="group"
-      aria-label="Language"
+      aria-label={t('language')}
     >
       {locales.map((l, i) => (
         <Fragment key={l}>

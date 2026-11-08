@@ -1,6 +1,6 @@
 'use client';
 
-import { createContext, useCallback, useContext, useEffect, useState } from 'react';
+import { createContext, useCallback, useContext, useEffect, useRef, useState } from 'react';
 import type { Locale } from '@/i18n/config';
 import BeddyBar from '@/components/BeddyBar';
 import WidgetLabel, { type Tone } from '@/components/WidgetLabel';
@@ -46,18 +46,25 @@ type Props = {
  * for the site-wide widget, or { widgetCode } for an apartment-specific one.
  * `mounted` keeps the dialog in the DOM through its exit transition; `shown`
  * drives the enter/leave animation a frame after mount.
+ *
+ * Not a native <dialog>: Beddy appends its calendar to <body>, and the top layer
+ * would hide it. Keyboard focus is held by making the page inert instead, which
+ * leaves anything Beddy adds to <body> usable.
  */
 export function BookingProvider({ locale, defaultWidgetCode, children }: Props) {
   const [mounted, setMounted] = useState(false);
   const [shown, setShown] = useState(false);
   const [widgetCode, setWidgetCode] = useState<string | null>(defaultWidgetCode);
   const [tone, setTone] = useState<Tone>('sage');
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
+  const triggerRef = useRef<HTMLElement | null>(null);
 
   const open = useCallback(
     (opts?: OpenOptions) => {
       // GA4: every "Book" CTA funnels through here — record where it was clicked
       // ('header' or 'apartment'). The current page is attached by GA automatically.
       trackEvent('book_cta', { location: opts?.source ?? 'unknown' });
+      triggerRef.current = document.activeElement as HTMLElement | null;
       setWidgetCode(opts?.widgetCode || defaultWidgetCode);
       // A random tone for the label chip each time the modal opens.
       setTone(TONES_LIST[Math.floor(Math.random() * TONES_LIST.length)]);
@@ -73,6 +80,7 @@ export function BookingProvider({ locale, defaultWidgetCode, children }: Props) 
     if (!mounted) return;
     const raf = requestAnimationFrame(() => setShown(true));
     document.body.style.overflow = 'hidden';
+    closeButtonRef.current?.focus({ preventScroll: true });
     const onKey = (e: KeyboardEvent) => {
       if (e.key === 'Escape') setShown(false);
     };
@@ -81,6 +89,8 @@ export function BookingProvider({ locale, defaultWidgetCode, children }: Props) 
       cancelAnimationFrame(raf);
       window.removeEventListener('keydown', onKey);
       document.body.style.overflow = '';
+      // Runs after the commit that lifts `inert`, so the CTA can take focus back.
+      triggerRef.current?.focus({ preventScroll: true });
     };
   }, [mounted]);
 
@@ -95,7 +105,10 @@ export function BookingProvider({ locale, defaultWidgetCode, children }: Props) 
 
   return (
     <BookingContext.Provider value={{ open, close }}>
-      {children}
+      {/* `contents` adds no box, so the layout is the same with or without it. */}
+      <div className="contents" inert={mounted}>
+        {children}
+      </div>
 
       {mounted && (
         // The overlay is also the scroll container: centred when the card fits,
@@ -124,6 +137,7 @@ export function BookingProvider({ locale, defaultWidgetCode, children }: Props) 
             >
               {/* Close */}
               <button
+                ref={closeButtonRef}
                 type="button"
                 onClick={close}
                 aria-label={intro.close}

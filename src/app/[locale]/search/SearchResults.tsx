@@ -108,7 +108,7 @@ export default function SearchResults({ locale, initialQuery }: Props) {
       </p>
 
       {/* Search field */}
-      <div className="flex items-center gap-2 rounded-pill border border-strong bg-surface px-5 py-2 shadow-card">
+      <div className="flex items-center gap-2 rounded-pill border border-strong bg-surface px-5 py-2 shadow-card has-[input:focus]:outline-2 has-[input:focus]:outline-offset-2 has-[input:focus]:outline-primary">
         <input
           type="search"
           autoFocus

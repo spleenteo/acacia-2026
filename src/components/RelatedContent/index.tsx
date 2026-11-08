@@ -21,7 +21,7 @@ export default function RelatedContent({ apartments, moods, locale }: Props) {
 
   return (
     <section className="py-20 lg:py-28 bg-surface">
-      <div className="mx-auto max-w-7xl px-8">
+      <div className="mx-auto max-w-7xl px-5 md:px-8">
         {/* Similar apartments */}
         {apartments.length > 0 && (
           <div className={moods.length > 0 ? 'mb-20' : ''}>
