@@ -4,14 +4,36 @@ type EnvironmentSettings = {
   locales: 'en' | 'it';
 };
 
+export type Amenity = ItemTypeDefinition<
+  EnvironmentSettings,
+  '114485',
+  {
+    name: {
+      type: 'string';
+      localized: true;
+    };
+    icon: {
+      type: 'string';
+    };
+    url: {
+      type: 'string';
+      localized: true;
+    };
+    position: {
+      type: 'integer';
+    };
+  }
+>;
+export const Amenity = {
+  ID: '114485',
+  REF: { type: 'item_type', id: '114485' },
+} as const;
+
 export type Apartment = ItemTypeDefinition<
   EnvironmentSettings,
   '2726',
   {
     beddy_id: {
-      type: 'string';
-    };
-    name: {
       type: 'string';
     };
     category: {
@@ -30,38 +52,41 @@ export type Apartment = ItemTypeDefinition<
     featured_image: {
       type: 'file';
     };
+    name: {
+      type: 'string';
+    };
     amenities: {
       type: 'links';
     };
     ape: {
       type: 'string';
     };
-    sleeps: {
-      type: 'integer';
-    };
     claim: {
       type: 'string';
       localized: true;
     };
-    house_badge: {
-      type: 'link';
-    };
     featured_slideshow: {
       type: 'gallery';
     };
-    wwl_gallery: {
-      type: 'links';
+    house_badge: {
+      type: 'link';
+    };
+    sleeps: {
+      type: 'integer';
+    };
+    acacia_reward: {
+      type: 'boolean';
+    };
+    bedrooms: {
+      type: 'integer';
     };
     home_truth: {
       type: 'rich_text';
       blocks: TruthBlock;
       localized: true;
     };
-    bedrooms: {
-      type: 'integer';
-    };
-    acacia_reward: {
-      type: 'boolean';
+    wwl_gallery: {
+      type: 'links';
     };
     bathrooms: {
       type: 'integer';
@@ -91,22 +116,162 @@ export const Apartment = {
   REF: { type: 'item_type', id: '2726' },
 } as const;
 
-export type GalleryImage = ItemTypeDefinition<
+export type ApartmentCategory = ItemTypeDefinition<
   EnvironmentSettings,
-  '2729',
+  '2971',
   {
-    image: {
-      type: 'file';
+    name: {
+      type: 'string';
+      localized: true;
     };
-    description: {
-      type: 'text';
+    slug: {
+      type: 'slug';
+    };
+    position: {
+      type: 'integer';
+    };
+  }
+>;
+export const ApartmentCategory = {
+  ID: '2971',
+  REF: { type: 'item_type', id: '2971' },
+} as const;
+
+export type App = ItemTypeDefinition<
+  EnvironmentSettings,
+  'c6zF9LTeRrSc71p8FnBSYQ',
+  {
+    footer_links: {
+      type: 'rich_text';
+      blocks: FooterMenuBlock;
+      localized: true;
+    };
+    nav_items: {
+      type: 'rich_text';
+      blocks: MenuDropdownBlock | MenuItemBlock | MenuExternalItemBlock;
+      localized: true;
+    };
+    social_links: {
+      type: 'rich_text';
+      blocks: SocialLinkBlock;
+    };
+    legal_text: {
+      type: 'structured_text';
       localized: true;
     };
   }
 >;
-export const GalleryImage = {
-  ID: '2729',
-  REF: { type: 'item_type', id: '2729' },
+export const App = {
+  ID: 'c6zF9LTeRrSc71p8FnBSYQ',
+  REF: { type: 'item_type', id: 'c6zF9LTeRrSc71p8FnBSYQ' },
+} as const;
+
+export type BlogCategory = ItemTypeDefinition<
+  EnvironmentSettings,
+  '2763',
+  {
+    name: {
+      type: 'string';
+      localized: true;
+    };
+    slug: {
+      type: 'slug';
+      localized: true;
+    };
+    position: {
+      type: 'integer';
+    };
+  }
+>;
+export const BlogCategory = {
+  ID: '2763',
+  REF: { type: 'item_type', id: '2763' },
+} as const;
+
+export type ButtonBlock = ItemTypeDefinition<
+  EnvironmentSettings,
+  'D6Mq0lExTdaSzsqpy02N0g',
+  {
+    button: {
+      type: 'json';
+    };
+  }
+>;
+export const ButtonBlock = {
+  ID: 'D6Mq0lExTdaSzsqpy02N0g',
+  REF: { type: 'item_type', id: 'D6Mq0lExTdaSzsqpy02N0g' },
+} as const;
+
+export type CallToAction = ItemTypeDefinition<
+  EnvironmentSettings,
+  '2905',
+  {
+    label: {
+      type: 'string';
+      localized: true;
+    };
+    url: {
+      type: 'string';
+      localized: true;
+    };
+  }
+>;
+export const CallToAction = {
+  ID: '2905',
+  REF: { type: 'item_type', id: '2905' },
+} as const;
+
+export type Comfort = ItemTypeDefinition<
+  EnvironmentSettings,
+  'dX-XZIRRRqKPsbO3gBn0rA',
+  {
+    name: {
+      type: 'string';
+      localized: true;
+    };
+    url: {
+      type: 'string';
+      localized: true;
+    };
+    icon: {
+      type: 'string';
+    };
+    position: {
+      type: 'integer';
+    };
+  }
+>;
+export const Comfort = {
+  ID: 'dX-XZIRRRqKPsbO3gBn0rA',
+  REF: { type: 'item_type', id: 'dX-XZIRRRqKPsbO3gBn0rA' },
+} as const;
+
+export type CtaBlogPostBlock = ItemTypeDefinition<
+  EnvironmentSettings,
+  'bb9IfZPPRQWgoPCDbdkdeg',
+  {
+    post: {
+      type: 'link';
+    };
+  }
+>;
+export const CtaBlogPostBlock = {
+  ID: 'bb9IfZPPRQWgoPCDbdkdeg',
+  REF: { type: 'item_type', id: 'bb9IfZPPRQWgoPCDbdkdeg' },
+} as const;
+
+export type CtaFaqBlock = ItemTypeDefinition<
+  EnvironmentSettings,
+  'cAZ0WadJTNaKprh6welhew',
+  {
+    faq: {
+      type: 'link';
+    };
+  }
+>;
+export const CtaFaqBlock = {
+  ID: 'cAZ0WadJTNaKprh6welhew',
+  REF: { type: 'item_type', id: 'cAZ0WadJTNaKprh6welhew' },
 } as const;
 
 export type District = ItemTypeDefinition<
@@ -144,66 +309,29 @@ export const District = {
   REF: { type: 'item_type', id: '2735' },
 } as const;
 
-export type Mood = ItemTypeDefinition<
+export type Essential = ItemTypeDefinition<
   EnvironmentSettings,
-  '2738',
+  '110157',
   {
     name: {
       type: 'string';
       localized: true;
     };
-    slug: {
-      type: 'slug';
-      localized: true;
-    };
-    claim: {
+    url: {
       type: 'string';
       localized: true;
     };
-    seo: {
-      type: 'seo';
-      localized: true;
-    };
-    image: {
-      type: 'file';
-    };
-    description: {
-      type: 'structured_text';
-      localized: true;
-    };
-    related_content: {
-      type: 'links';
+    icon: {
+      type: 'string';
     };
     position: {
       type: 'integer';
     };
   }
 >;
-export const Mood = {
-  ID: '2738',
-  REF: { type: 'item_type', id: '2738' },
-} as const;
-
-export type BlogCategory = ItemTypeDefinition<
-  EnvironmentSettings,
-  '2763',
-  {
-    name: {
-      type: 'string';
-      localized: true;
-    };
-    slug: {
-      type: 'slug';
-      localized: true;
-    };
-    position: {
-      type: 'integer';
-    };
-  }
->;
-export const BlogCategory = {
-  ID: '2763',
-  REF: { type: 'item_type', id: '2763' },
+export const Essential = {
+  ID: '110157',
+  REF: { type: 'item_type', id: '110157' },
 } as const;
 
 export type Faq = ItemTypeDefinition<
@@ -251,6 +379,42 @@ export const Faq = {
   REF: { type: 'item_type', id: '2803' },
 } as const;
 
+export type FooterMenuBlock = ItemTypeDefinition<
+  EnvironmentSettings,
+  'ATeUuoQZRh-fBh5SQfEtTw',
+  {
+    widget_label: {
+      type: 'string';
+    };
+    nav_links: {
+      type: 'rich_text';
+      blocks: MenuItemBlock | MenuExternalItemBlock;
+    };
+  }
+>;
+export const FooterMenuBlock = {
+  ID: 'ATeUuoQZRh-fBh5SQfEtTw',
+  REF: { type: 'item_type', id: 'ATeUuoQZRh-fBh5SQfEtTw' },
+} as const;
+
+export type GalleryImage = ItemTypeDefinition<
+  EnvironmentSettings,
+  '2729',
+  {
+    image: {
+      type: 'file';
+    };
+    description: {
+      type: 'text';
+      localized: true;
+    };
+  }
+>;
+export const GalleryImage = {
+  ID: '2729',
+  REF: { type: 'item_type', id: '2729' },
+} as const;
+
 export type Guestbook = ItemTypeDefinition<
   EnvironmentSettings,
   '2804',
@@ -281,6 +445,29 @@ export type Guestbook = ItemTypeDefinition<
 export const Guestbook = {
   ID: '2804',
   REF: { type: 'item_type', id: '2804' },
+} as const;
+
+export type HeroIndexBlock = ItemTypeDefinition<
+  EnvironmentSettings,
+  'EYk_5XZGRsatdHYno4e7-g',
+  {
+    color: {
+      type: 'string';
+    };
+    title: {
+      type: 'string';
+    };
+    subtitle: {
+      type: 'string';
+    };
+    featured_image: {
+      type: 'file';
+    };
+  }
+>;
+export const HeroIndexBlock = {
+  ID: 'EYk_5XZGRsatdHYno4e7-g',
+  REF: { type: 'item_type', id: 'EYk_5XZGRsatdHYno4e7-g' },
 } as const;
 
 export type HomePage = ItemTypeDefinition<
@@ -337,138 +524,95 @@ export const HomePage = {
   REF: { type: 'item_type', id: '2831' },
 } as const;
 
-export type CallToAction = ItemTypeDefinition<
+export type HouseBadge = ItemTypeDefinition<
   EnvironmentSettings,
-  '2905',
+  'dLjNwl31TXeXlDIyRuc3IA',
   {
     label: {
       type: 'string';
       localized: true;
     };
-    url: {
-      type: 'string';
-      localized: true;
+  }
+>;
+export const HouseBadge = {
+  ID: 'dLjNwl31TXeXlDIyRuc3IA',
+  REF: { type: 'item_type', id: 'dLjNwl31TXeXlDIyRuc3IA' },
+} as const;
+
+export type ImageBlock = ItemTypeDefinition<
+  EnvironmentSettings,
+  'GEcAJMbwRta4jX1Kfz1kLQ',
+  {
+    asset: {
+      type: 'file';
     };
   }
 >;
-export const CallToAction = {
-  ID: '2905',
-  REF: { type: 'item_type', id: '2905' },
+export const ImageBlock = {
+  ID: 'GEcAJMbwRta4jX1Kfz1kLQ',
+  REF: { type: 'item_type', id: 'GEcAJMbwRta4jX1Kfz1kLQ' },
 } as const;
 
-export type ApartmentCategory = ItemTypeDefinition<
+export type ImageGalleryBlock = ItemTypeDefinition<
   EnvironmentSettings,
-  '2971',
+  'VKlYOF--Q0ap0Ca4rsYkqA',
   {
-    name: {
-      type: 'string';
+    assets: {
+      type: 'gallery';
+    };
+  }
+>;
+export const ImageGalleryBlock = {
+  ID: 'VKlYOF--Q0ap0Ca4rsYkqA',
+  REF: { type: 'item_type', id: 'VKlYOF--Q0ap0Ca4rsYkqA' },
+} as const;
+
+export type IndexPage = ItemTypeDefinition<
+  EnvironmentSettings,
+  'ZOa9QihDSZ2Fi8kBsrv0jg',
+  {
+    hero: {
+      type: 'single_block';
+      blocks: HeroIndexBlock;
+      localized: true;
+    };
+    seo: {
+      type: 'seo';
+      localized: true;
+    };
+    description: {
+      type: 'structured_text';
       localized: true;
     };
     slug: {
       type: 'slug';
-    };
-    position: {
-      type: 'integer';
+      localized: true;
     };
   }
 >;
-export const ApartmentCategory = {
-  ID: '2971',
-  REF: { type: 'item_type', id: '2971' },
+export const IndexPage = {
+  ID: 'ZOa9QihDSZ2Fi8kBsrv0jg',
+  REF: { type: 'item_type', id: 'ZOa9QihDSZ2Fi8kBsrv0jg' },
 } as const;
 
-export type Tip = ItemTypeDefinition<
+export type InfoAddressBlock = ItemTypeDefinition<
   EnvironmentSettings,
-  '3599',
+  '326828',
   {
-    published: {
-      type: 'boolean';
-      localized: true;
+    details_label: {
+      type: 'link';
     };
-    title: {
+    address_map: {
+      type: 'lat_lon';
+    };
+    address_text: {
       type: 'string';
-      localized: true;
-    };
-    featured_image: {
-      type: 'file';
-    };
-    description: {
-      type: 'text';
-      localized: true;
-    };
-    url: {
-      type: 'string';
-      localized: true;
     };
   }
 >;
-export const Tip = {
-  ID: '3599',
-  REF: { type: 'item_type', id: '3599' },
-} as const;
-
-export type Essential = ItemTypeDefinition<
-  EnvironmentSettings,
-  '110157',
-  {
-    name: {
-      type: 'string';
-      localized: true;
-    };
-    url: {
-      type: 'string';
-      localized: true;
-    };
-    icon: {
-      type: 'string';
-    };
-    position: {
-      type: 'integer';
-    };
-  }
->;
-export const Essential = {
-  ID: '110157',
-  REF: { type: 'item_type', id: '110157' },
-} as const;
-
-export type TruthBlock = ItemTypeDefinition<
-  EnvironmentSettings,
-  '110472',
-  {
-    body: {
-      type: 'text';
-    };
-  }
->;
-export const TruthBlock = {
-  ID: '110472',
-  REF: { type: 'item_type', id: '110472' },
-} as const;
-
-export type Amenity = ItemTypeDefinition<
-  EnvironmentSettings,
-  '114485',
-  {
-    name: {
-      type: 'string';
-      localized: true;
-    };
-    icon: {
-      type: 'string';
-    };
-    url: {
-      type: 'string';
-      localized: true;
-    };
-    position: {
-      type: 'integer';
-    };
-  }
->;
-export const Amenity = {
-  ID: '114485',
-  REF: { type: 'item_type', id: '114485' },
+export const InfoAddressBlock = {
+  ID: '326828',
+  REF: { type: 'item_type', id: '326828' },
 } as const;
 
 export type InfoLabel = ItemTypeDefinition<
@@ -503,109 +647,6 @@ export const InfoTextBlock = {
   REF: { type: 'item_type', id: '326825' },
 } as const;
 
-export type InfoAddressBlock = ItemTypeDefinition<
-  EnvironmentSettings,
-  '326828',
-  {
-    details_label: {
-      type: 'link';
-    };
-    address_map: {
-      type: 'lat_lon';
-    };
-    address_text: {
-      type: 'string';
-    };
-  }
->;
-export const InfoAddressBlock = {
-  ID: '326828',
-  REF: { type: 'item_type', id: '326828' },
-} as const;
-
-export type FooterMenuBlock = ItemTypeDefinition<
-  EnvironmentSettings,
-  'ATeUuoQZRh-fBh5SQfEtTw',
-  {
-    widget_label: {
-      type: 'string';
-    };
-    nav_links: {
-      type: 'rich_text';
-      blocks: MenuItemBlock | MenuExternalItemBlock;
-    };
-  }
->;
-export const FooterMenuBlock = {
-  ID: 'ATeUuoQZRh-fBh5SQfEtTw',
-  REF: { type: 'item_type', id: 'ATeUuoQZRh-fBh5SQfEtTw' },
-} as const;
-
-export type VideoBlock = ItemTypeDefinition<
-  EnvironmentSettings,
-  'A0cNQOy5SuONmoLpo8x6bg',
-  {
-    embedded_video: {
-      type: 'video';
-    };
-  }
->;
-export const VideoBlock = {
-  ID: 'A0cNQOy5SuONmoLpo8x6bg',
-  REF: { type: 'item_type', id: 'A0cNQOy5SuONmoLpo8x6bg' },
-} as const;
-
-export type ButtonBlock = ItemTypeDefinition<
-  EnvironmentSettings,
-  'D6Mq0lExTdaSzsqpy02N0g',
-  {
-    button: {
-      type: 'json';
-    };
-  }
->;
-export const ButtonBlock = {
-  ID: 'D6Mq0lExTdaSzsqpy02N0g',
-  REF: { type: 'item_type', id: 'D6Mq0lExTdaSzsqpy02N0g' },
-} as const;
-
-export type HeroIndexBlock = ItemTypeDefinition<
-  EnvironmentSettings,
-  'EYk_5XZGRsatdHYno4e7-g',
-  {
-    color: {
-      type: 'string';
-    };
-    title: {
-      type: 'string';
-    };
-    subtitle: {
-      type: 'string';
-    };
-    featured_image: {
-      type: 'file';
-    };
-  }
->;
-export const HeroIndexBlock = {
-  ID: 'EYk_5XZGRsatdHYno4e7-g',
-  REF: { type: 'item_type', id: 'EYk_5XZGRsatdHYno4e7-g' },
-} as const;
-
-export type ImageBlock = ItemTypeDefinition<
-  EnvironmentSettings,
-  'GEcAJMbwRta4jX1Kfz1kLQ',
-  {
-    asset: {
-      type: 'file';
-    };
-  }
->;
-export const ImageBlock = {
-  ID: 'GEcAJMbwRta4jX1Kfz1kLQ',
-  REF: { type: 'item_type', id: 'GEcAJMbwRta4jX1Kfz1kLQ' },
-} as const;
-
 export type MenuDropdownBlock = ItemTypeDefinition<
   EnvironmentSettings,
   'JQeKJz2cRJ6tXjeGw9dQTw',
@@ -622,6 +663,130 @@ export type MenuDropdownBlock = ItemTypeDefinition<
 export const MenuDropdownBlock = {
   ID: 'JQeKJz2cRJ6tXjeGw9dQTw',
   REF: { type: 'item_type', id: 'JQeKJz2cRJ6tXjeGw9dQTw' },
+} as const;
+
+export type MenuExternalItemBlock = ItemTypeDefinition<
+  EnvironmentSettings,
+  'S-IlPzGxRNy5H1eByC2yXQ',
+  {
+    label: {
+      type: 'string';
+    };
+    url: {
+      type: 'string';
+    };
+  }
+>;
+export const MenuExternalItemBlock = {
+  ID: 'S-IlPzGxRNy5H1eByC2yXQ',
+  REF: { type: 'item_type', id: 'S-IlPzGxRNy5H1eByC2yXQ' },
+} as const;
+
+export type MenuItemBlock = ItemTypeDefinition<
+  EnvironmentSettings,
+  'QvVizRpcSBioYs3t8o5vDQ',
+  {
+    label: {
+      type: 'string';
+    };
+    page: {
+      type: 'link';
+    };
+  }
+>;
+export const MenuItemBlock = {
+  ID: 'QvVizRpcSBioYs3t8o5vDQ',
+  REF: { type: 'item_type', id: 'QvVizRpcSBioYs3t8o5vDQ' },
+} as const;
+
+export type Mood = ItemTypeDefinition<
+  EnvironmentSettings,
+  '2738',
+  {
+    name: {
+      type: 'string';
+      localized: true;
+    };
+    slug: {
+      type: 'slug';
+      localized: true;
+    };
+    claim: {
+      type: 'string';
+      localized: true;
+    };
+    seo: {
+      type: 'seo';
+      localized: true;
+    };
+    image: {
+      type: 'file';
+    };
+    description: {
+      type: 'structured_text';
+      localized: true;
+    };
+    related_content: {
+      type: 'links';
+    };
+    position: {
+      type: 'integer';
+    };
+  }
+>;
+export const Mood = {
+  ID: '2738',
+  REF: { type: 'item_type', id: '2738' },
+} as const;
+
+export type Poi = ItemTypeDefinition<
+  EnvironmentSettings,
+  'eH1aHhB6STK4pf_UWleiEA',
+  {
+    night_day: {
+      type: 'string';
+    };
+    name: {
+      type: 'string';
+    };
+    related_content: {
+      type: 'links';
+    };
+    description: {
+      type: 'string';
+    };
+    featured_image: {
+      type: 'file';
+    };
+    category: {
+      type: 'links';
+    };
+    instagram: {
+      type: 'string';
+    };
+    location: {
+      type: 'lat_lon';
+    };
+  }
+>;
+export const Poi = {
+  ID: 'eH1aHhB6STK4pf_UWleiEA',
+  REF: { type: 'item_type', id: 'eH1aHhB6STK4pf_UWleiEA' },
+} as const;
+
+export type PoiCategory = ItemTypeDefinition<
+  EnvironmentSettings,
+  'fSIHiEHVR66e4kpWfB_E3Q',
+  {
+    name: {
+      type: 'string';
+      localized: true;
+    };
+  }
+>;
+export const PoiCategory = {
+  ID: 'fSIHiEHVR66e4kpWfB_E3Q',
+  REF: { type: 'item_type', id: 'fSIHiEHVR66e4kpWfB_E3Q' },
 } as const;
 
 export type Post = ItemTypeDefinition<
@@ -686,92 +851,6 @@ export const RecordBin = {
   REF: { type: 'item_type', id: 'PEvhd5OVRc6mRQtWfFt8JQ' },
 } as const;
 
-export type MenuItemBlock = ItemTypeDefinition<
-  EnvironmentSettings,
-  'QvVizRpcSBioYs3t8o5vDQ',
-  {
-    label: {
-      type: 'string';
-    };
-    page: {
-      type: 'link';
-    };
-  }
->;
-export const MenuItemBlock = {
-  ID: 'QvVizRpcSBioYs3t8o5vDQ',
-  REF: { type: 'item_type', id: 'QvVizRpcSBioYs3t8o5vDQ' },
-} as const;
-
-export type Translation = ItemTypeDefinition<
-  EnvironmentSettings,
-  'SEhOnKQrTeqJFN2XzZZBOg',
-  {
-    key: {
-      type: 'string';
-    };
-    value: {
-      type: 'string';
-      localized: true;
-    };
-  }
->;
-export const Translation = {
-  ID: 'SEhOnKQrTeqJFN2XzZZBOg',
-  REF: { type: 'item_type', id: 'SEhOnKQrTeqJFN2XzZZBOg' },
-} as const;
-
-export type MenuExternalItemBlock = ItemTypeDefinition<
-  EnvironmentSettings,
-  'S-IlPzGxRNy5H1eByC2yXQ',
-  {
-    label: {
-      type: 'string';
-    };
-    url: {
-      type: 'string';
-    };
-  }
->;
-export const MenuExternalItemBlock = {
-  ID: 'S-IlPzGxRNy5H1eByC2yXQ',
-  REF: { type: 'item_type', id: 'S-IlPzGxRNy5H1eByC2yXQ' },
-} as const;
-
-export type ImageGalleryBlock = ItemTypeDefinition<
-  EnvironmentSettings,
-  'VKlYOF--Q0ap0Ca4rsYkqA',
-  {
-    assets: {
-      type: 'gallery';
-    };
-  }
->;
-export const ImageGalleryBlock = {
-  ID: 'VKlYOF--Q0ap0Ca4rsYkqA',
-  REF: { type: 'item_type', id: 'VKlYOF--Q0ap0Ca4rsYkqA' },
-} as const;
-
-export type SocialLinkBlock = ItemTypeDefinition<
-  EnvironmentSettings,
-  'WiMHjAJsQqmSl0NMPGkSeA',
-  {
-    platform: {
-      type: 'string';
-    };
-    url: {
-      type: 'string';
-    };
-    icon_name: {
-      type: 'string';
-    };
-  }
->;
-export const SocialLinkBlock = {
-  ID: 'WiMHjAJsQqmSl0NMPGkSeA',
-  REF: { type: 'item_type', id: 'WiMHjAJsQqmSl0NMPGkSeA' },
-} as const;
-
 export type SchemaMigration = ItemTypeDefinition<
   EnvironmentSettings,
   'YeOxxlBLR_iVo0C91KZVfw',
@@ -784,131 +863,6 @@ export type SchemaMigration = ItemTypeDefinition<
 export const SchemaMigration = {
   ID: 'YeOxxlBLR_iVo0C91KZVfw',
   REF: { type: 'item_type', id: 'YeOxxlBLR_iVo0C91KZVfw' },
-} as const;
-
-export type IndexPage = ItemTypeDefinition<
-  EnvironmentSettings,
-  'ZOa9QihDSZ2Fi8kBsrv0jg',
-  {
-    hero: {
-      type: 'single_block';
-      blocks: HeroIndexBlock;
-      localized: true;
-    };
-    seo: {
-      type: 'seo';
-      localized: true;
-    };
-    description: {
-      type: 'structured_text';
-      localized: true;
-    };
-    slug: {
-      type: 'slug';
-      localized: true;
-    };
-  }
->;
-export const IndexPage = {
-  ID: 'ZOa9QihDSZ2Fi8kBsrv0jg',
-  REF: { type: 'item_type', id: 'ZOa9QihDSZ2Fi8kBsrv0jg' },
-} as const;
-
-export type CtaBlogPostBlock = ItemTypeDefinition<
-  EnvironmentSettings,
-  'bb9IfZPPRQWgoPCDbdkdeg',
-  {
-    post: {
-      type: 'link';
-    };
-  }
->;
-export const CtaBlogPostBlock = {
-  ID: 'bb9IfZPPRQWgoPCDbdkdeg',
-  REF: { type: 'item_type', id: 'bb9IfZPPRQWgoPCDbdkdeg' },
-} as const;
-
-export type CtaFaqBlock = ItemTypeDefinition<
-  EnvironmentSettings,
-  'cAZ0WadJTNaKprh6welhew',
-  {
-    faq: {
-      type: 'link';
-    };
-  }
->;
-export const CtaFaqBlock = {
-  ID: 'cAZ0WadJTNaKprh6welhew',
-  REF: { type: 'item_type', id: 'cAZ0WadJTNaKprh6welhew' },
-} as const;
-
-export type App = ItemTypeDefinition<
-  EnvironmentSettings,
-  'c6zF9LTeRrSc71p8FnBSYQ',
-  {
-    footer_links: {
-      type: 'rich_text';
-      blocks: FooterMenuBlock;
-      localized: true;
-    };
-    nav_items: {
-      type: 'rich_text';
-      blocks: MenuDropdownBlock | MenuItemBlock | MenuExternalItemBlock;
-      localized: true;
-    };
-    social_links: {
-      type: 'rich_text';
-      blocks: SocialLinkBlock;
-    };
-    legal_text: {
-      type: 'structured_text';
-      localized: true;
-    };
-  }
->;
-export const App = {
-  ID: 'c6zF9LTeRrSc71p8FnBSYQ',
-  REF: { type: 'item_type', id: 'c6zF9LTeRrSc71p8FnBSYQ' },
-} as const;
-
-export type HouseBadge = ItemTypeDefinition<
-  EnvironmentSettings,
-  'dLjNwl31TXeXlDIyRuc3IA',
-  {
-    label: {
-      type: 'string';
-      localized: true;
-    };
-  }
->;
-export const HouseBadge = {
-  ID: 'dLjNwl31TXeXlDIyRuc3IA',
-  REF: { type: 'item_type', id: 'dLjNwl31TXeXlDIyRuc3IA' },
-} as const;
-
-export type Comfort = ItemTypeDefinition<
-  EnvironmentSettings,
-  'dX-XZIRRRqKPsbO3gBn0rA',
-  {
-    name: {
-      type: 'string';
-      localized: true;
-    };
-    url: {
-      type: 'string';
-      localized: true;
-    };
-    icon: {
-      type: 'string';
-    };
-    position: {
-      type: 'integer';
-    };
-  }
->;
-export const Comfort = {
-  ID: 'dX-XZIRRRqKPsbO3gBn0rA',
-  REF: { type: 'item_type', id: 'dX-XZIRRRqKPsbO3gBn0rA' },
 } as const;
 
 export type SectionHeaderBlock = ItemTypeDefinition<
@@ -931,44 +885,142 @@ export const SectionHeaderBlock = {
   REF: { type: 'item_type', id: 'fohy5eWKQ8-3vZFwvn_r0w' },
 } as const;
 
+export type SocialLinkBlock = ItemTypeDefinition<
+  EnvironmentSettings,
+  'WiMHjAJsQqmSl0NMPGkSeA',
+  {
+    platform: {
+      type: 'string';
+    };
+    url: {
+      type: 'string';
+    };
+    icon_name: {
+      type: 'string';
+    };
+  }
+>;
+export const SocialLinkBlock = {
+  ID: 'WiMHjAJsQqmSl0NMPGkSeA',
+  REF: { type: 'item_type', id: 'WiMHjAJsQqmSl0NMPGkSeA' },
+} as const;
+
+export type Tip = ItemTypeDefinition<
+  EnvironmentSettings,
+  '3599',
+  {
+    published: {
+      type: 'boolean';
+      localized: true;
+    };
+    title: {
+      type: 'string';
+      localized: true;
+    };
+    featured_image: {
+      type: 'file';
+    };
+    description: {
+      type: 'text';
+      localized: true;
+    };
+    url: {
+      type: 'string';
+      localized: true;
+    };
+  }
+>;
+export const Tip = {
+  ID: '3599',
+  REF: { type: 'item_type', id: '3599' },
+} as const;
+
+export type Translation = ItemTypeDefinition<
+  EnvironmentSettings,
+  'SEhOnKQrTeqJFN2XzZZBOg',
+  {
+    key: {
+      type: 'string';
+    };
+    value: {
+      type: 'string';
+      localized: true;
+    };
+  }
+>;
+export const Translation = {
+  ID: 'SEhOnKQrTeqJFN2XzZZBOg',
+  REF: { type: 'item_type', id: 'SEhOnKQrTeqJFN2XzZZBOg' },
+} as const;
+
+export type TruthBlock = ItemTypeDefinition<
+  EnvironmentSettings,
+  '110472',
+  {
+    body: {
+      type: 'text';
+    };
+  }
+>;
+export const TruthBlock = {
+  ID: '110472',
+  REF: { type: 'item_type', id: '110472' },
+} as const;
+
+export type VideoBlock = ItemTypeDefinition<
+  EnvironmentSettings,
+  'A0cNQOy5SuONmoLpo8x6bg',
+  {
+    embedded_video: {
+      type: 'video';
+    };
+  }
+>;
+export const VideoBlock = {
+  ID: 'A0cNQOy5SuONmoLpo8x6bg',
+  REF: { type: 'item_type', id: 'A0cNQOy5SuONmoLpo8x6bg' },
+} as const;
+
 export type AnyBlock =
-  | TruthBlock
-  | InfoTextBlock
-  | InfoAddressBlock
-  | FooterMenuBlock
-  | VideoBlock
   | ButtonBlock
-  | HeroIndexBlock
-  | ImageBlock
-  | MenuDropdownBlock
-  | MenuItemBlock
-  | MenuExternalItemBlock
-  | ImageGalleryBlock
-  | SocialLinkBlock
   | CtaBlogPostBlock
   | CtaFaqBlock
-  | SectionHeaderBlock;
+  | FooterMenuBlock
+  | HeroIndexBlock
+  | ImageBlock
+  | ImageGalleryBlock
+  | InfoAddressBlock
+  | InfoTextBlock
+  | MenuDropdownBlock
+  | MenuExternalItemBlock
+  | MenuItemBlock
+  | SectionHeaderBlock
+  | SocialLinkBlock
+  | TruthBlock
+  | VideoBlock;
 export type AnyModel =
+  | Amenity
   | Apartment
-  | GalleryImage
-  | District
-  | Mood
+  | ApartmentCategory
+  | App
   | BlogCategory
+  | CallToAction
+  | Comfort
+  | District
+  | Essential
   | Faq
+  | GalleryImage
   | Guestbook
   | HomePage
-  | CallToAction
-  | ApartmentCategory
-  | Tip
-  | Essential
-  | Amenity
+  | HouseBadge
+  | IndexPage
   | InfoLabel
+  | Mood
+  | Poi
+  | PoiCategory
   | Post
   | RecordBin
-  | Translation
   | SchemaMigration
-  | IndexPage
-  | App
-  | HouseBadge
-  | Comfort;
+  | Tip
+  | Translation;
 export type AnyBlockOrModel = AnyBlock | AnyModel;
