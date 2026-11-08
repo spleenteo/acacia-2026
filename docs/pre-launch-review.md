@@ -98,7 +98,6 @@ Concrete refactors that collapse the bulk of the duplicate findings:
 - **Dead imports:** `HtmlContent` import in `ApartmentDetailContent.tsx:8`; `cookies` in `src/app/api/draft-mode/disable/route.ts:1` (use `import { draftMode }`).
 - **Dead local code:** `siblingsOf` export in `src/lib/faq/faqTree.ts:144-149` (zero callers); unused `inputRef` in `src/components/SearchBox/index.tsx:71,95`; unused `locale` prop in `InfoDetail` (`:48,52` — or wire it up to fix the "( area)" bug, recommended).
 - **`public/logo--main.svg`** — old header logo, replaced by text wordmark in commit 48134e6; zero refs in src. (Keep `placeholder-airbnb-superhost.svg` / `placeholder-booking-score.svg` — actively rendered in ReviewsList despite the name.)
-- **`src/messages/en.json` / `it.json`** — confirmed NOT imported at runtime (runtime path is `fetchTranslations()` → DatoCMS CDA; only `scripts/export-translations.ts` references them, and it _writes_ them). Also stale (missing 8 live namespaces). Delete, or keep strictly as a regenerable reference — but don't trust them.
 - **Dead CSS `@theme` tokens in `global.css`:** 9 pure dead color variants (`--color-dark-soft`, `--color-primary-soft`, `--color-primary-deep`, `--color-rust-hover`, `--color-rust-soft`, `--color-rust-deep`, `--color-sage-strong`, `--color-alert`, `--color-notice`), `--text-tag`, and 3 section-spacing tokens (`--spacing-section-x/-y/-y-lg`). Zero `var()` refs and zero generated utility usage.
 
 **Delete-candidate (medium confidence):**
