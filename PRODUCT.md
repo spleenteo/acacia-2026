@@ -30,6 +30,7 @@ Si sceglie un'atmosfera e una zona di Firenze, non solo un letto: mood e quartie
 ## Capabilities and Constraints
 
 - La prenotazione avviene solo tramite il widget Beddy (`<beddy-bar>`); non esiste un checkout proprio.
+- Niente prezzi sul sito, nemmeno "a partire da": Beddy non li fornisce e la tariffa reale cambia per periodo, numero di persone e pulizie. Il tentativo con il prezzo di partenza si è rivelato fuorviante, perché gli ospiti si aspettavano di pagare la cifra mostrata. Il prezzo vero si vede nel widget di prenotazione.
 - Sezioni: home, appartamenti, quartieri, mood, blog, guestbook, FAQ, ricerca.
 - Percorsi URL tradotti per lingua (`florence`/`firenze`, `accommodations`/`appartamenti`, `districts`/`quartieri`).
 - Contenuti sempre da CMS, EN e IT in parità.

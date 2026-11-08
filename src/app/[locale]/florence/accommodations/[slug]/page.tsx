@@ -72,7 +72,6 @@ export const query = graphql(
         bathrooms
         sleeps
         beddyId
-        price
         cin
         ape
         acaciaReward
