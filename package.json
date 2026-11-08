@@ -35,10 +35,10 @@
     "yet-another-react-lightbox": "^3.29.1"
   },
   "devDependencies": {
-    "@datocms/cli": "^4.0.26",
     "@types/node": "^25.6.0",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "datocms": "^4.2.0",
     "datocms-html-to-structured-text": "^6.0.0",
     "dotenv-cli": "^11.0.0",
     "eslint": "^9.39.4",
