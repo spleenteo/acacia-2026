@@ -1,8 +1,8 @@
 ---
 status: open
-phase: impact
-slice: null
-step: null
+phase: slice
+slice: V1
+step: plan
 work: native-ui-messages
 stacks: [datocms, react]
 base: main
@@ -31,3 +31,4 @@ description: 'Portare le label UI dal modello Translation di DatoCMS a file nati
 <!-- date — step — done — remaining — wall-clock — cost -->
 
 - 2026-11-08 — slicing — due slice definite, fidelity check saltato (nessun frame) — resta impact — n/d — n/d
+- 2026-11-08 — impact — 14 correzioni applicate a V1 e V2, due blocchi su V1 (cartella messages, mappe di chiavi) — resta V1 — n/d — n/d
