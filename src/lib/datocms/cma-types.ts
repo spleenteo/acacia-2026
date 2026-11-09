@@ -935,24 +935,6 @@ export const Tip = {
   REF: { type: 'item_type', id: '3599' },
 } as const;
 
-export type Translation = ItemTypeDefinition<
-  EnvironmentSettings,
-  'SEhOnKQrTeqJFN2XzZZBOg',
-  {
-    key: {
-      type: 'string';
-    };
-    value: {
-      type: 'string';
-      localized: true;
-    };
-  }
->;
-export const Translation = {
-  ID: 'SEhOnKQrTeqJFN2XzZZBOg',
-  REF: { type: 'item_type', id: 'SEhOnKQrTeqJFN2XzZZBOg' },
-} as const;
-
 export type TruthBlock = ItemTypeDefinition<
   EnvironmentSettings,
   '110472',
@@ -1021,6 +1003,5 @@ export type AnyModel =
   | Post
   | RecordBin
   | SchemaMigration
-  | Tip
-  | Translation;
+  | Tip;
 export type AnyBlockOrModel = AnyBlock | AnyModel;
