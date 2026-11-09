@@ -1,6 +1,6 @@
 {
   "apartment": {
-    "allPhotos": "View gallery",
+    "allPhotos": "Galleria foto",
     "amenitiesLabel": "Amenities",
     "amenitiesTitle": "La casa include",
     "bathWord": "{count, plural, one {bagno} other {bagni}}",
@@ -15,7 +15,7 @@
     "ctaBookTitle": "Verifica disponibilità",
     "ctaContactButton": "Chatta su WhatsApp",
     "ctaContactLabel": "Parla con noi",
-    "ctaContactText": "Chatta con il crew di Acacia® su WhatsApp per un consiglio personalizzato sul tuo soggiorno.",
+    "ctaContactText": "Chatta con il team di Acacia® su WhatsApp per un consiglio personalizzato sul tuo soggiorno.",
     "ctaContactTitle": "Hai una domanda?",
     "essentials": "Acacia® Essentials",
     "goToReview": "Vai alla recensione {number}",
