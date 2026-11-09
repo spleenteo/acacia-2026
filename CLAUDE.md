@@ -31,7 +31,6 @@ Scripts are in `package.json`; the non-obvious ones:
 - `npm run generate-cma-types` — regenerates `src/lib/datocms/cma-types.ts` (needs `DATOCMS_CMA_TOKEN`).
 - `npm run codegen` = both of the above. **`prepare` runs `codegen` on every local `npm install`** (skipped when `VERCEL` or `CI` is set), so a fresh install needs a filled `.env.local`.
 - `npm run lint` = `eslint . && prettier --check .`. Pre-commit runs Prettier on staged files (simple-git-hooks + lint-staged).
-- `npm run export-translations` — the one-off dump that seeded `src/messages/*.json`, which are committed and maintained by hand. Do not re-run it: it would overwrite them.
 
 ## Data flow and caching
 
@@ -73,7 +72,7 @@ Legacy text fields (apartment/district/home `description`, `abstract`, `claim`) 
 
 ## UI translations (next-intl)
 
-- No hardcoded UI strings except in `not-found.tsx`, `error.tsx` and `NotFoundScene` (no locale context there, copy is bilingual). Source of truth is `src/messages/en.json` and `it.json`, nested by section (`section.camelCaseKey`). The DatoCMS `Translation` model is no longer read: editing it has no effect.
+- No hardcoded UI strings except in `not-found.tsx`, `error.tsx` and `NotFoundScene` (no locale context there, copy is bilingual). Source of truth is `src/messages/en.json` and `it.json`, nested by section (`section.camelCaseKey`).
 - `src/i18n/request.ts` imports the JSON of the requested locale and feeds next-intl; the locale layout provides `NextIntlClientProvider`. `src/i18n/appConfig.ts` types the keys, so an unknown key or a key in one language only fails `tsc`; computed keys need a literal map (`as const satisfies`).
 - Client components: `useTranslations('section')`; server components: `await getTranslations('section')` from `next-intl/server`. ICU placeholders: `t('key', { name })`. Sections are whatever `useTranslations('…')` calls exist in `src/` — grep before inventing a new one.
 - New string: add the key to both JSON files, then `t('key')`. It ships with a deploy, no CMS and no webhook.
