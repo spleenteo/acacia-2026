@@ -21,6 +21,7 @@ I primi nove lavori qui sotto sono **precedenti all'adozione di devflow**: vivev
 | `audit-fixes`                 | 2026-06-17 | Open redirect chiuso, errori non più verbosi, CardImage e WidgetList estratti, query parallelizzate                            | v0.8.1                                         |
 | `home-search`                 | 2026-06-21 | Site Search: route handler, pagina risultati con filtri, SearchBox nell'hero                                                   | v0.9.0                                         |
 | `locale-switcher`             | 2026-09-02 | Selettore di lingua nella barra dell'header a ogni larghezza, CTA a icona sotto 400px, cookie scritto solo su scelta esplicita | v1.4.0                                         |
+| `native-ui-messages`          | 2026-11-09 | Ha spostato le label UI dal modello `Translation` di DatoCMS a `src/messages/{en,it}.json` e ha cancellato il modello          | CHANGELOG v1.4.1 · 1 decisione                 |
 
 ## Cosa è rimasto aperto
 

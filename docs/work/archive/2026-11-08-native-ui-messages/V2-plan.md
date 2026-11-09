@@ -7,7 +7,7 @@ description: 'V2 plan: delete the DatoCMS Translation model in a sandbox, promot
 
 # V2 plan — Il modello Translation sparisce da DatoCMS
 
-**Mandate**: [slices.md, V2](slices.md) · **Guidelines**: [development-guidelines.md](../../development-guidelines.md) · **Lessons**: [lessons.md](lessons.md) · **Execution rules**: [executor.md](/Users/spleenteo/.claude/plugins/cache/flow/flow/facb0e621782/agents/executor.md), test level `none`
+**Mandate**: [slices.md, V2](slices.md) · **Guidelines**: [development-guidelines.md](../../../development-guidelines.md) · **Lessons**: [lessons.md](lessons.md) · **Execution rules**: [executor.md](/Users/spleenteo/.claude/plugins/cache/flow/flow/facb0e621782/agents/executor.md), test level `none`
 **Summary**: Compares the CMS labels with the JSON, and writes the migration that deletes `translation` by `api_key`. With maintenance on, forks `activities-01` into `production-2026-11-08` and runs the migration there. Regenerates and commits schema and types against the sandbox, then removes the export script. After the gate and the owner's ok, the conductor promotes, turns maintenance off, verifies `DATOCMS_ENVIRONMENT`, invalidates the cache, merges to `main` and checks production. `activities-01` survives as a sandbox.
 **Files**: `migrations/<unix-timestamp>_deleteTranslationModel.ts` (timestamp set by the CLI), `schema.graphql`, `src/lib/datocms/graphql-env.d.ts`, `src/lib/datocms/cma-types.ts`, `scripts/export-translations.ts`, `package.json`, `CLAUDE.md`
 

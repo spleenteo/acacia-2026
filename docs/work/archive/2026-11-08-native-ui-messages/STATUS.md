@@ -7,6 +7,7 @@ work: native-ui-messages
 stacks: [datocms, react]
 base: main
 updated: 2026-11-09
+archived: 2026-11-09
 tags: [work, native-ui-messages]
 description: 'Portare le label UI dal modello Translation di DatoCMS a file nativi nel repo, gestiti da next-intl'
 ---
