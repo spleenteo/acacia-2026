@@ -1,8 +1,8 @@
 ---
-status: open
-phase: slice
-slice: V2
-step: execute
+status: closed
+phase: done
+slice: null
+step: null
 work: native-ui-messages
 stacks: [datocms, react]
 base: main
@@ -20,7 +20,7 @@ description: 'Portare le label UI dal modello Translation di DatoCMS a file nati
 ## Slices
 
 - [x] V1 — Le label vengono dai file del repo
-- [ ] V2 — Il modello Translation sparisce da DatoCMS
+- [x] V2 — Il modello Translation sparisce da DatoCMS
 
 ## Pending proposals
 
@@ -33,3 +33,5 @@ description: 'Portare le label UI dal modello Translation di DatoCMS a file nati
 - 2026-11-08 — slicing — due slice definite, fidelity check saltato (nessun frame) — resta impact — n/d — n/d
 - 2026-11-08 — impact — 14 correzioni applicate a V1 e V2, due blocchi su V1 (cartella messages, mappe di chiavi) — resta V1 — n/d — n/d
 - 2026-11-08 — V1 — chiusa, 6 task, gate verde, label identiche alla produzione — resta il deploy di V1, poi V2 — n/d — n/d
+- 2026-11-09 — V2 — chiusa: modello Translation rimosso, nuovo primary production-2026-11-08, gate verde, produzione verificata — n/d — n/d
+- 2026-11-09 — chiusura — work completo: label nel repo, due slice, un token ruotato — restano changelog e archivio — n/d — n/d

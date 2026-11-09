@@ -84,3 +84,7 @@ Le label arrivano da `src/messages/{en,it}.json`, 134 chiavi per lingua, generat
 
 - `CLAUDE.md:76` va corretta anche se il mandato nomina solo la riga 34: descrive un modello che non esisterà più.
 - `npx gql.tada generate output` si aggiunge a `npm run codegen`: senza, `graphql-env.d.ts` conserva `allTranslations` e il controllo del Done fallisce.
+
+**V2 — done on 2026-11-09**
+
+Il fork `production-2026-11-08` da `activities-01` non ha trovato limiti del piano e la migration ha tolto il solo modello `translation` (39 modelli contro 40). La sandbox è stata promossa con la maintenance attiva dal prima del fork, `activities-01` e le altre sandbox sono intatte. `DATOCMS_ENVIRONMENT` è vuota in locale e assente su Vercel, quindi il sito segue il primary. Cache invalidata a mano; produzione verificata su `/en` e `/it`. Durante T2 un `npx … --api-token` ha stampato il token CMA: l'owner lo ha ruotato e il piano è passato a `DATOCMS_API_TOKEN` col binario locale. Ruling: T5 è rimasto in due commit (dff0476, 08a6fe5) per non riscrivere la storia. Resta da verificare che il secret GitHub del reindex non contenesse il token ruotato.
