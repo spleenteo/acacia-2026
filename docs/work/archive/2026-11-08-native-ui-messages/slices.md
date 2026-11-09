@@ -74,8 +74,17 @@ Le label arrivano da `src/messages/{en,it}.json`, 134 chiavi per lingua, generat
 
 **Attenzione**
 
-- Il webhook di invalidazione scatta solo per eventi sul primary: dopo la promozione serve l'invalidazione manuale.
+- Il webhook di invalidazione non scatta su una promozione: dopo serve l'invalidazione manuale. Non ha filtri per environment, quindi può scattare anche durante le operazioni in sandbox, senza danni: la cache si rigenera dal primary.
 - `DATOCMS_ENVIRONMENT` su Vercel e in locale deve puntare al primary giusto dopo la promozione: se è valorizzato col vecchio nome, il sito legge l'environment sbagliato senza errori. Il valore su Vercel non è stato verificato.
 - Esistono già 6 sandbox e il limite del piano non è leggibile: il fork potrebbe trovare un tetto.
 - Cancellare il modello è irreversibile sul nuovo primary: il vecchio environment resta come copia finché l'owner non decide di rimuoverlo.
 - Dopo V2, tornare a un deploy precedente a V1 richiede di ripromuovere il vecchio environment: quel codice interroga `allTranslations`.
+
+**Deviations found while planning V2**
+
+- `CLAUDE.md:76` va corretta anche se il mandato nomina solo la riga 34: descrive un modello che non esisterà più.
+- `npx gql.tada generate output` si aggiunge a `npm run codegen`: senza, `graphql-env.d.ts` conserva `allTranslations` e il controllo del Done fallisce.
+
+**V2 — done on 2026-11-09**
+
+Il fork `production-2026-11-08` da `activities-01` non ha trovato limiti del piano e la migration ha tolto il solo modello `translation` (39 modelli contro 40). La sandbox è stata promossa con la maintenance attiva dal prima del fork, `activities-01` e le altre sandbox sono intatte. `DATOCMS_ENVIRONMENT` è vuota in locale e assente su Vercel, quindi il sito segue il primary. Cache invalidata a mano; produzione verificata su `/en` e `/it`. Durante T2 un `npx … --api-token` ha stampato il token CMA: l'owner lo ha ruotato e il piano è passato a `DATOCMS_API_TOKEN` col binario locale. Ruling: T5 è rimasto in due commit (dff0476, 08a6fe5) per non riscrivere la storia. Resta da verificare che il secret GitHub del reindex non contenesse il token ruotato.

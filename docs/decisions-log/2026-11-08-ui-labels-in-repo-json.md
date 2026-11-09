@@ -35,7 +35,7 @@ Non-developers need to change UI labels regularly without going through a deploy
 
 ## References
 
-- docs/work/2026-11-08-native-ui-messages/slices.md
+- docs/work/archive/2026-11-08-native-ui-messages/slices.md
 
 ## Status log
 

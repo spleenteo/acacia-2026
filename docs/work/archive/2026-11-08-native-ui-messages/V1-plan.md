@@ -7,7 +7,7 @@ description: 'V1 plan: next-intl reads typed JSON labels from src/messages inste
 
 # V1 plan — Le label vengono dai file del repo
 
-**Mandate**: [slices.md, V1](slices.md) · **Guidelines**: [development-guidelines.md](../../development-guidelines.md) · **Lessons**: none yet (first slice) · **Execution rules**: [executor.md](/Users/spleenteo/.claude/plugins/cache/flow/flow/facb0e621782/agents/executor.md), test level `none`
+**Mandate**: [slices.md, V1](slices.md) · **Guidelines**: [development-guidelines.md](../../../development-guidelines.md) · **Lessons**: none yet (first slice) · **Execution rules**: [executor.md](/Users/spleenteo/.claude/plugins/cache/flow/flow/facb0e621782/agents/executor.md), test level `none`
 **Summary**: Dumps the published Translation records from `activities-01` into sorted, committed `src/messages/{en,it}.json`. Gives the two computed-key maps literal types. Switches `src/i18n/request.ts` to the JSON, then removes `fetchTranslations.ts` and the `noStore` option. Adds `AppConfig` typing and the en/it parity assertion, proving by mutation that both fail `tsc`. Last, corrects the documents the change makes false.
 **Files**: `src/messages/en.json`, `src/messages/it.json`, `src/lib/search/searchType.ts`, `src/components/FilterBar/masonryFilters.ts`, `src/i18n/request.ts`, `src/lib/datocms/fetchTranslations.ts`, `src/lib/datocms/executeQuery.ts`, `src/i18n/appConfig.ts`, `CLAUDE.md`, `PRODUCT.md`, `docs/pre-launch-review.md`, `src/app/[locale]/florence/accommodations/[slug]/ApartmentDetailContent.tsx`, `src/components/BookingModal/index.tsx`
 
