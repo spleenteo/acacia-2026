@@ -2,6 +2,16 @@
 
 > Entries are ordered by version. **v0.8.0, v0.8.1 and v0.9.0 were reconstructed in September 2026** from the git history and the shaping documents of work that shipped without being recorded at the time — v0.9.0 (21 June) therefore carries a date one day later than v1.0.0 (20 June), which kept the number it was released under.
 
+## v1.4.1 — 2026-11-09 — Interface labels now come from the repo
+
+The interface labels (menus, buttons, messages) used to be loaded from the DatoCMS Translation model at request time. They now live in typed JSON files in the repo, so a label change ships with the code and no longer depends on a CMS fetch.
+
+- **Labels in the repo**: English and Italian labels are nested JSON files in `src/messages`, read by next-intl, with keys typed so a missing or misspelled key fails at build time.
+- **Translation model removed**: the DatoCMS Translation model is deleted, and the runtime fetch of its records is gone.
+- **Tooling cleanup**: the translation export script and its docs are removed, and the schema and generated types are regenerated without the model.
+- **Work**: `native-ui-messages`
+- **Decision**: [UI labels live in nested JSON files in the repo](docs/decisions-log/2026-11-08-ui-labels-in-repo-json.md)
+
 ## v1.4.0 — 2026-09-02 — The language switch is where people look for it
 
 Guests reported not finding how to change language: it sat in the footer, on the
